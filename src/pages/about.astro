@@ -5,21 +5,27 @@ import { Picture } from 'astro:assets';
 const pageTitle = "About Me";
 ---
 <BaseLayout pageTitle={pageTitle}>
-    <div>
-        <Picture
-            class="rounded-full"
+    <div class="rounded-xl shadow-md bg-gray-100">
+        <div class="m-4 bg-blue-200 rounded-lg">
+            <Picture
+            class="rounded-full mx-auto"
             src="https://share.kadykov.com/export/DSC_1244.webp"
             alt="Aleksandr Kadykov's portrait. He fixes the position of his glasses and looks straight into the camera."
-            inferSize={true}
             formats={["avif", "webp"]}
             fallbackFormat="jpg"
-            width="200"
+            inferSize={true}
             densities={[0.25, 0.33, 0.5, 0.67, 0.75, 1.0, 1.1, 1.25, 1.33, 1.5, 1.75, 2, 2.5, 3, 4, 5]}
-        />
-    </div>
-    <div>
-        My name is Aleksandr, but my friends and colleagues call me Sasha (Саша).
-        Currently, I am working as a researcher in THz spectroscopy at Multitel.
-        This website is still under construction. In the future, I plan to share my thoughts and photos here.
+            width="200"
+            height="200"
+            />
+        </div>
+        <div class="m-4">
+            <p>
+                My name is Aleksandr, but my friends and colleagues call me Sasha (Саша).
+                Currently, I am working as a research engineer in THz spectroscopy at Multitel.
+                This website is still under construction.
+                In the future, I plan to share my thoughts and photos here.
+            </p>
+        </div>
     </div>
 </BaseLayout>
