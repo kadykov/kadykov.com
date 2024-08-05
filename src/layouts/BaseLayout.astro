@@ -12,13 +12,13 @@ const {pageTitle} = Astro.props;
 	</head>
 	<body>
 		<div class="shadow-lg bg-blue-200">
-			<div class="mx-auto max-w-screen-lg w-11/12">
+			<div class="mx-auto max-w-screen-md w-11/12">
 				<Header />
 			</div>
 		</div>
-		<div class="mx-auto max-w-screen-lg w-11/12">
+		<main class="mx-auto max-w-screen-md w-11/12">
 			<h1 class="text-4xl my-5">{pageTitle}</h1>
 			<slot />
-		</div>
+		</main>
 	</body>
 </html>
