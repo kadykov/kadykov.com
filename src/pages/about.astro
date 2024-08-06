@@ -5,9 +5,9 @@ import { Picture } from 'astro:assets';
 const pageTitle = "About Me";
 ---
 <BaseLayout pageTitle={pageTitle}>
-    <div class="flex flex-col sm:flex-row gap-4 items-center mx-auto">
+    <div class="mx-auto block sm:flex">
         <Picture
-        class="rounded-full mx-auto max-w-52"
+        class="rounded-full mx-auto my-4 w-2/3 max-w-52 sm:w-52 sm:mx-4"
         src="https://share.kadykov.com/export/DSC_1244.webp"
         alt="Aleksandr Kadykov's portrait. He fixes the position of his glasses and looks straight into the camera."
         formats={["avif", "webp"]}
@@ -17,7 +17,7 @@ const pageTitle = "About Me";
         width="200"
         height="200"
         />
-        <p>
+        <p class="sm:self-center">
             My name is Aleksandr, but my friends and colleagues call me Sasha (Саша).
             Currently, I am working as a research engineer in THz spectroscopy at Multitel.
             This website is still under construction.
