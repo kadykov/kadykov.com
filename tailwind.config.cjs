@@ -4,8 +4,8 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['"Mulish Variable"', ...defaultTheme.fontFamily.sans],
-				serif: ['"Martel"', ...defaultTheme.fontFamily.serif],
+				sans: ['"Overpass Variable"', ...defaultTheme.fontFamily.sans],
+				serif: ['"Lora Variable"', ...defaultTheme.fontFamily.serif],
 			},
 		},
 	},
