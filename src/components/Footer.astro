@@ -1,9 +1,29 @@
 ---
-import Social from "./Social.astro";
-const platform = "github";
-const username = "kadykov";
+import { Icon } from "astro-icon/components";
 ---
-<footer class="flex gap-4 py-4">
-    <Social platform="facebook" username="Aleksandr Kadykov"/>
-    <Social platform="github" username="kadykov"/>
+
+<footer class="flex justify-between my-4">
+    <p class="">© 2024. Aleksandr Kadykov</p>
+    <ul class="flex gap-1">
+      <li class="hover:opacity-75">
+        <a href="mailto:web@kadykov.com">
+          <Icon name="mdi:email-outline" />
+        </a>
+      </li>
+      <li class="hover:opacity-75">
+        <a href="https://github.com/kadykov">
+          <Icon name="mdi:github" />
+        </a>
+      </li>
+      <li class="hover:opacity-75">
+        <a href="https://www.linkedin.com/in/aleksandr-kadykov/">
+          <Icon name="mdi:linkedin" />
+        </a>
+      </li>
+      <li class="hover:opacity-75">
+        <a href="https://kadykov.com/rss.xml">
+          <Icon name="mdi:rss" />
+        </a>
+      </li>
+    </ul>
 </footer>

@@ -17,6 +17,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@fontsource-variable/lora": "^5.0.18",
     "@fontsource-variable/overpass": "^5.0.19",
+    "@iconify-json/mdi": "^1.1.68",
     "@types/canvas-confetti": "^1.6.4",
     "astro": "^4.13.1",
     "astro-icon": "^1.1.0",
