@@ -1,35 +1,36 @@
 ---
-import ViewTransitions from 'astro/components/ViewTransitions.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-const {pageTitle} = Astro.props;
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+const { pageTitle } = Astro.props;
 ---
+
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="sitemap" href="/sitemap-index.xml" />
-		<title>{pageTitle}</title>
-		<ViewTransitions />
-	</head>
-	<body class="flex flex-col min-h-svh">
-		<div class="shadow-lg bg-blue-200">
-			<div class="mx-auto max-w-screen-2xl w-5/6">
-				<Header />
-			</div>
-		</div>
-		<main class="mx-auto max-w-screen-md w-5/6 mb-10 text-lg">
-			<h1 class="font-serif font-bold text-4xl mt-10 mb-5">{pageTitle}</h1>
-			<slot />
-		</main>
-		<div class="shadow-inner bg-blue-200 mt-auto">
-			<div class="mx-auto max-w-screen-md w-5/6 text-sm">
-				<Footer />
-			</div>
-		</div>
-		<script>
-			import "../scripts/menu.js"
-		</script>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <title>{pageTitle}</title>
+    <ViewTransitions />
+  </head>
+  <body class="flex flex-col min-h-svh">
+    <div class="shadow-lg bg-blue-200">
+      <div class="mx-auto max-w-screen-2xl w-5/6">
+        <Header />
+      </div>
+    </div>
+    <main class="mx-auto max-w-screen-md w-5/6 mb-10 text-lg">
+      <h1 class="font-serif font-bold text-4xl mt-10 mb-5">{pageTitle}</h1>
+      <slot />
+    </main>
+    <div class="shadow-inner bg-blue-200 mt-auto">
+      <div class="mx-auto max-w-screen-md w-5/6 text-sm">
+        <Footer />
+      </div>
+    </div>
+    <script>
+      import "../scripts/menu.js";
+    </script>
+  </body>
 </html>
