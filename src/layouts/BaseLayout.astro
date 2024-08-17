@@ -16,7 +16,7 @@ const { pageTitle } = Astro.props;
   </head>
   <body class="flex flex-col min-h-svh">
     <div class="shadow-lg bg-blue-200">
-      <div class="mx-auto max-w-screen-2xl w-5/6">
+      <div class="mx-auto max-w-screen-md xl:max-w-screen-xl w-5/6">
         <Header />
       </div>
     </div>
@@ -25,7 +25,7 @@ const { pageTitle } = Astro.props;
       <slot />
     </main>
     <div class="shadow-inner bg-blue-200 mt-auto">
-      <div class="mx-auto max-w-screen-md w-5/6 text-sm">
+      <div class="mx-auto max-w-screen-md xl:max-w-screen-xl w-5/6 text-sm">
         <Footer />
       </div>
     </div>
