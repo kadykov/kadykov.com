@@ -1,10 +1,33 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Picture } from "astro:assets";
 const pageTitle = "Welcome!";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  I’m excited you’re here. This space is still a work in progress, so please
-  bear with me as I continue to build and refine it. In the future, I plan to
-  share my thoughts and photos here. Your patience is greatly appreciated!
+  <div class="mx-auto block sm:flex sm:flex-row-reverse">
+    <Picture
+      class="rounded-full drop-shadow-lg mx-auto my-4 w-2/3 max-w-fit sm:mx-4 sm:w-fit"
+      src="https://share.kadykov.com/export/DSC_1244.webp"
+      alt="Aleksandr Kadykov's portrait. He fixes the position of his glasses and looks straight into the camera."
+      formats={["avif", "webp"]}
+      fallbackFormat="jpg"
+      inferSize={true}
+      densities={[1.0, 1.25, 1.5, 2, 3, 4, 5]}
+      width="250"
+      height="250"
+      loading="eager"
+    />
+    <p class="sm:self-center">
+      My name is Aleksandr.
+      This space is still a work in progress,
+      but you can still
+      <a href="/cv" class="underline">check out my CV</a>
+      or download it in
+      <a href="http://cv.kadykov.com/kadykov-cv-en.pdf" class="underline">PDF</a>
+      format.
+      Currently, I am working as a research engineer in THz spectroscopy at
+      Multitel.
+    </p>
+  </div>
 </BaseLayout>
