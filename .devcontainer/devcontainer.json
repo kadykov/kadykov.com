@@ -1,12 +1,11 @@
 {
   "name": "Astro",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "image": "node:20-alpine3.20",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "username": "vscode"
-    }
+    },
+    "ghcr.io/kadykov/devcontainer-features/pre-commit:1": {}
   },
   "postCreateCommand": "pre-commit install && npm install",
   "customizations": {
