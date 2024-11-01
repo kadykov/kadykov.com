@@ -9,7 +9,10 @@ export default defineConfig({
   integrations: [tailwind({}), icon(), sitemap(), mdx()],
   site: "https://www.kadykov.com",
   image: {
-    domains: ["kadykov.com"],
+    domains: [
+      "kadykov.com",
+      "staticflickr.com",
+    ],
     remotePatterns: [{
       protocol: "https"
     }]
