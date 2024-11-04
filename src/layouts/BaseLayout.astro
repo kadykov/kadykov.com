@@ -1,7 +1,9 @@
 ---
-import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import '@fontsource/ibm-plex-serif/600.css';
+import ibmPlexSerifWoff2 from '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-600-normal.woff2?url';
 const { pageTitle } = Astro.props;
 ---
 
@@ -9,6 +11,7 @@ const { pageTitle } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="font" type="font/woff2" href={ibmPlexSerifWoff2} crossorigin="anonymous" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{pageTitle}</title>
@@ -16,12 +19,12 @@ const { pageTitle } = Astro.props;
   </head>
   <body class="flex flex-col min-h-svh">
     <div class="shadow-lg bg-blue-200">
-      <div class="mx-auto max-w-screen-md xl:max-w-screen-xl w-5/6">
+      <div class="mx-auto max-w-screen-md xl:max-w-screen-xl w-5/6 font-bold">
         <Header />
       </div>
     </div>
     <main class="mx-auto max-w-screen-md w-5/6 mb-10 text-lg">
-      <h1 class="font-serif font-bold text-4xl mt-10 mb-5 text-center">{pageTitle}</h1>
+      <h1 class="font-serif font-semibold text-4xl mt-10 mb-5 text-center">{pageTitle}</h1>
       <slot />
     </main>
     <div class="shadow-inner bg-blue-200 mt-auto">
@@ -31,6 +34,14 @@ const { pageTitle } = Astro.props;
     </div>
     <script>
       import "../scripts/menu.js";
+      import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
+      document.addEventListener("astro:before-swap", (e) =>
+        [
+          ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
+            'link[as="font"]'
+          ),
+        ].forEach((link) => link.remove())
+      );
     </script>
   </body>
 </html>
