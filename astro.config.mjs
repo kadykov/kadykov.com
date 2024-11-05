@@ -6,7 +6,12 @@ import mdx from "@astrojs/mdx";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind({}), icon(), sitemap(), mdx()],
+  integrations: [
+    tailwind({}),
+    icon(),
+    sitemap(),
+    mdx(),
+  ],
   site: "https://www.kadykov.com",
   image: {
     domains: [
