@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions"
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import Prose from "../components/Prose.astro"
@@ -34,7 +33,11 @@ const { pageTitle } = Astro.props
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{pageTitle}</title>
-    <ViewTransitions />
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
   </head>
   <body class="flex flex-col min-h-svh subpixel-antialiased">
     <div class="shadow-lg bg-blue-200">
@@ -57,14 +60,6 @@ const { pageTitle } = Astro.props
     </div>
     <script>
       import "../scripts/menu.js"
-      import type { TransitionBeforeSwapEvent } from "astro:transitions/client"
-      document.addEventListener("astro:before-swap", (e) =>
-        [
-          ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
-            'link[as="font"]'
-          ),
-        ].forEach((link) => link.remove())
-      )
     </script>
   </body>
 </html>
