@@ -17,7 +17,9 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "formulahendry.auto-rename-tag",
-        "christian-kohler.path-intellisense"
+        "christian-kohler.path-intellisense",
+        "unifiedjs.vscode-mdx",
+        "eamodio.gitlens"
       ]
     }
   },

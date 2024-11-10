@@ -1,0 +1,52 @@
+---
+title: "Welcome!"
+---
+
+import BaseLayout from "../layouts/BaseLayout.astro"
+import { Picture } from "astro:assets"
+import Prose from "../components/Prose.astro"
+
+<BaseLayout pageTitle={frontmatter.title}>
+  <div class="md:flex md:flex-row-reverse md:justify-between md:items-center">
+    <Picture
+      class="mx-auto md:mx-0 rounded-full drop-shadow-lg my-5"
+      src="https://live.staticflickr.com/65535/54109455443_2c0fac61ec_o_d.jpg"
+      alt="Aleksandr Kadykov's self portrait."
+      formats={["avif", "webp"]}
+      fallbackFormat="jpg"
+      inferSize={true}
+      densities={[1.0, 1.25, 1.5, 2, 3, 4, 5]}
+      width="250"
+      height="250"
+      loading="eager"
+    />
+    <div class="mx-auto md:mx-0 md:mr-5">
+      <Prose>
+        ## Error 501. Not implemented
+
+        But wait!
+        It only means
+        that for now
+        there is not much
+        content available on this website.
+
+        By the way,
+        I'm Aleksandr,
+        and this is my personal project
+        where I'm learning web technologies
+        and sharing my photography and thoughts.
+        Currently,
+        I'm exploring new opportunities
+        as a Research Engineer.
+        If you're interested
+        in learning more
+        about my background and experience,
+        you can check my CV
+        in [web](cv)
+        or [PDF]("http://github.kadykov.com/typstCV/kadykov-cv-en.pdf")
+        formats.
+      </Prose>
+    </div>
+
+  </div>
+</BaseLayout>
