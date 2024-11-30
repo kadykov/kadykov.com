@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "src": "https://live.staticflickr.com/65535/54109455443_2c0fac61ec_o_d.jpg",
+      "alt": "Studio self-portrait photo of Aleksandr Kadykov",
+      "title": "Self-portrait",
+      "description": "Home studio"
+    },
+    {
+      "src": "https://live.staticflickr.com/65535/54163807312_d8456912ba_o_d.jpg",
+      "alt": "Studio self-portrait photo of Aleksandr Kadykov",
+      "title": "Self-portrait",
+      "description": "Home studio"
+    },
+    {
+      "src": "https://live.staticflickr.com/65535/54159173007_9bd2a000ff_o_d.jpg",
+      "alt": "Self-portrait photo of Aleksandr Kadykov with a bike on a road",
+      "title": "Self-portrait with a bike",
+      "description": "Nimy, Belgium"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+---
+import { getImage } from "astro:assets"
+import GalleryThumbnail from "./GalleryThumbnail.astro"
+
+const { src, alt, title, description, galleryID } = Astro.props
+const widthSet = [240, 320, 480, 640, 960, 1280, 1600, 2000, 2560, 3200]
+
+const optimizedRemote = await getImage({
+  src: src,
+  format: "avif",
+  widths: widthSet,
+  inferSize: true,
+})
+---
+
+<a
+  href={optimizedRemote.src}
+  class="glightbox"
+  data-gallery={galleryID}
+  data-sizes="100vw"
+  data-srcset={optimizedRemote.srcSet.attribute}
+>
+  <GalleryThumbnail
+    src={src}
+    alt={alt}
+    title={title}
+    description={description}
+    widthSet={widthSet}
+  />
+</a>
+
+<script src="../scripts/lightbox.js"></script>

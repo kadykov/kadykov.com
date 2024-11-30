@@ -7,12 +7,13 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "format": "prettier --write src/*"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^3.1.8",
-    "@astrojs/rss": "^4.0.8",
+    "@astrojs/mdx": "^3.1.9",
+    "@astrojs/rss": "^4.0.9",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/tailwind": "^5.1.2",
     "@fontsource/fira-sans": "^5.1.0",
@@ -20,9 +21,10 @@
     "@fontsource/ibm-plex-serif": "^5.1.0",
     "@iconify-json/mdi": "^1.1.68",
     "@tailwindcss/typography": "^0.5.15",
-    "astro": "^4.16.4",
+    "astro": "^4.16.16",
     "astro-icon": "^1.1.0",
     "autoprefixer": "^10.4.20",
+    "glightbox": "^3.3.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.5.3"
