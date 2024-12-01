@@ -18,5 +18,8 @@ module.exports = {
       "2xl": "1800px",
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require('daisyui'),
+    require("@tailwindcss/typography"),
+  ],
 };

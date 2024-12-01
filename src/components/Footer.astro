@@ -2,33 +2,25 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<footer class="flex justify-between my-4">
-  <p class="">© 2024. Aleksandr Kadykov</p>
-  <ul class="flex gap-1">
-    <li class="hover:opacity-75">
-      <a href="mailto:web@kadykov.com">
-        <Icon name="mdi:email-outline" />
-      </a>
-    </li>
-    <li class="hover:opacity-75">
-      <a href="https://github.com/kadykov">
-        <Icon name="mdi:github" />
-      </a>
-    </li>
-    <li class="hover:opacity-75">
-      <a href="https://gitlab.com/kadykov">
-        <Icon name="mdi:gitlab" />
-      </a>
-    </li>
-    <li class="hover:opacity-75">
-      <a href="https://www.linkedin.com/in/aleksandr-kadykov/">
-        <Icon name="mdi:linkedin" />
-      </a>
-    </li>
-    <li class="hover:opacity-75">
-      <a href="https://kadykov.com/rss.xml">
-        <Icon name="mdi:rss" />
-      </a>
-    </li>
-  </ul>
+<footer
+  class="footer bg-neutral text-neutral-content p-10 mt-auto items-center"
+>
+  <aside class="flex items-center">
+    <Icon name="logo" class="h-10 w-10" />
+    <p>© 2024. Aleksandr Kadykov</p>
+  </aside>
+  <nav class="grid grid-flow-col gap-4">
+    <a class="link link-hover" href="mailto:web@kadykov.com">
+      <Icon name="mdi:email-outline" class="h-8 w-8" />
+    </a>
+    <a class="link link-hover" href="https://github.com/kadykov">
+      <Icon name="mdi:github" class="h-8 w-8" />
+    </a>
+    <a href="https://gitlab.com/kadykov">
+      <Icon name="mdi:gitlab" class="h-8 w-8" />
+    </a>
+    <a href="https://kadykov.com/rss.xml">
+      <Icon name="mdi:rss" class="h-8 w-8" />
+    </a>
+  </nav>
 </footer>
