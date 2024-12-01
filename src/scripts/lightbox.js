@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     closeEffect: "fade",
     slideEffect: "fade",
     dragAutoSnap: true,
+    dragToleranceY: 0,
     cssEfects: {
       fade: { in: "fadeIn", out: "fadeOut" },
     },
