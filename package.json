@@ -19,7 +19,6 @@
     "@fontsource/fira-sans": "^5.1.0",
     "@fontsource/ibm-plex-mono": "^5.1.0",
     "@fontsource/ibm-plex-serif": "^5.1.0",
-    "@iconify-json/mdi": "^1.1.68",
     "@iconify-json/ri": "^1.2.3",
     "@tailwindcss/typography": "^0.5.15",
     "astro": "^4.16.16",
