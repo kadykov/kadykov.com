@@ -19,7 +19,8 @@
         "formulahendry.auto-rename-tag",
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "emranweb.daisyui-snippet"
       ]
     }
   },

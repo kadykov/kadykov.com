@@ -5,11 +5,17 @@ import Hamburger from "./Hamburger.astro"
 import ThemeSwitch from "./ThemeSwitch.astro"
 ---
 
-<header class="sm:flex sm:justify-between sm:items-center">
-  <div class="navbar flex justify-between py-4 items-center">
+<header class="navbar">
+  <div class="navbar-start">
     <Logo />
-    <Hamburger />
-    <ThemeSwitch />
   </div>
-  <Navigation />
+  <div class="navbar-center menu menu-horizontal menu-lg hidden sm:flex">
+    <Navigation />
+  </div>
+  <div class="navbar-end">
+    <ThemeSwitch />
+    <div class="sm:hidden">
+      <Hamburger />
+    </div>
+  </div>
 </header>

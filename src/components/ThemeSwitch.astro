@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<label class="swap swap-rotate">
+<label class="swap swap-rotate btn btn-ghost btn-square">
   <!-- this hidden checkbox controls the state -->
   <input
     type="checkbox"
@@ -12,8 +12,8 @@ import { Icon } from "astro-icon/components"
   />
 
   <!-- light icon -->
-  <Icon name="ri:sun-line" class="swap-off h-10 w-10 fill-current" />
+  <Icon name="ri:sun-line" class="swap-off h-10 w-10" />
 
   <!-- dark icon -->
-  <Icon name="ri:moon-line" class="swap-on h-10 w-10 fill-current" />
+  <Icon name="ri:moon-line" class="swap-on h-10 w-10" />
 </label>

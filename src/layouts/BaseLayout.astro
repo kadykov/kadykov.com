@@ -2,6 +2,7 @@
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import Prose from "../components/Prose.astro"
+import Navigation from "../components/Navigation.astro"
 import "@fontsource/fira-sans/500.css"
 import "@fontsource/ibm-plex-serif"
 import "@fontsource/ibm-plex-serif/700.css"
@@ -55,23 +56,35 @@ const { pageTitle } = Astro.props
       }
     </style>
   </head>
-  <body class="flex flex-col min-h-svh subpixel-antialiased">
-    <div class="shadow-lg bg-neutral text-neutral-content">
-      <div class="mx-auto max-w-screen-md xl:max-w-screen-xl w-5/6">
+  <body class="drawer drawer-end subpixel-antialiased">
+    <input id="navbar-drawer" type="checkbox" class="drawer-toggle" />
+
+    <div class="drawer-content min-h-screen">
+      <div class="shadow-lg bg-neutral text-neutral-content">
         <Header />
       </div>
+      <main class="mx-auto mb-10 w-5/6 max-w-screen-md">
+        <div class="mt-10 mb-5">
+          <Prose>
+            <h1>{pageTitle}</h1>
+          </Prose>
+        </div>
+        <slot />
+      </main>
     </div>
-    <main class="mx-auto mb-10 w-5/6 max-w-screen-md">
-      <div class="mt-10 mb-5">
-        <Prose>
-          <h1>{pageTitle}</h1>
-        </Prose>
-      </div>
-      <slot />
-    </main>
     <Footer />
-    <script>
-      import "../scripts/menu.js"
-    </script>
+
+    <div class="drawer-side">
+      <label
+        for="navbar-drawer"
+        aria-label="close sidebar"
+        class="drawer-overlay"></label>
+      <ul class="menu menu-lg bg-base-200 text-base-content min-h-full w-80 p-4">
+        <Navigation />
+      </ul>
+    </div>
   </body>
+  <script>
+    import "../scripts/lightbox"
+  </script>
 </html>
