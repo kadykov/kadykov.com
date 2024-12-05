@@ -8,7 +8,7 @@ const galleryID = "self-portrait"
 const selfPortrait = await getEntry("galleries", galleryID)
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle={pageTitle} hasGlightbox=true>
   <div class="columns-2 md:columns-3xs gap-4 sm:gap-8">
     {
       selfPortrait.data.images.map((image) => (
