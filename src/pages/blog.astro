@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import BlogPost from "../components/BlogPost.astro"
 
 const pageTitle = "My Astro Learning Blog"
-const allPosts = await getCollection("posts")
+const allPosts = await getCollection("blog")
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -12,7 +12,7 @@ const allPosts = await getCollection("posts")
   <ul>
     {
       allPosts.map((post) => (
-        <BlogPost url={"/posts/" + post.slug} title={post.data.title} />
+        <BlogPost url={"/posts/" + post.id} title={post.data.title} />
       ))
     }
   </ul>

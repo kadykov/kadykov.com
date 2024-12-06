@@ -1,17 +1,17 @@
 ---
-import { getEntry } from "astro:content"
+import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Glightbox from "../../components/Glightbox.astro"
 
 const pageTitle = "Self-portrait"
 const galleryID = "self-portrait"
-const selfPortrait = await getEntry("galleries", galleryID)
+const galleries = await getCollection("galleries");
 ---
 
 <BaseLayout pageTitle={pageTitle} hasGlightbox=true>
   <div class="columns-2 md:columns-3xs gap-4 sm:gap-8">
     {
-      selfPortrait.data.images.map((image) => (
+      galleries[0].data.images.map((image) => (
         <Glightbox
           src={image.src}
           alt={image.alt}
@@ -22,5 +22,4 @@ const selfPortrait = await getEntry("galleries", galleryID)
       ))
     }
   </div>
-  <script src="../../scripts/lightbox.js"></script>
 </BaseLayout>
