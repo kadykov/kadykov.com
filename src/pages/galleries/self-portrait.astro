@@ -5,10 +5,10 @@ import Glightbox from "../../components/Glightbox.astro"
 
 const pageTitle = "Self-portrait"
 const galleryID = "self-portrait"
-const galleries = await getCollection("galleries");
+const galleries = await getCollection("galleries")
 ---
 
-<BaseLayout pageTitle={pageTitle} hasGlightbox=true>
+<BaseLayout pageTitle={pageTitle} hasGlightbox={true}>
   <div class="columns-2 md:columns-3xs gap-4 sm:gap-8">
     {
       galleries[0].data.images.map((image) => (
