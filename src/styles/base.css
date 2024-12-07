@@ -5,6 +5,6 @@
 
 @layer base {
   .prose-serif {
-    @apply prose prose-lg max-w-screen-sm hyphens-auto font-serif prose-a:link-hover prose-a:link sm:prose-xl prose-headings:font-sans prose-headings:font-medium prose-a:text-secondary;
+    @apply prose prose-base max-w-screen-sm hyphens-auto font-serif prose-a:link-hover prose-a:link sm:prose-lg prose-headings:font-sans prose-headings:font-medium prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg prose-a:text-secondary sm:prose-h1:text-4xl sm:prose-h2:text-3xl sm:prose-h3:text-2xl sm:prose-h4:text-xl;
   }
 }
