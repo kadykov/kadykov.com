@@ -3,12 +3,11 @@ title: "Page Not Found"
 ---
 
 import BaseLayout from "../layouts/BaseLayout.astro"
-import Prose from "../components/Prose.astro"
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <Prose>
+  <div class="prose-serif">
     Don't worry, you can always return to [home](/). Drop me a
     [message](mailto:web@kadykov.com) if the page you are looking for is
     important for you.
-  </Prose>
+  </div>
 </BaseLayout>

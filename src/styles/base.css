@@ -1,0 +1,10 @@
+/* The integration's default injected base.css file */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .prose-serif {
+    @apply prose prose-lg max-w-screen-sm hyphens-auto font-serif prose-a:link-hover prose-a:link sm:prose-xl prose-headings:font-sans prose-headings:font-medium prose-a:text-secondary;
+  }
+}

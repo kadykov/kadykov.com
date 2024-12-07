@@ -19,7 +19,7 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["fantasy", "dracula",],
+    themes: ["fantasy", "dracula"],
     darkTheme: "dracula",
   },
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
