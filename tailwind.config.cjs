@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Fira Sans"', ...defaultTheme.fontFamily.sans],
-        serif: ['"IBM Plex Serif"', ...defaultTheme.fontFamily.serif],
-        mono: ['"IBM Plex Mono"', ...defaultTheme.fontFamily.mono],
+        sans: ['"Source Sans 3 Variable"', ...defaultTheme.fontFamily.sans],
+        serif: ['"Faustina Variable"', ...defaultTheme.fontFamily.serif],
+        mono: ['"Source Code Pro Variable"', ...defaultTheme.fontFamily.mono],
       },
     },
     screens: {

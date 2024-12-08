@@ -99,7 +99,7 @@ _Sep. 2018 -- Sep. 2020_
 
 _French National Laboratory of Metrology and Testing,_
 _an_
-_[EPIC](https://en.wikipedia.org/wiki/%C3%89tablissement_public_%C3%A0\*caract%C3%A8re*industriel_et_commercial)*
+_[EPIC](https://en.wikipedia.org/wiki/%C3%89tablissement_public_%C3%A0\*caract%C3%A8re*industriel_et_commercial)_
 _company with ~1000 employees,_
 _[Trappes, France.](https://www.openstreetmap.org/#map=17/48.76090/1.98370)_
 
