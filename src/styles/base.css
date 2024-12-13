@@ -10,48 +10,27 @@
     @apply leading-normal;
     @apply font-serif prose-headings:font-sans;
     @apply prose-a:link-hover prose-a:link;
-    @apply prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl;
-    @apply sm:prose-h1:text-5xl sm:prose-h2:text-4xl sm:prose-h3:text-3xl sm:prose-h4:text-2xl;
+    @apply prose-h1:font-normal prose-h2:font-medium prose-h3:font-[550];
   }
 }
 
-/* source-sans-3-latin-wght-normal */
+/* yaldevi-latin-wght-normal */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: 'Yaldevi Variable';
   font-style: normal;
   font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2) format('woff2-variations');
+  font-weight: 200 700;
+  src: url(@fontsource-variable/yaldevi/files/yaldevi-latin-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-/* source-sans-3-latin-ext-wght-normal */
+/* yaldevi-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: 'Yaldevi Variable';
   font-style: normal;
   font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
-/* source-sans-3-latin-wght-italic */
-@font-face {
-  font-family: 'Source Sans 3 Variable';
-  font-style: italic;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-
-/* source-sans-3-latin-ext-wght-italic */
-@font-face {
-  font-family: 'Source Sans 3 Variable';
-  font-style: italic;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-italic.woff2) format('woff2-variations');
+  font-weight: 200 700;
+  src: url(@fontsource-variable/yaldevi/files/yaldevi-latin-ext-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
 }
 
