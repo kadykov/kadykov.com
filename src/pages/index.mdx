@@ -6,7 +6,11 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import { Picture } from "astro:assets"
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <div class="md:flex md:flex-row-reverse md:justify-between md:items-center">
+  <div class="mx-auto text-center prose-serif mt-10">
+  # {frontmatter.title}
+  </div>
+
+  <div class="mx-auto md:flex md:flex-row-reverse md:justify-between md:items-center w-5/6 max-w-screen-md">
     <Picture
       class="mx-auto md:mx-0 rounded-full drop-shadow-lg my-5"
       src="https://live.staticflickr.com/65535/54109455443_2c0fac61ec_o_d.jpg"

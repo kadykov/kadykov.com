@@ -1,86 +1,13 @@
 ---
-import Header from "../components/Header.astro"
-import Footer from "../components/Footer.astro"
-import Navigation from "../components/Navigation.astro"
-import fontSans from "@fontsource-variable/yaldevi/files/yaldevi-latin-wght-normal.woff2?url"
-import fontSerif from "@fontsource-variable/faustina/files/faustina-latin-wght-normal.woff2?url"
+import HeaderlessLayout from "./HeaderlessLayout.astro";
+import Header from "../components/Header.astro";
 const { pageTitle, hasGlightbox } = Astro.props
-import "../styles/base.css"
 ---
-
-<html lang="en">
-  <head>
-    <script is:inline>
-      // ☝️ This script prevent the FART effect.
-      if (localStorage.getItem("theme") === null) {
-        document.documentElement.setAttribute("data-theme", "light")
-      } else
-        document.documentElement.setAttribute(
-          "data-theme",
-          localStorage.getItem("theme")
-        )
-      // "theme" LocalStorage value is set by the package to remember user preference.
-      // The value is checked and applyed before rendering anything.
-    </script>
-    <script>
-      import { themeChange } from "theme-change"
-      themeChange()
-    </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSans}
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSerif}
-      crossorigin="anonymous"
-    />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>{pageTitle}</title>
-    <style>
-      @view-transition {
-        navigation: auto;
-      }
-    </style>
-  </head>
-  <body class="drawer drawer-end subpixel-antialiased">
-    <input id="navbar-drawer" type="checkbox" class="drawer-toggle" />
-
-    <div class="drawer-content min-h-screen">
-      <div class="shadow-lg bg-neutral text-neutral-content">
-        <Header />
-      </div>
-      <main class="mx-auto mb-10 w-5/6 max-w-screen-md">
-        <div class="prose-serif mx-auto mt-10 mb-5 text-center">
-          <h1>{pageTitle}</h1>
-        </div>
-        <slot />
-      </main>
-    </div>
-
-    <div class="shadow-inner bg-neutral text-neutral-content">
-      <Footer />
-    </div>
-
-    <div class="drawer-side">
-      <label
-        for="navbar-drawer"
-        aria-label="close sidebar"
-        class="drawer-overlay"></label>
-      <ul
-        class="menu menu-lg bg-base-200 text-base-content min-h-full max-w-80 w-3/4 p-4"
-      >
-        <Navigation />
-      </ul>
-    </div>
-  </body>
-  {hasGlightbox && <script>import '../scripts/lightbox';</script>}
-</html>
+<HeaderlessLayout pageTitle={pageTitle} hasGlightbox={hasGlightbox}>
+  <div class="shadow-lg bg-base-300 text-basebg-base-300-content">
+    <Header />
+  </div>
+  <main>
+    <slot />
+  </main>
+</HeaderlessLayout>

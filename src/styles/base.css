@@ -10,7 +10,11 @@
     @apply leading-normal;
     @apply font-serif prose-headings:font-sans;
     @apply prose-a:link-hover prose-a:link;
-    @apply prose-h1:font-normal prose-h2:font-medium prose-h3:font-[550];
+    @apply prose-h1:font-medium prose-h2:font-[550] prose-h3:font-semibold;
+  }
+
+  .menu-item {
+    @apply text-2xl font-semibold;
   }
 }
 

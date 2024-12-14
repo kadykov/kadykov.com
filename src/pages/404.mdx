@@ -5,7 +5,9 @@ title: "Page Not Found"
 import BaseLayout from "../layouts/BaseLayout.astro"
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <div class="prose-serif">
+  <div class="prose-serif mx-auto my-10">
+    # {frontmatter.title}
+
     Don't worry, you can always return to [home](/). Drop me a
     [message](mailto:web@kadykov.com) if the page you are looking for is
     important for you.
