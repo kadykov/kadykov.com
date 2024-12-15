@@ -1,10 +1,9 @@
 ---
-import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import Navigation from "../components/Navigation.astro"
 import fontSans from "@fontsource-variable/yaldevi/files/yaldevi-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/faustina/files/faustina-latin-wght-normal.woff2?url"
-const { pageTitle, hasGlightbox } = Astro.props
+const { pageTitle } = Astro.props
 import "../styles/base.css"
 ---
 
@@ -55,7 +54,7 @@ import "../styles/base.css"
     <input id="navbar-drawer" type="checkbox" class="drawer-toggle" />
 
     <div class="drawer-content min-h-screen">
-      <slot/>
+      <slot />
     </div>
 
     <div class="shadow-inner bg-neutral text-neutral-content">
@@ -74,5 +73,4 @@ import "../styles/base.css"
       </ul>
     </div>
   </body>
-  {hasGlightbox && <script>import '../scripts/lightbox';</script>}
 </html>

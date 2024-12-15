@@ -1,25 +1,29 @@
 ---
 import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-import Glightbox from "../../components/Glightbox.astro"
+import PhotoSwipe from "../../components/PhotoSwipe.astro"
 
 const pageTitle = "Self-portrait"
-const galleryID = "self-portrait"
 const galleries = await getCollection("galleries")
 ---
 
-<BaseLayout pageTitle={pageTitle} hasGlightbox={true}>
-  <div class="columns-2 md:columns-3xs gap-4 sm:gap-8">
+<BaseLayout pageTitle={pageTitle}>
+  <div
+    id="gallery"
+    class="mx-auto max-w-screen-md py-10 w-11/12 sm:w-5/6 columns-2 md:columns-3xs gap-4 sm:gap-8"
+  >
     {
       galleries[0].data.images.map((image) => (
-        <Glightbox
+        <PhotoSwipe
           src={image.src}
           alt={image.alt}
           title={image.title}
           description={image.description}
-          galleryID={galleryID}
         />
       ))
     }
   </div>
+  <script>
+    import "../../scripts/photoswipe"
+  </script>
 </BaseLayout>

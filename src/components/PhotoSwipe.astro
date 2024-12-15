@@ -2,10 +2,10 @@
 import { getImage } from "astro:assets"
 import GalleryThumbnail from "./GalleryThumbnail.astro"
 
-const { src, alt, title, description, galleryID } = Astro.props
+const { src, alt, title, description } = Astro.props
 const widthSet = [240, 320, 480, 640, 960, 1280, 1600, 2000, 2560, 3200]
 
-const optimizedRemote = await getImage({
+const optimizedImage = await getImage({
   src: src,
   format: "avif",
   widths: widthSet,
@@ -14,11 +14,11 @@ const optimizedRemote = await getImage({
 ---
 
 <a
-  href={optimizedRemote.src}
-  class="glightbox"
-  data-gallery={galleryID}
-  data-sizes="100vw"
-  data-srcset={optimizedRemote.srcSet.attribute}
+  href={optimizedImage.src}
+  data-pswp-srcset={optimizedImage.srcSet.attribute}
+  data-pswp-width={optimizedImage.attributes.width}
+  data-pswp-height={optimizedImage.attributes.height}
+  target="_blank"
 >
   <GalleryThumbnail
     src={src}
@@ -29,4 +29,4 @@ const optimizedRemote = await getImage({
   />
 </a>
 
-<script src="../scripts/lightbox.js"></script>
+<script src="../scripts/photoswipe"></script>

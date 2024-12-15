@@ -1,9 +1,10 @@
 ---
-import HeaderlessLayout from "./HeaderlessLayout.astro";
-import Header from "../components/Header.astro";
-const { pageTitle, hasGlightbox } = Astro.props
+import HeaderlessLayout from "./HeaderlessLayout.astro"
+import Header from "../components/Header.astro"
+const { pageTitle } = Astro.props
 ---
-<HeaderlessLayout pageTitle={pageTitle} hasGlightbox={hasGlightbox}>
+
+<HeaderlessLayout pageTitle={pageTitle}>
   <div class="shadow-lg bg-base-300 text-basebg-base-300-content">
     <Header />
   </div>

@@ -25,7 +25,7 @@
     "astro-icon": "^1.1.0",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.14",
-    "glightbox": "^3.3.0",
+    "photoswipe": "^5.4.4",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "theme-change": "^2.5.0",
