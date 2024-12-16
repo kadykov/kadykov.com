@@ -20,6 +20,7 @@
     "@fontsource-variable/source-code-pro": "^5.1.0",
     "@fontsource-variable/yaldevi": "^5.1.0",
     "@iconify-json/ri": "^1.2.3",
+    "@playform/compress": "^0.1.6",
     "@tailwindcss/typography": "^0.5.15",
     "astro": "^5.0.5",
     "astro-icon": "^1.1.0",
