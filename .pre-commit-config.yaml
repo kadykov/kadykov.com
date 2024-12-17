@@ -15,11 +15,6 @@ repos:
       - id: fix-byte-order-marker
       - id: mixed-line-ending
       - id: trailing-whitespace
-      - id: pretty-format-json
-        exclude: (package.json|package-lock.json)
-        args:
-          - "--autofix"
-          - "--no-sort-keys"
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
@@ -35,3 +30,12 @@ repos:
     rev: v0.13.0
     hooks:
       - id: yamlfmt
+
+  - repo: local
+    hooks:
+      - id: prettier-format
+        name: Formatting with Prettier
+        entry: npm run format
+        language: node
+        pass_filenames: false
+        require_serial: true

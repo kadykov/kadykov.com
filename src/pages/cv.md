@@ -99,7 +99,7 @@ _Sep. 2018 -- Sep. 2020_
 
 _French National Laboratory of Metrology and Testing,_
 _an_
-_[EPIC](https://en.wikipedia.org/wiki/%C3%89tablissement_public_%C3%A0\*caract%C3%A8re*industriel_et_commercial)_
+[_EPIC_](https://en.wikipedia.org/wiki/%C3%89tablissement_public_%C3%A0_caract%C3%A8re_industriel_et_commercial)
 _company with ~1000 employees,_
 _[Trappes, France.](https://www.openstreetmap.org/#map=17/48.76090/1.98370)_
 
@@ -129,7 +129,7 @@ _[Trappes, France.](https://www.openstreetmap.org/#map=17/48.76090/1.98370)_
 _May 2017 -- Sep. 2018_
 
 _State-owned research institute_
-_with \~200 employees_
+_with ~200 employees_
 _based in [Nizhny Novgorod, Russia](https://www.openstreetmap.org/#map=18/56.28067/44.08277)_
 
 #### Research Engineer in Photonics of 2D Narrow-Gap Heterostructures
@@ -214,26 +214,25 @@ emission and detection](https://www.theses.fr/en/2017MONTS086)
 ### Languages
 
 - _English_ (upper-intermediate)
-- _French_ ([
-  upper-intermediate]("https://www.duolingo.com/profile/aleksandrkadykov"))
+- _French_ ([upper-intermediate]("https://www.duolingo.com/profile/aleksandrkadykov"))
 - _Russian_ (native)
 
 ## Selected publications
 
-1.  Kadykov, A.M., Torres, J., Krishtopenko, S.S. et al., [_Terahertz imaging of Landau levels in HgTe-based topological insulators_](https://dx.doi.org/10.1063/1.4955018), **Applied Physics Letters**, 108(26), _262102_, 2016
-2.  Teppe, F., Marcinkiewicz, M., Krishtopenko, S.S. et al., [_Temperature-driven massless Kane fermions in HgCdTe crystals_](https://dx.doi.org/10.1038/ncomms12576), **Nature Communications**, 7, _12576_, 2016
-3.  Kadykov, A.M., Krishtopenko, S.S., Jouault, B. et al., [_Temperature-Induced Topological Phase Transition in HgTe Quantum Wells_](https://dx.doi.org/10.1103/PhysRevLett.120.086401), **Physical Review Letters**, 120(8), _086401_, 2018
-4.  Kadykov, A.M., Teppe, F., Consejo, C. et al., [_Terahertz detection of magnetic field-driven topological phase transition in HgTe-based transistors_](https://dx.doi.org/10.1063/1.4932943), **Applied Physics Letters**, 107(15), _152101_, 2015
-5.  Krishtopenko, S.S., Ruffenach, S., Gonzalez-Posada, F. et al., [_Temperature-dependent terahertz spectroscopy of inverted-band three-layer InAs / GaSb / InAs quantum well_](https://dx.doi.org/10.1103/PhysRevB.97.245419), **Physical Review B**, 97(24), _245419_, 2018
-6.  Ruffenach, S., Kadykov, A.M., Rumyantsev, V.V. et al., [_HgCdTe-based heterostructures for terahertz photonics_](https://dx.doi.org/10.1063/1.4977781), **APL Materials**, 5(3), _035503_, 2017
-7.  Yahniuk, I., Krishtopenko, S.S., Grabecki, G. et al., [_Magneto-transport in inverted HgTe quantum wells_](https://dx.doi.org/10.1038/s41535-019-0154-3), **npj Quantum Materials**, 4(1), _1--8_, 2019
-8.  Marcinkiewicz, M., Ruffenach, S., Krishtopenko, S.S. et al., [_Temperature-driven single-valley Dirac fermions in HgTe quantum wells_](https://dx.doi.org/10.1103/PhysRevB.96.035405), **Physical Review B**, 96(3), _035405_, 2017
-9.  Morozov, S.V., Rumyantsev, V.V., Fadeev, M. et al., [_Stimulated emission from HgCdTe quantum well heterostructures at wavelengths up to 19.5\~um_](https://dx.doi.org/10.1063/1.4996966), **Applied Physics Letters**, 111(19), _192101_, 2017
-10. Morozov, S.V., Rumyantsev, V.V., Kadykov, A.M. et al., [_Long wavelength stimulated emission up to 9.5\~um from HgCdTe quantum well heterostructures_](https://dx.doi.org/10.1063/1.4943087), **Applied Physics Letters**, 108(9), _092104_, 2016
-11. Morozov, S.V., Rumyantsev, V.V., Dubinov, A.A. et al., [_Long wavelength superluminescence from narrow gap HgCdTe epilayer at 100\~K_](https://dx.doi.org/10.1063/1.4926927), **Applied Physics Letters**, 107(4), _042105_, 2015
+1. Kadykov, A.M., Torres, J., Krishtopenko, S.S. et al., [_Terahertz imaging of Landau levels in HgTe-based topological insulators_](https://dx.doi.org/10.1063/1.4955018), **Applied Physics Letters**, 108(26), _262102_, 2016
+2. Teppe, F., Marcinkiewicz, M., Krishtopenko, S.S. et al., [_Temperature-driven massless Kane fermions in HgCdTe crystals_](https://dx.doi.org/10.1038/ncomms12576), **Nature Communications**, 7, _12576_, 2016
+3. Kadykov, A.M., Krishtopenko, S.S., Jouault, B. et al., [_Temperature-Induced Topological Phase Transition in HgTe Quantum Wells_](https://dx.doi.org/10.1103/PhysRevLett.120.086401), **Physical Review Letters**, 120(8), _086401_, 2018
+4. Kadykov, A.M., Teppe, F., Consejo, C. et al., [_Terahertz detection of magnetic field-driven topological phase transition in HgTe-based transistors_](https://dx.doi.org/10.1063/1.4932943), **Applied Physics Letters**, 107(15), _152101_, 2015
+5. Krishtopenko, S.S., Ruffenach, S., Gonzalez-Posada, F. et al., [_Temperature-dependent terahertz spectroscopy of inverted-band three-layer InAs / GaSb / InAs quantum well_](https://dx.doi.org/10.1103/PhysRevB.97.245419), **Physical Review B**, 97(24), _245419_, 2018
+6. Ruffenach, S., Kadykov, A.M., Rumyantsev, V.V. et al., [_HgCdTe-based heterostructures for terahertz photonics_](https://dx.doi.org/10.1063/1.4977781), **APL Materials**, 5(3), _035503_, 2017
+7. Yahniuk, I., Krishtopenko, S.S., Grabecki, G. et al., [_Magneto-transport in inverted HgTe quantum wells_](https://dx.doi.org/10.1038/s41535-019-0154-3), **npj Quantum Materials**, 4(1), _1--8_, 2019
+8. Marcinkiewicz, M., Ruffenach, S., Krishtopenko, S.S. et al., [_Temperature-driven single-valley Dirac fermions in HgTe quantum wells_](https://dx.doi.org/10.1103/PhysRevB.96.035405), **Physical Review B**, 96(3), _035405_, 2017
+9. Morozov, S.V., Rumyantsev, V.V., Fadeev, M. et al., [_Stimulated emission from HgCdTe quantum well heterostructures at wavelengths up to 19.5~um_](https://dx.doi.org/10.1063/1.4996966), **Applied Physics Letters**, 111(19), _192101_, 2017
+10. Morozov, S.V., Rumyantsev, V.V., Kadykov, A.M. et al., [_Long wavelength stimulated emission up to 9.5~um from HgCdTe quantum well heterostructures_](https://dx.doi.org/10.1063/1.4943087), **Applied Physics Letters**, 108(9), _092104_, 2016
+11. Morozov, S.V., Rumyantsev, V.V., Dubinov, A.A. et al., [_Long wavelength superluminescence from narrow gap HgCdTe epilayer at 100~K_](https://dx.doi.org/10.1063/1.4926927), **Applied Physics Letters**, 107(4), _042105_, 2015
 12. Morozov, S.V., Rumyantsev, V.V., Antonov, A. et al., [_Time resolved photoluminescence spectroscopy of narrow gap Hg1-xCdxTe/CdyHg1-yTe quantum well heterostructures_](https://dx.doi.org/10.1063/1.4890416), **Applied Physics Letters**, 105(2), _022102_, 2014
 13. Rumyantsev, V.V., Kozlov, D.V., Morozov, S.V. et al., [_Terahertz photoconductivity of double acceptors in narrow gap HgCdTe epitaxial films grown by molecular beam epitaxy on GaAs(013) and Si(013) substrates_](https://dx.doi.org/10.1088/1361-6641/aa76a0), **Semiconductor Science and Technology**, 32(9), _095007_, 2017
-14. Fadeev, M.A., Rumyantsev, V.V., Kadykov, A.M. et al., [_Stimulated emission in the 2.8--3.5\~um wavelength range from Peltier cooled HgTe/CdHgTe quantum well heterostructures_](https://dx.doi.org/10.1364/OE.26.012755), **Optics Express**, 26(10), _12755_, 2018
+14. Fadeev, M.A., Rumyantsev, V.V., Kadykov, A.M. et al., [_Stimulated emission in the 2.8--3.5~um wavelength range from Peltier cooled HgTe/CdHgTe quantum well heterostructures_](https://dx.doi.org/10.1364/OE.26.012755), **Optics Express**, 26(10), _12755_, 2018
 15. Kadykov, A.M., Consejo, C., Marcinkiewicz, M. et al., [_Observation of topological phase transition by terahertz photoconductivity in HgTe-based transistors_](https://dx.doi.org/10.1002/pssc.201510264), **physica status solidi (c)**, 13(7), _534--537_, 2016
 16. Kadykov, A.M., Consejo, C., Teppe, F. et al., [_Terahertz excitations in HgTe-based field effect transistors_](https://dx.doi.org/10.1088/1742-6596/647/1/012009), **Journal of Physics: Conference Series**, 647(1), _012009_, 2015
 17. Bovkun, L.S., Krishtopenko, S.S., Ikonnikov, A.V. et al., [_Magnetospectroscopy of double HgTe/CdHgTe quantum wells_](https://dx.doi.org/10.1134/S1063782616110063), **Semiconductors**, 50(11), _1532--1538_, 2016
