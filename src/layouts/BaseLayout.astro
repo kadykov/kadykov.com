@@ -17,7 +17,7 @@ const { pageTitle } = Astro.props
   <script>
     let prevScrollpos = window.scrollY
     let navbar = document.getElementById("navbar")
-    let scrollThreshold = 10
+    let scrollThreshold = 5
     if (navbar) {
       window.addEventListener("scroll", function () {
         let currentScrollPos = window.scrollY
