@@ -1,0 +1,52 @@
+---
+import { Icon } from "astro-icon/components"
+---
+
+<form
+  name="contact"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="title"
+  class="flex flex-col gap-4 max-w-md mx-auto p-4"
+>
+  <label class="input sm:input-lg input-bordered flex items-center gap-2">
+    <Icon name="ri:account-circle-line" class="w-6 h-6" />
+    <input type="text" name="name" class="grow" placeholder="Name" required />
+  </label>
+
+  <label
+    class="input sm:input-lg input-bordered flex items-center gap-2 absolute -left-full -top-full"
+  >
+    <Icon name="ri:account-circle-line" class="w-6 h-6" />
+    <input
+      type="text"
+      name="title"
+      class="grow"
+      placeholder="Title"
+      tabindex="-1"
+      autocomplete="nope"
+    />
+  </label>
+
+  <label class="input sm:input-lg input-bordered flex items-center gap-2">
+    <Icon name="ri:mail-line" class="w-6 h-6" />
+    <input
+      type="email"
+      name="email"
+      class="grow"
+      placeholder="email@example.com"
+      required
+    />
+  </label>
+
+  <textarea
+    name="message"
+    class="textarea sm:textarea-lg textarea-bordered h-24"
+    placeholder="Hey Aleksandr, I'd like to chat about..."
+    required></textarea>
+
+  <button type="submit" class="btn btn-lg btn-primary">
+    <Icon name="ri:send-plane-line" class="w-6 h-6" />
+    Send Message
+  </button>
+</form>
