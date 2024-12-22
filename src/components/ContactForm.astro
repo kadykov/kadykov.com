@@ -9,7 +9,9 @@ import { Icon } from "astro-icon/components"
   netlify-honeypot="title"
   class="flex flex-col gap-4"
 >
-  <label class="input sm:input-lg input-bordered flex items-center gap-2">
+  <label
+    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl"
+  >
     <Icon
       name="ri:account-circle-line"
       class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
@@ -18,7 +20,7 @@ import { Icon } from "astro-icon/components"
   </label>
 
   <label
-    class="input sm:input-lg input-bordered flex items-center gap-2 absolute -left-full -top-full"
+    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl absolute -left-full -top-full"
   >
     <Icon
       name="ri:account-circle-line"
@@ -34,7 +36,9 @@ import { Icon } from "astro-icon/components"
     />
   </label>
 
-  <label class="input sm:input-lg input-bordered flex items-center gap-2">
+  <label
+    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl"
+  >
     <Icon name="ri:mail-line" class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
     <input
       type="email"
@@ -47,11 +51,11 @@ import { Icon } from "astro-icon/components"
 
   <textarea
     name="message"
-    class="textarea sm:textarea-lg textarea-bordered h-24"
+    class="textarea sm:textarea-lg textarea-bordered h-32 sm:h-40 font-serif text-lg sm:text-xl"
     placeholder="Hey Aleksandr, I'd like to chat about..."
     required></textarea>
 
-  <button type="submit" class="btn sm:btn-lg btn-primary">
+  <button type="submit" class="btn sm:btn-lg btn-primary text-lg sm:text-xl">
     <Icon
       name="ri:send-plane-line"
       class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
