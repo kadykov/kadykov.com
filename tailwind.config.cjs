@@ -19,8 +19,24 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["fantasy", "dracula"],
-    darkTheme: "dracula",
+    themes: [
+      {
+        light: {
+          primary: "#a991f7",
+          secondary: "#f6d860",
+          accent: "#37cdbe",
+          neutral: "#3d4451",
+          "base-100": "#ffffff",
+        },
+        dark: {
+          primary: "#a991f7",
+          secondary: "#f6d860",
+          accent: "#37cdbe",
+          neutral: "#3d4451",
+          "base-100": "#252f3f",
+        },
+      },
+    ],
   },
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
 }

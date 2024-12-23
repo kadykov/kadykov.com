@@ -14,7 +14,6 @@ export default defineConfig({
     mdx(),
     playformCompress({
       Image: false,
-      CSS: { csso: { restructure: true, forceMediaMerge: true } },
       HTML: {
         "html-minifier-terser": {
           removeComments: true,

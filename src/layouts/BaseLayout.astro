@@ -11,20 +11,24 @@ import "../styles/base.css"
 <html lang="en">
   <head>
     <script is:inline>
-      // ☝️ This script prevent the FART effect.
-      if (localStorage.getItem("theme") === null) {
-        document.documentElement.setAttribute("data-theme", "light")
-      } else
-        document.documentElement.setAttribute(
-          "data-theme",
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
           localStorage.getItem("theme")
-        )
-      // "theme" LocalStorage value is set by the package to remember user preference.
-      // The value is checked and applyed before rendering anything.
-    </script>
-    <script>
-      import { themeChange } from "theme-change"
-      themeChange()
+        ) {
+          return localStorage.getItem("theme") ?? "light"
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark"
+        }
+        return "light"
+      })()
+
+      if (theme === "light") {
+        document.documentElement.setAttribute("data-theme", "light")
+      } else {
+        document.documentElement.setAttribute("data-theme", "dark")
+      }
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

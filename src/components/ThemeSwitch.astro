@@ -7,8 +7,8 @@ import { Icon } from "astro-icon/components"
   <input
     type="checkbox"
     class="theme-controller"
-    value="synthwave"
-    data-toggle-theme="dracula,fantasy"
+    data-toggle-theme="dark,light"
+    id="theme-switch"
   />
 
   <!-- light icon -->
@@ -17,3 +17,18 @@ import { Icon } from "astro-icon/components"
   <!-- dark icon -->
   <Icon name="ri:moon-line" class="swap-on h-8 w-8 sm:h-10 sm:w-10" />
 </label>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme") ?? "light"
+    const themeSwitch = document.getElementById("theme-switch")
+    if (theme === "dark" && themeSwitch) {
+      ;(themeSwitch as HTMLInputElement).checked = true
+    } else if (themeSwitch) {
+      ;(themeSwitch as HTMLInputElement).checked = false
+    }
+  })
+
+  import { themeChange } from "theme-change"
+  themeChange()
+</script>
