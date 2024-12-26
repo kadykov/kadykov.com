@@ -19,6 +19,8 @@ const galleries = await getCollection("galleries")
           alt={image.alt}
           title={image.title}
           description={image.description}
+          width={300}
+          sizes="(max-width: 600px) 40vw, (max-width: 1100px) 25vw, 300px"
         />
       ))
     }

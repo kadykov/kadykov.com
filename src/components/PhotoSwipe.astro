@@ -1,31 +1,18 @@
 ---
 import { getImage, inferRemoteSize } from "astro:assets"
-import GalleryThumbnail from "./GalleryThumbnail.astro"
+import RemotePhoto from "./RemotePhoto.astro"
+import { widthSet } from "../utils/widthSet"
+const { src, alt, title, description, sizes, width } = Astro.props
 
-const { src, alt, title, description } = Astro.props
-const { width, height } = await inferRemoteSize(src)
-const widthSet = [
-  240,
-  320,
-  480,
-  640,
-  960,
-  1280,
-  1600,
-  2000,
-  2560,
-  3200,
-  4000,
-  5000,
-  width,
-].filter((w) => w <= width)
+const { width: fullWidth, height: fullHeight } = await inferRemoteSize(src)
+const currentWidthSet = widthSet.filter((w: number) => w <= fullWidth)
 
 const optimizedImage = await getImage({
   src: src,
   format: "avif",
-  widths: widthSet,
-  width: width,
-  height: height,
+  widths: currentWidthSet,
+  width: fullWidth,
+  height: fullHeight,
 })
 ---
 
@@ -36,13 +23,16 @@ const optimizedImage = await getImage({
   data-pswp-height={optimizedImage.attributes.height}
   target="_blank"
 >
-  <GalleryThumbnail
-    src={src}
-    alt={alt}
-    title={title}
-    description={description}
-    widthSet={widthSet}
-  />
+  <div class="transition-transform duration-300 hover:scale-105">
+    <RemotePhoto
+      src={src}
+      alt={alt}
+      title={title}
+      description={description}
+      sizes={sizes}
+      width={width}
+    />
+  </div>
 </a>
 
 <script src="../scripts/photoswipe"></script>

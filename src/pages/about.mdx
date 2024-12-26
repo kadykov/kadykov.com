@@ -21,10 +21,11 @@ import PhotoSwipe from "../components/PhotoSwipe.astro"
         <PhotoSwipe
             src="https://live.staticflickr.com/65535/54159173007_9bd2a000ff_o_d.jpg"
             alt="Self-portrait photo of Aleksandr Kadykov with a bike on a road"
+            width={600}
+            sizes="(min-width: 600px) 600px, 100vw"
           />
       </div>
     </div>
-
   </div>
   <div class="prose-serif mx-auto p-4">
 
@@ -65,8 +66,8 @@ import PhotoSwipe from "../components/PhotoSwipe.astro"
     Next, I explored [Gatsby](https://www.gatsbyjs.com/),
     which had better optimization
     but felt overly complex for my needs.
-    Finally, I discovered Astro.
-    With its excellent tutorial,
+    Finally, I discovered [Astro](https://astro.build/).
+    With its excellent [tutorial](https://docs.astro.build/en/tutorial/0-introduction/),
     built-in optimization
     (including [AVIF](https://aomediacodec.github.io/av1-avif/) and responsive "picture" tags),
     and flexibility,
@@ -111,7 +112,4 @@ import PhotoSwipe from "../components/PhotoSwipe.astro"
     Aleksandr Kadykov
 
   </div>
-  <script>
-    import "../../scripts/photoswipe"
-  </script>
 </BaseLayout>

@@ -1,0 +1,23 @@
+---
+import { Picture } from "astro:assets"
+const { src, alt, width, sizes, loading = "lazy", maxScaling = 5 } = Astro.props
+import { inferRemoteSize } from "astro:assets"
+import { widthSet } from "../utils/widthSet.ts"
+
+const { width: fullWidth } = await inferRemoteSize(src)
+
+const maxWidth = Math.max(width * maxScaling, fullWidth)
+const currentWidthSet = widthSet.filter((w) => w <= maxWidth)
+---
+
+<Picture
+  src={src}
+  alt={alt}
+  formats={["avif", "webp"]}
+  fallbackFormat="jpg"
+  inferSize={true}
+  width={width}
+  widths={currentWidthSet}
+  sizes={sizes}
+  loading={loading}
+/>
