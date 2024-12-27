@@ -1,38 +1,56 @@
 ---
 import { getImage, inferRemoteSize } from "astro:assets"
-import RemotePhoto from "./RemotePhoto.astro"
 import { widthSet } from "../utils/widthSet"
-const { src, alt, title, description, sizes, width } = Astro.props
-
+const { src, alt, width, sizes, loading = "lazy" } = Astro.props
 const { width: fullWidth, height: fullHeight } = await inferRemoteSize(src)
-const currentWidthSet = widthSet.filter((w: number) => w <= fullWidth)
+const height = Math.round((fullHeight / fullWidth) * width)
+const currentWidthSet = widthSet
+  .filter((w: number) => w < fullWidth)
+  .concat(fullWidth)
 
-const optimizedImage = await getImage({
+const avifImage = await getImage({
   src: src,
   format: "avif",
   widths: currentWidthSet,
   width: fullWidth,
   height: fullHeight,
 })
+
+// Fallback to jpg if avif is not supported.
+// The resulting image will have only minimal resolution
+// as the device not supporting avif
+// is likely to have a low resolution
+// and low hardware capabilities
+const jpgImage = await getImage({
+  src: src,
+  format: "jpeg",
+  width: width,
+  height: height,
+})
 ---
 
 <a
   href={src}
-  data-pswp-srcset={optimizedImage.srcSet.attribute}
-  data-pswp-width={optimizedImage.attributes.width}
-  data-pswp-height={optimizedImage.attributes.height}
+  data-pswp-srcset={avifImage.srcSet.attribute}
+  data-pswp-width={avifImage.attributes.width}
+  data-pswp-height={avifImage.attributes.height}
   target="_blank"
 >
-  <div class="transition-transform duration-300 hover:scale-105">
-    <RemotePhoto
-      src={src}
-      alt={alt}
-      title={title}
-      description={description}
+  <picture class="relative block w-full h-full">
+    <source
       sizes={sizes}
-      width={width}
+      srcset={avifImage.srcSet.attribute}
+      type="image/avif"
     />
-  </div>
+    <img
+      src={jpgImage.src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+    />
+  </picture>
 </a>
 
 <script src="../scripts/photoswipe"></script>
