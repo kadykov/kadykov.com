@@ -36,7 +36,9 @@ const jpgImage = await getImage({
   data-pswp-height={avifImage.attributes.height}
   target="_blank"
 >
-  <picture class="relative block w-full h-full">
+  <picture
+    class="relative block w-full h-full transition-transform duration-300 transform hover:scale-105 ease-in-out"
+  >
     <source
       sizes={sizes}
       srcset={avifImage.srcSet.attribute}
