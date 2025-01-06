@@ -1,11 +1,12 @@
 ---
 import { Icon } from "astro-icon/components"
+const year = new Date().getFullYear()
 ---
 
 <footer class="footer py-10 items-center w-5/6 mx-auto max-w-screen-xl">
   <aside class="flex items-center">
     <Icon name="logo" class="h-10 w-10" />
-    <p>© 2024. Aleksandr Kadykov</p>
+    <p>© 2024 - {year}. Aleksandr Kadykov</p>
   </aside>
   <nav class="grid grid-flow-col gap-4">
     <a class="link link-hover" href="mailto:web@kadykov.com">
