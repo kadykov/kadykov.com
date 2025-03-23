@@ -8,6 +8,7 @@
     "ghcr.io/kadykov/devcontainer-features/pre-commit:1": {}
   },
   "postCreateCommand": "pre-commit install && npm install",
+  "forwardPorts": [4321],
   "customizations": {
     "vscode": {
       "extensions": [
