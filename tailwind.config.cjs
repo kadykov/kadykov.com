@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Yaldevi Variable"', ...defaultTheme.fontFamily.sans],
+        sans: ['"Ruda Variable"', ...defaultTheme.fontFamily.sans],
         serif: ['"Faustina Variable"', ...defaultTheme.fontFamily.serif],
         mono: ['"Source Code Pro Variable"', ...defaultTheme.fontFamily.mono],
       },
