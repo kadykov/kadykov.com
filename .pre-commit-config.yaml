@@ -25,12 +25,3 @@ repos:
     rev: v0.16.0
     hooks:
       - id: yamlfmt
-
-  - repo: local
-    hooks:
-      - id: prettier-format
-        name: Formatting with Prettier
-        entry: npm run format
-        language: node
-        pass_filenames: false
-        require_serial: true
