@@ -1,6 +1,13 @@
 {
-  "name": "Astro",
-  "image": "node:22-alpine3.21",
+  "name": "${localWorkspaceFolderBasename}-devcontainer",
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": ".."
+  },
+  "runArgs": [
+    "--env-file",
+    ".devcontainer/devcontainer.env"
+  ],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "username": "vscode"
@@ -21,9 +28,17 @@
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
         "eamodio.gitlens",
-        "emranweb.daisyui-snippet"
+        "emranweb.daisyui-snippet",
+        "saoudrizwan.claude-dev"
       ]
     }
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "mounts": [
+    {
+      "source": "${localWorkspaceFolderBasename}-vscode-home",
+      "target": "/home/vscode",
+      "type": "volume"
+    }
+  ]
 }
