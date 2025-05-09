@@ -1,0 +1,35 @@
+# .clinerules for kadykov.com Project
+
+This file serves as Cline's learning journal and project intelligence log for the kadykov.com website. It will capture important patterns, user preferences, technical decisions, and other insights discovered during development.
+
+## Initial Observations (2025-05-08)
+
+1.  **User Priorities**:
+    *   **Performance**: High emphasis on a fast and lightweight website. This influences technology choices (AstroJS, AVIF) and optimization tasks (font subsetting).
+    *   **Modern Aesthetics & Practices**: Desire for a stylish, modern look and use of current best practices in web development.
+    *   **Clear Documentation**: User values good documentation and context (evidenced by detailed initial brief and custom instructions for Cline).
+
+2.  **Technical Preferences**:
+    *   **AstroJS**: Chosen for its performance benefits and JavaScript optimization.
+    *   **Tailwind CSS & DaisyUI**: Preferred for styling and UI components.
+    *   **Image Formats**: AVIF is the primary choice for optimized images, with JPEG as a minimal fallback.
+    *   **Font Choices**: Specific preferences for Faustina (serif body) and Ruda (sans-serif headings/UI), self-hosted via Fontsource.
+    *   **Netlify**: Chosen hosting platform.
+
+3.  **Development Workflow & Tooling Insights**:
+    *   **Open to Refactoring**: User acknowledges that the initial site was a learning project and is open to refactoring and improvements.
+    *   **Tooling Evolution**: Interest in evolving the development toolkit (e.g., Husky over Python pre-commit, adding ESLint, CI/CD, justfile).
+    *   **Dev Environment**: Awareness of potential improvements to the devcontainer setup.
+
+4.  **Communication Style**:
+    *   User provides detailed and comprehensive information.
+    *   User is proactive in suggesting areas for improvement and discussion.
+
+## Future Entries
+This section will be populated with:
+- Specific code patterns identified.
+- Key architectural decisions and their rationale if not covered elsewhere.
+- User feedback نقاط on specific implementations.
+- Challenges encountered and how they were overcome.
+- Tool usage patterns that prove effective for this project.
+- Any "gotchas" or non-obvious aspects of the codebase or tooling.
