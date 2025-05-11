@@ -53,3 +53,18 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   `cache-control: max-age=31536000` (1 year)
     *   `cache-control: immutable`
     This ensures long-term caching of versioned assets by browsers and CDNs.
+
+## 6. Blog Content & Layout Patterns (Planned)
+-   **Content Source**: Markdown (`.md`) files will be primary, located in `src/content/blog/`. MDX (`.mdx`) will be used for posts requiring complex layouts or custom components (e.g., inline PhotoSwipe).
+-   **Schema**: Defined in `src/content.config.ts` using Zod. Key fields include `title`, `pubDate`, `description`, `image`, `tags`, and an optional `lastUpdatedDate`.
+-   **Individual Post Layout (`src/layouts/MarkDownPostLayout.astro`)**:
+    *   Will be the default for Markdown posts.
+    *   Displays metadata (title, dates, description, image) with distinct styling.
+    *   The main post content (from the `<slot />`) will be wrapped in a `div` with the `.prose-serif` class for consistent typography.
+-   **Listing Page (`src/pages/blog.astro`)**:
+    *   Will display a list of posts using an enhanced component (e.g., `BlogCard.astro`) showing title, date, description snippet, thumbnail image, and tags.
+-   **Tagging**:
+    *   Tags will be displayed on individual posts and listing previews.
+    *   Dedicated pages for listing all posts under a specific tag (`src/pages/tags/[tag].astro`) and an index of all tags (`src/pages/tags/index.astro`) will be implemented.
+-   **Rendering**:
+    *   Dynamic route `src/pages/posts/[...id].astro` will use modern Astro APIs (e.g., `entry.render()`) for rendering content.

@@ -16,6 +16,10 @@ This document details the technologies, tools, and configurations used in the ka
 -   **JavaScript Environment**:
     -   ES Modules (`"type": "module"` in `package.json`).
     -   TypeScript (`^5.5.3`) used for type checking via `astro check`.
+-   **Content Collections (Blog Focus)**:
+    -   Currently uses `glob` loader in `src/content.config.ts` to source Markdown from `src/data/blog/`.
+    -   Individual posts rendered using `await render(entry)` in dynamic route `src/pages/posts/[...id].astro`.
+    -   **Planned Modernization**: Migrate to standard `src/content/blog/` directory structure (removing `glob` loader) and update rendering to use modern Astro APIs (e.g., `entry.render()` or direct `<Content />` component).
 
 ## 2. AstroJS Integrations (from `astro.config.mjs` and `package.json`)
 -   `@astrojs/tailwind`: Integrates Tailwind CSS. `applyBaseStyles` is `false`.

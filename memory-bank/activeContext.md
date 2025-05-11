@@ -3,46 +3,70 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-05-08
--   **Activity**: Initial project introduction and setup with Cline (AI Software Engineer).
--   **Primary Goal**: Establishing the Memory Bank (core documentation files: `projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`) and the `.clinerules` file.
--   **Status**: Memory Bank file creation is in progress.
+-   **Date**: 2025-05-10
+-   **Activity**: Planning the implementation and refinement of the blog functionality.
+-   **Primary Goal**: Finalize a phased plan for blog improvements, focusing on foundational modernization, enhanced presentation, and core features.
+-   **Status**: Detailed plan for blog development formulated. Memory Bank updates are in progress. Next step is to begin implementation once the user switches to Act Mode.
 
 ## 2. Recent Key Activities & Decisions
--   Decision to examine key project files (`astro.config.mjs`, `package.json`, `tailwind.config.cjs`, `src/layouts/BaseLayout.astro`, `src/styles/base.css`, `netlify.toml`, `public/_headers`, `src/components/PhotoSwipe.astro`) before populating the Memory Bank to ensure accuracy.
--   Information from these files has been gathered and summarized for inclusion in the Memory Bank.
+-   Initial Memory Bank and `.clinerules` file established (2025-05-08).
+-   Decision to prioritize blog development.
+-   Detailed examination of current blog-related files:
+    -   `src/components/BlogPost.astro`
+    -   `src/layouts/MarkDownLayout.astro`
+    -   `src/layouts/MarkDownPostLayout.astro`
+    -   `src/pages/blog.astro`
+    -   `src/data/blog/post-1.md` (now to be `src/content/blog/`)
+    -   `src/pages/posts/[...id].astro`
+    -   `src/content.config.ts`
+-   Formulated a phased plan for blog improvements, covering:
+    *   **Phase I (Foundational Refinements)**: Content collection modernization, schema updates, individual post rendering modernization, core styling, and blog listing page cleanup.
+    *   **Phase II (Enhancing Presentation & Functionality)**: Enhanced post previews on the listing page and tagging system implementation.
+    *   **Phase III (Future Considerations)**: MDX for complex posts, OpenGraph tags, pagination, comments.
+-   User confirmed the plan for blog development.
 
-## 3. Key Files Examined Recently
--   `astro.config.mjs`
--   `package.json`
--   `tailwind.config.cjs`
--   `src/layouts/BaseLayout.astro`
--   `src/styles/base.css`
--   `netlify.toml`
--   `public/_headers`
--   `src/components/PhotoSwipe.astro` (from user's initial message)
+## 3. Key Files Examined Recently (for Blog Planning)
+-   `src/components/BlogPost.astro`
+-   `src/layouts/MarkDownLayout.astro`
+-   `src/layouts/MarkDownPostLayout.astro`
+-   `src/pages/blog.astro`
+-   `src/data/blog/post-1.md` (and its planned move to `src/content/blog/`)
+-   `src/pages/posts/[...id].astro`
+-   `src/content.config.ts`
+-   (Previously examined core files: `astro.config.mjs`, `package.json`, `tailwind.config.cjs`, `src/layouts/BaseLayout.astro`, `src/styles/base.css`, `netlify.toml`, `public/_headers`, `src/components/PhotoSwipe.astro`)
 
-## 4. Immediate Next Steps (Cline's Perspective)
-1.  Complete creation of all core Memory Bank files:
-    *   `activeContext.md` (this file)
-    *   `progress.md`
-2.  Create the `.clinerules` file (initially with some foundational observations).
-3.  Once the Memory Bank is established, engage with the user to:
-    *   Discuss their priorities among the many ideas presented (Blog, Photo Galleries, CV, Front Page, Footer, Refactoring/Maintenance).
-    *   Formulate a more detailed development plan for the chosen priority.
-    *   Determine if any further information gathering is needed for the chosen task.
+## 4. Immediate Next Steps (Cline's Perspective - Blog Phase I)
+Once the user switches to Act Mode, the following steps will be taken for Phase I of the blog development:
+
+1.  **Content Collection Modernization & Schema Update**:
+    *   Modify `src/content.config.ts`:
+        *   Remove `glob` loader for `postsCollection`.
+        *   Update schema: remove `author`, add `lastUpdatedDate: z.date().optional()`.
+    *   Move blog content from `src/data/blog/` to `src/content/blog/`.
+    *   Delete placeholder `src/content/blog/post-1.md`.
+2.  **Individual Post Rendering Modernization & Core Styling**:
+    *   Update `src/pages/posts/[...id].astro` to use modern Astro content rendering (e.g., `entry.render()`).
+    *   Update `src/layouts/MarkDownPostLayout.astro`:
+        *   Wrap main slot in `<div class="prose-serif">`.
+        *   Display metadata: `title`, `pubDate`, `description`, `lastUpdatedDate` (if applicable), `image`.
+        *   Style metadata section.
+3.  **Blog Listing Page (`src/pages/blog.astro`) - Initial Cleanup**:
+    *   Update page title.
+    *   Update/remove placeholder introductory text.
 
 ## 5. Broader Project Ideas & Potential Future Tasks (from User)
-This list is for reference and will be prioritized later.
+This list is for reference and will be prioritized later. (Content remains largely the same as previous version, focusing on the blog plan above for immediate action).
 
--   **Blog**:
-    *   Adapt existing blog implementation.
-    *   Draft posts (e.g., "why personal website," touch typing, stereographic projection, quitting alcohol, degoogled Android, self-hosted services).
+-   **Blog (Post-Phase I & II)**:
+    *   MDX for complex posts (PhotoSwipe integration, alternating layouts).
+    *   OpenGraph tags & social sharing.
+    *   Pagination.
+    *   Comments system (to be evaluated).
+    *   Draft actual posts.
 -   **Photo Galleries**:
     *   Prototype "Strangers Gallery" (date/location navigation).
-    *   Investigate image hosting solutions (beyond Flickr's 1000 image limit for this type of gallery).
+    *   Investigate image hosting solutions.
     *   Refactor lightbox (`PhotoSwipe.astro`) implementation if needed.
-    *   Implement OpenGraph tags for social media sharing and previews.
     *   Design thematic galleries with unique styles.
 -   **CV Page**:
     *   Rebuild using DaisyUI components (e.g., timeline).
@@ -54,17 +78,8 @@ This list is for reference and will be prioritized later.
     *   Add relevant links and information.
 -   **Refactoring & Maintenance**:
     *   Incorporate new features from recent Tailwind CSS / DaisyUI updates.
-    *   **Testing**:
-        *   Consider unit tests for components.
-        *   Investigate testing Astro's processed/built JavaScript.
-    *   **Development Environment**:
-        *   Switch from Alpine-based devcontainer to Ubuntu/Debian-based.
-    *   **Performance**:
-        *   Optimize font subsetting (beyond current `unicode-range` in Fontsource files) to only include characters used on the site.
-    *   **Code Quality & Practices**:
-        *   General refactoring (as it was a first project with these technologies).
-        *   Replace Python pre-commit hooks with Husky.
-        *   Add ESLint for JavaScript/TypeScript linting.
-    *   **DevOps**:
-        *   Create a CI/CD pipeline.
-        *   Add a `justfile` for common development commands.
+    *   **Testing**: Unit tests, testing built JS.
+    *   **Development Environment**: Switch devcontainer base.
+    *   **Performance**: Optimize font subsetting.
+    *   **Code Quality & Practices**: General refactoring, Husky, ESLint.
+    *   **DevOps**: CI/CD pipeline, `justfile`.

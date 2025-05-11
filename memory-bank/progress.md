@@ -3,72 +3,69 @@
 This document tracks the development progress, current status, and known issues for the kadykov.com website.
 
 ## 1. Current Overall Status
--   **Date**: 2025-05-08
--   **Phase**: Initial Planning and Setup.
--   **Summary**: The basic website structure is in place with a few core pages. The project is currently in the phase of establishing comprehensive documentation (Memory Bank) and planning future development tasks with Cline (AI Software Engineer). No new features or major refactoring have commenced yet.
+-   **Date**: 2025-05-10
+-   **Phase**: Planning - Blog Development Focus.
+-   **Summary**: The basic website structure is in place. A detailed plan for overhauling and enhancing the blog functionality has been formulated. Memory Bank documentation is being updated to reflect this plan. Implementation will begin once the user switches to Act Mode.
 
-## 2. What Works (Existing Functionality)
--   **Core Pages**:
-    *   Home Page (`src/pages/index.mdx`)
-    *   About Page (`src/pages/about.mdx`)
-    *   CV Page (`src/pages/cv.md` - currently Markdown rendered)
-    *   Contact Page (`src/pages/contact.astro` - uses Netlify Forms)
--   **Basic Blog Structure**:
-    *   Blog listing page (`src/pages/blog.astro`).
-    *   Individual post layout (`src/layouts/MarkDownPostLayout.astro`).
-    *   One template blog post (`src/data/blog/post-1.md`) exists from a tutorial.
--   **Photo Lightbox**:
-    *   A basic prototype of PhotoSwipe lightbox is implemented and can be seen on the About page (likely using `src/components/PhotoSwipe.astro` and `src/pages/galleries/self-portrait.astro` as an example data source or test).
--   **Styling & Theming**:
-    *   Tailwind CSS and DaisyUI are functional.
-    *   Light/Dark theme switching is implemented and working.
--   **Deployment**:
-    *   The website is deployable and hosted on Netlify.
-    *   Build process (`npm run build`) is functional.
--   **Image Optimization**:
-    *   Basic AVIF/JPEG optimization via `astro:assets` is in place as demonstrated in `PhotoSwipe.astro`.
+## 2. What Works (Existing Functionality - Pre-Blog Overhaul)
+-   **Core Pages**: Home, About, CV (Markdown), Contact (Netlify Forms).
+-   **Basic Blog Structure (To Be Overhauled)**:
+    *   Rudimentary blog listing page (`src/pages/blog.astro`).
+    *   Basic individual post layout (`src/layouts/MarkDownPostLayout.astro`).
+    *   Content sourced from `src/data/blog/` via `glob` loader (older Astro pattern).
+    *   Placeholder tutorial content.
+-   **Photo Lightbox**: Basic PhotoSwipe prototype on About page.
+-   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
+-   **Deployment**: Netlify deployment, functional build process.
+-   **Image Optimization**: Basic `astro:assets` AVIF/JPEG optimization.
 
-## 3. What's Left to Build / Improve (High-Level from User's Ideas)
-This is a summary of desired enhancements and new features. Prioritization will follow.
+## 3. Planned Work: Blog Development (Phased Approach)
 
--   **Blog**:
-    *   Adapt current blog structure to meet specific needs.
-    *   Create actual blog content.
-    *   Remove template/tutorial blog posts.
--   **Photo Galleries**:
-    *   **"Strangers Gallery"**: Design and implement this specialized gallery with date/location navigation.
-    *   **Thematic Galleries**: Develop concepts and implementations for other gallery types.
-    *   **Image Hosting**: Address potential limitations of Flickr for the "Strangers Gallery" and explore alternatives if necessary.
-    *   **Social Sharing**: Implement OpenGraph tags for better gallery sharing.
--   **CV Page**:
-    *   Transform the current Markdown CV into a more structured and visually appealing page (e.g., using DaisyUI timeline).
-    *   Add interactivity.
--   **Front Page**:
-    *   Develop into a more engaging and interactive landing page.
--   **Footer**:
-    *   Populate with useful links and information.
--   **Refactoring and Maintenance**:
-    *   Full utilization of new Tailwind CSS / DaisyUI features.
-    *   Implementation of a testing strategy (unit tests, etc.).
-    *   Devcontainer improvements (switch from Alpine).
-    *   Advanced font subsetting.
-    *   General code refactoring.
-    *   Migration from Python pre-commit hooks to Husky.
-    *   Introduction of ESLint.
-    *   Setup of CI/CD pipeline.
-    *   Creation of a `justfile`.
+### Phase I: Foundational Refinements
+-   **Task 1: Content Collection Modernization & Schema Update**
+    *   Modify `src/content.config.ts`:
+        *   Remove `glob` loader for `postsCollection`.
+        *   Update schema: remove `author`, add `lastUpdatedDate: z.date().optional()`.
+    *   Migrate blog content from `src/data/blog/` to `src/content/blog/`.
+    *   Delete placeholder `src/content/blog/post-1.md`.
+-   **Task 2: Individual Post Rendering Modernization & Core Styling**
+    *   Update `src/pages/posts/[...id].astro` to use modern Astro content rendering (e.g., `entry.render()`).
+    *   Update `src/layouts/MarkDownPostLayout.astro`:
+        *   Wrap main slot in `<div class="prose-serif">`.
+        *   Display metadata: `title`, `pubDate`, `description`, `lastUpdatedDate` (if applicable), `image`.
+        *   Style metadata section distinctly from prose content.
+-   **Task 3: Blog Listing Page (`src/pages/blog.astro`) - Initial Cleanup**
+    *   Update page title to be appropriate for the site.
+    *   Update/remove placeholder introductory text.
 
-## 4. Known Issues & Areas for Attention (from User Initial Input)
--   A template blog post (`src/data/blog/post-1.md` and potentially `src/data/blog/research-lab-tips.md`) is still present from an AstroJS tutorial and needs removal or replacement.
--   The current PhotoSwipe lightbox implementation (`src/components/PhotoSwipe.astro`) might not be optimal and could benefit from refactoring.
--   The front page is currently quite empty.
--   The footer is currently quite empty.
--   Although Tailwind CSS and DaisyUI packages were updated, the website code may not yet fully leverage their new features.
--   Lack of automated tests.
--   The Alpine-based devcontainer has historical reasons but might be due for an update to a more common base like Ubuntu/Debian.
--   Font subsetting via Fontsource's default `unicode-range` might be too broad; more precise subsetting based on actual site content is desired.
--   General potential for refactoring as the initial version was a learning project for the owner with AstroJS, Tailwind CSS, and DaisyUI.
--   Current pre-commit setup uses Python hooks; a switch to Husky (more common in Node.js ecosystem) is desired.
--   No ESLint is currently configured.
--   No CI/CD pipeline exists.
--   No `justfile` for managing common commands.
+### Phase II: Enhancing Presentation & Functionality
+-   **Task 4: Blog Listing Page - Enhanced Post Previews**
+    *   Modify `src/components/BlogPost.astro` (or create new e.g., `BlogCard.astro`) to display: `title` (link), `pubDate`, `description` snippet, `image` (thumbnail), `tags`.
+    *   Style these previews for better visual appeal and information density.
+-   **Task 5: Tagging System Implementation**
+    *   Display tags on individual post pages and listing page previews.
+    *   Implement dynamic tag page `src/pages/tags/[tag].astro` (lists posts for a specific tag).
+    *   Implement main tags index page `src/pages/tags/index.astro` (lists all unique tags with links).
+
+### Phase III: Future Considerations (Blog)
+-   MDX for complex posts (e.g., inline PhotoSwipe, custom layouts).
+-   OpenGraph tags and social sharing features.
+-   Pagination for the blog listing page (if post count grows).
+-   Comment system (evaluation needed due to complexity/privacy).
+-   Drafting and publishing actual blog content.
+
+## 4. What's Left to Build / Improve (Other Areas - Post-Blog Focus)
+This is a summary of desired enhancements and new features beyond the immediate blog focus.
+-   **Photo Galleries**: "Strangers Gallery" (date/location nav), thematic galleries, image hosting, OpenGraph.
+-   **CV Page**: DaisyUI timeline, interactivity.
+-   **Front Page**: Interactivity, landing page style.
+-   **Footer**: Add links/info.
+-   **Refactoring and Maintenance**: Utilize new Tailwind/DaisyUI features, testing strategy, devcontainer improvements, advanced font subsetting, general refactoring, Husky, ESLint, CI/CD, `justfile`.
+
+## 5. Known Issues & Areas for Attention (Pre-Blog Overhaul)
+Many of these will be addressed by the planned blog work.
+-   Blog uses older Astro content collection patterns (`glob` loader, `src/data/blog`).
+-   Blog post layout (`MarkDownPostLayout.astro`) needs styling for metadata and consistent prose styling for content.
+-   Blog listing page (`src/pages/blog.astro`) has placeholder content and very basic post links.
+-   Template blog post (`src/data/blog/post-1.md`) needs removal.
+-   (Other existing known issues from previous version of this file remain relevant for future work beyond the blog).
