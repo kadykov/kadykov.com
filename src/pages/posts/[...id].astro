@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content"
+import { getCollection } from "astro:content"
 import MarkDownPostLayout from "../../layouts/MarkDownPostLayout.astro"
 
 export async function getStaticPaths() {
@@ -11,11 +11,10 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await render(entry)
+// Use the modern entry.render() method
+const { Content } = await entry.render()
 ---
 
 <MarkDownPostLayout frontmatter={entry.data}>
-  <div class="prose-serif">
-    <Content />
-  </div>
+  <Content />
 </MarkDownPostLayout>

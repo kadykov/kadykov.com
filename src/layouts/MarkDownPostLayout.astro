@@ -1,12 +1,49 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
+import OptimizedImage from "../components/OptimizedImage.astro"; // Import the new component
 const { frontmatter } = Astro.props
+
+// Helper function to format dates
+const formatDate = (date: Date | undefined | null) => {
+  if (!date) return ""
+  return new Date(date).toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
+const pubDateFormatted = formatDate(frontmatter.pubDate)
+const lastUpdatedDateFormatted = frontmatter.lastUpdatedDate ? formatDate(frontmatter.lastUpdatedDate) : ""
+const showLastUpdated = lastUpdatedDateFormatted && lastUpdatedDateFormatted !== pubDateFormatted
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
-  <p><em>{frontmatter.description}</em></p>
-  <p>Written by: {frontmatter.author}</p>
-  <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-  <slot />
+  <article class="mx-auto my-10 w-11/12 sm:w-5/6 lg:w-4/6 xl:w-3/6">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold mb-2">{frontmatter.title}</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">
+        {frontmatter.description}
+      </p>
+      <div class="text-sm text-gray-500 dark:text-gray-500">
+        <span>Published: {pubDateFormatted}</span>
+        {showLastUpdated && (
+          <span class="ml-4">Last updated: {lastUpdatedDateFormatted}</span>
+        )}
+      </div>
+      {frontmatter.image && frontmatter.image.url && (
+        <OptimizedImage
+          src={frontmatter.image.url}
+          alt={frontmatter.image.alt || "Blog post image"}
+          displayWidth={800}
+          sizesAttr="(max-width: 800px) 100vw, 800px"
+          enforceAspectRatio="16:9"
+          class="mt-6 mb-8 block mx-auto max-w-full object-cover rounded-lg shadow-md"
+        />
+      )}
+    </header>
+    <div class="prose-serif mx-auto">
+      <slot />
+    </div>
+  </article>
 </BaseLayout>

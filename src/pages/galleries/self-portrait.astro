@@ -1,10 +1,11 @@
 ---
-import { getCollection } from "astro:content"
+import { getEntry } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import PhotoSwipe from "../../components/PhotoSwipe.astro"
 
 const pageTitle = "Self-portrait"
-const galleries = await getCollection("galleries")
+// Fetch the specific gallery entry by its slug (filename without .json)
+const selfPortraitGallery = await getEntry("galleries", "self-portrait")
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -13,7 +14,7 @@ const galleries = await getCollection("galleries")
     class="mx-auto max-w-screen-md py-10 w-11/12 sm:w-5/6 columns-2 md:columns-3xs gap-4 sm:gap-8"
   >
     {
-      galleries[0].data.images.map((image) => (
+      selfPortraitGallery && selfPortraitGallery.data.images.map((image) => (
         <PhotoSwipe
           src={image.src}
           alt={image.alt}

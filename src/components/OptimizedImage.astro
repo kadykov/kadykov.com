@@ -1,0 +1,122 @@
+---
+// src/components/OptimizedImage.astro
+import { getImage, inferRemoteSize } from "astro:assets";
+import { widthSet as globalWidthSet } from "../utils/widthSet";
+
+interface Props {
+  src: string;
+  alt: string;
+  displayWidth: number;
+  sizesAttr: string;
+  maxScaling?: number;
+  class?: string;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "sync" | "auto";
+  quality?: number;
+  enforceAspectRatio?: string | number;
+}
+
+const {
+  src,
+  alt,
+  displayWidth,
+  sizesAttr,
+  maxScaling = 3, // Default maxScaling to 3
+  class: className,
+  loading = "lazy",
+  decoding = "async",
+  quality,
+  enforceAspectRatio,
+} = Astro.props;
+
+const { width: fullWidth, height: fullHeight } = await inferRemoteSize(src);
+
+// Calculate cappedMaxWidth based on displayWidth, maxScaling, and fullWidth
+const cappedMaxWidth = Math.min(displayWidth * maxScaling, fullWidth);
+
+// Calculate currentWidthSet:
+// Filter globalWidthSet up to cappedMaxWidth, include cappedMaxWidth, ensure uniqueness and sort.
+let currentWidthSet = [...new Set(globalWidthSet.filter(w => w <= cappedMaxWidth).concat(cappedMaxWidth))].sort((a, b) => a - b);
+
+// Ensure displayWidth is included if it's smaller than the smallest value in currentWidthSet,
+// or if currentWidthSet is empty. This helps ensure a sensible base image size for the <img> tag.
+if (currentWidthSet.length === 0 || displayWidth < currentWidthSet[0]) {
+  if (!currentWidthSet.includes(displayWidth)) {
+    currentWidthSet.push(displayWidth);
+    currentWidthSet.sort((a, b) => a - b);
+  }
+}
+// If currentWidthSet is still empty (e.g. displayWidth and cappedMaxWidth are smaller than any in globalWidthSet),
+// use displayWidth as the only width.
+if (currentWidthSet.length === 0) {
+  currentWidthSet.push(displayWidth);
+}
+// Ensure all widths in currentWidthSet are not greater than fullWidth
+currentWidthSet = currentWidthSet.filter(w => w <= fullWidth);
+// If after filtering, currentWidthSet is empty (e.g. displayWidth > fullWidth, and no smaller widths from globalWidthSet apply)
+// add fullWidth as the only option, or displayWidth if it's smaller than fullWidth
+if (currentWidthSet.length === 0) {
+    currentWidthSet.push(Math.min(displayWidth, fullWidth));
+}
+
+
+let displayHeight: number | undefined = undefined;
+if (enforceAspectRatio && displayWidth) {
+  const ratio =
+    typeof enforceAspectRatio === "string"
+      ? parseFloat(enforceAspectRatio.split(":")[0]) /
+        parseFloat(enforceAspectRatio.split(":")[1])
+      : enforceAspectRatio;
+  if (ratio > 0) {
+    displayHeight = Math.round(displayWidth / ratio);
+  }
+}
+
+const largestWidthInSet = Math.max(...currentWidthSet, displayWidth); // Ensure displayWidth is considered for base
+const largestHeightInSet = Math.round((fullHeight / fullWidth) * largestWidthInSet);
+
+const avifImage = await getImage({
+  src: src,
+  widths: currentWidthSet,
+  format: "avif",
+  quality: quality,
+  width: largestWidthInSet, // Base width for srcset generation
+  height: largestHeightInSet, // Corresponding height
+});
+
+const webpImage = await getImage({
+  src: src,
+  widths: currentWidthSet,
+  format: "webp",
+  quality: quality,
+  width: largestWidthInSet,
+  height: largestHeightInSet,
+});
+
+// For the final fallback <img>, use displayWidth and calculated displayHeight (if any)
+// or let Astro infer if displayHeight is not set from aspect ratio.
+const fallbackImage = await getImage({
+  src: src,
+  width: displayWidth,
+  height: displayHeight, // This will be undefined if no aspect ratio enforced, allowing inference
+  format: "jpeg", // Or another fallback like png if preferred
+  quality: quality,
+});
+---
+
+<picture
+  class:list={[className]}
+  style={`max-width: ${displayWidth}px;`}
+>
+  {avifImage?.srcSet && <source type="image/avif" srcset={avifImage.srcSet.attribute} sizes={sizesAttr} />}
+  {webpImage?.srcSet && <source type="image/webp" srcset={webpImage.srcSet.attribute} sizes={sizesAttr} />}
+  <img
+    src={fallbackImage.src}
+    width={fallbackImage.attributes.width}
+    height={fallbackImage.attributes.height}
+    alt={alt}
+    loading={loading}
+    decoding={decoding}
+    class="block mx-auto rounded-lg"
+  />
+</picture>
