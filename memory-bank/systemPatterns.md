@@ -11,6 +11,15 @@ This document outlines key architectural patterns, technical decisions, and comp
 -   **Lightbox Integration**: The `PhotoSwipe.astro` component generates `data-pswp-srcset`, `data-pswp-width`, and `data-pswp-height` attributes for PhotoSwipe, using the AVIF image set.
 -   **Original Image Link**: A direct link to the original source image (e.g., on Flickr) is provided (`<a href={src} ...>`).
 -   **Implementation Example**: See `src/components/PhotoSwipe.astro`.
+-   **Reusable Optimized Image Component (`src/components/OptimizedImage.astro` - Planned)**:
+    *   **Goal**: Centralize logic for rendering optimized images using `astro:assets`, the `<Picture />` component, and `src/utils/widthSet.ts`.
+    *   **Props**: `src`, `alt`, `displayWidth`, `sizesAttr`, `maxScaling` (default 3), `class`, `loading`, `decoding`, `quality`, `enforceAspectRatio`.
+    *   **Logic**:
+        *   Calculates `currentWidthSet` by filtering global `widthSet` based on `fullWidth` (from `inferRemoteSize`), `displayWidth`, and `maxScaling`. This aims to cap generated image sizes appropriately for general content.
+        *   Calculates `displayHeight` if `enforceAspectRatio` is provided.
+    *   **Output**: Uses Astro's `<Picture />` component to serve images in `avif`, `webp` formats with a `jpeg` fallback.
+    *   **Primary Use Case**: Initially for blog post featured images, then for other content images across the site.
+    *   **Future Enhancements (Deferred)**: Per-format scaling factors, option to disable `maxScaling` (e.g., for PhotoSwipe integration).
 
 ## 2. Layout and Structure
 -   **Main Layout**: `src/layouts/BaseLayout.astro` serves as the foundational layout for most pages.

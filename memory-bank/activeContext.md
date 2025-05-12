@@ -3,56 +3,37 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-05-10
--   **Activity**: Planning the implementation and refinement of the blog functionality.
--   **Primary Goal**: Finalize a phased plan for blog improvements, focusing on foundational modernization, enhanced presentation, and core features.
--   **Status**: Detailed plan for blog development formulated. Memory Bank updates are in progress. Next step is to begin implementation once the user switches to Act Mode.
+-   **Date**: 2025-05-12
+-   **Activity**: Implementing `OptimizedImage.astro` component and integrating it into the blog layout. This addresses Issue #5 (Image Rendering) identified after completing Phase I of blog foundational refinements.
+-   **Primary Goal**: Create a reusable image component that leverages `widthSet.ts` and `astro:assets` for consistent and efficient image optimization.
+-   **Status**: Planning for `OptimizedImage.astro` complete. Implementation starting.
 
 ## 2. Recent Key Activities & Decisions
--   Initial Memory Bank and `.clinerules` file established (2025-05-08).
--   Decision to prioritize blog development.
--   Detailed examination of current blog-related files:
-    -   `src/components/BlogPost.astro`
-    -   `src/layouts/MarkDownLayout.astro`
-    -   `src/layouts/MarkDownPostLayout.astro`
-    -   `src/pages/blog.astro`
-    -   `src/data/blog/post-1.md` (now to be `src/content/blog/`)
-    -   `src/pages/posts/[...id].astro`
-    -   `src/content.config.ts`
--   Formulated a phased plan for blog improvements, covering:
-    *   **Phase I (Foundational Refinements)**: Content collection modernization, schema updates, individual post rendering modernization, core styling, and blog listing page cleanup.
-    *   **Phase II (Enhancing Presentation & Functionality)**: Enhanced post previews on the listing page and tagging system implementation.
-    *   **Phase III (Future Considerations)**: MDX for complex posts, OpenGraph tags, pagination, comments.
--   User confirmed the plan for blog development.
+-   **Blog Phase I Completion (2025-05-10)**:
+    *   Modernized blog content collections (`src/content.config.ts`, moved files to `src/content/blog/`).
+    *   Updated individual post rendering (`src/pages/posts/[...id].astro`) and layout (`src/layouts/MarkDownPostLayout.astro`) for modern Astro APIs and core styling.
+    *   Cleaned up blog listing page (`src/pages/blog.astro`).
+    *   Addressed build issues related to content collections by modernizing `galleriesCollection` and moving its data to `src/content/galleries/`, and updating `src/pages/galleries/self-portrait.astro`.
+-   **Post-Phase I Review & New Task Identification (2025-05-11/12)**:
+    *   User identified several styling/layout issues with the `hello-world` blog post.
+    *   Decision to address these issues, starting with image rendering (Issue #5).
+    *   Planned creation of a reusable `OptimizedImage.astro` component.
+    *   Agreed on initial specs for `OptimizedImage.astro` (using `<Picture />`, `maxScaling` prop, `widthSet.ts`).
+    *   Deferred advanced features for `OptimizedImage.astro` (per-format scaling, noMaxScaling flag).
+-   Key files for `OptimizedImage.astro` planning reviewed: `src/utils/widthSet.ts`, `src/components/PhotoSwipe.astro`, `src/components/RemotePhoto.astro`, `src/pages/about.mdx`.
 
-## 3. Key Files Examined Recently (for Blog Planning)
--   `src/components/BlogPost.astro`
--   `src/layouts/MarkDownLayout.astro`
--   `src/layouts/MarkDownPostLayout.astro`
--   `src/pages/blog.astro`
--   `src/data/blog/post-1.md` (and its planned move to `src/content/blog/`)
--   `src/pages/posts/[...id].astro`
--   `src/content.config.ts`
--   (Previously examined core files: `astro.config.mjs`, `package.json`, `tailwind.config.cjs`, `src/layouts/BaseLayout.astro`, `src/styles/base.css`, `netlify.toml`, `public/_headers`, `src/components/PhotoSwipe.astro`)
+## 3. Key Files Examined Recently (for OptimizedImage.astro)
+-   `src/utils/widthSet.ts`
+-   `src/components/PhotoSwipe.astro`
+-   `src/components/RemotePhoto.astro`
+-   `src/pages/about.mdx`
+-   `src/layouts/MarkDownPostLayout.astro` (for integration context)
 
-## 4. Immediate Next Steps (Cline's Perspective - Blog Phase I)
-Once the user switches to Act Mode, the following steps will be taken for Phase I of the blog development:
-
-1.  **Content Collection Modernization & Schema Update**:
-    *   Modify `src/content.config.ts`:
-        *   Remove `glob` loader for `postsCollection`.
-        *   Update schema: remove `author`, add `lastUpdatedDate: z.date().optional()`.
-    *   Move blog content from `src/data/blog/` to `src/content/blog/`.
-    *   Delete placeholder `src/content/blog/post-1.md`.
-2.  **Individual Post Rendering Modernization & Core Styling**:
-    *   Update `src/pages/posts/[...id].astro` to use modern Astro content rendering (e.g., `entry.render()`).
-    *   Update `src/layouts/MarkDownPostLayout.astro`:
-        *   Wrap main slot in `<div class="prose-serif">`.
-        *   Display metadata: `title`, `pubDate`, `description`, `lastUpdatedDate` (if applicable), `image`.
-        *   Style metadata section.
-3.  **Blog Listing Page (`src/pages/blog.astro`) - Initial Cleanup**:
-    *   Update page title.
-    *   Update/remove placeholder introductory text.
+## 4. Immediate Next Steps (Cline's Perspective - OptimizedImage.astro)
+1.  Update Memory Bank files (`activeContext.md`, `progress.md`, `systemPatterns.md`, `.clinerules`) to reflect the plan for `OptimizedImage.astro`. (This step)
+2.  Create `src/components/OptimizedImage.astro` with the agreed-upon initial version (using `<Picture />`, `maxScaling` default to 3, `enforceAspectRatio` support).
+3.  Integrate `OptimizedImage.astro` into `src/layouts/MarkDownPostLayout.astro` for the featured blog image, using `displayWidth={800}` and `enforceAspectRatio="16:9"`.
+4.  Address other identified styling issues from the `hello-world` post review (duplicate titles, spacing, description typography, content alignment) in subsequent steps.
 
 ## 5. Broader Project Ideas & Potential Future Tasks (from User)
 This list is for reference and will be prioritized later. (Content remains largely the same as previous version, focusing on the blog plan above for immediate action).

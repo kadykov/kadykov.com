@@ -16,6 +16,7 @@ This file serves as Cline's learning journal and project intelligence log for th
     *   **Font Choices**: Specific preferences for Faustina (serif body) and Ruda (sans-serif headings/UI), self-hosted via Fontsource.
     *   **Netlify**: Chosen hosting platform.
     *   **Blog Content Strategy**: Prefers Markdown for simple blog posts and MDX for posts requiring complex layouts or custom components (e.g., inline image galleries with PhotoSwipe).
+    *   **Image Optimization Strategy**: Prefers a centralized, reusable component (`OptimizedImage.astro`) for handling `astro:assets` image optimization, leveraging a global `widthSet.ts` and providing control over `maxScaling` to prevent overly large fallbacks for content images.
 
 3.  **Development Workflow & Tooling Insights**:
     *   **Open to Refactoring**: User acknowledges that the initial site was a learning project and is open to refactoring and improvements.
