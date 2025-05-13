@@ -14,6 +14,7 @@ interface Props {
   decoding?: "async" | "sync" | "auto";
   quality?: number;
   enforceAspectRatio?: string | number;
+  imgClass?: string; // New prop for img tag classes
 }
 
 const {
@@ -27,6 +28,7 @@ const {
   decoding = "async",
   quality,
   enforceAspectRatio,
+  imgClass, // Get the new prop
 } = Astro.props;
 
 const { width: fullWidth, height: fullHeight } = await inferRemoteSize(src);
@@ -117,6 +119,6 @@ const fallbackImage = await getImage({
     alt={alt}
     loading={loading}
     decoding={decoding}
-    class="block mx-auto rounded-lg"
+    class="block w-full h-full object-cover"
   />
 </picture>
