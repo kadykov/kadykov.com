@@ -4,18 +4,62 @@
 @tailwind utilities;
 
 @layer utilities {
+  /* Semantic Text Utilities */
+  .text-heading-1 {
+    @apply font-sans text-3xl sm:text-4xl font-bold tracking-tight mb-4 sm:mb-6;
+  }
+  .text-heading-2 {
+    @apply font-sans text-2xl sm:text-3xl font-[550] tracking-tight mb-3 sm:mb-4;
+  }
+  .text-heading-3 {
+    @apply font-sans text-xl sm:text-2xl font-semibold tracking-tight mb-2 sm:mb-3;
+  }
+  .text-body-large-serif {
+    @apply font-serif text-lg sm:text-xl leading-relaxed mb-4 text-gray-700 dark:text-gray-300;
+  }
+  .text-body-standard-serif {
+    @apply font-serif text-lg sm:text-xl leading-relaxed;
+  }
+  .text-meta {
+    @apply font-sans text-sm text-gray-600 dark:text-gray-400;
+  }
+  .text-link {
+    @apply link link-hover;
+  }
+
+  /* Updated .prose-serif using direct application of utilities with prose modifiers */
   .prose-serif {
-    @apply prose prose-lg sm:prose-xl;
-    @apply max-w-screen-sm;
-    @apply leading-normal;
-    @apply font-serif prose-headings:font-sans;
-    @apply prose-a:link prose-a:link-hover;
-    @apply prose-h1:font-medium prose-h2:font-[550] prose-h3:font-semibold;
-    @apply prose-headings:tracking-tight;
+    @apply prose prose-lg sm:prose-xl; /* Base prose, responsive sizing */
+    @apply max-w-screen-sm; /* Width constraint */
+
+    /* Base fonts for the .prose-serif context */
+    @apply font-serif; /* Default body to serif */
+    @apply prose-headings:font-sans; /* All headings to sans-serif */
+
+    /* H1 styles - mirroring .text-heading-1 */
+    @apply prose-h1:text-heading-1;
+
+    /* H2 styles - applying .text-heading-2 */
+    @apply prose-h2:text-heading-2;
+
+    /* H3 styles - applying .text-heading-3 */
+    @apply prose-h3:text-heading-3;
+
+    /* Paragraph styles - applying .text-body-standard-serif */
+    @apply prose-p:text-body-standard-serif;
+    /* Note: The font-family from .text-body-standard-serif (serif) will correctly apply here,
+       overriding the prose-headings:font-sans if it were to somehow apply to p,
+       and complementing the base @apply font-serif on .prose-serif. */
+
+    /* Link styles - applying .text-link */
+    /* @apply prose-a:link prose-a:link-hover; /* This is fine if .text-link is identical */
+    @apply prose-a:text-link; /* This should also work if .text-link is just @apply link link-hover */
+
+    /* Add other elements like blockquotes, lists, code etc. similarly if needed */
   }
 
   .menu-item {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-semibold; /* Existing - uses font-sans by default */
   }
 }
 

@@ -21,11 +21,11 @@ const showLastUpdated = lastUpdatedDateFormatted && lastUpdatedDateFormatted !==
 <BaseLayout pageTitle={frontmatter.title}>
   <article class="mx-auto my-10 w-11/12 sm:w-5/6 lg:w-4/6 xl:w-3/6">
     <header class="mb-8 text-center">
-      <h1 class="text-4xl font-bold mb-2">{frontmatter.title}</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">
+      <h1 class="text-heading-1">{frontmatter.title}</h1>
+      <p class="text-body-large-serif">
         {frontmatter.description}
       </p>
-      <div class="text-sm text-gray-500 dark:text-gray-500">
+      <div class="text-meta">
         <span>Published: {pubDateFormatted}</span>
         {showLastUpdated && (
           <span class="ml-4">Last updated: {lastUpdatedDateFormatted}</span>

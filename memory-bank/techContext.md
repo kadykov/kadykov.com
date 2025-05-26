@@ -41,7 +41,22 @@ This document details the technologies, tools, and configurations used in the ka
     -   `unicode-range` is specified for each font file.
     -   `font-display: block;` is used.
 
-## 4. Build & Deployment
+## 4. Typography System and Tailwind Customization (New Section)
+-   **Semantic Text Utilities:** A set of semantic utility classes (e.g., `.text-heading-1`, `.text-body-standard-serif`) are defined in `src/styles/base.css`. These classes encapsulate specific typographic styles (font family, size, weight, leading, margins, etc.) and serve as the "source of truth" for these styles across the site.
+-   **Font Families (as per section 3):**
+    -   Sans-serif: Ruda Variable (via `font-sans` in `tailwind.config.cjs`)
+    -   Serif: Faustina Variable (via `font-serif` in `tailwind.config.cjs`)
+    -   Monospace: Source Code Pro Variable (via `font-mono` in `tailwind.config.cjs`)
+-   **Styling Standalone Elements:** Semantic text utilities are applied directly to HTML elements outside of Markdown content (e.g., titles, descriptions in Astro layouts like `MarkDownPostLayout.astro`).
+-   **Styling Markdown (Prose) Content:**
+    *   The `.prose-serif` utility class in `src/styles/base.css` is used to style Markdown content.
+    *   It applies base Tailwind Typography styles (`@apply prose prose-lg sm:prose-xl;`) and responsive sizing.
+    *   It sets base font families for the prose context (`@apply font-serif prose-headings:font-sans;`).
+    *   **Key Pattern for Customization:** It then applies the pre-defined semantic text utility classes to specific prose elements using the `prose-modifier:component-class` syntax (e.g., `@apply prose-h1:text-heading-1;`, `@apply prose-p:text-body-standard-serif;`). This has proven to be an effective and clean method for customizing `@tailwindcss/typography` in this Astro project, allowing component-like classes (which themselves use `@apply`) to style prose elements. This was a key learning, as initial attempts with CSS nesting (`& h1 { @apply ... }`) or `tailwind.config.js` typography extensions were problematic or overly complex for this goal.
+-   **Responsive Typography:** Semantic classes and prose styles incorporate responsive prefixes (e.g., `sm:text-xl`) to adjust typography for different screen sizes.
+-   **DaisyUI for Links:** Link styling (`.text-link`) leverages DaisyUI's `link` and `link-hover` utilities, applied both directly and via `prose-a:text-link`.
+
+## 5. Build & Deployment
 -   **Package Manager**: npm
 -   **Build Command**: `npm run build` (which executes `astro check && astro build`).
 -   **Output Directory**: `dist/` (configured in `netlify.toml`).
@@ -49,7 +64,7 @@ This document details the technologies, tools, and configurations used in the ka
     -   Configuration: `netlify.toml`.
     -   Custom Headers: `public/_headers` for caching `/_astro/*` assets.
 
-## 5. Development Environment & Tooling
+## 6. Development Environment & Tooling
 -   **Code Formatting**:
     -   Prettier (`^3.3.3`)
     -   `prettier-plugin-astro` (`^0.14.1`)
