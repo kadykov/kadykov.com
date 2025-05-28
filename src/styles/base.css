@@ -6,25 +6,25 @@
 @layer utilities {
   /* Semantic Text Utilities */
   .text-heading-1 {
-    @apply font-sans text-7xl/none sm:text-8xl/none xl:text-9xl/none font-[300] sm:font-[250] xl:font-[200] tracking-tighter;
+    @apply font-sans text-7xl/none sm:text-8xl/none xl:text-9xl/none font-[300] sm:font-[250] xl:font-[200] tracking-tighter my-[0.3em];
   }
   .text-heading-2 {
-    @apply font-sans text-5xl/none sm:text-6xl/none xl:text-7xl/none font-[350] sm:font-[325] xl:font-[300] tracking-tight;
+    @apply font-sans text-5xl/tight sm:text-6xl/none xl:text-7xl/none font-[350] sm:font-[325] xl:font-[300] tracking-tight my-[0.5em];
   }
   .text-heading-3 {
-    @apply font-sans text-3xl/none sm:text-4xl/none xl:text-5xl/none font-[400] sm:font-[375] xl:font-[350];
+    @apply font-sans text-3xl/normal sm:text-4xl/tight xl:text-5xl/tight font-[400] sm:font-[375] xl:font-[350] my-[0.7em];
   }
   .text-heading-4 {
-    @apply font-sans text-xl/none sm:text-2xl/none xl:text-3xl/none font-[550] sm:font-[500] xl:font-[450];
+    @apply font-sans text-xl/normal sm:text-2xl/normal xl:text-3xl/normal font-[550] sm:font-[500] xl:font-[450] my-[0.9em];
   }
   .text-body-large-serif {
-    @apply font-serif text-lg sm:text-2xl;
+    @apply font-serif text-xl/relaxed sm:text-2xl/relaxed xl:text-3xl/relaxed font-[400];
   }
   .text-body-standard-serif {
     @apply font-serif text-lg/relaxed sm:text-xl/relaxed xl:text-2xl/relaxed font-[450];
   }
   .text-meta {
-    @apply font-sans text-base;
+    @apply font-sans text-base/relaxed;
   }
   .text-link {
     @apply link link-hover;
