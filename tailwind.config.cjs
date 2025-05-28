@@ -4,14 +4,14 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Ruda Variable"', ...defaultTheme.fontFamily.sans],
-        serif: ['"Faustina Variable"', ...defaultTheme.fontFamily.serif],
+        sans: ['"Source Sans 3 Variable"', ...defaultTheme.fontFamily.sans],
+        serif: ['"Bitter Variable"', ...defaultTheme.fontFamily.serif],
         mono: ['"Source Code Pro Variable"', ...defaultTheme.fontFamily.mono],
       },
     },
     screens: {
       // From https://www.freecodecamp.org/news/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862/
-      sm: "600px",
+      sm: "680px", // Increased from 600px as it is used for prose-serif width
       md: "900px",
       lg: "1200px",
       xl: "1500px",
