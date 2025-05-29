@@ -33,6 +33,9 @@
   .menu-item {
     @apply font-sans text-5xl/tight sm:text-2xl xl:text-3xl font-[350] sm:font-[500] xl:font-[450];
   }
+  .logo-text {
+    @apply font-sans text-lg/tight sm:text-xl/none xl:text-2xl/none font-[550] sm:font-[500] xl:font-[450];
+  }
 
   /* Updated .prose-serif using direct application of utilities with prose modifiers */
   .prose-serif {
