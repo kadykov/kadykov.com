@@ -45,13 +45,11 @@ _[railway certification](https://railways.multitel.be/)._
   data pipeline
   with an improved signal-to-noise ratio
   by utilizing sensitivity profile-shaped filtering.
-
 - Developed
   a computationally cheap
   THz-TDS data processing method
   for refractive index and thickness extraction
   in low-absorption materials.
-
 - Streamlined
   refractive index profile reconstruction
   from THz-TDS data
@@ -59,7 +57,6 @@ _[railway certification](https://railways.multitel.be/)._
   to a GPU
   and utilizing backpropagation-based
   optimization algorithms.
-
 - Implemented
   a low-cost operation
   and
@@ -67,19 +64,16 @@ _[railway certification](https://railways.multitel.be/)._
   broadband THz-TDS setup
   by suppressing atmospheric absorption
   with silica gel-based dehumidification.
-
 - Automated laboratory workflows
   by implementing Python tools
   for measurement orchestration,
   data management,
   analysis,
   and result presentation.
-
 - Ensured best software development practices
   by implementing unit testing,
   CI/CD pipelines,
   and documentation.
-
 - Led the
   [SAPHIRE]("https://www.multitel.eu/projects/saphire/") project,
   developing
@@ -88,7 +82,6 @@ _[railway certification](https://railways.multitel.be/)._
   to control
   pill coating thickness
   and humidity.
-
 - Led the development of
   THz-TDS-based methods
   for polymer wastes sorting.
@@ -111,16 +104,13 @@ _[Trappes, France.](https://www.openstreetmap.org/#map=17/48.76090/1.98370)_
   on [graphene](https://oar.ptb.de/resources/show/10.7795/EMPIR.17FUN04.RE.20220228),
   exploring its potential
   as a resistance standard.
-
 - Designed
   a flexible Python software
   package,
   optimizing scientific equipment orchestration.
-
 - Participated
   in the nanofabrication
   of hBN-encapsulated graphene stacks.
-
 - Improved performance
   of a helium gas recuperation system.
 
@@ -138,7 +128,6 @@ _based in [Nizhny Novgorod, Russia](https://www.openstreetmap.org/#map=18/56.280
   photoluminescence and photoconductivity
   FTIR cryogenic measurements
   of HgTe/HgCdTe quantum wells.
-
 - Achieved
   laser emission
   in HgCdTe heterostructures at
