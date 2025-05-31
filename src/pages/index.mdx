@@ -12,7 +12,7 @@ import { Picture } from "astro:assets"
 
   <div class="mx-auto lg:flex lg:flex-row-reverse lg:justify-between lg:items-center w-11/12 sm:w-5/6 max-w-screen-md">
     <Picture
-      class="mx-auto lg:mx-0 rounded-full drop-shadow-lg my-5"
+      class="mx-auto lg:mx-0 rounded-full drop-shadow-lg my-5 lg:flex-shrink-0"
       src="https://live.staticflickr.com/65535/54109455443_2c0fac61ec_o_d.jpg"
       alt="Aleksandr Kadykov's self portrait."
       formats={["avif", "webp"]}
@@ -23,33 +23,30 @@ import { Picture } from "astro:assets"
       height="250"
       loading="eager"
     />
-    <div class="text-body-standard-serif mx-auto lg:mx-0 lg:mr-5">
-      <h2 class="text-heading-2">
-        Error 501. Not implemented
-      </h2>
-      <p class="text-body-standard-serif">
-        But wait!
-        It only means
-        that for now
-        there is not much
-        content available on this website.
+    <div class="prose-serif mx-auto lg:mx-0 lg:mr-5 lg:min-w-0 lg:flex-1">
+      ## Error 501. Not implemented
 
-        By the way,
-        I'm Aleksandr,
-        and this is my personal project
-        where I'm learning web technologies
-        and sharing my photography and thoughts.
-        Currently,
-        I'm exploring new opportunities
-        as a Research Engineer.
-        If you're interested
-        in learning more
-        about my background and experience,
-        you can check my CV
-        in [web](cv)
-        or [PDF](https://github.com/kadykov/typstCV/releases/latest/download/kadykov-cv-en.pdf)
-        formats.
-      </p>
+      But wait!
+      It only means
+      that for now
+      there is not much
+      content available on this website.
+
+      By the way,
+      I'm Aleksandr,
+      and this is my personal project
+      where I'm learning web technologies
+      and sharing my photography and thoughts.
+      Currently,
+      I'm exploring new opportunities
+      as a Research Engineer.
+      If you're interested
+      in learning more
+      about my background and experience,
+      you can check my CV
+      in [web](cv)
+      or [PDF](https://github.com/kadykov/typstCV/releases/latest/download/kadykov-cv-en.pdf)
+      formats.
     </div>
 
   </div>
