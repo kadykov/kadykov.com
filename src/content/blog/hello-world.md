@@ -4,7 +4,7 @@ pubDate: 2025-05-10
 lastUpdatedDate: 2025-05-10
 description: "This is a test post to ensure the new blog setup is working correctly."
 image:
-  url: "https://live.staticflickr.com/65535/54344430687_e62197cfe7_o_d.jpg"
+  url: "https://share.kadykov.com/2024/12/26/DSC_2884.jpg"
   alt: "A placeholder image for the hello world post"
 tags: ["test", "astro", "hello world"]
 ---
