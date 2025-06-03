@@ -95,20 +95,32 @@ const webpImage = await getImage({
   height: largestHeightInSet,
 });
 
-// For the final fallback <img>, use displayWidth and calculated displayHeight (if any)
-// or let Astro infer if displayHeight is not set from aspect ratio.
+// Calculate height for the fallback image
+let heightForFallback: number;
+if (displayHeight) { // If enforceAspectRatio was used and displayHeight was calculated
+  heightForFallback = displayHeight;
+} else if (fullWidth && fullHeight && displayWidth) { // Otherwise, calculate from intrinsic aspect ratio
+  heightForFallback = Math.round((fullHeight / fullWidth) * displayWidth);
+} else {
+  // Fallback if dimensions couldn't be determined, though inferRemoteSize should provide them
+  // Or if displayWidth is 0 for some reason.
+  // This case should ideally not be hit if src is valid and displayWidth > 0.
+  heightForFallback = displayWidth; // Default to square or let it break if displayWidth is also problematic
+}
+
+
 const fallbackImage = await getImage({
   src: src,
   width: displayWidth,
-  height: displayHeight, // This will be undefined if no aspect ratio enforced, allowing inference
-  format: "jpeg", // Or another fallback like png if preferred
+  height: heightForFallback,
+  format: "jpeg",
   quality: quality,
 });
 ---
 
 <picture
   class:list={[className]}
-  style={`max-width: ${displayWidth}px;`}
+  style={enforceAspectRatio ? `aspect-ratio: ${typeof enforceAspectRatio === 'string' ? enforceAspectRatio.replace(':', '/') : (fullWidth && fullHeight && fullWidth > 0 ? String(fullWidth/fullHeight) : 'auto')};` : ''}
 >
   {avifImage?.srcSet && <source type="image/avif" srcset={avifImage.srcSet.attribute} sizes={sizesAttr} />}
   {webpImage?.srcSet && <source type="image/webp" srcset={webpImage.srcSet.attribute} sizes={sizesAttr} />}
@@ -119,6 +131,6 @@ const fallbackImage = await getImage({
     alt={alt}
     loading={loading}
     decoding={decoding}
-    class="block w-full h-full object-cover"
+    class:list={["block w-full h-full object-cover", imgClass]}
   />
 </picture>
