@@ -4,31 +4,45 @@ import BlogPost from "../../components/BlogPost.astro"
 import { getCollection } from "astro:content"
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection("blog")
-  const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())]
+  const allPosts = await getCollection("blog");
+  // Ensure tags array is not undefined before flat() and filter for valid tags
+  const validTags = allPosts
+    .map((post) => post.data.tags)
+    .flat()
+    .filter(tag => typeof tag === 'string' && tag.trim() !== ''); // Filter out undefined/empty tags
+  const uniqueTags = [...new Set(validTags)];
 
   return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts.filter((post) =>
-      post.data.tags.includes(tag)
-    )
+    const filteredPosts = allPosts.filter(
+      (post) => post.data.tags && post.data.tags.includes(tag) // Check if post.data.tags exists
+    );
     return {
-      params: { tag },
+      params: { tag: tag! }, // Assert tag is not undefined
       props: { posts: filteredPosts },
-    }
-  })
+    };
+  });
 }
 
-const { tag } = Astro.params
-const { posts } = Astro.props
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+const pageTitle = `Posts tagged with "${tag}"`;
 ---
 
-<BaseLayout pageTitle={tag}>
-  <p>Posts tagged with {tag}</p>
-  <ul>
+<BaseLayout pageTitle={pageTitle}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1> {/* Used text-heading-1 */}
     {
-      posts.map((post) => (
-        <BlogPost url={"/posts/" + post.id} title={post.data.title} />
-      ))
+      posts && posts.length > 0 ? (
+        <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {
+            posts.map((post) => (
+              <BlogPost post={post} />
+            ))
+          }
+        </ul>
+      ) : (
+        <p class="text-center text-lg">No posts found for this tag.</p>
+      )
     }
-  </ul>
+  </div>
 </BaseLayout>

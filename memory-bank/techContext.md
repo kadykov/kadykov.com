@@ -17,9 +17,17 @@ This document details the technologies, tools, and configurations used in the ka
     -   ES Modules (`"type": "module"` in `package.json`).
     -   TypeScript (`^5.5.3`) used for type checking via `astro check`.
 -   **Content Collections (Blog Focus)**:
-    -   Currently uses `glob` loader in `src/content.config.ts` to source Markdown from `src/data/blog/`.
-    -   Individual posts rendered using `await render(entry)` in dynamic route `src/pages/posts/[...id].astro`.
-    -   **Planned Modernization**: Migrate to standard `src/content/blog/` directory structure (removing `glob` loader) and update rendering to use modern Astro APIs (e.g., `entry.render()` or direct `<Content />` component).
+    *   **Directory Structure**: Blog content (Markdown files) resides in `src/content/blog/`.
+    *   **Schema**: Defined in `src/content/config.ts` using Zod.
+    *   **Rendering Individual Posts**:
+        *   Dynamic route `src/pages/blog/[...slug].astro` handles rendering.
+        *   Uses `getCollection("blog")` and `entry.slug` for path generation.
+        *   Content is rendered using `entry.render()` and the `<Content />` component within `src/layouts/MarkDownPostLayout.astro`.
+    *   **Listing Pages**:
+        *   `src/pages/blog/index.astro` (main blog listing).
+        *   `src/pages/tags/[tag].astro` (tag-specific listings).
+        *   Both use `getCollection("blog")` to fetch posts and display them using `src/components/BlogPost.astro`.
+    *   **RSS Feed**: `src/pages/rss.xml.js` uses `getCollection("blog")`.
 
 ## 2. AstroJS Integrations (from `astro.config.mjs` and `package.json`)
 -   `@astrojs/tailwind`: Integrates Tailwind CSS. `applyBaseStyles` is `false`.

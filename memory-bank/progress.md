@@ -3,44 +3,54 @@
 This document tracks the development progress, current status, and known issues for the kadykov.com website.
 
 ## 1. Current Overall Status
--   **Date**: 2025-05-26
--   **Phase**: Blog Refinement - Typographic Consistency.
--   **Summary**: Completed the integration of `OptimizedImage.astro` into the blog post layout. Successfully refactored the typography for `MarkDownPostLayout.astro` and its prose content (`.prose-serif`) to use a new system of semantic text utility classes, achieving consistent styling.
+-   **Date**: 2025-06-04
+-   **Phase**: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling.
+-   **Summary**: Completed a major overhaul of the blog's URL structure, styled the blog listing and tag pages with DaisyUI cards, and refined image rendering in these cards for consistency and CLS prevention. Semantic typography applied to new blog page titles.
 
 ## 2. What Works (Post-Blog Phase I & Recent Refinements)
 -   **Core Pages**: Home, About, CV (Markdown), Contact (Netlify Forms).
 -   **Blog - Foundational Refinements (Complete)**:
-    *   Content collections modernized.
-    *   Individual post rendering uses modern Astro APIs.
-    *   `hello-world.md` test post created.
-    *   Build issues related to content collections resolved.
+    *   Content collections modernized (`src/content/blog/`).
+    *   Individual post rendering uses modern Astro APIs (`src/layouts/MarkDownPostLayout.astro`).
+    *   `hello-world.md` test post available.
 -   **Blog - Typographic Refinement for Post Layout (Complete)**:
-    *   `MarkDownPostLayout.astro` updated to use semantic text utility classes for title, description, and metadata.
-    *   `.prose-serif` (styling Markdown content) updated to use the same semantic text utility classes via `prose-modifier:component-class` syntax (e.g., `@apply prose-h1:text-heading-1;`).
-    *   Achieved consistent and responsive typography between standalone layout elements and Markdown-generated content on blog posts.
-    *   Semantic text utilities (`.text-heading-1`, `.text-body-standard-serif`, etc.) defined in `src/styles/base.css`.
--   **Image Optimization**:
-    *   `OptimizedImage.astro` component developed and integrated into `MarkDownPostLayout.astro` for featured images.
+    *   `MarkDownPostLayout.astro` uses semantic text utility classes.
+    *   `.prose-serif` styles Markdown content with semantic classes.
+    *   Consistent typography on individual blog posts.
+    *   Semantic text utilities defined in `src/styles/base.css`.
+-   **Blog - URL Structure, Listing Pages, and Card Styling (Complete as of 2025-06-04)**:
+    *   **URL Structure**: Posts now at `/blog/[slug]` (no `.md` extension). Dynamic route is `src/pages/blog/[...slug].astro`.
+    *   **Listing Pages**:
+        *   Main listing at `/blog/` (`src/pages/blog/index.astro`).
+        *   Tag-specific listings at `/tags/[tag]/` (`src/pages/tags/[tag].astro`).
+        *   Both pages display posts as a grid of DaisyUI cards.
+        *   Page titles (`<h1>`) use `text-heading-1` semantic class.
+    *   **`BlogPost.astro` Component**:
+        *   Enhanced as a DaisyUI card displaying title, date, description, thumbnail, and tags.
+        *   Uses semantic typography classes for its content.
+        *   Integrates `OptimizedImage.astro` for thumbnails.
+    *   **RSS Feed**: `src/pages/rss.xml.js` updated for new paths and collection.
+    *   **Tag Pages**: `src/pages/tags/[tag].astro` updated for new paths, collection, and robust tag handling.
+-   **Image Optimization & Rendering**:
+    *   `OptimizedImage.astro` component:
+        *   Integrated into `MarkDownPostLayout.astro` and `BlogPost.astro`.
+        *   Handles remote image dimension inference for CLS prevention.
+        *   `picture` tag does not impose `max-width`, allowing parent containers to control size.
+        *   Correctly fills `figure` elements in cards, respecting aspect ratios and card corner rounding.
     *   Basic `astro:assets` AVIF/JPEG optimization.
 -   **Photo Lightbox**: Basic PhotoSwipe prototype on About page.
 -   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
 -   **Deployment**: Netlify deployment, functional build process.
 
-## 3. Current Task: Typographic Consistency (Blog Post Layout - COMPLETE)
--   **Goal**: Ensure consistent typographic styling between elements in `MarkDownPostLayout.astro` and the Markdown content rendered within it.
--   **Outcome**: Successfully implemented using semantic utility classes and `prose-modifier:component-class` syntax in `src/styles/base.css`.
+## 3. Current Task: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling (COMPLETE)
+-   **Goal**: Fix blog URL extensions, style listing pages, ensure correct image display in cards, and update related pages (RSS, tags).
+-   **Outcome**: Successfully implemented clean URLs, styled blog listing and tag pages with responsive DaisyUI cards, resolved image rendering issues, and fixed RSS/tag page functionality.
 
 ## 4. Planned Next Steps
 -   **Site-wide Typographic Consistency**:
     *   Extend the use of semantic text utility classes to other pages and components (Homepage, About page, Contact page, Header, Footer, UI elements like buttons, form inputs).
--   Address remaining styling/layout issues from `hello-world` post review (if any beyond typography).
-    *   Spacing around blog post title/header (review if current semantic class margins are sufficient).
--   **Blog Phase II: Enhancing Presentation & Functionality**
--   **Task 4: Blog Listing Page - Enhanced Post Previews**
-    *   Modify `src/components/BlogPost.astro` (or create new e.g., `BlogCard.astro`) to display: `title` (link), `pubDate`, `description` snippet, `image` (thumbnail), `tags`.
-    *   Style these previews for better visual appeal and information density, using semantic text utilities where appropriate.
-    *   Task 5: Tagging System Implementation (noting existing tag pages).
--   **Blog Phase III: Future Considerations (Blog)**
+-   Address remaining styling/layout issues from `hello-world.md` post review (if any beyond typography, e.g., spacing around blog post title/header).
+-   **Blog Phase III: Future Considerations (Blog)** (Previously Blog Phase II & III)
     *   MDX for complex posts.
     *   OpenGraph tags & social sharing.
     *   Pagination.

@@ -11,15 +11,18 @@ This document outlines key architectural patterns, technical decisions, and comp
 -   **Lightbox Integration**: The `PhotoSwipe.astro` component generates `data-pswp-srcset`, `data-pswp-width`, and `data-pswp-height` attributes for PhotoSwipe, using the AVIF image set.
 -   **Original Image Link**: A direct link to the original source image (e.g., on Flickr) is provided (`<a href={src} ...>`).
 -   **Implementation Example**: See `src/components/PhotoSwipe.astro`.
--   **Reusable Optimized Image Component (`src/components/OptimizedImage.astro` - Planned)**:
-    *   **Goal**: Centralize logic for rendering optimized images using `astro:assets`, the `<Picture />` component, and `src/utils/widthSet.ts`.
-    *   **Props**: `src`, `alt`, `displayWidth`, `sizesAttr`, `maxScaling` (default 3), `class`, `loading`, `decoding`, `quality`, `enforceAspectRatio`.
+-   **Reusable Optimized Image Component (`src/components/OptimizedImage.astro` - Implemented & Refined)**:
+    *   **Goal**: Centralizes logic for rendering optimized images using `astro:assets` (`getImage`, `inferRemoteSize`) and `src/utils/widthSet.ts`.
+    *   **Props**: `src`, `alt`, `displayWidth`, `sizesAttr`, `maxScaling` (default 3), `class` (for `<picture>`), `imgClass` (for `<img>`), `loading`, `decoding`, `quality`, `enforceAspectRatio`.
     *   **Logic**:
-        *   Calculates `currentWidthSet` by filtering global `widthSet` based on `fullWidth` (from `inferRemoteSize`), `displayWidth`, and `maxScaling`. This aims to cap generated image sizes appropriately for general content.
-        *   Calculates `displayHeight` if `enforceAspectRatio` is provided.
-    *   **Output**: Uses Astro's `<Picture />` component to serve images in `avif`, `webp` formats with a `jpeg` fallback.
-    *   **Primary Use Case**: Initially for blog post featured images, then for other content images across the site.
-    *   **Future Enhancements (Deferred)**: Per-format scaling factors, option to disable `maxScaling` (e.g., for PhotoSwipe integration).
+        *   Uses `inferRemoteSize` to get `fullWidth` and `fullHeight` of the remote image.
+        *   Calculates `currentWidthSet` by filtering global `widthSet` based on `fullWidth`, `displayWidth`, and `maxScaling`.
+        *   Calculates `displayHeight` if `enforceAspectRatio` is provided by the consumer.
+        *   Calculates `heightForFallback` for the `<img>` tag, using `displayHeight` if available, otherwise deriving from intrinsic aspect ratio and `displayWidth`. This ensures `getImage` receives explicit dimensions for CLS prevention with remote images.
+        *   The root `<picture>` tag does *not* apply a `max-width` style, allowing parent containers to control its rendered size. It applies `aspect-ratio` style if `enforceAspectRatio` is used.
+        *   The `class` prop is applied to the `<picture>` tag. For proper filling of containers like `figure` in cards, it's expected to be used with `block w-full` (or similar).
+    *   **Output**: Uses `getImage` to generate sources for `avif`, `webp`, and a `jpeg` fallback, rendered within a `<picture>` element. The `<img>` tag uses `width` and `height` attributes derived from `fallbackImage.attributes`.
+    *   **Primary Use Cases**: Blog post featured images (in `MarkDownPostLayout.astro`) and blog post card thumbnails (in `BlogPost.astro`).
 
 ## 2. Layout and Structure
 -   **Main Layout**: `src/layouts/BaseLayout.astro` serves as the foundational layout for most pages.
@@ -63,17 +66,22 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   `cache-control: immutable`
     This ensures long-term caching of versioned assets by browsers and CDNs.
 
-## 6. Blog Content & Layout Patterns (Planned)
--   **Content Source**: Markdown (`.md`) files will be primary, located in `src/content/blog/`. MDX (`.mdx`) will be used for posts requiring complex layouts or custom components (e.g., inline PhotoSwipe).
--   **Schema**: Defined in `src/content.config.ts` using Zod. Key fields include `title`, `pubDate`, `description`, `image`, `tags`, and an optional `lastUpdatedDate`.
--   **Individual Post Layout (`src/layouts/MarkDownPostLayout.astro`)**:
-    *   Will be the default for Markdown posts.
-    *   Displays metadata (title, dates, description, image) with distinct styling.
-    *   The main post content (from the `<slot />`) will be wrapped in a `div` with the `.prose-serif` class for consistent typography.
--   **Listing Page (`src/pages/blog.astro`)**:
-    *   Will display a list of posts using an enhanced component (e.g., `BlogCard.astro`) showing title, date, description snippet, thumbnail image, and tags.
--   **Tagging**:
-    *   Tags will be displayed on individual posts and listing previews.
-    *   Dedicated pages for listing all posts under a specific tag (`src/pages/tags/[tag].astro`) and an index of all tags (`src/pages/tags/index.astro`) will be implemented.
--   **Rendering**:
-    *   Dynamic route `src/pages/posts/[...id].astro` will use modern Astro APIs (e.g., `entry.render()`) for rendering content.
+## 6. Blog Content & Layout Patterns (Implemented & Refined)
+-   **Content Source**: Markdown (`.md`) files in `src/content/blog/`. MDX for future complex posts.
+-   **Schema**: Defined in `src/content/config.ts` (Zod). Includes `title`, `pubDate`, `description`, `image` (object with `url`, `alt`), `tags` (optional array), `lastUpdatedDate` (optional).
+-   **URL Structure**: Posts are served at `/blog/[slug]` (e.g., `/blog/hello-world`), with no `.md` extension.
+-   **Individual Post Rendering**:
+    *   **Dynamic Route**: `src/pages/blog/[...slug].astro` uses `getCollection("blog")` and `entry.slug` for `getStaticPaths`.
+    *   **Layout**: `src/layouts/MarkDownPostLayout.astro` is used. It displays metadata and uses `OptimizedImage.astro` for the featured image. Content is styled with `.prose-serif`. Semantic typography classes are used for layout elements.
+-   **Listing Pages**:
+    *   **Main Listing**: `src/pages/blog/index.astro` (serves `/blog/`).
+    *   **Tag Listing**: `src/pages/tags/[tag].astro` (serves `/tags/[tag_name]/`).
+    *   Both pages fetch posts using `getCollection("blog")` and display them as a grid of cards using the `BlogPost.astro` component.
+    *   Page titles (`<h1>`) use the `text-heading-1` semantic class.
+-   **Blog Post Card (`src/components/BlogPost.astro`)**:
+    *   A DaisyUI card component.
+    *   Displays: title (link), publication date, description snippet, thumbnail image (via `OptimizedImage.astro`), and tags.
+    *   Uses semantic typography classes (e.g., `text-heading-3`, `text-body-standard-serif`, `text-meta`).
+    *   The image is contained within a `figure class="aspect-video"`. The `a` tag wrapping `OptimizedImage` and the `OptimizedImage`'s `class` prop are set to `block w-full` to ensure the image fills the figure and respects card corner rounding.
+-   **RSS Feed**: `src/pages/rss.xml.js` uses `getCollection("blog")` and generates links to `/blog/[slug]`.
+-   **Tag Handling**: `src/pages/tags/[tag].astro` correctly filters posts by tag (handling optional `tags` field) and links to `/blog/[slug]`.

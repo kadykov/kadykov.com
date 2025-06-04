@@ -5,7 +5,7 @@ import MarkDownPostLayout from "../../layouts/MarkDownPostLayout.astro"
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog")
   return blogEntries.map((entry) => ({
-    params: { id: entry.id },
+    params: { slug: entry.slug }, // Use entry.slug for the parameter
     props: { entry },
   }))
 }
