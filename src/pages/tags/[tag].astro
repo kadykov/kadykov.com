@@ -25,7 +25,7 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params;
 const { posts } = Astro.props;
-const pageTitle = `Posts tagged with "${tag}"`;
+const pageTitle = `Tagged: ${tag}`;
 ---
 
 <BaseLayout pageTitle={pageTitle}>
