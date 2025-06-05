@@ -189,3 +189,6 @@ cython_debug/
 
 # My personal files and instructions
 kadykov-*
+
+# Local documentation
+local-docs/
