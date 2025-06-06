@@ -3,12 +3,22 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-06-04
--   **Activity**: Completed comprehensive blog refinement: URL structure, styling of listing pages, and image rendering in post cards.
--   **Primary Goal**: Address issues with `.md` extensions in URLs, unstyled blog listing page, and inconsistent blog content paths. Improve overall blog presentation and functionality.
--   **Status**: Task complete. Memory Bank update in progress.
+-   **Date**: 2025-06-05
+-   **Activity**: Planning and starting implementation of a new General Photo Gallery.
+-   **Primary Goal**: Replace the old JSON-based gallery system with a new one that sources images and metadata from a remote `image_manifest.json` (served at `https://share.kadykov.com/image_manifest.json`). Implement gallery display, tag-based filtering, date-based filtering, and pagination.
+-   **Status**: Planning complete. Starting Memory Bank update, then implementation.
 
 ## 2. Recent Key Activities & Decisions
+-   **General Photo Gallery Planning (2025-06-05)**:
+    *   **Data Source**: Decided to fetch `image_manifest.json` directly from `https://share.kadykov.com` in `getStaticPaths` for gallery pages. A Zod schema will be used for type safety.
+    *   **Core Component**: `PhotoGallery.astro` will be created to display photo thumbnails (using `OptimizedImage.astro`) and integrate with `PhotoSwipe.astro` for lightbox.
+    *   **Layout**: Start with a simple CSS-based justified layout, iterate later.
+    *   **Pages**:
+        *   Main gallery: `/photos/index.astro` (all photos, paginated).
+        *   Tag galleries: `/photos/tags/index.astro` (list of tags), `/photos/tags/[tag].astro` (photos for a specific tag, paginated). Photo tags will be separate from blog tags.
+        *   Date galleries: `/photos/dates/index.astro` (list of dates), `/photos/dates/[date].astro` (photos for a specific date, e.g., YYYY-MM-DD).
+    *   **Individual Photo Pages**: Deferred for now, relying on PhotoSwipe.
+    *   **Cleanup**: Old `self-portrait.json` gallery and related pages will be removed.
 -   **Blog Refinement (2025-06-03/04)**:
     *   **URL Structure**:
         *   Individual blog posts moved from `/posts/name.md` to `/blog/name`.
@@ -39,24 +49,35 @@ This document tracks the current state of work, recent decisions, and immediate 
 -   `src/styles/base.css` (referenced for semantic typography classes)
 
 ## 4. Immediate Next Steps
-1.  Update Memory Bank files (`activeContext.md`, `progress.md`, `systemPatterns.md`, `techContext.md`) to reflect completed blog refinements. (This step)
-2.  User to review changes and merge.
-3.  User to delete `src/pages/posts/[...id].astro`.
-4.  Proceed with next planned tasks from project backlog (e.g., further blog enhancements like OpenGraph tags, pagination, or other site sections).
+1.  **Update Memory Bank**:
+    *   Update `activeContext.md` (this document) with the current focus on the General Photo Gallery. (This step)
+    *   Update `progress.md` to reflect the planned work for the General Photo Gallery.
+2.  **Implement General Photo Gallery**:
+    *   Define Zod schema for `image_manifest.json` data.
+    *   Create `src/components/PhotoGallery.astro`.
+    *   Create gallery pages: `/photos/index.astro`, `/photos/tags/index.astro`, `/photos/tags/[tag].astro`, `/photos/dates/index.astro`, `/photos/dates/[date].astro`.
+    *   Implement pagination.
+    *   Update navigation.
+    *   Add `share.kadykov.com` to `image.domains` in `astro.config.mjs` (user confirmed this is already done).
+3.  **Cleanup Old Gallery System**:
+    *   Remove `src/content/galleries/self-portrait.json`.
+    *   Remove `src/pages/galleries/self-portrait.astro`.
+4.  User to review changes and merge.
+5.  Proceed with next planned tasks from project backlog.
 
 ## 5. Broader Project Ideas & Potential Future Tasks (from User)
-This list is for reference and will be prioritized later. (Content remains largely the same as previous version, focusing on the blog plan above for immediate action).
+This list is for reference and will be prioritized later.
 
 -   **Blog (Post-Phase I & II)**:
     *   MDX for complex posts (PhotoSwipe integration, alternating layouts).
     *   OpenGraph tags & social sharing.
-    *   Pagination.
+    *   Pagination (already implemented for main blog listing, consider for tags if needed).
     *   Comments system (to be evaluated).
     *   Draft actual posts.
 -   **Photo Galleries**:
-    *   Prototype "Strangers Gallery" (date/location navigation).
-    *   Investigate image hosting solutions.
-    *   Refactor lightbox (`PhotoSwipe.astro`) implementation if needed.
+    *   **General Photo Gallery (Current Task)**: Implement as planned.
+    *   Future: Artistic galleries, "Strangers Gallery" (may leverage general gallery with specific filters/views).
+    *   Refactor lightbox (`PhotoSwipe.astro`) implementation if needed during/after general gallery implementation.
     *   Design thematic galleries with unique styles.
 -   **CV Page**:
     *   Rebuild using DaisyUI components (e.g., timeline).

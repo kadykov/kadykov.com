@@ -6,6 +6,8 @@ import { widthSet as globalWidthSet } from "../utils/widthSet";
 interface Props {
   src: string;
   alt: string;
+  width?: number; // Intrinsic width of the image, optional
+  height?: number; // Intrinsic height of the image, optional
   displayWidth: number;
   sizesAttr: string;
   maxScaling?: number;
@@ -29,9 +31,23 @@ const {
   quality,
   enforceAspectRatio,
   imgClass, // Get the new prop
+  // Destructure new width and height props
+  width: intrinsicWidth,
+  height: intrinsicHeight,
 } = Astro.props;
 
-const { width: fullWidth, height: fullHeight } = await inferRemoteSize(src);
+let fullWidth: number;
+let fullHeight: number;
+
+if (intrinsicWidth && intrinsicHeight) {
+  fullWidth = intrinsicWidth;
+  fullHeight = intrinsicHeight;
+} else {
+  // Fallback to inferring size if not provided
+  const inferred = await inferRemoteSize(src);
+  fullWidth = inferred.width;
+  fullHeight = inferred.height;
+}
 
 // Calculate cappedMaxWidth based on displayWidth, maxScaling, and fullWidth
 const cappedMaxWidth = Math.min(displayWidth * maxScaling, fullWidth);

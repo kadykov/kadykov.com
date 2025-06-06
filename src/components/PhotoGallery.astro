@@ -1,0 +1,83 @@
+---
+import OptimizedImage from './OptimizedImage.astro';
+import type { PhotoManifestItem } from '../utils/photoManifestSchema';
+
+interface Props {
+  photos: PhotoManifestItem[];
+}
+
+const { photos } = Astro.props;
+const imageBaseUrl = 'https://share.kadykov.com/'; // Base URL for images from the manifest
+---
+
+{photos && photos.length > 0 ? (
+  <div class="photo-gallery-grid" id="gallery">
+    {photos.map((photo) => {
+      const photoSrc = `${imageBaseUrl}${photo.relativePath}`;
+      const altText = photo.title || photo.description || photo.filename;
+      // For a simple grid, let's aim for thumbnails around 300-400px wide.
+      // This displayWidth is conceptual for OptimizedImage.
+      // The actual rendered width will be controlled by CSS grid.
+      const displayWidth = 400;
+      // Sizes attribute for responsive images. This is a basic example.
+      // It might need adjustment based on the actual number of columns and breakpoints.
+      const sizesAttr = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+
+      return (
+        <a
+          href={photoSrc}
+          data-pswp-src={photoSrc}
+          data-pswp-width={photo.width}
+          data-pswp-height={photo.height}
+          target="_blank"
+          class="gallery-item block relative overflow-hidden group"
+          aria-label={`View image ${altText}`}
+        >
+          <OptimizedImage
+            src={photoSrc}
+            alt={altText}
+            width={photo.width}
+            height={photo.height}
+            displayWidth={displayWidth}
+            sizesAttr={sizesAttr}
+            loading="lazy"
+            decoding="async"
+            enforceAspectRatio={`${photo.width}:${photo.height}`}
+            class="w-full h-auto transition-transform duration-300 ease-in-out group-hover:scale-105"
+            imgClass="object-cover"
+          />
+          {(photo.title || photo.description) && (
+            <div class="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+              {photo.title && <h3 class="text-sm font-bold">{photo.title}</h3>}
+              {photo.description && <p class="text-xs truncate">{photo.description}</p>}
+            </div>
+          )}
+        </a>
+      );
+    })}
+  </div>
+) : (
+  <p>No photos to display.</p>
+)}
+
+<script>
+  // This ensures src/scripts/photoswipe.js is processed by Vite/Astro and included in the build.
+  // The script itself (photoswipe.js) will then initialize PhotoSwipe on the #gallery.
+  import "../scripts/photoswipe.js";
+</script>
+
+<style>
+  .photo-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); /* Responsive grid columns */
+    gap: 0.5rem; /* Adjust gap as needed */
+    /* For a more justified look, one might use Flexbox with items of varying flex-grow based on aspect ratio,
+       or more complex JS libraries. This grid is a starting point. */
+  }
+
+  .gallery-item {
+    /* Ensure items maintain aspect ratio if OptimizedImage doesn't enforce it via style */
+    /* aspect-ratio will be handled by OptimizedImage's enforceAspectRatio prop */
+    background-color: #eee; /* Placeholder background */
+  }
+</style>

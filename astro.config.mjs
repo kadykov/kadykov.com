@@ -23,7 +23,7 @@ export default defineConfig({
   ],
   site: "https://www.kadykov.com",
   image: {
-    domains: ["kadykov.com"],
+    domains: ["share.kadykov.com"],
     remotePatterns: [
       {
         protocol: "https",

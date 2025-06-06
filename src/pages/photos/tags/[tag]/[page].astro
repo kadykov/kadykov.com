@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro'; // Adjusted path
+import PhotoGallery from '../../../../components/PhotoGallery.astro'; // Adjusted path
+import type { PhotoManifestItem } from '../../../../utils/photoManifestSchema'; // Adjusted path
+import { fetchPhotoManifest } from '../../../../utils/photoData'; // Adjusted path
+import type { Page, PaginateFunction, GetStaticPathsResult } from 'astro';
+
+// const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Will be handled by fetchPhotoManifest
+
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }): Promise<GetStaticPathsResult> {
+  const PAGE_SIZE = 24; // Defined inside function
+  let allPhotos: PhotoManifestItem[] = [];
+  try {
+    allPhotos = await fetchPhotoManifest();
+  } catch (e) {
+    const error = e as Error;
+    // fetchPhotoManifest already logs errors. We just need to ensure build fails.
+    console.error(`Failed to load photo manifest for /photos/tags/[tag]/[page].astro: ${error.message}`);
+    throw error; // Re-throw to fail the build
+  }
+
+  const photosByTag = new Map<string, PhotoManifestItem[]>();
+  allPhotos.forEach(photo => {
+    if (photo.tags && photo.tags.length > 0) {
+      photo.tags.forEach(tag => {
+        const lowerCaseTag = tag.toLowerCase();
+        if (!photosByTag.has(lowerCaseTag)) {
+          photosByTag.set(lowerCaseTag, []);
+        }
+        photosByTag.get(lowerCaseTag)?.push(photo);
+      });
+    }
+  });
+
+  const paths = [];
+  for (const [tag, photosForTag] of photosByTag.entries()) {
+    // Sort photos within this tag group by dateTaken, most recent first
+    photosForTag.sort((a, b) => {
+      if (a.dateTaken && b.dateTaken) {
+        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
+      }
+      if (a.dateTaken) return -1;
+      if (b.dateTaken) return 1;
+      return 0;
+    });
+
+    // Astro's paginate function will handle the `page` param from the filename [page].astro
+    const paginatedResult = paginate(photosForTag, {
+      pageSize: PAGE_SIZE,
+      params: { tag: encodeURIComponent(tag) }, // Pass the 'tag' param
+      props: { tagDisplayName: tag } // Pass the original tag name for display
+    });
+    paths.push(...paginatedResult);
+  }
+  return paths;
+}
+
+interface Props {
+  page: Page<PhotoManifestItem>; // page prop is automatically populated by paginate
+  tagDisplayName: string; // From getStaticPaths props
+}
+
+const { page, tagDisplayName } = Astro.props;
+// const { tag } = Astro.params; // 'tag' is still available from Astro.params if needed,
+                               // and 'page' (the number) would be Astro.params.page
+
+// Use tagDisplayName for display, as it preserves original casing
+const pageTitle = `Photos tagged: "${tagDisplayName}"${page.currentPage > 1 ? ` (Page ${page.currentPage})` : ''}`;
+const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-heading-1 mb-2 text-center">Photos tagged: "{tagDisplayName}"</h1>
+    <p class="text-center text-meta mb-8">
+      {/* Link to tags index needs to be adjusted if its path changes relative to this page, but it's root-relative so it's fine */}
+      <a href="/photos/tags" class="text-link hover:underline">View all photo tags</a>
+    </p>
+
+    <PhotoGallery photos={page.data} />
+
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="btn btn-outline">
+            &laquo; Previous
+          </a>
+        ) : (
+          <span class="btn btn-outline btn-disabled" aria-disabled="true">&laquo; Previous</span>
+        )}
+
+        <span>Page {page.currentPage} of {page.lastPage}</span>
+
+        {page.url.next ? (
+          <a href={page.url.next} class="btn btn-outline">
+            Next &raquo;
+          </a>
+        ) : (
+          <span class="btn btn-outline btn-disabled" aria-disabled="true">Next &raquo;</span>
+        )}
+      </nav>
+    )}
+  </div>
+</BaseLayout>

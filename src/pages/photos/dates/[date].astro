@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PhotoGallery from '../../../components/PhotoGallery.astro';
+import { photoManifestSchema, type PhotoManifestItem } from '../../../utils/photoManifestSchema';
+import type { GetStaticPathsResult } from 'astro'; // Re-import GetStaticPathsResult
+
+// const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Moved inside getStaticPaths
+
+interface Props { // Renamed PageProps back to Props
+  photosForDate: PhotoManifestItem[];
+  dateDisplay: string;
+}
+
+export async function getStaticPaths(): Promise<GetStaticPathsResult> { // Reverted return type
+  const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Defined inside function
+  let allPhotos: PhotoManifestItem[] = [];
+  try {
+    const response = await fetch(manifestUrl);
+    if (!response.ok) throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+    const jsonData = await response.json();
+    const parsed = photoManifestSchema.safeParse(jsonData);
+    if (!parsed.success) {
+      console.error('Failed to parse photo manifest for [date] page:', parsed.error.flatten());
+      throw new Error('Failed to parse photo manifest for [date] page: ' + parsed.error.toString());
+    }
+    allPhotos = parsed.data;
+  } catch (e) {
+    const error = e as Error;
+    console.error(`Error processing photo manifest for [date] page: ${error.message}`);
+    throw error; // Fail fast
+  }
+
+  const photosByDate = new Map<string, PhotoManifestItem[]>();
+  allPhotos.forEach(photo => {
+    let dateStr: string | null = null;
+    if (photo.dateTaken) {
+      dateStr = photo.dateTaken.substring(0, 10); // YYYY-MM-DD
+    } else if (photo.year && photo.month && photo.day) {
+      const monthStr = String(photo.month).padStart(2, '0');
+      const dayStr = String(photo.day).padStart(2, '0');
+      dateStr = `${photo.year}-${monthStr}-${dayStr}`;
+    }
+
+    if (dateStr) {
+      if (!photosByDate.has(dateStr)) {
+        photosByDate.set(dateStr, []);
+      }
+      photosByDate.get(dateStr)?.push(photo);
+    }
+  });
+
+  const paths = Array.from(photosByDate.keys()).map(date => {
+    const photosOnDate = photosByDate.get(date) || [];
+    // Sort photos on this specific date by time (if available in dateTaken)
+    photosOnDate.sort((a, b) => {
+      if (a.dateTaken && b.dateTaken) {
+        const dateA = new globalThis.Date(a.dateTaken);
+        const dateB = new globalThis.Date(b.dateTaken);
+
+        const timeA = dateA.getTime();
+        const timeB = dateB.getTime();
+
+        if (isNaN(timeA) && isNaN(timeB)) return 0; // Both invalid, treat as equal
+        if (isNaN(timeA)) return 1;  // Invalid dateA goes to the end
+        if (isNaN(timeB)) return -1; // Invalid dateB goes to the end
+
+        return timeA - timeB; // Earliest first for a given day
+      }
+      return 0;
+    });
+    return {
+      params: { date: date }, // date is YYYY-MM-DD
+      props: { photosForDate: photosOnDate, dateDisplay: date }, // Removed 'as PageProps'
+    };
+  });
+
+  return paths;
+}
+
+// Props interface is now Props defined above
+const { photosForDate, dateDisplay } = Astro.props as Props; // Changed Astro.props as PageProps to Astro.props as Props
+
+const pageTitle = `Photos from ${dateDisplay}`;
+const pageDescription = `A collection of photos taken on ${dateDisplay}.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-heading-1 mb-2 text-center">{pageTitle}</h1>
+    <p class="text-center text-meta mb-8">
+      <a href="/photos/dates" class="text-link hover:underline">View all photo dates</a>
+    </p>
+
+    {photosForDate && photosForDate.length > 0 ? (
+      <PhotoGallery photos={photosForDate} />
+    ) : (
+      <p class="text-center">No photos found for this date.</p>
+    )}
+  </div>
+</BaseLayout>

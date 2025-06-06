@@ -3,9 +3,9 @@
 This document tracks the development progress, current status, and known issues for the kadykov.com website.
 
 ## 1. Current Overall Status
--   **Date**: 2025-06-04
--   **Phase**: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling.
--   **Summary**: Completed a major overhaul of the blog's URL structure, styled the blog listing and tag pages with DaisyUI cards, and refined image rendering in these cards for consistency and CLS prevention. Semantic typography applied to new blog page titles.
+-   **Date**: 2025-06-06
+-   **Phase**: General Photo Gallery Implementation - Phase 1.
+-   **Summary**: Starting implementation of a new general photo gallery system. This involves fetching photo data from a remote manifest, creating display components, and building pages for viewing all photos, photos by tag, and photos by date, including pagination.
 
 ## 2. What Works (Post-Blog Phase I & Recent Refinements)
 -   **Core Pages**: Home, About, CV (Markdown), Contact (Netlify Forms).
@@ -42,24 +42,40 @@ This document tracks the development progress, current status, and known issues 
 -   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
 -   **Deployment**: Netlify deployment, functional build process.
 
-## 3. Current Task: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling (COMPLETE)
--   **Goal**: Fix blog URL extensions, style listing pages, ensure correct image display in cards, and update related pages (RSS, tags).
--   **Outcome**: Successfully implemented clean URLs, styled blog listing and tag pages with responsive DaisyUI cards, resolved image rendering issues, and fixed RSS/tag page functionality.
+## 3. Current Task: General Photo Gallery Implementation (Phase 1 - In Progress)
+-   **Goal**: Implement a new general photo gallery system using `image_manifest.json` from `https://share.kadykov.com`.
+-   **Key Implementation Steps**:
+    *   Define a Zod schema for validating the fetched `image_manifest.json` data.
+    *   Create `src/components/PhotoGallery.astro` to display photo thumbnails using `OptimizedImage.astro` and integrate with `PhotoSwipe.astro` for lightbox functionality. Start with a simple CSS-based justified layout.
+    *   Create main gallery page `src/pages/photos/index.astro` to display all photos, with pagination.
+    *   Create tag-based gallery pages:
+        *   `src/pages/photos/tags/index.astro`: Lists all unique photo tags.
+        *   `src/pages/photos/tags/[tag].astro`: Displays photos for a specific tag, with pagination. (Photo tags separate from blog tags).
+    *   Create date-based gallery pages:
+        *   `src/pages/photos/dates/index.astro`: Lists all unique dates (YYYY-MM-DD).
+        *   `src/pages/photos/dates/[date].astro`: Displays photos for a specific date.
+    *   Update site navigation to include links to new gallery sections.
+    *   Cleanup: Remove old `self-portrait.json` gallery and `src/pages/galleries/self-portrait.astro`.
+-   **Previous Task (Complete)**: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling.
 
 ## 4. Planned Next Steps
+-   **Complete General Photo Gallery Implementation (Phase 1)**: Focus on the steps outlined in section 3.
+-   **Future Photo Gallery Enhancements (Phase 2+)**:
+    *   Refine gallery layout (e.g., explore `justified-layout` npm package or advanced CSS).
+    *   Implement individual photo pages if deemed necessary (for SEO, sharing).
+    *   Develop "Artistic Galleries" and "Strangers Gallery" concepts, potentially leveraging the general gallery framework.
 -   **Site-wide Typographic Consistency**:
-    *   Extend the use of semantic text utility classes to other pages and components (Homepage, About page, Contact page, Header, Footer, UI elements like buttons, form inputs).
--   Address remaining styling/layout issues from `hello-world.md` post review (if any beyond typography, e.g., spacing around blog post title/header).
--   **Blog Phase III: Future Considerations (Blog)** (Previously Blog Phase II & III)
+    *   Extend the use of semantic text utility classes to other pages and components.
+-   **Blog Enhancements**:
     *   MDX for complex posts.
     *   OpenGraph tags & social sharing.
-    *   Pagination.
-    *   Comments system.
+    *   Comments system (evaluation).
     *   Drafting and publishing actual blog content.
 
-## 5. What's Left to Build / Improve (Other Areas - Post-Blog Focus)
-(Content remains largely the same as previous version)
--   **Photo Galleries**: "Strangers Gallery" (date/location nav), thematic galleries, image hosting, OpenGraph.
+## 5. What's Left to Build / Improve (Other Areas)
+-   **Photo Galleries**:
+    *   **General Photo Gallery**: Currently in progress (see section 3).
+    *   Future: "Strangers Gallery" (date/location nav), thematic galleries with unique styling, further lightbox refinements.
 -   **CV Page**: DaisyUI timeline, interactivity.
 -   **Front Page**: Interactivity, landing page style.
 -   **Footer**: Add links/info.
