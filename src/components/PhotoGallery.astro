@@ -1,36 +1,81 @@
 ---
 import OptimizedImage from './OptimizedImage.astro';
 import type { PhotoManifestItem } from '../utils/photoManifestSchema';
+import { getImage } from "astro:assets";
+import { widthSet as globalWidthSet } from "../utils/widthSet"; // Import global widthSet
 
 interface Props {
   photos: PhotoManifestItem[];
 }
 
 const { photos } = Astro.props;
-const imageBaseUrl = 'https://share.kadykov.com/'; // Base URL for images from the manifest
+const imageBaseUrl = 'https://share.kadykov.com/';
+
+// Helper function to calculate lightbox widths, moved here to avoid parser issues
+function getLightboxWidths(photoWidth: number): number[] {
+  const widths = [...new Set(globalWidthSet.filter(w => photoWidth >= w).concat(photoWidth))].sort((a, b) => a - b);
+  if (widths.length === 0) {
+    widths.push(photoWidth);
+  }
+  return widths;
+}
 ---
 
 {photos && photos.length > 0 ? (
-  <div class="photo-gallery-grid" id="gallery">
-    {photos.map((photo) => {
-      const photoSrc = `${imageBaseUrl}${photo.relativePath}`;
+  // Switched from CSS Grid to Tailwind CSS Columns for masonry-like layout
+  // Adjust column counts (columns-2, sm:columns-3, etc.) as needed for desired density.
+  // The `space-y-4` on child `<a>` tags will handle vertical spacing if using columns.
+  // Or, `gap-4` on the parent div if using `columns` with `break-inside-avoid`.
+  <div class="columns-2 sm:columns-3xs gap-4" id="gallery">
+    {photos.map(async (photo) => {
+      const photoSrc = `${imageBaseUrl}${photo.relativePath}`; // Original JPEG/PNG src
       const altText = photo.title || photo.description || photo.filename;
-      // For a simple grid, let's aim for thumbnails around 300-400px wide.
-      // This displayWidth is conceptual for OptimizedImage.
-      // The actual rendered width will be controlled by CSS grid.
-      const displayWidth = 400;
-      // Sizes attribute for responsive images. This is a basic example.
-      // It might need adjustment based on the actual number of columns and breakpoints.
-      const sizesAttr = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+
+      const calculatedLightboxWidths = getLightboxWidths(photo.width);
+
+      const avifLightboxImages = await getImage({
+        src: photoSrc,
+        widths: calculatedLightboxWidths,
+        width: photo.width,
+        height: photo.height,
+        format: 'avif',
+      });
+
+      // WebP fallback generation removed as data-pswp-src is now original JPEG.
+
+      // For PhotoSwipe:
+      // href: Original JPEG for download via PhotoSwipe's download button.
+      // data-pswp-src: Original JPEG. If PhotoSwipe uses this for download (overriding href), this ensures JPEG download.
+      //                Also serves as fallback display if AVIF/WebP srcset not supported/used.
+      // data-pswp-srcset: AVIF srcset for modern browsers for optimized display.
+      // data-pswp-width/height: Original dimensions for PhotoSwipe to calculate aspect ratio.
+      const pswpLinkHref = photoSrc;
+      const pswpDataSrc = photoSrc; // Changed to photoSrc to ensure JPEG download if data-pswp-src is used by download button
+      const pswpWidth = photo.width;
+      const pswpHeight = photo.height;
+      const pswpSrcset = avifLightboxImages?.srcSet?.attribute;
+
+      // displayWidth for OptimizedImage: Max anticipated rendering width of the thumbnail.
+      // For `columns-2 sm:columns-3xs` (sm: 680px, 3xs means 256px wide columns):
+      // Max width is ~256px on sm+ screens, or ~50vw on smaller.
+      // Set displayWidth to a value slightly larger than 256px for high DPR, e.g. 300px.
+      const displayWidth = 300;
+      // sizesAttr:
+      // - Below sm (680px): 2 columns, so image width is ~50vw.
+      // - sm (680px) and above: columns are 256px wide.
+      const sizesAttr = '(min-width: 680px) 256px, 50vw';
+
 
       return (
+        // Added `break-inside-avoid` for CSS columns and `mb-4` for vertical spacing.
         <a
-          href={photoSrc}
-          data-pswp-src={photoSrc}
-          data-pswp-width={photo.width}
-          data-pswp-height={photo.height}
+          href={pswpLinkHref}
+          data-pswp-src={pswpDataSrc}
+          data-pswp-width={pswpWidth}
+          data-pswp-height={pswpHeight}
+          data-pswp-srcset={pswpSrcset}
           target="_blank"
-          class="gallery-item block relative overflow-hidden group"
+          class="gallery-item block relative overflow-hidden group rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10"
           aria-label={`View image ${altText}`}
         >
           <OptimizedImage
@@ -43,15 +88,10 @@ const imageBaseUrl = 'https://share.kadykov.com/'; // Base URL for images from t
             loading="lazy"
             decoding="async"
             enforceAspectRatio={`${photo.width}:${photo.height}`}
-            class="w-full h-auto transition-transform duration-300 ease-in-out group-hover:scale-105"
+            class="w-full h-auto transition-transform duration-300 ease-in-out group-hover:scale-110 rounded-lg"
             imgClass="object-cover"
           />
-          {(photo.title || photo.description) && (
-            <div class="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-              {photo.title && <h3 class="text-sm font-bold">{photo.title}</h3>}
-              {photo.description && <p class="text-xs truncate">{photo.description}</p>}
-            </div>
-          )}
+          {/* Overlay removed as per user request to prioritize enlarge hover effect */}
         </a>
       );
     })}
@@ -67,17 +107,23 @@ const imageBaseUrl = 'https://share.kadykov.com/'; // Base URL for images from t
 </script>
 
 <style>
-  .photo-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); /* Responsive grid columns */
-    gap: 0.5rem; /* Adjust gap as needed */
-    /* For a more justified look, one might use Flexbox with items of varying flex-grow based on aspect ratio,
-       or more complex JS libraries. This grid is a starting point. */
-  }
+  /* .photo-gallery-grid class is no longer used as Tailwind column classes are applied directly to the div */
 
   .gallery-item {
-    /* Ensure items maintain aspect ratio if OptimizedImage doesn't enforce it via style */
-    /* aspect-ratio will be handled by OptimizedImage's enforceAspectRatio prop */
-    background-color: #eee; /* Placeholder background */
+    background-color: #2d3748; /* Darker placeholder for dark mode, or use theme variable */
+    /* For CSS columns, items flow naturally. Aspect ratio is handled by OptimizedImage. */
+  }
+
+  /* Styling for the text overlay to ensure readability and better aesthetics */
+  .gallery-item .absolute div h3 {
+    /* text-shadow: 0 1px 3px rgba(0,0,0,0.5); */
+  }
+  .gallery-item .absolute div p {
+    /* text-shadow: 0 1px 2px rgba(0,0,0,0.5); */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
