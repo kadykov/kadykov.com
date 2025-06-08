@@ -6,11 +6,11 @@ This document outlines key architectural patterns, technical decisions, and comp
 -   **Core Technology**: `astro:assets` module (`getImage`, `inferRemoteSize`) is used for processing and generating image sources.
 -   **Format Prioritization**:
     *   **Primary**: AVIF format is served for modern browsers due to its superior compression and quality.
-    *   **Fallback**: JPEG format is used as a fallback for browsers that do not support AVIF. The fallback JPEG is intentionally served at a minimal resolution, assuming devices not supporting AVIF may have lower hardware capabilities.
--   **Source**: Images are referenced from a remote source (e.g., Flickr, as indicated by `staticflickr.com` in `astro.config.mjs` image domains).
--   **Lightbox Integration**: The `PhotoSwipe.astro` component generates `data-pswp-srcset`, `data-pswp-width`, and `data-pswp-height` attributes for PhotoSwipe, using the AVIF image set.
--   **Original Image Link**: A direct link to the original source image (e.g., on Flickr) is provided (`<a href={src} ...>`).
--   **Implementation Example**: See `src/components/PhotoSwipe.astro`.
+    *   **Fallback**: JPEG format is used as a fallback for browsers that do not support AVIF. The fallback JPEG is intentionally served at a minimal resolution, assuming devices not supporting AVIF may have lower hardware capabilities. (Note: For thumbnails, the fallback JPEG from `OptimizedImage.astro` is based on `displayWidth`).
+-   **Source**: Images are referenced from a remote source (e.g., Flickr, `share.kadykov.com`).
+-   **Lightbox Integration**: The `PhotoSwipe.astro` component generates `data-pswp-srcset`, `data-pswp-width`, and `data-pswp-height` attributes for PhotoSwipe, using the AVIF image set. (Note: `PhotoGallery.astro` now directly prepares these attributes for PhotoSwipe JS).
+-   **Original Image Link**: A direct link to the original source image (e.g., on Flickr or `share.kadykov.com`) is provided (`<a href={src} ...>`).
+-   **Implementation Example**: See `src/components/PhotoSwipe.astro` (for lightbox setup) and `src/components/PhotoGallery.astro` (for gallery item setup).
 -   **Reusable Optimized Image Component (`src/components/OptimizedImage.astro` - Implemented & Refined)**:
     *   **Goal**: Centralizes logic for rendering optimized images using `astro:assets` (`getImage`, `inferRemoteSize`) and `src/utils/widthSet.ts`.
     *   **Props**: `src`, `alt`, `displayWidth`, `sizesAttr`, `maxScaling` (default 3), `class` (for `<picture>`), `imgClass` (for `<img>`), `loading`, `decoding`, `quality`, `enforceAspectRatio`.
@@ -22,9 +22,28 @@ This document outlines key architectural patterns, technical decisions, and comp
         *   The root `<picture>` tag does *not* apply a `max-width` style, allowing parent containers to control its rendered size. It applies `aspect-ratio` style if `enforceAspectRatio` is used.
         *   The `class` prop is applied to the `<picture>` tag. For proper filling of containers like `figure` in cards, it's expected to be used with `block w-full` (or similar).
     *   **Output**: Uses `getImage` to generate sources for `avif`, `webp`, and a `jpeg` fallback, rendered within a `<picture>` element. The `<img>` tag uses `width` and `height` attributes derived from `fallbackImage.attributes`.
-    *   **Primary Use Cases**: Blog post featured images (in `MarkDownPostLayout.astro`) and blog post card thumbnails (in `BlogPost.astro`).
+    *   **Primary Use Cases**: Blog post featured images (in `MarkDownPostLayout.astro`), blog post card thumbnails (in `BlogPost.astro`), and photo gallery thumbnails (in `PhotoGallery.astro`).
 
-## 2. Layout and Structure
+## 2. Photo Gallery System Architecture
+-   **Thumbnail Display Component (`src/components/PhotoGallery.astro`):**
+    *   Responsible for fetching and processing photo manifest data (e.g., from `image_manifest.json`).
+    *   Iterates through photos, preparing data for both thumbnail display and lightbox integration.
+    *   Uses `src/components/OptimizedImage.astro` for rendering individual responsive thumbnails.
+    *   Manages the overall layout of thumbnails (e.g., using Tailwind CSS Columns for a masonry effect).
+    *   Provides necessary `data-pswp-*` attributes (e.g., `data-pswp-src`, `data-pswp-srcset`, `data-pswp-width`, `data-pswp-height`) on anchor tags, which PhotoSwipe JavaScript uses to initialize the lightbox.
+-   **Optimized Thumbnails (`src/components/OptimizedImage.astro`):**
+    *   Acts as a dedicated component for generating responsive `<picture>` elements with optimized AVIF, WebP, and JPEG sources, as detailed in section 1.
+    *   Receives props like `src`, `alt`, `displayWidth`, `sizesAttr` from `PhotoGallery.astro`.
+-   **Lightbox Functionality:**
+    *   Provided by the PhotoSwipe JavaScript library (`src/scripts/photoswipe.js`), which is initialized on a container (e.g., `#gallery`) and dynamically builds the lightbox from the `data-pswp-*` attributes on child anchor tags.
+-   **Separation of Concerns:**
+    *   `PhotoGallery.astro`: Handles gallery data, layout, and PhotoSwipe JS data provisioning.
+    *   `OptimizedImage.astro`: Focuses on generating the markup for a single optimized, responsive image.
+    *   `photoswipe.js`: Manages the interactive lightbox experience.
+-   **Potential Future Refinement:**
+    *   Consideration for integrating `OptimizedImage.astro` logic more directly within a hypothetical enhanced `PhotoSwipe.astro` component if it were to also manage thumbnail generation, creating a more unified "gallery item" component. This approach was deferred for the current implementation phase.
+
+## 3. Layout and Structure
 -   **Main Layout**: `src/layouts/BaseLayout.astro` serves as the foundational layout for most pages.
     *   It includes common components: `Header.astro`, `Navigation.astro`, `Footer.astro`.
 -   **Navigation**:
@@ -32,7 +51,7 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   The `Header.astro` component is sticky (`position: sticky`) and implements an auto-hide behavior on scroll (hides on scroll down, appears on scroll up) via an inline JavaScript snippet in `BaseLayout.astro`.
 -   **View Transitions**: Astro's View Transitions (`@view-transition { navigation: auto; }`) are enabled globally in `BaseLayout.astro` for smoother page transitions.
 
-## 3. Styling and Theming
+## 4. Styling and Theming
 -   **CSS Framework**: Tailwind CSS is the primary styling utility.
     *   Configuration: `tailwind.config.cjs`.
     *   Base Styles: Tailwind's base, components, and utilities are imported in `src/styles/base.css`. Astro's default base styles are disabled (`applyBaseStyles: false` in `astro.config.mjs`).
@@ -49,7 +68,7 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   A custom Tailwind utility class `.prose-serif` (defined in `src/styles/base.css`) is used to style Markdown-generated content.
     *   It applies `font-serif` (Faustina) to body text and `font-sans` (Ruda) to headings within the prose context, along with other typographic refinements.
 
-## 4. Font Management
+## 5. Font Management
 -   **Self-Hosting**: Fonts (Ruda, Faustina, Source Code Pro) are self-hosted using `@fontsource-variable` packages.
 -   **Preloading**: Specific WOFF2 font files (`ruda-latin-wght-normal.woff2`, `faustina-latin-wght-normal.woff2`) are preloaded in `src/layouts/BaseLayout.astro` for performance.
 -   **`@font-face` Definitions**: Located in `src/styles/base.css`.
@@ -58,7 +77,7 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   Specify `unicode-range` for each font file to aid browser optimization.
     *   `font-display: block;` is used.
 
-## 5. Caching Strategy
+## 6. Caching Strategy
 -   **Netlify Headers**: Custom caching headers are defined in `public/_headers`.
 -   **Asset Caching**: Files under `/_astro/*` (Astro's generated assets) are configured with:
     *   `cache-control: public`
@@ -66,7 +85,7 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   `cache-control: immutable`
     This ensures long-term caching of versioned assets by browsers and CDNs.
 
-## 6. Blog Content & Layout Patterns (Implemented & Refined)
+## 7. Blog Content & Layout Patterns (Implemented & Refined)
 -   **Content Source**: Markdown (`.md`) files in `src/content/blog/`. MDX for future complex posts.
 -   **Schema**: Defined in `src/content/config.ts` (Zod). Includes `title`, `pubDate`, `description`, `image` (object with `url`, `alt`), `tags` (optional array), `lastUpdatedDate` (optional).
 -   **URL Structure**: Posts are served at `/blog/[slug]` (e.g., `/blog/hello-world`), with no `.md` extension.
