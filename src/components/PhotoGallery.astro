@@ -75,7 +75,7 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-pswp-height={pswpHeight}
           data-pswp-srcset={pswpSrcset}
           target="_blank"
-          class="gallery-item block relative overflow-hidden group rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10"
+          class="gallery-item block relative overflow-hidden rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}
         >
           <OptimizedImage
@@ -88,7 +88,7 @@ function getLightboxWidths(photoWidth: number): number[] {
             loading="lazy"
             decoding="async"
             enforceAspectRatio={`${photo.width}:${photo.height}`}
-            class="w-full h-auto transition-transform duration-300 ease-in-out group-hover:scale-110 rounded-lg"
+            class="w-full h-auto rounded-lg"
             imgClass="object-cover"
           />
           {/* Overlay removed as per user request to prioritize enlarge hover effect */}
