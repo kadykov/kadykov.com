@@ -74,6 +74,10 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-pswp-width={pswpWidth}
           data-pswp-height={pswpHeight}
           data-pswp-srcset={pswpSrcset}
+          data-title={photo.title || ''}
+          data-description={photo.description || ''}
+          data-date={photo.dateTaken || ''}
+          data-tags={photo.tags?.join(',') || ''}
           target="_blank"
           class="gallery-item block relative overflow-hidden rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}
