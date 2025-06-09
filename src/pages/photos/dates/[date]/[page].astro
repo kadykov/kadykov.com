@@ -1,17 +1,18 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PhotoGallery from '../../../components/PhotoGallery.astro';
-import { photoManifestSchema, type PhotoManifestItem } from '../../../utils/photoManifestSchema';
-import type { GetStaticPathsResult } from 'astro'; // Re-import GetStaticPathsResult
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PhotoGallery from '../../../../components/PhotoGallery.astro';
+import { photoManifestSchema, type PhotoManifestItem } from '../../../../utils/photoManifestSchema';
+import type { GetStaticPathsResult, PaginateFunction, Page } from 'astro';
 
 // const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Moved inside getStaticPaths
 
 interface Props { // Renamed PageProps back to Props
-  photosForDate: PhotoManifestItem[];
+  page: Page<PhotoManifestItem>;
   dateDisplay: string;
 }
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult> { // Reverted return type
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }): Promise<GetStaticPathsResult> { // Reverted return type
+  const PAGE_SIZE = 24; // Define page size inside getStaticPaths
   const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Defined inside function
   let allPhotos: PhotoManifestItem[] = [];
   try {
@@ -49,8 +50,8 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> { // Rever
     }
   });
 
-  const paths = Array.from(photosByDate.keys()).map(date => {
-    const photosOnDate = photosByDate.get(date) || [];
+  const paths = [];
+  for (const [date, photosOnDate] of photosByDate.entries()) {
     // Sort photos on this specific date by time (if available in dateTaken)
     photosOnDate.sort((a, b) => {
       if (a.dateTaken && b.dateTaken) {
@@ -68,33 +69,57 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> { // Rever
       }
       return 0;
     });
-    return {
-      params: { date: date }, // date is YYYY-MM-DD
-      props: { photosForDate: photosOnDate, dateDisplay: date }, // Removed 'as PageProps'
-    };
-  });
 
+    const paginatedResult = paginate(photosOnDate, {
+      pageSize: PAGE_SIZE,
+      params: { date: date },
+      props: { dateDisplay: date }
+    });
+    paths.push(...paginatedResult);
+  }
   return paths;
 }
 
 // Props interface is now Props defined above
-const { photosForDate, dateDisplay } = Astro.props as Props; // Changed Astro.props as PageProps to Astro.props as Props
+const { page, dateDisplay } = Astro.props;
 
-const pageTitle = `Photos from ${dateDisplay}`;
-const pageDescription = `A collection of photos taken on ${dateDisplay}.`;
+const pageTitle = `Photos from ${dateDisplay}${page.currentPage > 1 ? ` (Page ${page.currentPage})` : ''}`;
+const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`;
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-2 text-center">{pageTitle}</h1>
+    <h1 class="text-heading-1 mb-2 text-center">Photos from {dateDisplay}</h1>
     <p class="text-center text-meta mb-8">
-      <a href="/photos/dates" class="text-link hover:underline">View all photo dates</a>
+      <a href="/photos/dates" class="text-link hover:underline text-body-large-serif">View all photo dates</a>
     </p>
 
-    {photosForDate && photosForDate.length > 0 ? (
-      <PhotoGallery photos={photosForDate} />
+    {page.data && page.data.length > 0 ? (
+      <PhotoGallery photos={page.data} />
     ) : (
       <p class="text-center">No photos found for this date.</p>
+    )}
+
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="btn btn-outline">
+            &laquo; Previous
+          </a>
+        ) : (
+          <span class="btn btn-outline btn-disabled" aria-disabled="true">&laquo; Previous</span>
+        )}
+
+        <span>Page {page.currentPage} of {page.lastPage}</span>
+
+        {page.url.next ? (
+          <a href={page.url.next} class="btn btn-outline">
+            Next &raquo;
+          </a>
+        ) : (
+          <span class="btn btn-outline btn-disabled" aria-disabled="true">Next &raquo;</span>
+        )}
+      </nav>
     )}
   </div>
 </BaseLayout>
