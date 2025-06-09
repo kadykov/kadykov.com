@@ -35,9 +35,14 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   Acts as a dedicated component for generating responsive `<picture>` elements with optimized AVIF, WebP, and JPEG sources, as detailed in section 1.
     *   Receives props like `src`, `alt`, `displayWidth`, `sizesAttr` from `PhotoGallery.astro`.
 -   **Lightbox Functionality:**
-    *   Provided by the PhotoSwipe JavaScript library (`src/scripts/photoswipe.js`), which is initialized on a container (e.g., `#gallery`) and dynamically builds the lightbox from the `data-pswp-*` attributes on child anchor tags.
+    *   Provided by the PhotoSwipe JavaScript library (`src/scripts/photoswipe.js`).
+    *   Uses the `photoswipe-dynamic-caption-plugin` to display captions.
+    *   The `PhotoGallery.astro` component embeds photo metadata (title, description, date, tags) as `data-*` attributes (e.g., `data-title`, `data-description`, `data-date`, `data-tags`) on the anchor tags.
+    *   The `captionContent` function in `src/scripts/photoswipe.js` consumes these `data-*` attributes to dynamically build the caption HTML.
+    *   Captions display the photo's title, description, date, and tags. Date and tags are clickable links to their respective archive pages (e.g., `/photos/dates/YYYY-MM-DD/1`, `/photos/tags/[tag]/1`).
+    *   Styling for the caption is achieved by applying Tailwind CSS utility classes directly within the `captionHTML` generated in `photoswipe.js`, ensuring it harmonizes with the site's design and the plugin's dark background.
 -   **Separation of Concerns:**
-    *   `PhotoGallery.astro`: Handles gallery data, layout, and PhotoSwipe JS data provisioning.
+    *   `PhotoGallery.astro`: Handles gallery data, layout, and provisioning of all necessary `data-*` attributes for PhotoSwipe core and the caption plugin.
     *   `OptimizedImage.astro`: Focuses on generating the markup for a single optimized, responsive image.
     *   `photoswipe.js`: Manages the interactive lightbox experience.
 -   **Potential Future Refinement:**

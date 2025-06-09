@@ -45,9 +45,25 @@ This document tracks the development progress, current status, and known issues 
     *   Features a "zoom within frame" hover effect with rounded corners.
     *   Correctly handles `sizes` attributes for responsive image loading.
     *   Configured for PhotoSwipe to download original JPEGs while displaying optimized AVIFs.
--   **Photo Lightbox**: Basic PhotoSwipe prototype on About page; main gallery uses PhotoSwipe JS via `PhotoGallery.astro`.
+-   **Photo Lightbox**:
+    *   Main gallery uses PhotoSwipe JS via `PhotoGallery.astro`.
+    *   Enhanced with dynamic captions using `photoswipe-dynamic-caption-plugin`.
+    *   Captions display photo title, description, date, and tags with clickable links to archive pages.
+    *   Styling of captions achieved using Tailwind CSS utility classes directly in `photoswipe.js`.
 -   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
 -   **Deployment**: Netlify deployment, functional build process.
+
+## 2025-06-09
+-   **PhotoSwipe Lightbox Caption Enhancement (Completed)**
+    *   Integrated `photoswipe-dynamic-caption-plugin` into `src/scripts/photoswipe.js`.
+    *   Modified `src/components/PhotoGallery.astro` to pass `data-title`, `data-description`, `data-date`, and `data-tags` attributes to PhotoSwipe.
+    *   The plugin's `captionContent` function now dynamically generates HTML for captions, including:
+        *   Photo title (using `text-heading-4`).
+        *   Photo description (using `text-body-standard-serif`).
+        *   Clickable date link (YYYY-MM-DD format, linking to `/photos/dates/YYYY-MM-DD/1`) styled as a DaisyUI button.
+        *   Clickable tag links (linking to `/photos/tags/[tag]/1`) styled as DaisyUI buttons.
+    *   Caption text styled with `text-gray-300` for readability on the dark caption background. Button styles adjusted for this context using Tailwind utilities.
+    *   Corrected pagination for date-specific gallery pages (`src/pages/photos/dates/[date]/[page].astro`).
 
 ## 2025-06-08
 -   **`PhotoGallery.astro` Component - Fixes & Enhancements (Completed)**

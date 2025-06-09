@@ -3,12 +3,18 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-06-05
--   **Activity**: Planning and starting implementation of a new General Photo Gallery.
+-   **Date**: 2025-06-09
+-   **Activity**: Implementing General Photo Gallery features, including PhotoSwipe caption enhancements and pagination for date-specific galleries.
 -   **Primary Goal**: Replace the old JSON-based gallery system with a new one that sources images and metadata from a remote `image_manifest.json` (served at `https://share.kadykov.com/image_manifest.json`). Implement gallery display, tag-based filtering, date-based filtering, and pagination.
--   **Status**: Planning complete. Starting Memory Bank update, then implementation.
+-   **Status**: Ongoing implementation. PhotoSwipe captions and date gallery pagination completed.
 
 ## 2. Recent Key Activities & Decisions
+-   **PhotoSwipe Caption Enhancement & Date Pagination (2025-06-09)**:
+    *   Integrated `photoswipe-dynamic-caption-plugin` to display photo title, description, date, and tags in the PhotoSwipe lightbox.
+    *   Metadata is passed via `data-*` attributes from `PhotoGallery.astro` to `photoswipe.js`.
+    *   Captions are styled using Tailwind CSS utility classes directly in `photoswipe.js`.
+    *   Date and tag links in captions point to their respective paginated archive pages (e.g., `/photos/dates/YYYY-MM-DD/1`, `/photos/tags/[tag]/1`).
+    *   Implemented pagination for date-specific photo gallery pages (`src/pages/photos/dates/[date]/[page].astro`), similar to tag pages.
 -   **General Photo Gallery Planning (2025-06-05)**:
     *   **Data Source**: Decided to fetch `image_manifest.json` directly from `https://share.kadykov.com` in `getStaticPaths` for gallery pages. A Zod schema will be used for type safety.
     *   **Core Component**: `PhotoGallery.astro` will be created to display photo thumbnails (using `OptimizedImage.astro`) and integrate with `PhotoSwipe.astro` for lightbox.
@@ -47,13 +53,17 @@ This document tracks the current state of work, recent decisions, and immediate 
 -   `src/pages/rss.xml.js` (updated for new paths and collection name)
 -   `src/pages/tags/[tag].astro` (updated for new paths, collection name, and robustness)
 -   `src/styles/base.css` (referenced for semantic typography classes)
+-   `src/scripts/photoswipe.js` (updated for dynamic captions and styling)
+-   `src/components/PhotoGallery.astro` (updated to provide data attributes for captions)
+-   `src/pages/photos/dates/[date]/[page].astro` (updated for pagination)
 
 ## 4. Immediate Next Steps
-1.  **Update Memory Bank**:
-    *   Update `activeContext.md` (this document) with the current focus on the General Photo Gallery. (This step)
-    *   Update `progress.md` to reflect the planned work for the General Photo Gallery.
+1.  **Update Memory Bank**: (Done for this iteration)
+    *   Update `activeContext.md` (this document).
+    *   Update `progress.md`.
+    *   Update `systemPatterns.md`.
 2.  **Implement General Photo Gallery**:
-    *   Define Zod schema for `image_manifest.json` data.
+    *   Define Zod schema for `image_manifest.json` data. (Done)
     *   Create `src/components/PhotoGallery.astro`.
     *   Create gallery pages: `/photos/index.astro`, `/photos/tags/index.astro`, `/photos/tags/[tag].astro`, `/photos/dates/index.astro`, `/photos/dates/[date].astro`.
     *   Implement pagination.
