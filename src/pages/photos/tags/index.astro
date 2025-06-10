@@ -24,7 +24,7 @@ try {
   throw error; // Re-throw to fail the build
 }
 
-const pageTitle = "Photo Tags";
+const pageTitle = "Photo tags";
 const pageDescription = "Browse photos by tags.";
 ---
 
@@ -36,7 +36,7 @@ const pageDescription = "Browse photos by tags.";
       <ul class="flex flex-wrap justify-center gap-4">
         {uniqueTags.map(tag => (
           <li>
-            <a href={`/photos/tags/${encodeURIComponent(tag)}/1`} class="btn btn-outline"> {/* Added /1 for pagination */}
+            <a href={`/photos/tags/${encodeURIComponent(tag)}/1`} class="btn btn-ghost text-body-standard-serif"> {/* Added /1 for pagination */}
               {tag}
             </a>
           </li>

@@ -90,9 +90,6 @@ const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-heading-1 mb-2 text-center">Photos from {dateDisplay}</h1>
-    <p class="text-center text-meta mb-8">
-      <a href="/photos/dates" class="text-link hover:underline text-body-large-serif">View all photo dates</a>
-    </p>
 
     {page.data && page.data.length > 0 ? (
       <PhotoGallery photos={page.data} />
@@ -100,24 +97,28 @@ const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${
       <p class="text-center">No photos found for this date.</p>
     )}
 
+    <p class="text-center text-meta mb-8">
+      <a href="/photos/dates" class="btn text-heading-4">View all photo dates</a>
+    </p>
+
     {page.lastPage > 1 && (
       <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
         {page.url.prev ? (
-          <a href={page.url.prev} class="btn btn-outline">
+          <a href={page.url.prev} class="btn text-heading-4">
             &laquo; Previous
           </a>
         ) : (
-          <span class="btn btn-outline btn-disabled" aria-disabled="true">&laquo; Previous</span>
+          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
         )}
 
         <span>Page {page.currentPage} of {page.lastPage}</span>
 
         {page.url.next ? (
-          <a href={page.url.next} class="btn btn-outline">
+          <a href={page.url.next} class="btn text-heading-4">
             Next &raquo;
           </a>
         ) : (
-          <span class="btn btn-outline btn-disabled" aria-disabled="true">Next &raquo;</span>
+          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
         )}
       </nav>
     )}

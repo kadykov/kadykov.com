@@ -71,32 +71,29 @@ const pageDescription = `A collection of photos tagged with "${tagDisplayName}".
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-2 text-center">Photos tagged: "{tagDisplayName}"</h1>
-    <p class="text-center text-meta mb-8">
-      {/* Link to tags index needs to be adjusted if its path changes relative to this page, but it's root-relative so it's fine */}
-      <a href="/photos/tags" class="text-link hover:underline text-body-large-serif">View all photo tags</a>
-    </p>
-
+    <h1 class="text-heading-1 mb-2 text-center">Photos tagged: {tagDisplayName}</h1>
     <PhotoGallery photos={page.data} />
-
+    <p class="text-center text-meta mb-8">
+      <a href="/photos/tags" class="btn text-heading-4">View all photo tags</a>
+    </p>
     {page.lastPage > 1 && (
       <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
         {page.url.prev ? (
-          <a href={page.url.prev} class="btn btn-outline">
+          <a href={page.url.prev} class="btn text-heading-4">
             &laquo; Previous
           </a>
         ) : (
-          <span class="btn btn-outline btn-disabled" aria-disabled="true">&laquo; Previous</span>
+          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
         )}
 
         <span>Page {page.currentPage} of {page.lastPage}</span>
 
         {page.url.next ? (
-          <a href={page.url.next} class="btn btn-outline">
+          <a href={page.url.next} class="btn text-heading-4">
             Next &raquo;
           </a>
         ) : (
-          <span class="btn btn-outline btn-disabled" aria-disabled="true">Next &raquo;</span>
+          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
         )}
       </nav>
     )}

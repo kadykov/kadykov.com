@@ -41,7 +41,7 @@ try {
   throw error; // Fail fast
 }
 
-const pageTitle = "Photo Dates";
+const pageTitle = "Photo dates";
 const pageDescription = "Browse photos by date taken.";
 ---
 
@@ -53,7 +53,7 @@ const pageDescription = "Browse photos by date taken.";
       <ul class="flex flex-wrap justify-center gap-4">
         {uniqueDates.map(date => (
           <li>
-            <a href={`/photos/dates/${date}`} class="btn btn-outline">
+            <a href={`/photos/dates/${date}/1`} class="btn btn-ghost text-body-standard-serif">
               {date}
             </a>
           </li>
