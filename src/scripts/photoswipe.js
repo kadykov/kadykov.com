@@ -38,7 +38,7 @@ lightbox.on("uiRegister", function () {
   })
 })
 
-const captionPlugin = new PhotoSwipeDynamicCaption(lightbox, {
+new PhotoSwipeDynamicCaption(lightbox, {
   type: 'auto', // Or 'below', 'aside'
   captionContent: (slide) => {
     const el = slide.data.element; // This is the <a> tag
