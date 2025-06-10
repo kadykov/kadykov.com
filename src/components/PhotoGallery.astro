@@ -41,15 +41,24 @@ function getLightboxWidths(photoWidth: number): number[] {
         format: 'avif',
       });
 
-      // WebP fallback generation removed as data-pswp-src is now original JPEG.
+      const mediumWebPWidth = Math.min(1200, photo.width);
+      const mediumWebPHeight = Math.round((photo.height / photo.width) * mediumWebPWidth);
+
+      const webpFallbackImage = await getImage({
+        src: photoSrc,
+        width: mediumWebPWidth,
+        height: mediumWebPHeight,
+        format: 'webp',
+      });
 
       // For PhotoSwipe:
       // href: Original JPEG for download via PhotoSwipe's download button.
+
       // data-pswp-src: Original JPEG. If PhotoSwipe uses this for download (overriding href), this ensures JPEG download.
       //                Also serves as fallback display if AVIF/WebP srcset not supported/used.
       // data-pswp-srcset: AVIF srcset for modern browsers for optimized display.
       // data-pswp-width/height: Original dimensions for PhotoSwipe to calculate aspect ratio.
-      const pswpLinkHref = photoSrc;
+      const pswpLinkHref = webpFallbackImage?.src || photoSrc; // Fallback to original JPEG if WebP not available
       const pswpDataSrc = photoSrc; // Changed to photoSrc to ensure JPEG download if data-pswp-src is used by download button
       const pswpWidth = photo.width;
       const pswpHeight = photo.height;
