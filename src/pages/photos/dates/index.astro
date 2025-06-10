@@ -5,6 +5,16 @@ import { photoManifestSchema, type PhotoManifestItem } from '../../../utils/phot
 const manifestUrl = 'https://share.kadykov.com/image_manifest.json';
 let uniqueDates: string[] = []; // Stores dates as YYYY-MM-DD strings
 
+// Group dates by year and month
+interface GroupedDates {
+  [year: string]: {
+    [month: string]: string[];
+  };
+}
+
+let groupedDates: GroupedDates = {};
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 try {
   const response = await fetch(manifestUrl);
   if (!response.ok) {
@@ -35,6 +45,20 @@ try {
   });
   uniqueDates = Array.from(dateSet).sort((a, b) => b.localeCompare(a)); // Sort YYYY-MM-DD strings, recent first
 
+  uniqueDates.forEach(dateStr => {
+    const [year, monthNumStr] = dateStr.split('-');
+    const monthIndex = parseInt(monthNumStr, 10) - 1;
+    const monthName = monthNames[monthIndex];
+
+    if (!groupedDates[year]) {
+      groupedDates[year] = {};
+    }
+    if (!groupedDates[year][monthName]) {
+      groupedDates[year][monthName] = [];
+    }
+    groupedDates[year][monthName].push(dateStr);
+  });
+
 } catch (e) {
   const error = e as Error;
   console.error(`Error processing photo dates: ${error.message}`);
@@ -49,16 +73,28 @@ const pageDescription = "Browse photos by date taken.";
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1>
 
-    {uniqueDates.length > 0 ? (
-      <ul class="flex flex-wrap justify-center gap-4">
-        {uniqueDates.map(date => (
-          <li>
-            <a href={`/photos/dates/${date}/1`} class="btn btn-ghost text-body-standard-serif">
-              {date}
-            </a>
-          </li>
+    {Object.keys(groupedDates).length > 0 ? (
+      <div class="text-center"> {/* Add text-center to the main container for grouped dates */}
+        {Object.keys(groupedDates).sort((a, b) => b.localeCompare(a)).map(year => (
+          <section class="mb-8"> {/* Year section will inherit text-center */}
+            <h2 class="text-heading-2 mb-4">{year}</h2>
+            {Object.keys(groupedDates[year]).sort((a, b) => monthNames.indexOf(b) - monthNames.indexOf(a)).map(monthName => (
+              <div class="mb-4"> {/* Month section will inherit text-center */}
+                <h3 class="text-heading-3 mb-2">{monthName}</h3>
+                <ul class="flex flex-wrap justify-center gap-2"> {/* Add justify-center to center the date buttons */}
+                  {groupedDates[year][monthName].map((date: string) => (
+                    <li>
+                      <a href={`/photos/dates/${date}/1`} class="btn btn-ghost text-body-standard-serif">
+                        {date}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </section>
         ))}
-      </ul>
+      </div>
     ) : (
       <p class="text-center">No photo dates found.</p>
     )}
