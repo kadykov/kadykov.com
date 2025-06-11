@@ -53,8 +53,10 @@ if (intrinsicWidth && intrinsicHeight) {
 const cappedMaxWidth = Math.min(displayWidth * maxScaling, fullWidth);
 
 // Calculate currentWidthSet:
-// Filter globalWidthSet up to cappedMaxWidth, include cappedMaxWidth, ensure uniqueness and sort.
-let currentWidthSet = [...new Set(globalWidthSet.filter(w => w <= cappedMaxWidth).concat(cappedMaxWidth))].sort((a, b) => a - b);
+// Filter globalWidthSet up to cappedMaxWidth.
+let currentWidthSet = globalWidthSet.filter(w => w <= cappedMaxWidth);
+// Explicitly sort after filtering, as the original globalWidthSet is sorted but filter doesn't guarantee order.
+currentWidthSet.sort((a, b) => a - b);
 
 // Ensure displayWidth is included if it's smaller than the smallest value in currentWidthSet,
 // or if currentWidthSet is empty. This helps ensure a sensible base image size for the <img> tag.
@@ -77,6 +79,28 @@ if (currentWidthSet.length === 0) {
     currentWidthSet.push(Math.min(displayWidth, fullWidth));
 }
 
+// NEW LOGIC:
+// If cappedMaxWidth was the largest in our set, and it's less than fullWidth,
+// and we have other smaller widths (currentWidthSet.length > 1 before removal),
+// then remove cappedMaxWidth from currentWidthSet.
+// This assumes getImage will add fullWidth later, and we want to avoid
+// having both cappedMaxWidth and fullWidth if they are different but potentially close.
+if (currentWidthSet.length > 1 && cappedMaxWidth < fullWidth) {
+  const maxInSet = Math.max(...currentWidthSet);
+  if (maxInSet === cappedMaxWidth) {
+    currentWidthSet = currentWidthSet.filter(w => w < cappedMaxWidth);
+  }
+}
+
+// Final safeguard: if currentWidthSet somehow ended up empty, add a single sensible width.
+if (currentWidthSet.length === 0) {
+  let safeWidth = displayWidth;
+  if (safeWidth <= 0 || safeWidth > fullWidth) safeWidth = fullWidth;
+  if (cappedMaxWidth > 0 && cappedMaxWidth < safeWidth) safeWidth = cappedMaxWidth;
+  if (safeWidth <= 0) safeWidth = 320; // Absolute last resort, ensure positive for getImage
+
+  currentWidthSet.push(safeWidth);
+}
 
 let displayHeight: number | undefined = undefined;
 if (enforceAspectRatio && displayWidth) {
@@ -123,7 +147,6 @@ if (displayHeight) { // If enforceAspectRatio was used and displayHeight was cal
   // This case should ideally not be hit if src is valid and displayWidth > 0.
   heightForFallback = displayWidth; // Default to square or let it break if displayWidth is also problematic
 }
-
 
 const fallbackImage = await getImage({
   src: src,

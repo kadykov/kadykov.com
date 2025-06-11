@@ -13,11 +13,34 @@ const imageBaseUrl = 'https://share.kadykov.com/';
 
 // Helper function to calculate lightbox widths, moved here to avoid parser issues
 function getLightboxWidths(photoWidth: number): number[] {
-  const widths = [...new Set(globalWidthSet.filter(w => photoWidth >= w).concat(photoWidth))].sort((a, b) => a - b);
-  if (widths.length === 0) {
-    widths.push(photoWidth);
+  let currentCalculatedWidths = globalWidthSet.filter(w => w <= photoWidth);
+
+  if (currentCalculatedWidths.length === 0 && photoWidth > 0) {
+    currentCalculatedWidths = [photoWidth];
   }
-  return widths;
+
+  // Ensure sorted and unique before further logic
+  currentCalculatedWidths = [...new Set(currentCalculatedWidths)].sort((a, b) => a - b);
+
+  // If we have more than one width, and the largest width we calculated
+  // is less than the actual photoWidth, remove our largest calculated width.
+  // This assumes getImage will add photoWidth, and we want to avoid
+  // our largest (e.g., 1600) + photoWidth (e.g., 1700) if they are close.
+  if (currentCalculatedWidths.length > 1) {
+    const maxInSet = Math.max(...currentCalculatedWidths);
+    if (maxInSet < photoWidth) {
+      currentCalculatedWidths = currentCalculatedWidths.filter(w => w < maxInSet);
+    }
+  }
+
+  // Final safeguard: if currentCalculatedWidths ended up empty,
+  // ensure at least photoWidth is present.
+  if (currentCalculatedWidths.length === 0 && photoWidth > 0) {
+    currentCalculatedWidths.push(photoWidth);
+  }
+
+  // One last sort and unique just in case, though logic should maintain it.
+  return [...new Set(currentCalculatedWidths)].sort((a, b) => a - b);
 }
 ---
 
