@@ -6,12 +6,13 @@ import type { GetStaticPathsResult, PaginateFunction, Page } from 'astro';
 
 // const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Moved inside getStaticPaths
 
-interface Props { // Renamed PageProps back to Props
-  page: Page<PhotoManifestItem>;
+interface Props {
+  page: Page<PhotoManifestItem>; // items will have slugs from manifest
   dateDisplay: string;
+  fullPhotoDataset: PhotoManifestItem[]; // The dataset for THIS date, with slugs
 }
 
-export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }): Promise<GetStaticPathsResult> { // Reverted return type
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }): Promise<GetStaticPathsResult> {
   const PAGE_SIZE = 24; // Define page size inside getStaticPaths
   const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Defined inside function
   let allPhotos: PhotoManifestItem[] = [];
@@ -73,7 +74,10 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
     const paginatedResult = paginate(photosOnDate, {
       pageSize: PAGE_SIZE,
       params: { date: date },
-      props: { dateDisplay: date }
+      props: {
+        dateDisplay: date,
+        fullPhotoDataset: photosOnDate // Pass ONLY the photos for THIS date
+      }
     });
     paths.push(...paginatedResult);
   }
@@ -81,7 +85,7 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
 }
 
 // Props interface is now Props defined above
-const { page, dateDisplay } = Astro.props;
+const { page, dateDisplay, fullPhotoDataset } = Astro.props; // Added fullPhotoDataset
 
 const pageTitle = `Photos from ${dateDisplay}${page.currentPage > 1 ? ` (Page ${page.currentPage})` : ''}`;
 const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`;
@@ -92,7 +96,7 @@ const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${
     <h1 class="text-heading-1 mb-2 text-center">Photos from {dateDisplay}</h1>
 
     {page.data && page.data.length > 0 ? (
-      <PhotoGallery photos={page.data} />
+      <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
     ) : (
       <p class="text-center">No photos found for this date.</p>
     )}

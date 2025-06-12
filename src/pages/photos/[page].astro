@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotoGallery from '../../components/PhotoGallery.astro';
 import type { PhotoManifestItem } from '../../utils/photoManifestSchema';
-import { fetchPhotoManifest, generateSlugFromRelativePath } from '../../utils/photoData'; // Import generateSlugFromRelativePath
+import { fetchPhotoManifest } from '../../utils/photoData'; // REMOVED generateSlugFromRelativePath
 import type { Page, PaginateFunction } from 'astro';
 
 // Define PAGE_SIZE for pagination
@@ -11,7 +11,7 @@ import type { Page, PaginateFunction } from 'astro';
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const PAGE_SIZE = 24; // Defined inside function
 
-  let fetchedPhotos: PhotoManifestItem[] = [];
+  let fetchedPhotos: PhotoManifestItem[] = []; // Now contains slugs from manifest
   try {
     fetchedPhotos = await fetchPhotoManifest();
   } catch (e) {
@@ -21,15 +21,12 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
     throw error; // Re-throw to fail the build
   }
 
-  // Add slugs and sort photos
-  const allPhotosWithSlugs: PhotoManifestItem[] = fetchedPhotos.map(photo => ({
-    ...photo,
-    slug: generateSlugFromRelativePath(photo.relativePath),
-  }));
+  // Slugs are now assumed to be in fetchedPhotos from the manifest.
+  // No need for: const allPhotosWithSlugs = ...
 
   // Sort photos by dateTaken, most recent first.
   // Handle null dateTaken values by pushing them to the end.
-  allPhotosWithSlugs.sort((a, b) => {
+  fetchedPhotos.sort((a, b) => { // Sort fetchedPhotos directly
     if (a.dateTaken && b.dateTaken) {
       return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
     }
@@ -41,16 +38,16 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
   // The paginate function will generate params like { page: "1" }, { page: "2" }
   // because the filename is [page].astro.
   // It will also pass props to each page, including the paginated data.
-  // We need to pass the full `allPhotosWithSlugs` dataset to each page as well.
-  return paginate(allPhotosWithSlugs, {
+  // We need to pass the full `fetchedPhotos` dataset to each page as well.
+  return paginate(fetchedPhotos, { // Paginate fetchedPhotos directly
     pageSize: PAGE_SIZE,
-    props: { fullPhotoDataset: allPhotosWithSlugs }, // Pass the full dataset to each page
+    props: { fullPhotoDataset: fetchedPhotos }, // Pass the full dataset (which has slugs from manifest)
   });
 }
 
 interface Props {
-  page: Page<PhotoManifestItem>; // page.data will have slugs
-  fullPhotoDataset: PhotoManifestItem[]; // The full dataset with slugs
+  page: Page<PhotoManifestItem>; // page.data will have slugs from manifest
+  fullPhotoDataset: PhotoManifestItem[]; // The full dataset with slugs from manifest
 }
 
 const { page, fullPhotoDataset } = Astro.props;

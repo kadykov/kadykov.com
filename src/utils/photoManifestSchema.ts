@@ -36,7 +36,7 @@ export const photoManifestItemSchema = z.object({
   exposureTime: z.number().nullable(),
   creator: z.string().nullable(),
   copyright: z.string().nullable(),
-  slug: z.string().optional(), // Added for deep linking
+  slug: z.string(), // Slug is now a required string
 });
 
 export const photoManifestSchema = z.array(photoManifestItemSchema);

@@ -113,18 +113,29 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 
     if (lightbox.pswp) {
       lightbox.pswp.on('change', () => {
-        if (typeof lightbox.pswp.currIndex !== 'undefined') {
+        if (typeof lightbox.pswp.currIndex !== 'undefined' && lightbox.pswp.currSlide) {
           const currentPhotoData = lightbox.pswp.currSlide.data;
-          if (currentPhotoData && currentPhotoData.slug) {
+          if (currentPhotoData && typeof currentPhotoData.slug === 'string' && currentPhotoData.slug.length > 0) {
             const newHash = '#' + currentPhotoData.slug;
             if (window.location.hash !== newHash) {
+              // Update hash only if it's different, to avoid redundant history entries
               history.replaceState(null, '', newHash);
             }
           } else {
-            console.warn('PhotoSwipe: currentPhotoData.slug is missing for hash update.', currentPhotoData);
+            // If slug is missing or empty, clear the hash
+            // This prevents '#undefined' or '#' in the URL if a slug is bad
+            // and handles the case where a photo legitimately has no slug.
+            const newUrl = window.location.pathname + window.location.search;
+            if (window.location.hash) { // Only clear if there's a hash
+              history.replaceState(null, '', newUrl);
+            }
+            if (currentPhotoData && (!currentPhotoData.slug || currentPhotoData.slug.length === 0)) {
+              // Keep the warning if slug is explicitly empty, but not if data itself is missing
+              console.warn('PhotoSwipe: currentPhotoData.slug is empty, clearing hash.', currentPhotoData);
+            }
           }
         } else {
-          // console.warn('PhotoSwipe: lightbox.pswp.currIndex not available in pswp:change for hash update.');
+          // console.warn('PhotoSwipe: lightbox.pswp.currIndex or currSlide not available in pswp:change for hash update.');
         }
       });
 
