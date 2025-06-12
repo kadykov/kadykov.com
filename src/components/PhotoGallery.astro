@@ -32,15 +32,73 @@ const photoSwipeJsonData = await Promise.all(pswpDataset.map(async (photo) => {
     });
     pswpSrcset = avifLightboxImages?.srcSet?.attribute || '';
   } catch (e) {
-    console.error(`Failed to generate AVIF srcset for ${photoSrc}:`, e);
+    // console.error(`Failed to generate AVIF srcset for ${photoSrc}:`, e);
     // pswpSrcset will remain empty, PhotoSwipe will use the main 'src'
   }
 
+  // Generate a medium WebP for the main 'src' (fallback for PhotoSwipe display)
+  // Aim for max dimension (width or height) around 1600px, maintaining aspect ratio.
+  const MAX_DIMENSION = 1600;
+  let targetWidth = photo.width;
+  let targetHeight = photo.height;
+
+  if (photo.width > MAX_DIMENSION || photo.height > MAX_DIMENSION) {
+    if (photo.width / photo.height > 1) { // Landscape or square
+      targetWidth = MAX_DIMENSION;
+      targetHeight = Math.round((photo.height / photo.width) * targetWidth);
+    } else { // Portrait
+      targetHeight = MAX_DIMENSION;
+      targetWidth = Math.round((photo.width / photo.height) * targetHeight);
+    }
+  }
+  // Ensure dimensions are at least 1px
+  targetWidth = Math.max(1, targetWidth);
+  targetHeight = Math.max(1, targetHeight);
+
+  let webpSrcForPswp = photoSrc; // Default to original if WebP generation fails
+  try {
+    const webpPswpDisplayImage = await getImage({
+      src: photoSrc,
+      width: targetWidth,
+      height: targetHeight,
+      format: 'webp',
+    });
+    if (webpPswpDisplayImage?.src) {
+      webpSrcForPswp = webpPswpDisplayImage.src;
+    }
+  } catch (e) {
+    // console.error(`Failed to generate WebP display image for ${photoSrc} (target ${targetWidth}x${targetHeight}):`, e);
+  }
+
+  // Generate a small WebP for 'msrc' (placeholder) - max width 300px
+  const placeholderMaxWidth = 300;
+  let msrcPlaceholderWidth = Math.min(placeholderMaxWidth, photo.width);
+  let msrcPlaceholderHeight = Math.round((photo.height / photo.width) * msrcPlaceholderWidth);
+  // Ensure dimensions are at least 1px
+  msrcPlaceholderWidth = Math.max(1, msrcPlaceholderWidth);
+  msrcPlaceholderHeight = Math.max(1, msrcPlaceholderHeight);
+
+  let msrcUrl = webpSrcForPswp; // Default to medium WebP if small one fails
+   try {
+    const placeholderImage = await getImage({
+      src: photoSrc,
+      width: msrcPlaceholderWidth,
+      height: msrcPlaceholderHeight,
+      format: 'webp',
+    });
+    if (placeholderImage?.src) {
+      msrcUrl = placeholderImage.src;
+    }
+  } catch (e) {
+    // console.error(`Failed to generate msrc placeholder for ${photoSrc} (target ${msrcPlaceholderWidth}x${msrcPlaceholderHeight}):`, e);
+  }
+
   return {
-    src: photoSrc, // Original JPEG for PhotoSwipe src and download
-    msrc: photoSrc, // Optional: for initial small image, can be same as src or a specific thumbnail
-    w: photo.width,  // PhotoSwipe expects 'w'
-    h: photo.height, // PhotoSwipe expects 'h'
+    downloadUrl: photoSrc, // Original JPEG for download
+    src: webpSrcForPswp,   // Optimized WebP for main display fallback
+    msrc: msrcUrl,         // Small WebP placeholder
+    w: photo.width,        // PhotoSwipe expects 'w' (original dimensions)
+    h: photo.height,       // PhotoSwipe expects 'h' (original dimensions)
     srcset: pswpSrcset, // AVIF srcset for PhotoSwipe
     title: photo.title || '',
     description: photo.description || '',
@@ -98,9 +156,15 @@ function getLightboxWidths(photoWidth: number): number[] {
       const photoSrc = `${imageBaseUrl}${photo.relativePath}`; // Original JPEG/PNG src
       const altText = photo.title || photo.description || photo.filename;
 
+      // Retrieve the pre-generated data for this photo from photoSwipeJsonData
+      // This avoids re-calculating or re-fetching optimized image URLs for the thumbnail's link
+      const pswpEntryForThisPhoto = photoSwipeJsonData.find(entry => entry.slug === photo.slug && entry.downloadUrl === photoSrc);
+
+
       const calculatedLightboxWidths = getLightboxWidths(photo.width);
 
-      // Pass the true intrinsic dimensions of the photo to getImage.
+      // Pass the true intrinsic dimensions of the photo to getImage for AVIF srcset for the <a> tag.
+      // This is still needed if PhotoSwipe falls back to using data attributes from the <a> tag.
       const avifLightboxImages = await getImage({
         src: photoSrc,
         widths: calculatedLightboxWidths,
@@ -109,28 +173,19 @@ function getLightboxWidths(photoWidth: number): number[] {
         format: 'avif',
       });
 
-      const mediumWebPWidth = Math.min(1200, photo.width);
-      const mediumWebPHeight = Math.round((photo.height / photo.width) * mediumWebPWidth);
-
-      const webpFallbackImage = await getImage({
-        src: photoSrc,
-        width: mediumWebPWidth,
-        height: mediumWebPHeight,
-        format: 'webp',
-      });
-
       // For PhotoSwipe:
-      // href: Original JPEG for download via PhotoSwipe's download button.
+      // href: Use the pre-generated medium WebP (src from photoSwipeJsonData) for the link.
+      // data-pswp-src: Original JPEG (downloadUrl from photoSwipeJsonData).
+      // data-pswp-srcset: AVIF srcset (srcset from photoSwipeJsonData).
+      // data-pswp-width/height: Original dimensions.
 
-      // data-pswp-src: Original JPEG. If PhotoSwipe uses this for download (overriding href), this ensures JPEG download.
-      //                Also serves as fallback display if AVIF/WebP srcset not supported/used.
-      // data-pswp-srcset: AVIF srcset for modern browsers for optimized display.
-      // data-pswp-width/height: Original dimensions for PhotoSwipe to calculate aspect ratio.
-      const pswpLinkHref = webpFallbackImage?.src || photoSrc; // Fallback to original JPEG if WebP not available
-      const pswpDataSrc = photoSrc; // Changed to photoSrc to ensure JPEG download if data-pswp-src is used by download button
+      const pswpLinkHref = pswpEntryForThisPhoto?.src || photoSrc; // Use the 1600px capped WebP, fallback to original
+      const pswpDataSrc = pswpEntryForThisPhoto?.downloadUrl || photoSrc; // Original JPEG
       const pswpWidth = photo.width;
       const pswpHeight = photo.height;
-      const pswpSrcset = avifLightboxImages?.srcSet?.attribute;
+      // Use the AVIF srcset generated for the <a> tag directly, or from pswpEntryForThisPhoto if preferred (should be same)
+      const pswpSrcset = avifLightboxImages?.srcSet?.attribute || pswpEntryForThisPhoto?.srcset || '';
+
 
       // displayWidth for OptimizedImage: Max anticipated rendering width of the thumbnail.
       // For `columns-2 sm:columns-3xs` (sm: 680px, 3xs means 256px wide columns):
