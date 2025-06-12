@@ -57,3 +57,27 @@ export async function fetchPhotoManifest(): Promise<PhotoManifestItem[]> {
 
   return fetchPromise;
 }
+
+/**
+ * Generates a URL-friendly slug from a photo's relativePath.
+ * e.g., "2023/01/01/some-image.jpg" becomes "2023-01-01-some-image"
+ * @param relativePath The relativePath string (e.g., "YYYY/MM/DD/filename.ext")
+ * @returns The generated slug string.
+ */
+export function generateSlugFromRelativePath(relativePath: string): string {
+  const parts = relativePath.split('/');
+  if (parts.length === 4) { // Expected: YYYY/MM/DD/filename.ext
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    const filenameWithExt = parts[3];
+    // Remove extension: "filename.jpg" -> "filename"
+    const filenameWithoutExt = filenameWithExt.substring(0, filenameWithExt.lastIndexOf('.')) || filenameWithExt;
+    return `${year}-${month}-${day}-${filenameWithoutExt}`;
+  }
+  // Fallback for unexpected format. This should ideally not be reached if schema validation is robust.
+  // Creates a slug by replacing slashes and dots with hyphens.
+  console.warn(`Unexpected relativePath format for slug generation: "${relativePath}". Using fallback slug.`);
+  const filenameWithoutExt = relativePath.substring(relativePath.lastIndexOf('/') + 1, relativePath.lastIndexOf('.')) || relativePath.substring(relativePath.lastIndexOf('/') + 1);
+  return filenameWithoutExt.replace(/[\/\.]/g, '-');
+}

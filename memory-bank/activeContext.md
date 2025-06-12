@@ -3,12 +3,20 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-06-09
--   **Activity**: Implementing General Photo Gallery features, including PhotoSwipe caption enhancements and pagination for date-specific galleries.
--   **Primary Goal**: Replace the old JSON-based gallery system with a new one that sources images and metadata from a remote `image_manifest.json` (served at `https://share.kadykov.com/image_manifest.json`). Implement gallery display, tag-based filtering, date-based filtering, and pagination.
--   **Status**: Ongoing implementation. PhotoSwipe captions and date gallery pagination completed.
+-   **Date**: 2025-06-11
+-   **Activity**: Implementing Phase 1 of Photo Linking: Hash-based deep linking for photos within PhotoSwipe.
+-   **Primary Goal**: Enable users to link directly to a specific photo in a gallery, opening it in the PhotoSwipe lightbox, by using URL hash identifiers. Ensure this works robustly with pagination by loading the full gallery context for PhotoSwipe.
+-   **Status**: Planning complete. Implementation starting.
 
 ## 2. Recent Key Activities & Decisions
+-   **Photo Linking Strategy (2025-06-11)**:
+    *   **Phase 1 (Current Focus)**: Implement hash-based deep linking.
+        *   **Slugs**: Generate unique slugs for each photo (e.g., `YYYY-MM-DD-filename`).
+        *   **Full Context for PhotoSwipe**: Gallery pages will provide the full photo dataset for the current context (e.g., all photos for a tag) to PhotoSwipe, not just the paginated thumbnail view.
+        *   **URL Handling**: Client-side JavaScript (`photoswipe.js`) will:
+            *   Read the URL hash on page load to open PhotoSwipe to the specified photo.
+            *   Update the URL hash as the user navigates within PhotoSwipe.
+    *   **Phase 2 (Deferred)**: Implement dedicated photo pages (e.g., `/photo/[slug].astro`) for SEO and social media previews. This will include updating PhotoSwipe's share functionality to use these canonical URLs.
 -   **PhotoSwipe Caption Enhancement & Date Pagination (2025-06-09)**:
     *   Integrated `photoswipe-dynamic-caption-plugin` to display photo title, description, date, and tags in the PhotoSwipe lightbox.
     *   Metadata is passed via `data-*` attributes from `PhotoGallery.astro` to `photoswipe.js`.
@@ -66,14 +74,20 @@ This document tracks the current state of work, recent decisions, and immediate 
     *   Define Zod schema for `image_manifest.json` data. (Done)
     *   Create `src/components/PhotoGallery.astro`.
     *   Create gallery pages: `/photos/index.astro`, `/photos/tags/index.astro`, `/photos/tags/[tag].astro`, `/photos/dates/index.astro`, `/photos/dates/[date].astro`.
-    *   Implement pagination.
+    *   Implement pagination. (Partially done for dates/tags, main gallery pending)
     *   Update navigation.
     *   Add `share.kadykov.com` to `image.domains` in `astro.config.mjs` (user confirmed this is already done).
-3.  **Cleanup Old Gallery System**:
+3.  **Implement Photo Linking - Phase 1 (Hash-based deep linking)**:
+    *   Modify gallery pages (`getStaticPaths` or utility functions) to generate unique slugs (`YYYY-MM-DD-filename`) for each photo.
+    *   Ensure gallery pages pass the *full* photo dataset (including slugs) for the current context to the client-side script that initializes PhotoSwipe.
+    *   Update `src/scripts/photoswipe.js`:
+        *   On load, check `window.location.hash`, parse slug, find photo index, and open PhotoSwipe to that photo.
+        *   On PhotoSwipe slide change (`afterChange` event), update `window.location.hash` with the current photo's slug.
+4.  **Cleanup Old Gallery System**:
     *   Remove `src/content/galleries/self-portrait.json`.
     *   Remove `src/pages/galleries/self-portrait.astro`.
-4.  User to review changes and merge.
-5.  Proceed with next planned tasks from project backlog.
+5.  User to review changes and merge.
+6.  Proceed with next planned tasks from project backlog (including Phase 2 of Photo Linking).
 
 ## 5. Broader Project Ideas & Potential Future Tasks (from User)
 This list is for reference and will be prioritized later.
@@ -85,7 +99,8 @@ This list is for reference and will be prioritized later.
     *   Comments system (to be evaluated).
     *   Draft actual posts.
 -   **Photo Galleries**:
-    *   **General Photo Gallery (Current Task)**: Implement as planned.
+    *   **General Photo Gallery (Current Task)**: Complete pagination for main gallery, tag index, date index. Implement Phase 1 of Photo Linking.
+    *   **Photo Linking - Phase 2 (Future)**: Implement dedicated photo pages (`/photo/[slug].astro`) for SEO and social media previews. Update PhotoSwipe share functionality.
     *   Future: Artistic galleries, "Strangers Gallery" (may leverage general gallery with specific filters/views).
     *   Refactor lightbox (`PhotoSwipe.astro`) implementation if needed during/after general gallery implementation.
     *   Design thematic galleries with unique styles.

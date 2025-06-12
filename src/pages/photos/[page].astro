@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotoGallery from '../../components/PhotoGallery.astro';
-import type { PhotoManifestItem } from '../../utils/photoManifestSchema'; // No longer need photoManifestSchema here
-import { fetchPhotoManifest } from '../../utils/photoData';
+import type { PhotoManifestItem } from '../../utils/photoManifestSchema';
+import { fetchPhotoManifest, generateSlugFromRelativePath } from '../../utils/photoData'; // Import generateSlugFromRelativePath
 import type { Page, PaginateFunction } from 'astro';
 
 // Define PAGE_SIZE for pagination
@@ -11,9 +11,9 @@ import type { Page, PaginateFunction } from 'astro';
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const PAGE_SIZE = 24; // Defined inside function
 
-  let allPhotos: PhotoManifestItem[] = [];
+  let fetchedPhotos: PhotoManifestItem[] = [];
   try {
-    allPhotos = await fetchPhotoManifest();
+    fetchedPhotos = await fetchPhotoManifest();
   } catch (e) {
     const error = e as Error;
     // fetchPhotoManifest already logs errors. We just need to ensure build fails.
@@ -21,9 +21,15 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
     throw error; // Re-throw to fail the build
   }
 
+  // Add slugs and sort photos
+  const allPhotosWithSlugs: PhotoManifestItem[] = fetchedPhotos.map(photo => ({
+    ...photo,
+    slug: generateSlugFromRelativePath(photo.relativePath),
+  }));
+
   // Sort photos by dateTaken, most recent first.
   // Handle null dateTaken values by pushing them to the end.
-  allPhotos.sort((a, b) => {
+  allPhotosWithSlugs.sort((a, b) => {
     if (a.dateTaken && b.dateTaken) {
       return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
     }
@@ -33,15 +39,21 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
   });
 
   // The paginate function will generate params like { page: "1" }, { page: "2" }
-  // because the filename is [page].astro
-  return paginate(allPhotos, { pageSize: PAGE_SIZE });
+  // because the filename is [page].astro.
+  // It will also pass props to each page, including the paginated data.
+  // We need to pass the full `allPhotosWithSlugs` dataset to each page as well.
+  return paginate(allPhotosWithSlugs, {
+    pageSize: PAGE_SIZE,
+    props: { fullPhotoDataset: allPhotosWithSlugs }, // Pass the full dataset to each page
+  });
 }
 
 interface Props {
-  page: Page<PhotoManifestItem>;
+  page: Page<PhotoManifestItem>; // page.data will have slugs
+  fullPhotoDataset: PhotoManifestItem[]; // The full dataset with slugs
 }
 
-const { page } = Astro.props;
+const { page, fullPhotoDataset } = Astro.props;
 
 if (!page) {
   console.error("CRITICAL: 'page' prop is undefined in /photos/[page].astro. Astro.props:", JSON.stringify(Astro.props)); // Updated log message
@@ -63,7 +75,7 @@ const pageDescription = `A collection of all photos. Page ${page.currentPage} of
       <a href="/photos/dates" class="btn text-heading-4">Browse by date</a>
     </div>
 
-    <PhotoGallery photos={page.data} />
+    <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
 
     {page.lastPage > 1 && (
       <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">

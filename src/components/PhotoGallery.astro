@@ -5,11 +5,32 @@ import { getImage } from "astro:assets";
 import { widthSet as globalWidthSet } from "../utils/widthSet"; // Import global widthSet
 
 interface Props {
-  photos: PhotoManifestItem[];
+  photos: PhotoManifestItem[]; // Photos for the current paginated view (thumbnails)
+  fullPhotoDataset?: PhotoManifestItem[]; // Optional: Full dataset for PhotoSwipe context
 }
 
-const { photos } = Astro.props;
+const { photos, fullPhotoDataset } = Astro.props;
 const imageBaseUrl = 'https://share.kadykov.com/';
+
+// Determine the dataset to use for PhotoSwipe. Fallback to current page's photos if full dataset isn't provided.
+const pswpDataset = fullPhotoDataset && fullPhotoDataset.length > 0 ? fullPhotoDataset : photos;
+
+// Prepare a simplified dataset for PhotoSwipe to embed as JSON
+const photoSwipeJsonData = pswpDataset.map(photo => ({
+  src: `${imageBaseUrl}${photo.relativePath}`, // Original JPEG for PhotoSwipe src and download
+  width: photo.width,
+  height: photo.height,
+  title: photo.title || '',
+  description: photo.description || '',
+  dateTaken: photo.dateTaken || '',
+  tags: photo.tags || [],
+  slug: photo.slug || '', // Slug for deep linking
+  // avifSrcset will be generated per-item for the data-pswp-srcset attribute on the anchor
+  // This is because getImage is async and needs to be called inside the map for thumbnails.
+  // We can pass the avifSrcset to photoswipe.js via the JSON if we pre-calculate it,
+  // or photoswipe.js can pick it up from the data-pswp-srcset attribute of the clicked item.
+  // For now, let's keep it on the data-attribute and photoswipe.js can use it.
+}));
 
 // Helper function to calculate lightbox widths, implementing user's "replace largest" logic.
 function getLightboxWidths(photoWidth: number): number[] {
@@ -41,7 +62,17 @@ function getLightboxWidths(photoWidth: number): number[] {
   // The `space-y-4` on child `<a>` tags will handle vertical spacing if using columns.
   // Or, `gap-4` on the parent div if using `columns` with `break-inside-avoid`.
   <div class="columns-2 sm:columns-3xs gap-4" id="gallery">
-    {photos.map(async (photo) => {
+    {/* Embed the full dataset for PhotoSwipe, ensuring it's not HTML-escaped */}
+    <script is:inline type="application/json" id="photoswipe-data" set:html={JSON.stringify(photoSwipeJsonData)} />
+    {/* Using set:html on the script tag itself should work for this.
+        Alternatively, <Fragment set:html={`<script type="application/json" id="photoswipe-data">${JSON.stringify(photoSwipeJsonData)}</script>`} />
+        But Astro docs suggest set:html can be used directly on elements like <script> or <style>.
+        If this doesn't work, we'll try the Fragment approach.
+        The `is:inline` is not needed when using `set:html` as `set:html` implies raw content.
+    */}
+
+    {/* Render thumbnails for the current page */}
+    {photos.map(async (photo, index) => { // Added index
       const photoSrc = `${imageBaseUrl}${photo.relativePath}`; // Original JPEG/PNG src
       const altText = photo.title || photo.description || photo.filename;
 
@@ -102,6 +133,8 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-description={photo.description || ''}
           data-date={photo.dateTaken || ''}
           data-tags={photo.tags?.join(',') || ''}
+          data-slug={photo.slug || ''}
+          data-pswp-index={index}
           target="_blank"
           class="gallery-item block relative overflow-hidden rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}

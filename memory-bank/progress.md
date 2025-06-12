@@ -3,9 +3,9 @@
 This document tracks the development progress, current status, and known issues for the kadykov.com website.
 
 ## 1. Current Overall Status
--   **Date**: 2025-06-08
--   **Phase**: General Photo Gallery Implementation - Phase 1.
--   **Summary**: Core component for photo gallery thumbnails (`PhotoGallery.astro`) implemented and refined. Work continues on gallery pages (all photos, by tag, by date) and pagination.
+-   **Date**: 2025-06-11
+-   **Phase**: Photo Linking Implementation - Phase 1 (Hash-based Deep Linking).
+-   **Summary**: Planning for hash-based deep linking in PhotoSwipe is complete. Implementation involves generating photo slugs, ensuring PhotoSwipe receives full gallery context, and updating `photoswipe.js` to handle URL hash reading and writing. Pagination for main gallery and tag/date index pages is still pending.
 
 ## 2. What Works (Post-Blog Phase I & Recent Refinements)
 -   **Core Pages**: Home, About, CV (Markdown), Contact (Netlify Forms).
@@ -53,6 +53,14 @@ This document tracks the development progress, current status, and known issues 
 -   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
 -   **Deployment**: Netlify deployment, functional build process.
 
+## 2025-06-11 (Current)
+-   **Photo Linking Strategy - Phase 1 Planning (Completed)**
+    *   **Goal**: Implement hash-based deep linking for photos within PhotoSwipe.
+    *   **Slug Generation**: Unique slugs (`YYYY-MM-DD-filename`) will be generated for each photo.
+    *   **Full Context for PhotoSwipe**: Gallery pages will provide the full photo dataset for the current context to PhotoSwipe.
+    *   **URL Hash Handling**: `photoswipe.js` will be updated to read the URL hash on load to open a specific photo and update the hash as the user navigates in the lightbox.
+    *   **Phase 2 Deferred**: Dedicated photo pages (`/photo/[slug].astro`) for SEO/social sharing are planned for a future phase.
+
 ## 2025-06-09
 -   **PhotoSwipe Lightbox Caption Enhancement (Completed)**
     *   Integrated `photoswipe-dynamic-caption-plugin` into `src/scripts/photoswipe.js`.
@@ -86,27 +94,31 @@ This document tracks the development progress, current status, and known issues 
     -   Updated `.prose-serif` in `src/styles/base.css` to apply these semantic classes to corresponding Markdown elements (e.g., `prose-h1:text-heading-1`), ensuring consistent typography between standalone elements and Markdown content. This resolved issues with customizing Tailwind Typography effectively.
     -   Verified consistent typography on `hello-world.md` blog post.
 
-## 3. Current Task: General Photo Gallery Implementation (Phase 1 - In Progress)
--   **Goal**: Implement a new general photo gallery system using `image_manifest.json` from `https://share.kadykov.com`.
--   **Key Implementation Steps**:
-    *   Define a Zod schema for validating the fetched `image_manifest.json` data. (Done)
-    *   Create `src/components/PhotoGallery.astro` to display photo thumbnails using `OptimizedImage.astro` and integrate with `PhotoSwipe.astro` (or rather, PhotoSwipe JS directly) for lightbox functionality. (Done)
-    *   Create main gallery page `src/pages/photos/index.astro` to display all photos, with pagination. (Next)
+## 3. Current Task: Photo Linking Implementation (Phase 1 - Starting) & Gallery Finalization
+-   **Goal**: Implement hash-based deep linking and complete remaining gallery pages (main gallery, tag index, date index pagination).
+-   **Key Implementation Steps for Photo Linking (Phase 1)**:
+    *   **Slug Generation**: Modify gallery page data fetching (e.g., in `getStaticPaths` or utility functions) to generate unique slugs (`YYYY-MM-DD-filename`) for each photo.
+    *   **Full Context for PhotoSwipe**: Ensure gallery pages pass the *full* photo dataset (including slugs) for the current context to the client-side script that initializes PhotoSwipe.
+    *   **Update `photoswipe.js`**:
+        *   On load, check `window.location.hash`, parse slug, find photo index, and open PhotoSwipe to that photo.
+        *   On PhotoSwipe slide change (`afterChange` event), update `window.location.hash` with the current photo's slug.
+-   **Key Implementation Steps for Gallery Finalization**:
+    *   Create main gallery page `src/pages/photos/[page].astro` (or `src/pages/photos/index.astro` if only one page initially) to display all photos, with pagination. (Next)
     *   Create tag-based gallery pages:
         *   `src/pages/photos/tags/index.astro`: Lists all unique photo tags. (Next)
-        *   `src/pages/photos/tags/[tag].astro`: Displays photos for a specific tag, with pagination. (Next)
+        *   Pagination for `src/pages/photos/tags/[tag]/[page].astro` is implemented.
     *   Create date-based gallery pages:
         *   `src/pages/photos/dates/index.astro`: Lists all unique dates (YYYY-MM-DD). (Next)
-        *   `src/pages/photos/dates/[date].astro`: Displays photos for a specific date. (Next)
+        *   Pagination for `src/pages/photos/dates/[date]/[page].astro` is implemented.
     *   Update site navigation to include links to new gallery sections.
     *   Cleanup: Remove old `self-portrait.json` gallery and `src/pages/galleries/self-portrait.astro`.
 -   **Previous Task (Complete)**: Blog Refinement - URL Structure, Listing Page Styling, and Image Handling.
 
 ## 4. Planned Next Steps
--   **Complete General Photo Gallery Implementation (Phase 1)**: Focus on the remaining steps outlined in section 3 (gallery pages, navigation, cleanup).
--   **Future Photo Gallery Enhancements (Phase 2+)**:
+-   **Complete Photo Linking (Phase 1) & Gallery Finalization**: Focus on the steps outlined in section 3.
+-   **Photo Linking (Phase 2 - Future)**: Implement dedicated photo pages (`/photo/[slug].astro`) for SEO and social media previews. Update PhotoSwipe share functionality.
+-   **Future Photo Gallery Enhancements**:
     *   Refine gallery layout (e.g., explore `justified-layout` npm package or advanced CSS).
-    *   Implement individual photo pages if deemed necessary (for SEO, sharing).
     *   Develop "Artistic Galleries" and "Strangers Gallery" concepts, potentially leveraging the general gallery framework.
 -   **Site-wide Typographic Consistency**:
     *   Extend the use of semantic text utility classes to other pages and components.
@@ -118,7 +130,8 @@ This document tracks the development progress, current status, and known issues 
 
 ## 5. What's Left to Build / Improve (Other Areas)
 -   **Photo Galleries**:
-    *   **General Photo Gallery**: Currently in progress (see section 3).
+    *   **Current**: Implement Phase 1 Photo Linking and finalize gallery pages/pagination.
+    *   **Future (Phase 2 Photo Linking)**: Dedicated photo pages for SEO/sharing.
     *   Future: "Strangers Gallery" (date/location nav), thematic galleries with unique styling, further lightbox refinements.
 -   **CV Page**: DaisyUI timeline, interactivity.
 -   **Front Page**: Interactivity, landing page style.
