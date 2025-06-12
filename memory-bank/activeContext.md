@@ -3,19 +3,20 @@
 This document tracks the current state of work, recent decisions, and immediate next steps for the kadykov.com website project.
 
 ## 1. Current Focus
--   **Date**: 2025-06-11
--   **Activity**: Implementing Phase 1 of Photo Linking: Hash-based deep linking for photos within PhotoSwipe.
--   **Primary Goal**: Enable users to link directly to a specific photo in a gallery, opening it in the PhotoSwipe lightbox, by using URL hash identifiers. Ensure this works robustly with pagination by loading the full gallery context for PhotoSwipe.
--   **Status**: Planning complete. Implementation starting.
+-   **Date**: 2025-06-12
+-   **Activity**: Photo Gallery Refinements - Completion of Hash-based Deep Linking & Lightbox Scoping.
+-   **Primary Goal**: Ensure robust deep linking to photos via URL hashes (using pre-generated slugs) and correct lightbox navigation scope (all photos, tag-specific, or date-specific) across all gallery pages.
+-   **Status**: Implemented and verified. Memory bank update in progress.
 
 ## 2. Recent Key Activities & Decisions
--   **Photo Linking Strategy (2025-06-11)**:
-    *   **Phase 1 (Current Focus)**: Implement hash-based deep linking.
-        *   **Slugs**: Generate unique slugs for each photo (e.g., `YYYY-MM-DD-filename`).
-        *   **Full Context for PhotoSwipe**: Gallery pages will provide the full photo dataset for the current context (e.g., all photos for a tag) to PhotoSwipe, not just the paginated thumbnail view.
+-   **Photo Linking Strategy (2025-06-11/12)**:
+    *   **Phase 1 (Completed)**: Implement hash-based deep linking.
+        *   **Slugs**: Unique, URL-friendly slugs are now a **required field** in `image_manifest.json`, pre-generated before build time. This simplifies Astro page logic.
+        *   **Full Context for PhotoSwipe**: Gallery pages (`/photos/[page].astro`, `/photos/tags/...`, `/photos/dates/...`) provide the appropriate photo dataset (all photos, tag-specific, or date-specific) as `fullPhotoDataset` to `PhotoGallery.astro`. This ensures PhotoSwipe's lightbox is correctly scoped.
         *   **URL Handling**: Client-side JavaScript (`photoswipe.js`) will:
             *   Read the URL hash on page load to open PhotoSwipe to the specified photo.
             *   Update the URL hash as the user navigates within PhotoSwipe.
+            *   Gracefully handle cases where a slug might be missing or empty (though less likely now with required slugs).
     *   **Phase 2 (Deferred)**: Implement dedicated photo pages (e.g., `/photo/[slug].astro`) for SEO and social media previews. This will include updating PhotoSwipe's share functionality to use these canonical URLs.
 -   **PhotoSwipe Caption Enhancement & Date Pagination (2025-06-09)**:
     *   Integrated `photoswipe-dynamic-caption-plugin` to display photo title, description, date, and tags in the PhotoSwipe lightbox.
@@ -63,7 +64,10 @@ This document tracks the current state of work, recent decisions, and immediate 
 -   `src/styles/base.css` (referenced for semantic typography classes)
 -   `src/scripts/photoswipe.js` (updated for dynamic captions and styling)
 -   `src/components/PhotoGallery.astro` (updated to provide data attributes for captions)
--   `src/pages/photos/dates/[date]/[page].astro` (updated for pagination)
+-   `src/pages/photos/dates/[date]/[page].astro` (updated for pagination, then for slug handling & lightbox scoping)
+-   `src/pages/photos/tags/[tag]/[page].astro` (updated for slug handling & lightbox scoping)
+-   `src/pages/photos/[page].astro` (updated for slug handling)
+-   `src/utils/photoManifestSchema.ts` (updated to make `slug` a required string)
 
 ## 4. Immediate Next Steps
 1.  **Update Memory Bank**: (Done for this iteration)
@@ -71,18 +75,11 @@ This document tracks the current state of work, recent decisions, and immediate 
     *   Update `progress.md`.
     *   Update `systemPatterns.md`.
 2.  **Implement General Photo Gallery**:
-    *   Define Zod schema for `image_manifest.json` data. (Done)
-    *   Create `src/components/PhotoGallery.astro`.
-    *   Create gallery pages: `/photos/index.astro`, `/photos/tags/index.astro`, `/photos/tags/[tag].astro`, `/photos/dates/index.astro`, `/photos/dates/[date].astro`.
-    *   Implement pagination. (Partially done for dates/tags, main gallery pending)
-    *   Update navigation.
-    *   Add `share.kadykov.com` to `image.domains` in `astro.config.mjs` (user confirmed this is already done).
-3.  **Implement Photo Linking - Phase 1 (Hash-based deep linking)**:
-    *   Modify gallery pages (`getStaticPaths` or utility functions) to generate unique slugs (`YYYY-MM-DD-filename`) for each photo.
-    *   Ensure gallery pages pass the *full* photo dataset (including slugs) for the current context to the client-side script that initializes PhotoSwipe.
-    *   Update `src/scripts/photoswipe.js`:
-        *   On load, check `window.location.hash`, parse slug, find photo index, and open PhotoSwipe to that photo.
-        *   On PhotoSwipe slide change (`afterChange` event), update `window.location.hash` with the current photo's slug.
+    *   Zod schema for `image_manifest.json` data defined and `slug` is required. (Done)
+    *   `PhotoGallery.astro` component created and refined. (Done)
+    *   Gallery pages created and paginated: `/photos/[page].astro`, `/photos/tags/index.astro`, `/photos/tags/[tag]/[page].astro`, `/photos/dates/index.astro`, `/photos/dates/[date]/[page].astro`. (Done, assuming index pages for tags/dates are also complete or out of scope for this immediate task).
+    *   Photo Linking Phase 1 (Hash-based deep linking) implemented. (Done)
+    *   Navigation updates (if any related to gallery) should be reviewed.
 4.  **Cleanup Old Gallery System**:
     *   Remove `src/content/galleries/self-portrait.json`.
     *   Remove `src/pages/galleries/self-portrait.astro`.

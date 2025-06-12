@@ -3,9 +3,9 @@
 This document tracks the development progress, current status, and known issues for the kadykov.com website.
 
 ## 1. Current Overall Status
--   **Date**: 2025-06-11
--   **Phase**: Photo Linking Implementation - Phase 1 (Hash-based Deep Linking).
--   **Summary**: Planning for hash-based deep linking in PhotoSwipe is complete. Implementation involves generating photo slugs, ensuring PhotoSwipe receives full gallery context, and updating `photoswipe.js` to handle URL hash reading and writing. Pagination for main gallery and tag/date index pages is still pending.
+-   **Date**: 2025-06-12
+-   **Phase**: Photo Gallery Refinements Completed.
+-   **Summary**: Hash-based deep linking using pre-generated slugs in PhotoSwipe is fully implemented and functional. Lightbox navigation is correctly scoped for main, tag-specific, and date-specific galleries. All gallery pages (`/photos/[page].astro`, `/photos/tags/[tag]/[page].astro`, `/photos/dates/[date]/[page].astro`) have been updated. `image_manifest.json` now requires slugs.
 
 ## 2. What Works (Post-Blog Phase I & Recent Refinements)
 -   **Core Pages**: Home, About, CV (Markdown), Contact (Netlify Forms).
@@ -50,10 +50,24 @@ This document tracks the development progress, current status, and known issues 
     *   Enhanced with dynamic captions using `photoswipe-dynamic-caption-plugin`.
     *   Captions display photo title, description, date, and tags with clickable links to archive pages.
     *   Styling of captions achieved using Tailwind CSS utility classes directly in `photoswipe.js`.
+    *   URL hash updates correctly reflect the current photo's slug.
+    *   Lightbox navigation is correctly scoped for main, tag, and date galleries.
 -   **Styling & Theming**: Tailwind CSS, DaisyUI, Light/Dark theme switching.
 -   **Deployment**: Netlify deployment, functional build process.
 
-## 2025-06-11 (Current)
+## 2025-06-12
+-   **Photo Gallery Slug & Lightbox Scoping Refinements (Completed)**
+    *   **Slug Requirement**: `slug` field made mandatory in `image_manifest.json` and `src/utils/photoManifestSchema.ts`.
+    *   **Runtime Slug Generation Removed**: All gallery pages (`/photos/[page].astro`, `/photos/tags/[tag]/[page].astro`, `/photos/dates/[date]/[page].astro`) now rely on slugs from the manifest.
+    *   **Lightbox Scoping**:
+        *   Tag pages pass only tag-specific photos as `fullPhotoDataset` to `PhotoGallery.astro`.
+        *   Date pages pass only date-specific photos as `fullPhotoDataset`.
+        *   Main gallery pages pass all photos as `fullPhotoDataset`.
+        *   This ensures PhotoSwipe navigation is correctly limited to the relevant photo set.
+    *   **URL Hash**: Deep linking via URL hash (using slugs) and hash updates during lightbox navigation confirmed working correctly across all gallery types.
+    *   `photoswipe.js` updated to gracefully handle (clear hash) if a slug is empty, though this is now less likely.
+
+## 2025-06-11
 -   **Photo Linking Strategy - Phase 1 Planning (Completed)**
     *   **Goal**: Implement hash-based deep linking for photos within PhotoSwipe.
     *   **Slug Generation**: Unique slugs (`YYYY-MM-DD-filename`) will be generated for each photo.

@@ -42,13 +42,13 @@ This document outlines key architectural patterns, technical decisions, and comp
     *   Captions display the photo's title, description, date, and tags. Date and tags are clickable links to their respective archive pages (e.g., `/photos/dates/YYYY-MM-DD/1`, `/photos/tags/[tag]/1`).
     *   Styling for the caption is achieved by applying Tailwind CSS utility classes directly within the `captionHTML` generated in `photoswipe.js`, ensuring it harmonizes with the site's design and the plugin's dark background.
 -   **Photo Linking (Phase 1 - Hash-based Deep Linking):**
-    *   **Slug Generation**: Each photo is assigned a unique, URL-friendly slug (e.g., `YYYY-MM-DD-filename`) derived from its path/filename. This slug is included in the data passed to PhotoSwipe.
+    *   **Slugs**: Unique, URL-friendly slugs are a **required field** in `image_manifest.json`, pre-generated before build time. Astro pages consume these directly.
     *   **Full Gallery Context**: Astro gallery pages (e.g., `/photos/tags/[tag]/[page].astro`) provide the *entire* set of photos for the current gallery context (e.g., all photos for a specific tag) to the client-side `photoswipe.js` script. This allows PhotoSwipe to open any photo in that context via its slug, regardless of the current thumbnail pagination page.
     *   **URL Hash Handling (`photoswipe.js`)**:
         *   **On Load**: The script checks `window.location.hash`. If a photo slug is present (e.g., `#2024-10-20-my-photo`), it finds the corresponding photo in the full dataset and opens PhotoSwipe directly to that image.
         *   **During Navigation**: When the user navigates between photos in the lightbox, the `afterChange` event in PhotoSwipe triggers an update to `window.location.hash` (using `history.replaceState`) to reflect the slug of the currently viewed photo. This ensures the URL in the address bar is always shareable for the current image.
 -   **Separation of Concerns:**
-    *   `PhotoGallery.astro`: Handles gallery data (including slug generation logic or receiving slugs), thumbnail layout, and provisioning of all necessary `data-*` attributes for PhotoSwipe core, the caption plugin, and hash-based linking.
+    *   `PhotoGallery.astro`: Handles gallery data (receiving photos with pre-generated slugs), thumbnail layout, and provisioning of all necessary `data-*` attributes for PhotoSwipe core, the caption plugin, and hash-based linking.
     *   `OptimizedImage.astro`: Focuses on generating the markup for a single optimized, responsive image.
     *   `photoswipe.js`: Manages the interactive lightbox experience, including dynamic captions and URL hash management for deep linking.
 -   **Potential Future Refinement (Photo Linking - Phase 2):**
