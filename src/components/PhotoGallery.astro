@@ -16,20 +16,38 @@ const imageBaseUrl = 'https://share.kadykov.com/';
 const pswpDataset = fullPhotoDataset && fullPhotoDataset.length > 0 ? fullPhotoDataset : photos;
 
 // Prepare a simplified dataset for PhotoSwipe to embed as JSON
-const photoSwipeJsonData = pswpDataset.map(photo => ({
-  src: `${imageBaseUrl}${photo.relativePath}`, // Original JPEG for PhotoSwipe src and download
-  width: photo.width,
-  height: photo.height,
-  title: photo.title || '',
-  description: photo.description || '',
-  dateTaken: photo.dateTaken || '',
-  tags: photo.tags || [],
-  slug: photo.slug || '', // Slug for deep linking
-  // avifSrcset will be generated per-item for the data-pswp-srcset attribute on the anchor
-  // This is because getImage is async and needs to be called inside the map for thumbnails.
-  // We can pass the avifSrcset to photoswipe.js via the JSON if we pre-calculate it,
-  // or photoswipe.js can pick it up from the data-pswp-srcset attribute of the clicked item.
-  // For now, let's keep it on the data-attribute and photoswipe.js can use it.
+// This now includes avifSrcset for each image in the full dataset.
+const photoSwipeJsonData = await Promise.all(pswpDataset.map(async (photo) => {
+  const photoSrc = `${imageBaseUrl}${photo.relativePath}`;
+  const calculatedLightboxWidths = getLightboxWidths(photo.width); // Ensure getLightboxWidths is defined above or passed
+
+  let pswpSrcset = '';
+  try {
+    const avifLightboxImages = await getImage({
+      src: photoSrc,
+      widths: calculatedLightboxWidths,
+      width: photo.width, // True intrinsic width
+      height: photo.height, // True intrinsic height
+      format: 'avif',
+    });
+    pswpSrcset = avifLightboxImages?.srcSet?.attribute || '';
+  } catch (e) {
+    console.error(`Failed to generate AVIF srcset for ${photoSrc}:`, e);
+    // pswpSrcset will remain empty, PhotoSwipe will use the main 'src'
+  }
+
+  return {
+    src: photoSrc, // Original JPEG for PhotoSwipe src and download
+    msrc: photoSrc, // Optional: for initial small image, can be same as src or a specific thumbnail
+    w: photo.width,  // PhotoSwipe expects 'w'
+    h: photo.height, // PhotoSwipe expects 'h'
+    srcset: pswpSrcset, // AVIF srcset for PhotoSwipe
+    title: photo.title || '',
+    description: photo.description || '',
+    dateTaken: photo.dateTaken || '',
+    tags: photo.tags || [],
+    slug: photo.slug || '', // Slug for deep linking
+  };
 }));
 
 // Helper function to calculate lightbox widths, implementing user's "replace largest" logic.
@@ -72,7 +90,11 @@ function getLightboxWidths(photoWidth: number): number[] {
     */}
 
     {/* Render thumbnails for the current page */}
-    {photos.map(async (photo, index) => { // Added index
+    {photos.map(async (photo, pageSpecificIndex) => {
+      // Find the index of this 'photo' within the 'pswpDataset' (which is fullPhotoDataset)
+      // This index is crucial if PhotoSwipe uses a JS dataSource.
+      const fullDatasetIndex = pswpDataset.findIndex(p => p.slug === photo.slug && p.relativePath === photo.relativePath);
+
       const photoSrc = `${imageBaseUrl}${photo.relativePath}`; // Original JPEG/PNG src
       const altText = photo.title || photo.description || photo.filename;
 
@@ -134,7 +156,7 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-date={photo.dateTaken || ''}
           data-tags={photo.tags?.join(',') || ''}
           data-slug={photo.slug || ''}
-          data-pswp-index={index}
+          data-pswp-index={fullDatasetIndex === -1 ? pageSpecificIndex : fullDatasetIndex}
           target="_blank"
           class="gallery-item block relative overflow-hidden rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}
