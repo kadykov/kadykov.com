@@ -92,6 +92,53 @@
   }
 }
 
+/* Custom transition for DaisyUI dropdowns */
+.dropdown .dropdown-content {
+  /* Base/Closed state */
+  opacity: 0;
+  transform: scale(0.95);
+  visibility: hidden; /* Ensures the element is not interactive when closed */
+
+  transition-property: opacity, transform; /* Explicitly transition opacity and transform */
+  transition-duration: 200ms; /* Consistent duration */
+  transition-timing-function: ease-out; /* Smooth easing, common for UI elements */
+}
+
+/* Open state for <details class="dropdown" open> */
+/* Using !important to ensure these styles override any conflicting base styles */
+details.dropdown[open] > .dropdown-content {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  visibility: visible !important; /* Crucial for making the content appear */
+}
+
+/* Open state for other types of dropdowns if they use a class like .dropdown-open on the parent */
+/* For example, <div class="dropdown dropdown-open"> */
+.dropdown.dropdown-open .dropdown-content {
+  opacity: 1 !important; /* Using !important for consistency, may not be needed if no conflicts */
+  transform: scale(1) !important;
+  visibility: visible !important;
+}
+
+/* This rule defines the closed state (default for .dropdown-content if not open) */
+/* Also, ensure this applies to .dropdown-content directly if it's the base state */
+.dropdown .dropdown-content:not([style*="display: none"]):not(.dropdown-top):not(.dropdown-bottom) { /* Added :not([style*="display: none"]) as a safeguard, though visibility should handle it */
+  opacity: 0;
+  transform: scale(0.95);
+  visibility: hidden; /* Ensure hidden and no interaction when closed */
+}
+
+/* If .dropdown-content needs an explicit base state outside of :not() selectors,
+   you might need to ensure it's also defined, e.g.:
+.dropdown-content {
+  opacity: 0;
+  transform: scale(0.95);
+  visibility: hidden;
+  ...
+}
+  However, the :not() selector combined with the [open] state should cover it.
+*/
+
 /* source-sans-3-latin-wght-normal */
 @font-face {
   font-family: 'Source Sans 3 Variable';

@@ -53,14 +53,51 @@ const {
         'StandaloneShareButton: Failed to find details.dropdown as previous sibling.',
         { scriptTag, previousSibling: componentRoot }
       );
-      componentRoot = null; // Ensure it's null if not found correctly, so the rest of the script doesn't run.
+      componentRoot = null;
     }
   } else {
     console.error('StandaloneShareButton: document.currentScript is null. The script might be loaded in a way that prevents it from being identified (e.g., module, async/defer).');
   }
 
   if (componentRoot) {
-    // console.log('StandaloneShareButton: Initialized for component:', componentRoot); // Optional: for debugging
+    const summaryElement = componentRoot.querySelector('summary');
+
+    if (summaryElement) {
+      summaryElement.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+    }
+
+    const detailsElement = componentRoot; // componentRoot is the <details> element
+
+    const handleDocumentClick = (event) => {
+      // Check if the dropdown is open and the click is outside the detailsElement
+      if (detailsElement.hasAttribute('open') && !detailsElement.contains(event.target)) {
+        detailsElement.removeAttribute('open');
+        // The 'toggle' event on detailsElement will automatically handle removing this listener.
+      }
+    };
+
+    detailsElement.addEventListener('toggle', () => {
+      const ulElement = detailsElement.querySelector('ul.dropdown-content.menu');
+      if (!ulElement) {
+        console.error('StandaloneShareButton: CRITICAL - Could not find ul.dropdown-content.menu inside detailsElement on toggle.');
+        return;
+      }
+
+      if (detailsElement.hasAttribute('open')) {
+        // Add the click listener to the document when the dropdown opens
+        // Use a timeout to ensure this listener is added after the current click event cycle has completed.
+        // This prevents the click that opened the dropdown from immediately triggering this listener.
+        setTimeout(() => {
+          document.documentElement.addEventListener('click', handleDocumentClick);
+        }, 0);
+      } else {
+        // Remove the click listener from the document when the dropdown closes
+        document.documentElement.removeEventListener('click', handleDocumentClick);
+      }
+    });
+
     const shareLinks = {
       facebook: componentRoot.querySelector('.share-link-facebook'),
       twitter: componentRoot.querySelector('.share-link-twitter'),

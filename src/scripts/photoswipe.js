@@ -133,15 +133,13 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         tagName: 'div',  // 'el' will be a div
         // html: svgIconShare, // Removed initial HTML, will be built in onInit
         onInit: (el, pswp) => {
-          console.log('PhotoSwipe Share: Initializing share button container (el is div)...');
-
           // 'el' is now a div container. We will build the <details> dropdown inside it.
           // Clear any default content PhotoSwipe might have put in 'el' (though unlikely for a div with no html)
           el.innerHTML = '';
           el.style.position = 'relative'; // For dropdown positioning within the toolbar flow
 
           const detailsElement = document.createElement('details');
-          detailsElement.className = 'dropdown dropdown-end';
+          detailsElement.className = 'dropdown dropdown-center';
 
           const summaryElement = document.createElement('summary');
           summaryElement.className = 'pswp__button text-white list-none'; // Added list-none
@@ -149,16 +147,36 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           summaryElement.setAttribute('title', 'Share');
           summaryElement.setAttribute('aria-label', 'Share');
 
-          // Removed explicit flex centering - pswp__icn handles centering via absolute positioning
+          summaryElement.addEventListener('click', function(event) {
+            event.stopPropagation();
+          });
+
+          detailsElement.appendChild(summaryElement);
 
           const menuUl = document.createElement('ul');
           // Reverted to theme-aware background and ensured text visibility
           menuUl.className = 'dropdown-content menu p-2 shadow bg-base-200 text-base-content rounded-box w-60 z-[10000]';
 
-          detailsElement.appendChild(summaryElement);
           detailsElement.appendChild(menuUl);
-          el.appendChild(detailsElement);
+          el.appendChild(detailsElement); // This is the correct single append
 
+          detailsElement.addEventListener('toggle', function() {
+            const currentUlElement = detailsElement.querySelector('ul.dropdown-content.menu');
+
+            if (!currentUlElement) {
+              console.error('PhotoSwipe Share: CRITICAL - Could not find ul.dropdown-content.menu inside detailsElement on toggle.');
+              // console.log('PhotoSwipe Share: detailsElement innerHTML:', detailsElement.innerHTML); // Retain for critical debug if needed
+              return;
+            }
+
+            // This event fires after the 'open' attribute has changed
+            if (detailsElement.open) {
+              updateShareLinks();
+            }
+          });
+
+          // Append the whole details structure to the container
+          el.appendChild(detailsElement);
 
           const shareOptions = [
             { name: 'Copy Link', icon: svgIconCopy, action: 'copy' },
@@ -176,44 +194,35 @@ if (parsedDataSource && parsedDataSource.length > 0) {
             const listItem = document.createElement('li');
             const link = document.createElement('a');
             link.innerHTML = `${opt.icon} <span class="ml-2">${opt.name}</span>`;
-            link.classList.add('flex', 'items-center'); // For icon and text alignment
-            // Add appropriate classes for DaisyUI menu items if needed, e.g., from StandaloneShareButton
-            // link.classList.add('text-base-content'); // if not inherited
+            link.classList.add('flex', 'items-center');
 
             if (opt.action === 'copy') {
-              link.href = '#'; // Prevent navigation
+              link.href = '#';
               link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const urlToCopy = pswp.currSlide && pswp.currSlide.data && pswp.currSlide.data.shareUrl
                                   ? pswp.currSlide.data.shareUrl
-                                  : window.location.href; // Fallback to current window URL
-
+                                  : window.location.href;
                 navigator.clipboard.writeText(urlToCopy).then(() => {
-                  const originalTextElement = link.querySelector('span');
-                  if (originalTextElement) {
-                    const originalText = originalTextElement.textContent;
-                    originalTextElement.textContent = 'Copied!';
-                    if (detailsElement.hasAttribute('open')) {
-                      detailsElement.removeAttribute('open'); // Close dropdown
+                  // Optional: Show a temporary "Copied!" message
+                  const originalText = link.querySelector('span').textContent;
+                  link.querySelector('span').textContent = 'Copied!';
+                  setTimeout(() => {
+                    link.querySelector('span').textContent = originalText;
+                    if (detailsElement.open) { // Close dropdown after copy
+                      detailsElement.open = false;
                     }
-                    setTimeout(() => {
-                      originalTextElement.textContent = originalText;
-                    }, 2000);
-                  }
+                  }, 1500);
                 }).catch(err => console.error('PhotoSwipe Share: Failed to copy URL: ', err));
               });
             } else {
               link.setAttribute('target', '_blank');
               link.setAttribute('rel', 'noopener noreferrer');
               activeShareLinks.push({ service: opt.service, element: link });
-              // Add click listener to close dropdown for external links
+              // Close dropdown when an external share link is clicked
               link.addEventListener('click', () => {
-                if (opt.service !== 'email') { // Don't close for email immediately
-                    setTimeout(() => {
-                        if (detailsElement.hasAttribute('open')) {
-                            detailsElement.removeAttribute('open');
-                        }
-                    }, 150);
+                if (detailsElement.open) {
+                  detailsElement.open = false;
                 }
               });
             }
@@ -222,89 +231,54 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           });
 
           const updateShareLinks = () => {
-            if (!pswp.currSlide || !pswp.currSlide.data) return;
+            if (!pswp.currSlide || !pswp.currSlide.data) {
+              console.warn('PhotoSwipe Share: No current slide data to update share links.');
+              activeShareLinks.forEach(item => {
+                item.element.href = '#';
+              });
+              // For the copy button, ensure it still tries to copy current window.location.href if slide data is missing
+              return;
+            }
 
             const currentPhotoData = pswp.currSlide.data;
-            // Construct the share URL. This should be the canonical URL of the photo page itself,
-            // often including a hash for the specific image.
-            // Example: https://yoursite.com/photos/gallery-page#image-slug
-            const photoPageUrl = new URL(window.location.origin + window.location.pathname);
-            const photoSlug = currentPhotoData.slug;
-            if (photoSlug) {
-                photoPageUrl.hash = photoSlug;
-            }
-            const shareUrl = currentPhotoData.shareUrl || photoPageUrl.href;
-
-
-            const title = currentPhotoData.title || document.title || '';
-            let shareText = title;
-            // Optional: Add description or site name to shareText
-            // const description = currentPhotoData.description || '';
-            // if (description) shareText = title ? `${title} - ${description}` : description;
+            const shareUrl = currentPhotoData.shareUrl || window.location.href;
+            const title = currentPhotoData.title || document.title;
 
             activeShareLinks.forEach(item => {
               let url;
               switch (item.service) {
+                case 'email':
+                  url = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareUrl)}`;
+                  break;
                 case 'facebook':
                   url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
                   break;
                 case 'twitter':
-                  url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                  url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`;
                   break;
                 case 'linkedin':
-                  url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+                  url = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}`;
                   break;
                 case 'telegram':
-                  url = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                  url = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`;
                   break;
                 case 'whatsapp':
-                  url = `whatsapp://send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
-                  break;
-                case 'email':
-                  const emailSubject = encodeURIComponent(title);
-                  const emailBody = encodeURIComponent(`Check out this photo: ${shareUrl}${shareText ? '\\n\\n' + shareText : ''}`);
-                  url = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+                  url = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + shareUrl)}`;
                   break;
               }
-              if (url) item.element.href = url;
+              if (url) {
+                item.element.href = url;
+              }
             });
           };
 
-          // Update links when the slide changes or dropdown opens
+          // Update links when the slide changes and initially
           pswp.on('change', updateShareLinks);
-
-          // Listen for the 'toggle' event on the details element
-          detailsElement.addEventListener('toggle', () => {
-            // console.log('PhotoSwipe Share: Details element toggled.'); // Debug log
-            if (detailsElement.hasAttribute('open')) {
-              // console.log('PhotoSwipe Share: Dropdown opened via toggle event. Updating links.'); // Debug log
-              // Defer updateShareLinks to allow CSS animation to start smoothly
-              setTimeout(() => {
-                updateShareLinks();
-                // console.log('PhotoSwipe Share: updateShareLinks called after timeout.'); // Debug log for confirmation
-              }, 50); // 50ms delay, can be adjusted
-            } else {
-              // console.log('PhotoSwipe Share: Dropdown closed via toggle event.'); // Debug log
-            }
-          });
-
-          // Ensure links are updated when PhotoSwipe opens to the first image
-          if (pswp.isOpen) {
-            updateShareLinks();
-          } else {
-            pswp.on('afterOpen', updateShareLinks); // Or 'beforeOpen' if data is ready
-          }
-
-          // Close dropdown if pswp is closing
-          pswp.on('close', () => {
-            if (detailsElement.hasAttribute('open')) {
-              detailsElement.removeAttribute('open');
-            }
-          });
+          updateShareLinks(); // Initial call
         }
       });
 
-    } else if (lightbox.pswp) {
+    } else if (!lightbox.pswp) {
       // UI might not be ready if pswp just got initialized.
     }
 
@@ -312,6 +286,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       lightbox.pswp.on('change', () => {
         if (typeof lightbox.pswp.currIndex !== 'undefined' && lightbox.pswp.currSlide) {
           const currentPhotoData = lightbox.pswp.currSlide.data;
+          // Corrected if condition below
           if (currentPhotoData && typeof currentPhotoData.slug === 'string' && currentPhotoData.slug.length > 0) {
             const newHash = '#' + currentPhotoData.slug;
             if (window.location.hash !== newHash) {
@@ -331,8 +306,6 @@ if (parsedDataSource && parsedDataSource.length > 0) {
               console.warn('PhotoSwipe: currentPhotoData.slug is empty, clearing hash.', currentPhotoData);
             }
           }
-        } else {
-          // console.warn('PhotoSwipe: lightbox.pswp.currIndex or currSlide not available in pswp:change for hash update.');
         }
       });
 
@@ -347,72 +320,72 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     }
   });
 
-  const galleryElement = document.getElementById('gallery');
-  if (galleryElement) {
-    galleryElement.addEventListener('click', (e) => {
-      const clickedLink = e.target.closest('a.gallery-item');
-      if (!clickedLink) {
-        return;
-      }
-      e.preventDefault();
+    const galleryElement = document.getElementById('gallery');
+    if (galleryElement) {
+      galleryElement.addEventListener('click', (e) => {
+        const clickedLink = e.target.closest('a.gallery-item');
+        if (!clickedLink) {
+          return;
+        }
+        e.preventDefault();
 
-      const clickedIndex = parseInt(clickedLink.dataset.pswpIndex, 10);
-      if (!isNaN(clickedIndex)) {
-        lightbox.loadAndOpen(clickedIndex);
-      } else {
-        console.warn('PhotoSwipe: Could not find pswpIndex on clicked gallery item.');
-      }
-    });
+        const clickedIndex = parseInt(clickedLink.dataset.pswpIndex, 10);
+        if (!isNaN(clickedIndex)) {
+          lightbox.loadAndOpen(clickedIndex);
+        } else {
+          console.warn('PhotoSwipe: Could not find pswpIndex on clicked gallery item.');
+        }
+      });
+    }
+
+    lightbox.init();
+
+  } else {
+    console.warn("PhotoSwipe: No parsedDataSource available or it's empty. Lightbox not initialized.");
   }
 
-  lightbox.init();
-
-} else {
-  console.warn("PhotoSwipe: No parsedDataSource available or it's empty. Lightbox not initialized.");
-}
-
-if (lightbox && parsedDataSource && parsedDataSource.length > 0) {
-  const openPhotoBySlug = (slugToOpen, pswpInstance) => {
-    if (!slugToOpen || !pswpInstance) return;
-    const corePswp = pswpInstance.pswp || pswpInstance;
-    const photoIndex = parsedDataSource.findIndex(p => p.slug === slugToOpen);
-    if (photoIndex !== -1) {
-      if (corePswp.goTo) {
-        corePswp.goTo(photoIndex);
+  if (lightbox && parsedDataSource && parsedDataSource.length > 0) {
+    const openPhotoBySlug = (slugToOpen, pswpInstance) => {
+      if (!slugToOpen || !pswpInstance) return;
+      const corePswp = pswpInstance.pswp || pswpInstance;
+      const photoIndex = parsedDataSource.findIndex(p => p.slug === slugToOpen);
+      if (photoIndex !== -1) {
+        if (corePswp.goTo) {
+          corePswp.goTo(photoIndex);
+        } else {
+          // console.warn('PhotoSwipe: corePswp.goTo is not a function in openPhotoBySlug');
+        }
       } else {
-        // console.warn('PhotoSwipe: corePswp.goTo is not a function in openPhotoBySlug');
+        // console.warn(`PhotoSwipe: Slug "${slugToOpen}" from hash not found in dataSource (openPhotoBySlug).`);
       }
-    } else {
-      // console.warn(`PhotoSwipe: Slug "${slugToOpen}" from hash not found in dataSource (openPhotoBySlug).`);
-    }
-  };
+    };
 
-  const initialHash = window.location.hash.substring(1);
-  if (initialHash) {
-    const targetElementIndex = parsedDataSource.findIndex(p => p.slug === initialHash);
-    if (targetElementIndex !== -1) {
-      setTimeout(() => {
-         if (lightbox && !lightbox.pswp) {
-            lightbox.loadAndOpen(targetElementIndex);
-         } else if (lightbox && lightbox.pswp && lightbox.pswp.currIndex !== targetElementIndex) {
-            lightbox.pswp.goTo(targetElementIndex);
-         }
-      }, 150);
-    }
-  }
-
-  window.addEventListener('hashchange', () => {
-    const newSlug = window.location.hash.substring(1);
-    if (lightbox.pswp && lightbox.pswp.isOpen) {
-      const currentPswpSlug = lightbox.pswp.currSlide && lightbox.pswp.currSlide.data ? lightbox.pswp.currSlide.data.slug : null;
-      if (newSlug && newSlug !== currentPswpSlug) {
-        openPhotoBySlug(newSlug, lightbox.pswp);
-      }
-    } else if (newSlug) {
-      const targetElementIndex = parsedDataSource.findIndex(p => p.slug === newSlug);
+    const initialHash = window.location.hash.substring(1);
+    if (initialHash) {
+      const targetElementIndex = parsedDataSource.findIndex(p => p.slug === initialHash);
       if (targetElementIndex !== -1) {
-        lightbox.loadAndOpen(targetElementIndex);
+        setTimeout(() => {
+           if (lightbox && !lightbox.pswp) {
+              lightbox.loadAndOpen(targetElementIndex);
+           } else if (lightbox && lightbox.pswp && lightbox.pswp.currIndex !== targetElementIndex) {
+              lightbox.pswp.goTo(targetElementIndex);
+           }
+        }, 150);
       }
     }
-  }, false);
-}
+
+    window.addEventListener('hashchange', () => {
+      const newSlug = window.location.hash.substring(1);
+      if (lightbox.pswp && lightbox.pswp.isOpen) {
+        const currentPswpSlug = lightbox.pswp.currSlide && lightbox.pswp.currSlide.data ? lightbox.pswp.currSlide.data.slug : null;
+        if (newSlug && newSlug !== currentPswpSlug) {
+          openPhotoBySlug(newSlug, lightbox.pswp);
+        }
+      } else if (newSlug) {
+        const targetElementIndex = parsedDataSource.findIndex(p => p.slug === newSlug);
+        if (targetElementIndex !== -1) {
+          lightbox.loadAndOpen(targetElementIndex);
+        }
+      }
+    }, false);
+  }
