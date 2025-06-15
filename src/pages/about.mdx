@@ -3,7 +3,7 @@ title: "About me"
 ---
 
 import BaseLayout from "../layouts/BaseLayout.astro"
-import PhotoSwipe from "../components/PhotoSwipe.astro"
+import OptimizedImage from "../components/OptimizedImage.astro";
 
 <BaseLayout pageTitle={frontmatter.title}>
 
@@ -17,12 +17,15 @@ import PhotoSwipe from "../components/PhotoSwipe.astro"
           Exploring the intersections of research, visual art, and programming.
         </h2>
       </div>
-      <div id="gallery">
-        <PhotoSwipe
+      {/* The image container - adjusted for centering and responsive width */}
+      <div id="gallery" class="w-full lg:w-1/2 lg:max-w-[600px] flex justify-center p-4">
+        <OptimizedImage
             src="https://share.kadykov.com/2024/05/19/DSC_8829.jpg"
             alt="Self-portrait photo of Aleksandr Kadykov with a bike on a road"
-            width={600}
-            sizes="(min-width: 600px) 600px, 100vw"
+            displayWidth={600}
+            sizesAttr="(min-width: 600px) 600px, 80vw"
+            imgClass="rounded-lg shadow-xl w-full h-auto"
+            loading="eager"
           />
       </div>
     </div>
