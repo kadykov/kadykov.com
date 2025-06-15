@@ -73,7 +73,7 @@ const { page, tagDisplayName, fullPhotoDataset } = Astro.props; // fullPhotoData
                                // and 'page' (the number) would be Astro.params.page
 
 // Use tagDisplayName for display, as it preserves original casing
-const pageTitle = `Photos tagged: "${tagDisplayName}"${page.currentPage > 1 ? ` (Page ${page.currentPage})` : ''}`;
+const pageTitle = `Photos tagged: "${tagDisplayName}"`;
 const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`;
 ---
 

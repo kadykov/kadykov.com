@@ -60,7 +60,7 @@ if (!page) {
 }
 
 // Reverted optional chaining to let errors surface if page is undefined.
-const pageTitle = `All Photos${page.currentPage > 1 ? ` (Page ${page.currentPage})` : ''}`;
+const pageTitle = `All Photos`;
 const pageDescription = `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`;
 ---
 
