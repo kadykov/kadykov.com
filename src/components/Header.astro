@@ -3,6 +3,7 @@ import Logo from "./Logo.astro"
 import Navigation from "./Navigation.astro"
 import Hamburger from "./Hamburger.astro"
 import ThemeSwitch from "./ThemeSwitch.astro"
+import StandaloneShareButton from "./StandaloneShareButton.astro"; // Added import
 ---
 
 <header class="navbar md:w-5/6 mx-auto max-w-screen-xl">
@@ -14,6 +15,10 @@ import ThemeSwitch from "./ThemeSwitch.astro"
   </div>
   <div class="navbar-end">
     <ThemeSwitch />
+    <StandaloneShareButton
+      buttonClass="btn btn-ghost btn-square"
+      dropdownAlignment="dropdown-end"
+    />
     <div class="sm:hidden">
       <Hamburger />
     </div>
