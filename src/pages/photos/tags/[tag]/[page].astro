@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro'; // Adjusted path
 import PhotoGallery from '../../../../components/PhotoGallery.astro'; // Adjusted path
+import PaginationNav from '../../../../components/PaginationNav.astro'; // Added import
 import type { PhotoManifestItem } from '../../../../utils/photoManifestSchema'; // Adjusted path
 import { fetchPhotoManifest } from '../../../../utils/photoData'; // Adjusted path, REMOVED generateSlugFromRelativePath
 import type { Page, PaginateFunction, GetStaticPathsResult } from 'astro';
@@ -83,26 +84,6 @@ const pageDescription = `A collection of photos tagged with "${tagDisplayName}".
     <p class="text-center text-meta mb-8">
       <a href="/photos/tags" class="btn text-heading-4">View all photo tags</a>
     </p>
-    {page.lastPage > 1 && (
-      <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
-        {page.url.prev ? (
-          <a href={page.url.prev} class="btn text-heading-4">
-            &laquo; Previous
-          </a>
-        ) : (
-          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
-        )}
-
-        <span>Page {page.currentPage} of {page.lastPage}</span>
-
-        {page.url.next ? (
-          <a href={page.url.next} class="btn text-heading-4">
-            Next &raquo;
-          </a>
-        ) : (
-          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
-        )}
-      </nav>
-    )}
+    <PaginationNav page={page} /> {/* Replaced inline pagination with component */}
   </div>
 </BaseLayout>

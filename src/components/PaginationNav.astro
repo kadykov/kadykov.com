@@ -1,0 +1,32 @@
+---
+// src/components/PaginationNav.astro
+import type { Page } from 'astro';
+
+interface Props {
+  page: Page<any>; // Accept any type of paginated data
+}
+
+const { page } = Astro.props;
+---
+
+{page.lastPage > 1 && (
+  <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
+    {page.url.prev ? (
+      <a href={page.url.prev} class="btn text-heading-4">
+        &laquo; Previous
+      </a>
+    ) : (
+      <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
+    )}
+
+    <span class="text-heading-4">Page {page.currentPage} of {page.lastPage}</span>
+
+    {page.url.next ? (
+      <a href={page.url.next} class="btn text-heading-4">
+        Next &raquo;
+      </a>
+    ) : (
+      <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
+    )}
+  </nav>
+)}

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PhotoGallery from '../../../../components/PhotoGallery.astro';
+import PaginationNav from '../../../../components/PaginationNav.astro';
 import { photoManifestSchema, type PhotoManifestItem } from '../../../../utils/photoManifestSchema';
 import type { GetStaticPathsResult, PaginateFunction, Page } from 'astro';
 
@@ -105,26 +106,6 @@ const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${
       <a href="/photos/dates" class="btn text-heading-4">View all photo dates</a>
     </p>
 
-    {page.lastPage > 1 && (
-      <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
-        {page.url.prev ? (
-          <a href={page.url.prev} class="btn text-heading-4">
-            &laquo; Previous
-          </a>
-        ) : (
-          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
-        )}
-
-        <span>Page {page.currentPage} of {page.lastPage}</span>
-
-        {page.url.next ? (
-          <a href={page.url.next} class="btn text-heading-4">
-            Next &raquo;
-          </a>
-        ) : (
-          <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
-        )}
-      </nav>
-    )}
+    <PaginationNav page={page} /> {/* Replaced inline pagination with component */}
   </div>
 </BaseLayout>
