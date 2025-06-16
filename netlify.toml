@@ -1,3 +1,15 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "/gc-api/*"
+  to = "https://kadykov.goatcounter.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/gc-script/*"
+  to = "https://gc.zgo.at/:splat"
+  status = 200
+  force = true
