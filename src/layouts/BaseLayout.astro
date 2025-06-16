@@ -4,7 +4,7 @@ import Navigation from "../components/Navigation.astro"
 import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
 import Header from "../components/Header.astro"
-const { pageTitle } = Astro.props
+const { title = 'kadykov.com', description = 'A photo gallery and blog by Kadykov.' } = Astro.props
 import "../styles/base.css"
 ---
 
@@ -54,7 +54,8 @@ import "../styles/base.css"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>{pageTitle}</title>
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <style>
       @view-transition {
         navigation: auto;
