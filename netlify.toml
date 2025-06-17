@@ -3,7 +3,7 @@
   publish = "dist"
 
 [[redirects]]
-  from = "/gc-script/*"
-  to = "https://gc.zgo.at/:splat"
+  from = "/umami/*"
+  to = "https://cloud.umami.is/:splat"
   status = 200
   force = true
