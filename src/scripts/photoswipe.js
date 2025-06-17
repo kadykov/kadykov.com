@@ -87,6 +87,44 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     }
   });
 
+  // GoatCounter Tracking Integration
+  const trackGoatCounterEvent = (slide) => {
+    if (window.goatcounter && typeof window.goatcounter.count === 'function' && slide && slide.data) {
+      let imagePath = slide.data.hash; // Prefer a dedicated 'hash' field like '#slug'
+      if (!imagePath && slide.data.id) { // Fallback to 'id' if 'hash' isn't available
+          imagePath = '#' + slide.data.id;
+      }
+
+      if (imagePath && imagePath.startsWith('#')) {
+        const pagePath = window.location.pathname;
+        const fullPathForGoatCounter = pagePath + imagePath;
+
+        window.goatcounter.count({
+          path: fullPathForGoatCounter,
+          title: slide.data.title || document.title,
+          event: true
+        });
+        // console.log('GoatCounter event sent:', fullPathForGoatCounter); // For debugging
+      } else {
+        // console.warn('GoatCounter: Could not determine image path for tracking from slide.data:', slide.data); // For debugging
+      }
+    }
+  };
+
+  lightbox.on('afterChange', () => {
+    if (lightbox.pswp && lightbox.pswp.currSlide) {
+      trackGoatCounterEvent(lightbox.pswp.currSlide);
+    }
+  });
+
+  lightbox.on('open', () => {
+    setTimeout(() => {
+        if (lightbox.pswp && lightbox.pswp.currSlide) {
+            trackGoatCounterEvent(lightbox.pswp.currSlide);
+        }
+    }, 100);
+  });
+
   lightbox.on("uiRegister", function () {
     if (!lightbox.pswp) {
       // This can happen and usually resolves.
