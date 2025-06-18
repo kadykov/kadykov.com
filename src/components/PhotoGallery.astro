@@ -213,7 +213,7 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-slug={photo.slug || ''}
           data-pswp-index={fullDatasetIndex === -1 ? pageSpecificIndex : fullDatasetIndex}
           target="_blank"
-          class="gallery-item block relative overflow-hidden rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
+          class="gallery-item block relative overflow-hidden rounded-md sm:rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}
         >
           <OptimizedImage
@@ -226,7 +226,7 @@ function getLightboxWidths(photoWidth: number): number[] {
             loading="lazy"
             decoding="async"
             enforceAspectRatio={`${photo.width}:${photo.height}`}
-            class="w-full h-auto rounded-lg"
+            class="w-full h-auto rounded-md sm:rounded-lg"
             imgClass="object-cover"
           />
           {/* Overlay removed as per user request to prioritize enlarge hover effect */}
