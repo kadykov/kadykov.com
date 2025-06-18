@@ -12,21 +12,21 @@ const { page } = Astro.props;
 {page.lastPage > 1 && (
   <nav class="mt-12 flex justify-center items-center space-x-4" aria-label="Pagination">
     {page.url.prev ? (
-      <a href={page.url.prev} class="btn text-heading-4">
+      <a href={page.url.prev} class="btn text-button">
         &laquo; Previous
       </a>
     ) : (
-      <span class="btn text-heading-4 btn-disabled" aria-disabled="true">&laquo; Previous</span>
+      <span class="btn text-button btn-disabled" aria-disabled="true">&laquo; Previous</span>
     )}
 
-    <span class="text-heading-4">Page {page.currentPage} of {page.lastPage}</span>
+    <span class="text-button">Page {page.currentPage} of {page.lastPage}</span>
 
     {page.url.next ? (
-      <a href={page.url.next} class="btn text-heading-4">
+      <a href={page.url.next} class="btn text-button">
         Next &raquo;
       </a>
     ) : (
-      <span class="btn text-heading-4 btn-disabled" aria-disabled="true">Next &raquo;</span>
+      <span class="btn text-button btn-disabled" aria-disabled="true">Next &raquo;</span>
     )}
   </nav>
 )}

@@ -81,8 +81,8 @@ const pageDescription = `A collection of photos tagged with "${tagDisplayName}".
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-heading-1 mb-2 text-center">Photos tagged: {tagDisplayName}</h1>
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
-    <p class="text-center text-meta mb-8">
-      <a href="/photos/tags" class="btn text-heading-4">View all photo tags</a>
+    <p class="text-center text-meta my-8">
+      <a href="/photos/tags" class="btn text-button">View all photo tags</a>
     </p>
     <PaginationNav page={page} /> {/* Replaced inline pagination with component */}
   </div>
