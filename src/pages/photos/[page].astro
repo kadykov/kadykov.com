@@ -68,9 +68,9 @@ const pageDescription = `A collection of all photos. Page ${page.currentPage} of
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1>
 
-    <div class="flex justify-center gap-4 mb-8">
-      <a href="/photos/tags" class="btn text-heading-4">Browse by tag</a>
-      <a href="/photos/dates" class="btn text-heading-4">Browse by date</a>
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <a href="/photos/tags" class="btn text-button">Browse by tag</a>
+      <a href="/photos/dates" class="btn text-button">Browse by date</a>
     </div>
 
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />

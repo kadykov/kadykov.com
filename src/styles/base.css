@@ -20,9 +20,12 @@
     @apply font-[400] sm:font-[375] xl:font-[350];
     @apply my-[0.7em];
   }
-  .text-heading-4 {
+  .text-button {
     @apply font-sans text-xl/normal sm:text-2xl/normal xl:text-3xl/normal;
     @apply font-[550] sm:font-[500] xl:font-[450];
+  }
+  .text-heading-4 {
+    @apply text-button;
     @apply my-[0.9em];
   }
   .text-body-large-serif {
