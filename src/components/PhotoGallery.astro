@@ -213,7 +213,7 @@ function getLightboxWidths(photoWidth: number): number[] {
           data-slug={photo.slug || ''}
           data-pswp-index={fullDatasetIndex === -1 ? pageSpecificIndex : fullDatasetIndex}
           target="_blank"
-          class="gallery-item block relative overflow-hidden rounded-md sm:rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
+          class="gallery-item group block relative overflow-hidden rounded-md sm:rounded-lg shadow-lg mb-4 break-inside-avoid hover:z-10 transition-transform duration-300 ease-in-out hover:scale-105"
           aria-label={`View image ${altText}`}
         >
           <OptimizedImage
@@ -229,7 +229,12 @@ function getLightboxWidths(photoWidth: number): number[] {
             class="w-full h-auto rounded-md sm:rounded-lg"
             imgClass="object-cover"
           />
-          {/* Overlay removed as per user request to prioritize enlarge hover effect */}
+          {/* Overlay with photo title, appears on hover */}
+          {photo.title && (
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <h4 class="text-white text-meta drop-shadow-lg">{photo.title}</h4>
+            </div>
+          )}
         </a>
       );
     })}
@@ -250,18 +255,5 @@ function getLightboxWidths(photoWidth: number): number[] {
   .gallery-item {
     background-color: #2d3748; /* Darker placeholder for dark mode, or use theme variable */
     /* For CSS columns, items flow naturally. Aspect ratio is handled by OptimizedImage. */
-  }
-
-  /* Styling for the text overlay to ensure readability and better aesthetics */
-  .gallery-item .absolute div h3 {
-    /* text-shadow: 0 1px 3px rgba(0,0,0,0.5); */
-  }
-  .gallery-item .absolute div p {
-    /* text-shadow: 0 1px 2px rgba(0,0,0,0.5); */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 </style>
