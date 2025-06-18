@@ -1,4 +1,4 @@
-FROM node:22-alpine3.21
+FROM node:24-alpine3.22
 
 # Install Google Cloud CLI
 RUN apk add --no-cache curl python3 py3-crcmod bash libc6-compat
