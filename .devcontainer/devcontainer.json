@@ -4,17 +4,13 @@
     "dockerfile": "./Dockerfile",
     "context": ".."
   },
-  "runArgs": [
-    "--env-file",
-    ".devcontainer/devcontainer.env"
-  ],
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "username": "vscode"
-    },
-    "ghcr.io/kadykov/devcontainer-features/pre-commit:1": {}
+    }
   },
-  "postCreateCommand": "pre-commit install && npm install",
+  "postCreateCommand": "npm install",
   "forwardPorts": [4321],
   "customizations": {
     "vscode": {
