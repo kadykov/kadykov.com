@@ -1,5 +1,5 @@
 import { defineConfig } from "astro/config"
-import tailwind from "@astrojs/tailwind"
+import tailwindcss from "@tailwindcss/vite"
 import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
@@ -8,7 +8,6 @@ import playformCompress from "@playform/compress"
 // https://astro.build/config
 export default defineConfig({
   integrations: [
-    tailwind({ applyBaseStyles: false }),
     icon(),
     sitemap(),
     mdx(),
@@ -21,7 +20,9 @@ export default defineConfig({
       },
     }),
   ],
+
   site: "https://www.kadykov.com",
+
   image: {
     domains: ["share.kadykov.com"],
     remotePatterns: [
@@ -29,5 +30,9 @@ export default defineConfig({
         protocol: "https",
       },
     ],
+  },
+
+  vite: {
+    plugins: [tailwindcss()],
   },
 })

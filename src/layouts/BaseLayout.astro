@@ -4,13 +4,20 @@ import Navigation from "../components/Navigation.astro"
 import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
 import Header from "../components/Header.astro"
-const { title = 'kadykov.com', description = 'A photo gallery and blog by Kadykov.' } = Astro.props
-import "../styles/base.css"
+const {
+  title = "kadykov.com",
+  description = "A photo gallery and blog by Kadykov.",
+} = Astro.props
+import "../styles/global.css"
 ---
 
 <html lang="en">
   <head>
-    <script is:inline defer src="/umami/script.js" data-website-id="8254b650-ea3c-461d-9f3e-0ad467230fa1"></script>
+    <script
+      is:inline
+      defer
+      src="/umami/script.js"
+      data-website-id="8254b650-ea3c-461d-9f3e-0ad467230fa1"></script>
 
     <script is:inline>
       const theme = (() => {
