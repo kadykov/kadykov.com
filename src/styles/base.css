@@ -20,6 +20,13 @@
     ); /* transparent version of link color */
     --max-w-body: 40rem;
     --max-w-body-xl: 48rem;
+
+    /* Define breakpoint variables for documentation and DRYness */
+    --breakpoint-sm: 680px;
+    --breakpoint-md: 900px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xl: 1500px;
+    --breakpoint-2xl: 1800px;
   }
 
   /* Headings */
@@ -45,7 +52,8 @@
     letter-spacing: -0.02em;
     margin-block: 0.3em;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-heading-1,
     h1,
     .prose-serif h1 {
@@ -53,7 +61,8 @@
       font-weight: 250;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-heading-1,
     h1,
     .prose-serif h1 {
@@ -72,7 +81,8 @@
     letter-spacing: -0.02em;
     margin-block: 0.5em;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-heading-2,
     h2,
     .prose-serif h2 {
@@ -81,7 +91,8 @@
       font-weight: 325;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-heading-2,
     h2,
     .prose-serif h2 {
@@ -99,7 +110,8 @@
     font-weight: 400;
     margin-block: 0.7em;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-heading-3,
     h3,
     .prose-serif h3 {
@@ -108,7 +120,8 @@
       font-weight: 375;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-heading-3,
     h3,
     .prose-serif h3 {
@@ -128,7 +141,8 @@
     font-weight: 550;
     margin-block: 0.9em;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-button,
     .text-heading-4,
     h4,
@@ -137,7 +151,8 @@
       font-weight: 500;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-button,
     .text-heading-4,
     h4,
@@ -154,7 +169,8 @@
     line-height: 1.75;
     max-width: var(--max-w-body);
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-body-large-serif,
     .text-body-standard-serif {
       max-width: var(--max-w-body-xl);
@@ -164,12 +180,14 @@
     font-size: 1.25rem;
     font-weight: 400;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-body-large-serif {
       font-size: 1.5rem;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-body-large-serif {
       font-size: 1.875rem;
     }
@@ -178,12 +196,14 @@
     font-size: 1.125rem;
     font-weight: 450;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .text-body-standard-serif {
       font-size: 1.25rem;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .text-body-standard-serif {
       font-size: 1.5rem;
     }
@@ -241,13 +261,15 @@
     line-height: 1.1;
     font-weight: 350;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .menu-item {
       font-size: 1.5rem;
       font-weight: 500;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .menu-item {
       font-size: 1.875rem;
       font-weight: 450;
@@ -258,13 +280,15 @@
     line-height: 1.1;
     font-weight: 550;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .logo-text {
       font-size: 1.25rem;
       font-weight: 500;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .logo-text {
       font-size: 1.5rem;
       font-weight: 450;
@@ -279,12 +303,14 @@
     max-width: var(--max-w-body);
     color: inherit;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 680px) {
+    /* var(--breakpoint-sm) */
     .prose-serif {
       font-size: 1.25rem;
     }
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1500px) {
+    /* var(--breakpoint-xl) */
     .prose-serif {
       font-size: 1.5rem;
       max-width: var(--max-w-body-xl);
