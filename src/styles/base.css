@@ -34,87 +34,117 @@
     letter-spacing: -0.02em;
   }
 
-  .text-heading-1 {
+  /* DRY heading styles: define once, reuse everywhere via grouped selectors */
+  .text-heading-1,
+  h1,
+  .prose-serif h1 {
+    font-family: var(--font-sans);
     font-size: 4.5rem;
     line-height: 1;
     font-weight: 300;
+    letter-spacing: -0.02em;
     margin-block: 0.3em;
   }
   @media (min-width: 640px) {
-    .text-heading-1 {
+    .text-heading-1,
+    h1,
+    .prose-serif h1 {
       font-size: 6rem;
       font-weight: 250;
     }
   }
   @media (min-width: 1280px) {
-    .text-heading-1 {
+    .text-heading-1,
+    h1,
+    .prose-serif h1 {
       font-size: 8rem;
       font-weight: 200;
     }
   }
 
-  .text-heading-2 {
+  .text-heading-2,
+  h2,
+  .prose-serif h2 {
+    font-family: var(--font-sans);
     font-size: 3rem;
     line-height: 1.1;
     font-weight: 350;
+    letter-spacing: -0.02em;
     margin-block: 0.5em;
   }
   @media (min-width: 640px) {
-    .text-heading-2 {
+    .text-heading-2,
+    h2,
+    .prose-serif h2 {
       font-size: 3.75rem;
       line-height: 1;
       font-weight: 325;
     }
   }
   @media (min-width: 1280px) {
-    .text-heading-2 {
+    .text-heading-2,
+    h2,
+    .prose-serif h2 {
       font-size: 4.5rem;
       font-weight: 300;
     }
   }
 
-  .text-heading-3 {
+  .text-heading-3,
+  h3,
+  .prose-serif h3 {
+    font-family: var(--font-sans);
     font-size: 1.875rem;
     line-height: 1.2;
     font-weight: 400;
     margin-block: 0.7em;
   }
   @media (min-width: 640px) {
-    .text-heading-3 {
+    .text-heading-3,
+    h3,
+    .prose-serif h3 {
       font-size: 2.25rem;
       line-height: 1.1;
       font-weight: 375;
     }
   }
   @media (min-width: 1280px) {
-    .text-heading-3 {
+    .text-heading-3,
+    h3,
+    .prose-serif h3 {
       font-size: 3rem;
       font-weight: 350;
     }
   }
 
+  /* DRY: text-button and text-heading-4 share the same styles */
   .text-button,
-  .text-heading-4 {
+  .text-heading-4,
+  h4,
+  .prose-serif h4 {
+    font-family: var(--font-sans);
     font-size: 1.25rem;
     line-height: 1.2;
     font-weight: 550;
+    margin-block: 0.9em;
   }
   @media (min-width: 640px) {
     .text-button,
-    .text-heading-4 {
+    .text-heading-4,
+    h4,
+    .prose-serif h4 {
       font-size: 1.5rem;
       font-weight: 500;
     }
   }
   @media (min-width: 1280px) {
     .text-button,
-    .text-heading-4 {
+    .text-heading-4,
+    h4,
+    .prose-serif h4 {
       font-size: 1.875rem;
       font-weight: 450;
     }
-  }
-  .text-heading-4 {
-    margin-block: 0.9em;
   }
 
   /* Serif body text */
@@ -243,35 +273,79 @@
 
   /* Updated .prose-serif using direct application of utilities with prose modifiers */
   .prose-serif {
-    @apply prose prose-lg sm:prose-xl xl:prose-2xl; /* Base prose, responsive sizing */
-    @apply max-w-screen-sm xl:max-w-screen-md; /* Width constraint */
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    max-width: var(--max-w-body);
+    color: inherit;
+  }
+  @media (min-width: 640px) {
+    .prose-serif {
+      font-size: 1.25rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .prose-serif {
+      font-size: 1.5rem;
+      max-width: var(--max-w-body-xl);
+    }
+  }
 
-    /* H1 styles - mirroring .text-heading-1 */
-    @apply prose-h1:text-heading-1;
+  /* Paragraphs, lists, and links inherit from .prose-serif, only override if needed */
+  .prose-serif ul,
+  .prose-serif ol {
+    padding-left: 1.5em;
+  }
+  .prose-serif li {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  .prose-serif a {
+    /* Only add link-specific styles, inherit font and size */
+    font-weight: 550;
+    color: var(--color-link);
+    text-decoration: none;
+    transition:
+      color 0.2s,
+      background 0.2s,
+      box-shadow 0.2s,
+      transform 0.08s;
+    border-radius: 0.3em;
+    padding: 0.12em 0.35em;
+    margin: -0.12em -0.35em;
+    position: relative;
+  }
+  .prose-serif a:hover {
+    color: var(--color-link-hover);
+    background: var(--color-link-bg-hover);
+  }
+  .prose-serif a:active {
+    color: var(--color-link-active-text);
+    background: var(--color-link-active-bg);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+    transform: scale(0.97);
+  }
 
-    /* H2 styles - applying .text-heading-2 */
-    @apply prose-h2:text-heading-2;
-
-    /* H3 styles - applying .text-heading-3 */
-    @apply prose-h3:text-heading-3;
-
-    /* H4 styles - applying .text-heading-4 */
-    @apply prose-h4:text-heading-4;
-
-    /* Paragraph styles - applying .text-body-standard-serif */
-    @apply prose-p:text-body-standard-serif;
-    @apply prose-ul:text-body-standard-serif;
-    @apply prose-ol:text-body-standard-serif;
-
-    /* Note: The font-family from .text-body-standard-serif (serif) will correctly apply here,
-    overriding the prose-headings:font-sans if it were to somehow apply to p,
-    and complementing the base @apply font-serif on .prose-serif. */
-
-    /* Link styles - applying .text-link */
-    /* @apply prose-a:link prose-a:link-hover; /* This is fine if .text-link is identical */
-    @apply prose-a:text-link; /* This should also work if .text-link is just @apply link link-hover */
-
-    /* Add other elements like blockquotes, lists, code etc. similarly if needed */
+  /* Ensure lists have bullets/numbers and improve paragraph spacing in prose-serif */
+  .prose-serif ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  .prose-serif ol {
+    list-style-type: decimal;
+    padding-left: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  .prose-serif li {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  .prose-serif p {
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
   }
 }
 
