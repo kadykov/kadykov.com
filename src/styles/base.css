@@ -4,61 +4,241 @@
 @tailwind utilities;
 
 @layer utilities {
-  /* Semantic Text Utilities */
+  /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
+  :root {
+    --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
+    --font-serif: "Bitter Variable", Georgia, serif;
+    --color-link: #515151;
+    --color-link-hover: #181818;
+    --color-link-active-bg: #181818; /* or your preferred dark color */
+    --color-link-active-text: #fff;
+    --color-link-bg-hover: rgba(
+      0,
+      0,
+      0,
+      0.04
+    ); /* transparent version of link color */
+    --max-w-body: 40rem;
+    --max-w-body-xl: 48rem;
+  }
+
+  /* Headings */
+  .text-heading-1,
+  .text-heading-2,
+  .text-heading-3,
+  .text-heading-4,
+  .text-button,
+  .menu-item,
+  .logo-text {
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
   .text-heading-1 {
-    @apply font-sans text-7xl/none sm:text-8xl/none xl:text-9xl/none;
-    @apply font-[300] sm:font-[250] xl:font-[200] tracking-tight;
-    @apply my-[0.3em];
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 300;
+    margin-block: 0.3em;
   }
+  @media (min-width: 640px) {
+    .text-heading-1 {
+      font-size: 6rem;
+      font-weight: 250;
+    }
+  }
+  @media (min-width: 1280px) {
+    .text-heading-1 {
+      font-size: 8rem;
+      font-weight: 200;
+    }
+  }
+
   .text-heading-2 {
-    @apply font-sans text-5xl/tight sm:text-6xl/none xl:text-7xl/none;
-    @apply font-[350] sm:font-[325] xl:font-[300] tracking-tight;
-    @apply my-[0.5em];
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 350;
+    margin-block: 0.5em;
   }
+  @media (min-width: 640px) {
+    .text-heading-2 {
+      font-size: 3.75rem;
+      line-height: 1;
+      font-weight: 325;
+    }
+  }
+  @media (min-width: 1280px) {
+    .text-heading-2 {
+      font-size: 4.5rem;
+      font-weight: 300;
+    }
+  }
+
   .text-heading-3 {
-    @apply font-sans text-3xl/normal sm:text-4xl/tight xl:text-5xl/tight;
-    @apply font-[400] sm:font-[375] xl:font-[350];
-    @apply my-[0.7em];
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 400;
+    margin-block: 0.7em;
   }
-  .text-button {
-    @apply font-sans text-xl/normal sm:text-2xl/normal xl:text-3xl/normal;
-    @apply font-[550] sm:font-[500] xl:font-[450];
+  @media (min-width: 640px) {
+    .text-heading-3 {
+      font-size: 2.25rem;
+      line-height: 1.1;
+      font-weight: 375;
+    }
+  }
+  @media (min-width: 1280px) {
+    .text-heading-3 {
+      font-size: 3rem;
+      font-weight: 350;
+    }
+  }
+
+  .text-button,
+  .text-heading-4 {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    font-weight: 550;
+  }
+  @media (min-width: 640px) {
+    .text-button,
+    .text-heading-4 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  }
+  @media (min-width: 1280px) {
+    .text-button,
+    .text-heading-4 {
+      font-size: 1.875rem;
+      font-weight: 450;
+    }
   }
   .text-heading-4 {
-    @apply text-button;
-    @apply my-[0.9em];
+    margin-block: 0.9em;
+  }
+
+  /* Serif body text */
+  .text-body-large-serif,
+  .text-body-standard-serif {
+    font-family: var(--font-serif);
+    line-height: 1.75;
+    max-width: var(--max-w-body);
+  }
+  @media (min-width: 1280px) {
+    .text-body-large-serif,
+    .text-body-standard-serif {
+      max-width: var(--max-w-body-xl);
+    }
   }
   .text-body-large-serif {
-    @apply font-serif text-xl/relaxed sm:text-2xl/relaxed xl:text-3xl/relaxed;
-    @apply font-[400];
-    @apply max-w-screen-sm xl:max-w-screen-md;
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+  @media (min-width: 640px) {
+    .text-body-large-serif {
+      font-size: 1.5rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .text-body-large-serif {
+      font-size: 1.875rem;
+    }
   }
   .text-body-standard-serif {
-    @apply font-serif text-lg/relaxed sm:text-xl/relaxed xl:text-2xl/relaxed;
-    @apply font-[450];
-    @apply max-w-screen-sm xl:max-w-screen-md;
+    font-size: 1.125rem;
+    font-weight: 450;
   }
-  .text-meta {
-    @apply font-sans text-base/relaxed;
+  @media (min-width: 640px) {
+    .text-body-standard-serif {
+      font-size: 1.25rem;
+    }
   }
-  .text-link {
-    @apply link link-hover;
+  @media (min-width: 1280px) {
+    .text-body-standard-serif {
+      font-size: 1.5rem;
+    }
   }
 
+  .text-meta {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* Links - hover uses transparent background for subtle effect, extends on Y axis */
+  .text-link,
+  .text-body-standard-serif a,
+  .text-body-large-serif a {
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: none;
+    transition:
+      color 0.2s,
+      background 0.2s,
+      box-shadow 0.2s,
+      transform 0.08s;
+    border-radius: 0.3em;
+    padding: 0.12em 0.35em;
+    margin: -0.12em -0.35em;
+    position: relative;
+    /* Padding/margin on Y and X axis for full background extension */
+  }
+  .text-link:hover,
+  .text-body-standard-serif a:hover,
+  .text-body-large-serif a:hover {
+    color: var(--color-link-hover);
+    background: var(--color-link-bg-hover);
+    box-shadow: none;
+  }
+  .text-link:active,
+  .text-body-standard-serif a:active,
+  .text-body-large-serif a:active {
+    color: var(--color-link-active-text, #fff);
+    background: var(--color-link-active-bg, #222a36);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+    transform: scale(0.97);
+  }
   .text-body-standard-serif a {
-    @apply link link-hover font-[550];
+    font-weight: 550;
   }
   .text-body-large-serif a {
-    @apply link link-hover font-[500];
+    font-weight: 500;
   }
 
+  /* Menu and logo */
   .menu-item {
-    @apply font-sans text-5xl/tight sm:text-2xl xl:text-3xl;
-    @apply font-[350] sm:font-[500] xl:font-[450];
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 350;
+  }
+  @media (min-width: 640px) {
+    .menu-item {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  }
+  @media (min-width: 1280px) {
+    .menu-item {
+      font-size: 1.875rem;
+      font-weight: 450;
+    }
   }
   .logo-text {
-    @apply font-sans text-lg/tight sm:text-xl/none xl:text-2xl/none;
-    @apply font-[550] sm:font-[500] xl:font-[450];
+    font-size: 1.125rem;
+    line-height: 1.1;
+    font-weight: 550;
+  }
+  @media (min-width: 640px) {
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+  }
+  @media (min-width: 1280px) {
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 450;
+    }
   }
 
   /* Updated .prose-serif using direct application of utilities with prose modifiers */
@@ -102,7 +282,8 @@
   transform: scale(0.95);
   visibility: hidden; /* Ensures the element is not interactive when closed */
 
-  transition-property: opacity, transform; /* Explicitly transition opacity and transform */
+  transition-property:
+    opacity, transform; /* Explicitly transition opacity and transform */
   transition-duration: 200ms; /* Consistent duration */
   transition-timing-function: ease-out; /* Smooth easing, common for UI elements */
 }
@@ -125,7 +306,11 @@ details.dropdown[open] > .dropdown-content {
 
 /* This rule defines the closed state (default for .dropdown-content if not open) */
 /* Also, ensure this applies to .dropdown-content directly if it's the base state */
-.dropdown .dropdown-content:not([style*="display: none"]):not(.dropdown-top):not(.dropdown-bottom) { /* Added :not([style*="display: none"]) as a safeguard, though visibility should handle it */
+.dropdown
+  .dropdown-content:not([style*="display: none"]):not(.dropdown-top):not(
+    .dropdown-bottom
+  ) {
+  /* Added :not([style*="display: none"]) as a safeguard, though visibility should handle it */
   opacity: 0;
   transform: scale(0.95);
   visibility: hidden; /* Ensure hidden and no interaction when closed */
@@ -144,180 +329,234 @@ details.dropdown[open] > .dropdown-content {
 
 /* source-sans-3-latin-wght-normal */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* source-sans-3-cyrillic-wght-normal */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* source-sans-3-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* source-sans-3-latin-wght-italic */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* source-sans-3-cyrillic-wght-italic */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* source-sans-3-latin-ext-wght-italic */
 @font-face {
-  font-family: 'Source Sans 3 Variable';
+  font-family: "Source Sans 3 Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* bitter-latin-wght-normal */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: normal;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* bitter-cyrillic-wght-normal */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: normal;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* bitter-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: normal;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* bitter-latin-wght-italic */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: italic;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* bitter-cyrillic-wght-italic */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: italic;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* bitter-latin-ext-wght-italic */
 @font-face {
-  font-family: 'Bitter Variable';
+  font-family: "Bitter Variable";
   font-style: italic;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* source-code-pro-latin-wght-normal */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* source-code-pro-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-ext-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* source-code-pro-cyrillic-wght-normal */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-cyrillic-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-cyrillic-wght-normal.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* source-code-pro-latin-wght-italic */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* source-code-pro-latin-ext-wght-italic */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-ext-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-ext-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* source-code-pro-cyrillic-wght-italic */
 @font-face {
-  font-family: 'Source Code Pro Variable';
+  font-family: "Source Code Pro Variable";
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-cyrillic-wght-italic.woff2) format('woff2-variations');
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-cyrillic-wght-italic.woff2)
+    format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
