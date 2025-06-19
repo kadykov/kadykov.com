@@ -1,5 +1,8 @@
 FROM node:24-alpine3.22
 
+# Install just
+RUN apk add --no-cache just
+
 # Install Google Cloud CLI
 RUN apk add --no-cache curl python3 py3-crcmod bash libc6-compat
 RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz && \
