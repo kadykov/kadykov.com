@@ -8,16 +8,14 @@
   :root {
     --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
     --font-serif: "Bitter Variable", Georgia, serif;
-    --color-link: #515151;
-    --color-link-hover: #181818;
-    --color-link-active-bg: #181818; /* or your preferred dark color */
-    --color-link-active-text: #fff;
-    --color-link-bg-hover: rgba(
-      0,
-      0,
-      0,
-      0.04
-    ); /* transparent version of link color */
+    --color-bg: #fff;
+    --color-bg-muted: #f5f5f5;
+    --color-content: #181818;
+    --color-content-muted: #515151;
+    --color-accent: #3b82f6;
+    --color-hover: rgba(0, 0, 0, 0.04); /* transparent overlay for hover */
+    --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1); /* semantic shadow color */
+
     --max-w-body: 40rem;
     --max-w-body-xl: 48rem;
 
@@ -29,63 +27,52 @@
     --breakpoint-2xl: 1800px;
   }
 
-  /* Headings */
-  .text-heading-1,
-  .text-heading-2,
-  .text-heading-3,
-  .text-heading-4,
-  .text-button,
-  .menu-item,
-  .logo-text {
+  /* Set serif as the default font for body text */
+  body {
+    font-family: var(--font-serif);
+  }
+
+  /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-sans);
     letter-spacing: -0.02em;
   }
 
-  /* DRY heading styles: define once, reuse everywhere via grouped selectors */
-  .text-heading-1,
-  h1,
-  .prose-serif h1 {
-    font-family: var(--font-sans);
+  /* h1 styles */
+  h1 {
     font-size: 4.5rem;
     line-height: 1;
     font-weight: 300;
-    letter-spacing: -0.02em;
     margin-block: 0.3em;
   }
   @media (min-width: 680px) {
     /* var(--breakpoint-sm) */
-    .text-heading-1,
-    h1,
-    .prose-serif h1 {
+    h1 {
       font-size: 6rem;
       font-weight: 250;
     }
   }
   @media (min-width: 1500px) {
     /* var(--breakpoint-xl) */
-    .text-heading-1,
-    h1,
-    .prose-serif h1 {
+    h1 {
       font-size: 8rem;
       font-weight: 200;
     }
   }
 
-  .text-heading-2,
-  h2,
-  .prose-serif h2 {
-    font-family: var(--font-sans);
+  /* h2 styles */
+  h2 {
     font-size: 3rem;
     line-height: 1.1;
     font-weight: 350;
-    letter-spacing: -0.02em;
     margin-block: 0.5em;
   }
   @media (min-width: 680px) {
     /* var(--breakpoint-sm) */
-    .text-heading-2,
-    h2,
-    .prose-serif h2 {
+    h2 {
       font-size: 3.75rem;
       line-height: 1;
       font-weight: 325;
@@ -93,18 +80,14 @@
   }
   @media (min-width: 1500px) {
     /* var(--breakpoint-xl) */
-    .text-heading-2,
-    h2,
-    .prose-serif h2 {
+    h2 {
       font-size: 4.5rem;
       font-weight: 300;
     }
   }
 
-  .text-heading-3,
-  h3,
-  .prose-serif h3 {
-    font-family: var(--font-sans);
+  /* h3 styles */
+  h3 {
     font-size: 1.875rem;
     line-height: 1.2;
     font-weight: 400;
@@ -112,9 +95,7 @@
   }
   @media (min-width: 680px) {
     /* var(--breakpoint-sm) */
-    .text-heading-3,
-    h3,
-    .prose-serif h3 {
+    h3 {
       font-size: 2.25rem;
       line-height: 1.1;
       font-weight: 375;
@@ -122,20 +103,14 @@
   }
   @media (min-width: 1500px) {
     /* var(--breakpoint-xl) */
-    .text-heading-3,
-    h3,
-    .prose-serif h3 {
+    h3 {
       font-size: 3rem;
       font-weight: 350;
     }
   }
 
-  /* DRY: text-button and text-heading-4 share the same styles */
-  .text-button,
-  .text-heading-4,
-  h4,
-  .prose-serif h4 {
-    font-family: var(--font-sans);
+  /* h4 styles */
+  h4 {
     font-size: 1.25rem;
     line-height: 1.2;
     font-weight: 550;
@@ -143,116 +118,71 @@
   }
   @media (min-width: 680px) {
     /* var(--breakpoint-sm) */
-    .text-button,
-    .text-heading-4,
-    h4,
-    .prose-serif h4 {
+    h4 {
       font-size: 1.5rem;
       font-weight: 500;
     }
   }
   @media (min-width: 1500px) {
     /* var(--breakpoint-xl) */
-    .text-button,
-    .text-heading-4,
-    h4,
-    .prose-serif h4 {
+    h4 {
       font-size: 1.875rem;
       font-weight: 450;
     }
   }
 
-  /* Serif body text */
-  .text-body-large-serif,
-  .text-body-standard-serif {
-    font-family: var(--font-serif);
-    line-height: 1.75;
-    max-width: var(--max-w-body);
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    .text-body-large-serif,
-    .text-body-standard-serif {
-      max-width: var(--max-w-body-xl);
-    }
-  }
-  .text-body-large-serif {
-    font-size: 1.25rem;
-    font-weight: 400;
-  }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    .text-body-large-serif {
-      font-size: 1.5rem;
-    }
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    .text-body-large-serif {
-      font-size: 1.875rem;
-    }
-  }
-  .text-body-standard-serif {
-    font-size: 1.125rem;
-    font-weight: 450;
-  }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    .text-body-standard-serif {
-      font-size: 1.25rem;
-    }
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    .text-body-standard-serif {
-      font-size: 1.5rem;
-    }
-  }
-
+  /* Meta/UI text: use sans-serif */
   .text-meta {
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.75;
   }
 
-  /* Links - hover uses transparent background for subtle effect, extends on Y axis */
-  .text-link,
-  .text-body-standard-serif a,
-  .text-body-large-serif a {
-    font-weight: 500;
-    color: var(--color-link);
-    text-decoration: none;
+  /*
+    DRY link interaction styles:
+    - Group .link-interactive and .prose-serif a for shared hover/click/shape/color styles.
+    - Spacing (padding/margin) is only added to standalone links/buttons, not prose links.
+  */
+  .link-interactive,
+  .prose-serif a {
+    color: var(--color-content-muted);
+    border-radius: 0.3em;
     transition:
       color 0.2s,
       background 0.2s,
       box-shadow 0.2s,
       transform 0.08s;
-    border-radius: 0.3em;
-    padding: 0.12em 0.35em;
-    margin: -0.12em -0.35em;
-    position: relative;
-    /* Padding/margin on Y and X axis for full background extension */
+    text-decoration: none;
   }
-  .text-link:hover,
-  .text-body-standard-serif a:hover,
-  .text-body-large-serif a:hover {
-    color: var(--color-link-hover);
-    background: var(--color-link-bg-hover);
+  .link-interactive:hover,
+  .prose-serif a:hover {
+    color: var(--color-content);
+    background: var(--color-hover);
     box-shadow: none;
   }
-  .text-link:active,
-  .text-body-standard-serif a:active,
-  .text-body-large-serif a:active {
-    color: var(--color-link-active-text, #fff);
-    background: var(--color-link-active-bg, #222a36);
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+  .link-interactive:active,
+  .prose-serif a:active {
+    color: var(--color-bg);
+    background: var(--color-accent);
+    box-shadow: var(--color-shadow);
     transform: scale(0.97);
   }
-  .text-body-standard-serif a {
-    font-weight: 550;
+
+  /* Standalone links/buttons get spacing */
+  .text-link,
+  .btn {
+    padding: 0.12em 0.35em;
+    margin: -0.12em -0.35em;
   }
+
+  /* Font-weight for different link contexts */
+  .text-link,
   .text-body-large-serif a {
     font-weight: 500;
+  }
+  .text-body-standard-serif a,
+  .prose-serif a {
+    font-weight: 550;
   }
 
   /* Menu and logo */
@@ -325,31 +255,6 @@
   .prose-serif li {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-  }
-  .prose-serif a {
-    /* Only add link-specific styles, inherit font and size */
-    font-weight: 550;
-    color: var(--color-link);
-    text-decoration: none;
-    transition:
-      color 0.2s,
-      background 0.2s,
-      box-shadow 0.2s,
-      transform 0.08s;
-    border-radius: 0.3em;
-    padding: 0.12em 0.35em;
-    margin: -0.12em -0.35em;
-    position: relative;
-  }
-  .prose-serif a:hover {
-    color: var(--color-link-hover);
-    background: var(--color-link-bg-hover);
-  }
-  .prose-serif a:active {
-    color: var(--color-link-active-text);
-    background: var(--color-link-active-bg);
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-    transform: scale(0.97);
   }
 
   /* Ensure lists have bullets/numbers and improve paragraph spacing in prose-serif */
