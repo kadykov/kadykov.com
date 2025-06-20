@@ -63,21 +63,39 @@ import "../styles/base.css"
       @view-transition {
         navigation: auto;
       }
+      .layout-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: var(--color-shadow);
+        background: var(--color-bg);
+        transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .layout-main {
+        min-height: 60vh;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 1rem;
+        max-width: 1200px;
+      }
+      .layout-footer {
+        margin-top: 3rem;
+        background: var(--color-bg-muted);
+        color: var(--color-content);
+        box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.04);
+      }
     </style>
   </head>
   <body class="subpixel-antialiased">
     <Drawer>
       <div slot="content">
-        <div
-          id="navbar"
-          class="sticky top-0 duration-300 ease-in-out z-10 shadow-md bg-base-200 text-basebg-base-200-content"
-        >
+        <div id="navbar" class="layout-navbar">
           <Header />
         </div>
-        <main>
+        <main class="layout-main">
           <slot />
         </main>
-        <div class="shadow-inner bg-neutral text-neutral-content mt-20">
+        <div class="layout-footer">
           <Footer />
         </div>
       </div>

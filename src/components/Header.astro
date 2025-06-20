@@ -3,24 +3,97 @@ import Logo from "./Logo.astro"
 import Navigation from "./Navigation.astro"
 import Hamburger from "./Hamburger.astro"
 import ThemeSwitch from "./ThemeSwitch.astro"
-import StandaloneShareButton from "./StandaloneShareButton.astro"; // Added import
+import StandaloneShareButton from "./StandaloneShareButton.astro"
 ---
 
-<header class="navbar md:w-5/6 mx-auto max-w-screen-xl">
-  <div class="navbar-start">
-    <Logo />
-  </div>
-  <div class="navbar-center menu menu-horizontal hidden sm:flex">
-    <Navigation />
-  </div>
-  <div class="navbar-end">
-    <ThemeSwitch />
-    <StandaloneShareButton
-      buttonClass="btn btn-ghost btn-square"
-      dropdownAlignment="dropdown-end"
-    />
-    <div class="sm:hidden">
-      <Hamburger />
+<div class="navbar-outer">
+  <header class="header-root">
+    <div class="header-start">
+      <Logo />
     </div>
-  </div>
-</header>
+    <nav class="header-center">
+      <Navigation />
+    </nav>
+    <div class="header-end">
+      <ThemeSwitch />
+      <StandaloneShareButton
+        buttonClass="share-btn"
+        dropdownAlignment="dropdown-end"
+      />
+      <div class="header-hamburger">
+        <Hamburger />
+      </div>
+    </div>
+  </header>
+</div>
+
+<style is:global>
+  .navbar-outer {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background: var(--color-bg-muted);
+    box-shadow: var(--color-shadow);
+    z-index: 20;
+  }
+  .header-root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    min-height: 4.5rem;
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+    z-index: 31;
+  }
+  .header-start {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+  }
+  .header-center {
+    flex: 2 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header-end {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  .header-hamburger {
+    display: none;
+  }
+  @media (max-width: 680px) {
+    .header-center {
+      display: none;
+    }
+    .header-hamburger {
+      display: block;
+    }
+  }
+  .share-btn {
+    background: none;
+    border: none;
+    padding: 0.25em 0.5em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    color: var(--color-content);
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .share-btn:hover {
+    background: var(--color-hover);
+    color: var(--color-content);
+  }
+</style>

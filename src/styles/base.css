@@ -21,6 +21,12 @@
   --breakpoint-2xl: 1800px;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 /* Set serif as the default font and base font size for body text */
 body {
   font-family: var(--font-serif);
