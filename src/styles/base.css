@@ -39,6 +39,14 @@ body {
   }
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+header {
+  list-style: none;
+}
+
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
 h2,
@@ -153,8 +161,6 @@ h4 {
 */
 .link-interactive,
 .prose-serif a {
-  color: var(--color-content-muted);
-  border-radius: 0.3em;
   transition:
     color 0.2s,
     background 0.2s,
