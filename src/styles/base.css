@@ -27,9 +27,22 @@
     --breakpoint-2xl: 1800px;
   }
 
-  /* Set serif as the default font for body text */
+  /* Set serif as the default font and base font size for body text */
   body {
     font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: inherit;
+  }
+  @media (min-width: 680px) {
+    body {
+      font-size: 1.25rem;
+    }
+  }
+  @media (min-width: 1500px) {
+    body {
+      font-size: 1.5rem;
+    }
   }
 
   /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -226,23 +239,13 @@
   }
 
   /* Updated .prose-serif using direct application of utilities with prose modifiers */
+  /* .prose-serif controls max-width for content blocks */
   .prose-serif {
-    font-family: var(--font-serif);
-    font-size: 1.125rem;
-    line-height: 1.75;
     max-width: var(--max-w-body);
     color: inherit;
   }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    .prose-serif {
-      font-size: 1.25rem;
-    }
-  }
   @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
     .prose-serif {
-      font-size: 1.5rem;
       max-width: var(--max-w-body-xl);
     }
   }
