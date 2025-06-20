@@ -1,25 +1,31 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PhotoGallery from '../../components/PhotoGallery.astro';
-import PaginationNav from '../../components/PaginationNav.astro'; // Added import
-import type { PhotoManifestItem } from '../../utils/photoManifestSchema';
-import { fetchPhotoManifest } from '../../utils/photoData'; // REMOVED generateSlugFromRelativePath
-import type { Page, PaginateFunction } from 'astro';
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import PhotoGallery from "../../components/PhotoGallery.astro"
+import PaginationNav from "../../components/PaginationNav.astro" // Added import
+import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
+import { fetchPhotoManifest } from "../../utils/photoData" // REMOVED generateSlugFromRelativePath
+import type { Page, PaginateFunction } from "astro"
 
 // Define PAGE_SIZE for pagination
 // const PAGE_SIZE = 24; // This comment is fine, PAGE_SIZE is defined inside getStaticPaths
 
-export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
-  const PAGE_SIZE = 24; // Defined inside function
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}) {
+  const PAGE_SIZE = 24 // Defined inside function
 
-  let fetchedPhotos: PhotoManifestItem[] = []; // Now contains slugs from manifest
+  let fetchedPhotos: PhotoManifestItem[] = [] // Now contains slugs from manifest
   try {
-    fetchedPhotos = await fetchPhotoManifest();
+    fetchedPhotos = await fetchPhotoManifest()
   } catch (e) {
-    const error = e as Error;
+    const error = e as Error
     // fetchPhotoManifest already logs errors. We just need to ensure build fails.
-    console.error(`Failed to load photo manifest for /photos/[page].astro: ${error.message}`);
-    throw error; // Re-throw to fail the build
+    console.error(
+      `Failed to load photo manifest for /photos/[page].astro: ${error.message}`
+    )
+    throw error // Re-throw to fail the build
   }
 
   // Slugs are now assumed to be in fetchedPhotos from the manifest.
@@ -27,46 +33,51 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
 
   // Sort photos by dateTaken, most recent first.
   // Handle null dateTaken values by pushing them to the end.
-  fetchedPhotos.sort((a, b) => { // Sort fetchedPhotos directly
+  fetchedPhotos.sort((a, b) => {
+    // Sort fetchedPhotos directly
     if (a.dateTaken && b.dateTaken) {
-      return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
+      return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
     }
-    if (a.dateTaken) return -1; // a has date, b doesn't, so a comes first
-    if (b.dateTaken) return 1;  // b has date, a doesn't, so b comes first
-    return 0; // both null
-  });
+    if (a.dateTaken) return -1 // a has date, b doesn't, so a comes first
+    if (b.dateTaken) return 1 // b has date, a doesn't, so b comes first
+    return 0 // both null
+  })
 
   // The paginate function will generate params like { page: "1" }, { page: "2" }
   // because the filename is [page].astro.
   // It will also pass props to each page, including the paginated data.
   // We need to pass the full `fetchedPhotos` dataset to each page as well.
-  return paginate(fetchedPhotos, { // Paginate fetchedPhotos directly
+  return paginate(fetchedPhotos, {
+    // Paginate fetchedPhotos directly
     pageSize: PAGE_SIZE,
     props: { fullPhotoDataset: fetchedPhotos }, // Pass the full dataset (which has slugs from manifest)
-  });
+  })
 }
 
 interface Props {
-  page: Page<PhotoManifestItem>; // page.data will have slugs from manifest
-  fullPhotoDataset: PhotoManifestItem[]; // The full dataset with slugs from manifest
+  page: Page<PhotoManifestItem> // page.data will have slugs from manifest
+  fullPhotoDataset: PhotoManifestItem[] // The full dataset with slugs from manifest
 }
 
-const { page, fullPhotoDataset } = Astro.props;
+const { page, fullPhotoDataset } = Astro.props
 
 if (!page) {
-  console.error("CRITICAL: 'page' prop is undefined in /photos/[page].astro. Astro.props:", JSON.stringify(Astro.props)); // Updated log message
+  console.error(
+    "CRITICAL: 'page' prop is undefined in /photos/[page].astro. Astro.props:",
+    JSON.stringify(Astro.props)
+  ) // Updated log message
   // This will likely still lead to an error below, but the log might provide insight.
   // Or, we could throw here: throw new Error("'page' prop is undefined!");
 }
 
 // Reverted optional chaining to let errors surface if page is undefined.
-const pageTitle = `All Photos`;
-const pageDescription = `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`;
+const pageTitle = `All Photos`
+const pageDescription = `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1>
+    <h1 class="text-center">{pageTitle}</h1>
 
     <div class="flex flex-wrap justify-center gap-4 mb-8">
       <a href="/photos/tags" class="btn text-button">Browse by tag</a>
@@ -75,6 +86,7 @@ const pageDescription = `A collection of all photos. Page ${page.currentPage} of
 
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
 
-    <PaginationNav page={page} /> {/* Replaced inline pagination with component */}
+    <PaginationNav page={page} />
+    {/* Replaced inline pagination with component */}
   </div>
 </BaseLayout>

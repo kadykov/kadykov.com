@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
-import OptimizedImage from "../components/OptimizedImage.astro"; // Import the new component
+import OptimizedImage from "../components/OptimizedImage.astro" // Import the new component
 const { frontmatter } = Astro.props
 
 // Helper function to format dates
@@ -14,34 +14,41 @@ const formatDate = (date: Date | undefined | null) => {
 }
 
 const pubDateFormatted = formatDate(frontmatter.pubDate)
-const lastUpdatedDateFormatted = frontmatter.lastUpdatedDate ? formatDate(frontmatter.lastUpdatedDate) : ""
-const showLastUpdated = lastUpdatedDateFormatted && lastUpdatedDateFormatted !== pubDateFormatted
+const lastUpdatedDateFormatted = frontmatter.lastUpdatedDate
+  ? formatDate(frontmatter.lastUpdatedDate)
+  : ""
+const showLastUpdated =
+  lastUpdatedDateFormatted && lastUpdatedDateFormatted !== pubDateFormatted
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
   <article class="mx-auto my-10 w-11/12 sm:w-5/6 lg:w-4/6 xl:w-3/6">
     <header class="mb-8 text-center">
-      <h1 class="text-heading-1">{frontmatter.title}</h1>
-      <p class="text-body-large-serif mx-auto">
+      <h1>{frontmatter.title}</h1>
+      <p class="mx-auto">
         {frontmatter.description}
       </p>
       <div class="text-meta">
         <span>Published: {pubDateFormatted}</span>
-        {showLastUpdated && (
-          <span class="ml-4">Last updated: {lastUpdatedDateFormatted}</span>
-        )}
+        {
+          showLastUpdated && (
+            <span class="ml-4">Last updated: {lastUpdatedDateFormatted}</span>
+          )
+        }
       </div>
-      {frontmatter.image && frontmatter.image.url && (
-        <OptimizedImage
-          src={frontmatter.image.url}
-          alt={frontmatter.image.alt || "Blog post image"}
-          displayWidth={800}
-          sizesAttr="(max-width: 800px) 100vw, 800px"
-          enforceAspectRatio="16:9"
-          class="mt-6 mb-8 block mx-auto max-w-full rounded-lg shadow-md overflow-hidden"
-          imgClass="w-full h-full object-cover"
-        />
-      )}
+      {
+        frontmatter.image && frontmatter.image.url && (
+          <OptimizedImage
+            src={frontmatter.image.url}
+            alt={frontmatter.image.alt || "Blog post image"}
+            displayWidth={800}
+            sizesAttr="(max-width: 800px) 100vw, 800px"
+            enforceAspectRatio="16:9"
+            class="mt-6 mb-8 block mx-auto max-w-full rounded-lg shadow-md overflow-hidden"
+            imgClass="w-full h-full object-cover"
+          />
+        )
+      }
     </header>
     <div class="prose-serif mx-auto">
       <slot />

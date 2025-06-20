@@ -1,102 +1,137 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { photoManifestSchema } from '../../../utils/photoManifestSchema';
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import { photoManifestSchema } from "../../../utils/photoManifestSchema"
 
-const manifestUrl = 'https://share.kadykov.com/image_manifest.json';
-let uniqueDates: string[] = []; // Stores dates as YYYY-MM-DD strings
+const manifestUrl = "https://share.kadykov.com/image_manifest.json"
+let uniqueDates: string[] = [] // Stores dates as YYYY-MM-DD strings
 
 // Group dates by year and month
 interface GroupedDates {
   [year: string]: {
-    [month: string]: string[];
-  };
+    [month: string]: string[]
+  }
 }
 
-let groupedDates: GroupedDates = {};
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+let groupedDates: GroupedDates = {}
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
 
 try {
-  const response = await fetch(manifestUrl);
+  const response = await fetch(manifestUrl)
   if (!response.ok) {
-    throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+    throw new Error(`Failed to fetch manifest: ${response.statusText}`)
   }
-  const jsonData = await response.json();
-  const parsed = photoManifestSchema.safeParse(jsonData);
+  const jsonData = await response.json()
+  const parsed = photoManifestSchema.safeParse(jsonData)
   if (!parsed.success) {
-    console.error('Failed to parse photo manifest for dates index page:', parsed.error.flatten());
-    throw new Error('Failed to parse photo manifest for dates index page: ' + parsed.error.toString());
+    console.error(
+      "Failed to parse photo manifest for dates index page:",
+      parsed.error.flatten()
+    )
+    throw new Error(
+      "Failed to parse photo manifest for dates index page: " +
+        parsed.error.toString()
+    )
   }
-  const allPhotos = parsed.data;
+  const allPhotos = parsed.data
 
-  const dateSet = new Set<string>();
-  allPhotos.forEach(photo => {
-    let dateStr: string | null = null;
+  const dateSet = new Set<string>()
+  allPhotos.forEach((photo) => {
+    let dateStr: string | null = null
     if (photo.dateTaken) {
-      dateStr = photo.dateTaken.substring(0, 10); // YYYY-MM-DD from ISO string
+      dateStr = photo.dateTaken.substring(0, 10) // YYYY-MM-DD from ISO string
     } else if (photo.year && photo.month && photo.day) {
       // Pad month and day with leading zeros if necessary
-      const monthStr = String(photo.month).padStart(2, '0');
-      const dayStr = String(photo.day).padStart(2, '0');
-      dateStr = `${photo.year}-${monthStr}-${dayStr}`;
+      const monthStr = String(photo.month).padStart(2, "0")
+      const dayStr = String(photo.day).padStart(2, "0")
+      dateStr = `${photo.year}-${monthStr}-${dayStr}`
     }
     if (dateStr) {
-      dateSet.add(dateStr);
+      dateSet.add(dateStr)
     }
-  });
-  uniqueDates = Array.from(dateSet).sort((a, b) => b.localeCompare(a)); // Sort YYYY-MM-DD strings, recent first
+  })
+  uniqueDates = Array.from(dateSet).sort((a, b) => b.localeCompare(a)) // Sort YYYY-MM-DD strings, recent first
 
-  uniqueDates.forEach(dateStr => {
-    const [year, monthNumStr] = dateStr.split('-');
-    const monthIndex = parseInt(monthNumStr, 10) - 1;
-    const monthName = monthNames[monthIndex];
+  uniqueDates.forEach((dateStr) => {
+    const [year, monthNumStr] = dateStr.split("-")
+    const monthIndex = parseInt(monthNumStr, 10) - 1
+    const monthName = monthNames[monthIndex]
 
     if (!groupedDates[year]) {
-      groupedDates[year] = {};
+      groupedDates[year] = {}
     }
     if (!groupedDates[year][monthName]) {
-      groupedDates[year][monthName] = [];
+      groupedDates[year][monthName] = []
     }
-    groupedDates[year][monthName].push(dateStr);
-  });
-
+    groupedDates[year][monthName].push(dateStr)
+  })
 } catch (e) {
-  const error = e as Error;
-  console.error(`Error processing photo dates: ${error.message}`);
-  throw error; // Fail fast
+  const error = e as Error
+  console.error(`Error processing photo dates: ${error.message}`)
+  throw error // Fail fast
 }
 
-const pageTitle = "Photo dates";
-const pageDescription = "Browse photos by date taken.";
+const pageTitle = "Photo dates"
+const pageDescription = "Browse photos by date taken."
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1>
+    <h1 class="text-center">{pageTitle}</h1>
 
-    {Object.keys(groupedDates).length > 0 ? (
-      <div class="text-center"> {/* Add text-center to the main container for grouped dates */}
-        {Object.keys(groupedDates).sort((a, b) => b.localeCompare(a)).map(year => (
-          <section class="mb-8"> {/* Year section will inherit text-center */}
-            <h2 class="text-heading-2 mb-4">{year}</h2>
-            {Object.keys(groupedDates[year]).sort((a, b) => monthNames.indexOf(b) - monthNames.indexOf(a)).map(monthName => (
-              <div class="mb-4"> {/* Month section will inherit text-center */}
-                <h3 class="text-heading-3 mb-2">{monthName}</h3>
-                <ul class="flex flex-wrap justify-center gap-2"> {/* Add justify-center to center the date buttons */}
-                  {groupedDates[year][monthName].map((date: string) => (
-                    <li>
-                      <a href={`/photos/dates/${date}/1`} class="btn btn-ghost text-body-standard-serif">
-                        {date}
-                      </a>
-                    </li>
+    {
+      Object.keys(groupedDates).length > 0 ? (
+        <div class="text-center">
+          {" "}
+          {/* Add text-center to the main container for grouped dates */}
+          {Object.keys(groupedDates)
+            .sort((a, b) => b.localeCompare(a))
+            .map((year) => (
+              <section class="mb-8">
+                {" "}
+                {/* Year section will inherit text-center */}
+                <h2>{year}</h2>
+                {Object.keys(groupedDates[year])
+                  .sort((a, b) => monthNames.indexOf(b) - monthNames.indexOf(a))
+                  .map((monthName) => (
+                    <div class="mb-4">
+                      {" "}
+                      {/* Month section will inherit text-center */}
+                      <h3>{monthName}</h3>
+                      <ul class="flex flex-wrap justify-center gap-2">
+                        {" "}
+                        {/* Add justify-center to center the date buttons */}
+                        {groupedDates[year][monthName].map((date: string) => (
+                          <li>
+                            <a
+                              href={`/photos/dates/${date}/1`}
+                              class="btn btn-ghost"
+                            >
+                              {date}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
-                </ul>
-              </div>
+              </section>
             ))}
-          </section>
-        ))}
-      </div>
-    ) : (
-      <p class="text-center">No photo dates found.</p>
-    )}
+        </div>
+      ) : (
+        <p class="text-center">No photo dates found.</p>
+      )
+    }
   </div>
 </BaseLayout>

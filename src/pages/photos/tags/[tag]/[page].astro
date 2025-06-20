@@ -1,52 +1,60 @@
 ---
-import BaseLayout from '../../../../layouts/BaseLayout.astro'; // Adjusted path
-import PhotoGallery from '../../../../components/PhotoGallery.astro'; // Adjusted path
-import PaginationNav from '../../../../components/PaginationNav.astro'; // Added import
-import type { PhotoManifestItem } from '../../../../utils/photoManifestSchema'; // Adjusted path
-import { fetchPhotoManifest } from '../../../../utils/photoData'; // Adjusted path, REMOVED generateSlugFromRelativePath
-import type { Page, PaginateFunction, GetStaticPathsResult } from 'astro';
+import BaseLayout from "../../../../layouts/BaseLayout.astro" // Adjusted path
+import PhotoGallery from "../../../../components/PhotoGallery.astro" // Adjusted path
+import PaginationNav from "../../../../components/PaginationNav.astro" // Added import
+import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema" // Adjusted path
+import { fetchPhotoManifest } from "../../../../utils/photoData" // Adjusted path, REMOVED generateSlugFromRelativePath
+import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
 
 // const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Will be handled by fetchPhotoManifest
 
-export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }): Promise<GetStaticPathsResult> {
-  const PAGE_SIZE = 24; // Defined inside function
-  let fetchedPhotos: PhotoManifestItem[] = []; // Now contains slugs from manifest
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}): Promise<GetStaticPathsResult> {
+  const PAGE_SIZE = 24 // Defined inside function
+  let fetchedPhotos: PhotoManifestItem[] = [] // Now contains slugs from manifest
   try {
-    fetchedPhotos = await fetchPhotoManifest();
+    fetchedPhotos = await fetchPhotoManifest()
   } catch (e) {
-    const error = e as Error;
+    const error = e as Error
     // fetchPhotoManifest already logs errors. We just need to ensure build fails.
-    console.error(`Failed to load photo manifest for /photos/tags/[tag]/[page].astro: ${error.message}`);
-    throw error; // Re-throw to fail the build
+    console.error(
+      `Failed to load photo manifest for /photos/tags/[tag]/[page].astro: ${error.message}`
+    )
+    throw error // Re-throw to fail the build
   }
 
   // Slugs are now assumed to be in fetchedPhotos from the manifest.
   // No need for: const allPhotosWithSlugs = ...
 
-  const photosByTag = new Map<string, PhotoManifestItem[]>();
-  fetchedPhotos.forEach(photo => { // Use fetchedPhotos directly
+  const photosByTag = new Map<string, PhotoManifestItem[]>()
+  fetchedPhotos.forEach((photo) => {
+    // Use fetchedPhotos directly
     if (photo.tags && photo.tags.length > 0) {
-      photo.tags.forEach(tag => {
-        const lowerCaseTag = tag.toLowerCase();
+      photo.tags.forEach((tag) => {
+        const lowerCaseTag = tag.toLowerCase()
         if (!photosByTag.has(lowerCaseTag)) {
-          photosByTag.set(lowerCaseTag, []);
+          photosByTag.set(lowerCaseTag, [])
         }
-        photosByTag.get(lowerCaseTag)?.push(photo); // photo has slug from manifest
-      });
+        photosByTag.get(lowerCaseTag)?.push(photo) // photo has slug from manifest
+      })
     }
-  });
+  })
 
-  const paths = [];
-  for (const [tag, photosForTag] of photosByTag.entries()) { // photosForTag items will have slugs
+  const paths = []
+  for (const [tag, photosForTag] of photosByTag.entries()) {
+    // photosForTag items will have slugs
     // Sort photos within this tag group by dateTaken, most recent first
     photosForTag.sort((a, b) => {
       if (a.dateTaken && b.dateTaken) {
-        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
+        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
       }
-      if (a.dateTaken) return -1;
-      if (b.dateTaken) return 1;
-      return 0;
-    });
+      if (a.dateTaken) return -1
+      if (b.dateTaken) return 1
+      return 0
+    })
 
     // Astro's paginate function will handle the `page` param from the filename [page].astro
     const paginatedResult = paginate(photosForTag, {
@@ -54,36 +62,37 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
       params: { tag: encodeURIComponent(tag) }, // Pass the 'tag' param
       props: {
         tagDisplayName: tag,
-        fullPhotoDataset: photosForTag // Pass ONLY the photos for THIS tag
-      }
-    });
-    paths.push(...paginatedResult);
+        fullPhotoDataset: photosForTag, // Pass ONLY the photos for THIS tag
+      },
+    })
+    paths.push(...paginatedResult)
   }
-  return paths;
+  return paths
 }
 
 interface Props {
-  page: Page<PhotoManifestItem>; // page prop is automatically populated by paginate, items will have slugs
-  tagDisplayName: string; // From getStaticPaths props
-  fullPhotoDataset: PhotoManifestItem[]; // The dataset for THIS tag, with slugs
+  page: Page<PhotoManifestItem> // page prop is automatically populated by paginate, items will have slugs
+  tagDisplayName: string // From getStaticPaths props
+  fullPhotoDataset: PhotoManifestItem[] // The dataset for THIS tag, with slugs
 }
 
-const { page, tagDisplayName, fullPhotoDataset } = Astro.props; // fullPhotoDataset is now scoped to the tag
+const { page, tagDisplayName, fullPhotoDataset } = Astro.props // fullPhotoDataset is now scoped to the tag
 // const { tag } = Astro.params; // 'tag' is still available from Astro.params if needed,
-                               // and 'page' (the number) would be Astro.params.page
+// and 'page' (the number) would be Astro.params.page
 
 // Use tagDisplayName for display, as it preserves original casing
-const pageTitle = `Photos tagged: "${tagDisplayName}"`;
-const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`;
+const pageTitle = `Photos tagged: "${tagDisplayName}"`
+const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-2 text-center">Photos tagged: {tagDisplayName}</h1>
+    <h1 class="text-center">Photos tagged: {tagDisplayName}</h1>
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
     <p class="text-center text-meta my-8">
       <a href="/photos/tags" class="btn text-button">View all photo tags</a>
     </p>
-    <PaginationNav page={page} /> {/* Replaced inline pagination with component */}
+    <PaginationNav page={page} />
+    {/* Replaced inline pagination with component */}
   </div>
 </BaseLayout>

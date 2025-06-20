@@ -46,6 +46,9 @@ a {
 header {
   list-style: none;
 }
+p {
+  font-weight: 450;
+}
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
@@ -190,11 +193,6 @@ h4 {
 }
 
 /* Font-weight for different link contexts */
-.text-link,
-.text-body-large-serif a {
-  font-weight: 500;
-}
-.text-body-standard-serif a,
 .prose-serif a {
   font-weight: 550;
 }

@@ -9,13 +9,9 @@ const allPosts = await getCollection("blog")
 
 <BaseLayout pageTitle={pageTitle}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-8 text-center">Blog Posts</h1> {/* Used text-heading-1 */}
+    <h1 class="text-center">Blog Posts</h1>
     <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {
-        allPosts.map((post) => (
-          <BlogPost post={post} />
-        ))
-      }
+      {allPosts.map((post) => <BlogPost post={post} />)}
     </ul>
   </div>
 </BaseLayout>

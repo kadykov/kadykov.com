@@ -1,49 +1,58 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import type { PhotoManifestItem } from '../../../utils/photoManifestSchema'; // No longer need photoManifestSchema here
-import { fetchPhotoManifest } from '../../../utils/photoData';
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import type { PhotoManifestItem } from "../../../utils/photoManifestSchema" // No longer need photoManifestSchema here
+import { fetchPhotoManifest } from "../../../utils/photoData"
 
 // const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // This comment can be removed.
-let uniqueTags: string[] = [];
+let uniqueTags: string[] = []
 
 try {
-  const allPhotos: PhotoManifestItem[] = await fetchPhotoManifest(); // Explicitly type allPhotos
+  const allPhotos: PhotoManifestItem[] = await fetchPhotoManifest() // Explicitly type allPhotos
 
-  const tagSet = new Set<string>();
-  allPhotos.forEach(photo => { // 'photo' will now be PhotoManifestItem
+  const tagSet = new Set<string>()
+  allPhotos.forEach((photo) => {
+    // 'photo' will now be PhotoManifestItem
     if (photo.tags && photo.tags.length > 0) {
-      photo.tags.forEach(tag => tagSet.add(tag.toLowerCase())); // 'tag' will now be string
+      photo.tags.forEach((tag) => tagSet.add(tag.toLowerCase())) // 'tag' will now be string
     }
-  });
-  uniqueTags = Array.from(tagSet).sort((a, b) => a.localeCompare(b));
-
+  })
+  uniqueTags = Array.from(tagSet).sort((a, b) => a.localeCompare(b))
 } catch (e) {
-  const error = e as Error;
+  const error = e as Error
   // fetchPhotoManifest already logs errors. We just need to ensure build fails.
-  console.error(`Failed to load photo manifest for /photos/tags/index.astro: ${error.message}`);
-  throw error; // Re-throw to fail the build
+  console.error(
+    `Failed to load photo manifest for /photos/tags/index.astro: ${error.message}`
+  )
+  throw error // Re-throw to fail the build
 }
 
-const pageTitle = "Photo tags";
-const pageDescription = "Browse photos by tags.";
+const pageTitle = "Photo tags"
+const pageDescription = "Browse photos by tags."
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-heading-1 mb-8 text-center">{pageTitle}</h1>
+    <h1 class="text-center">{pageTitle}</h1>
 
-    {uniqueTags.length > 0 ? (
-      <ul class="flex flex-wrap justify-center gap-4">
-        {uniqueTags.map(tag => (
-          <li>
-            <a href={`/photos/tags/${encodeURIComponent(tag)}/1`} class="btn btn-ghost text-body-standard-serif"> {/* Added /1 for pagination */}
-              {tag}
-            </a>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p class="text-center">No photo tags found.</p>
-    )}
+    {
+      uniqueTags.length > 0 ? (
+        <ul class="flex flex-wrap justify-center gap-4">
+          {uniqueTags.map((tag) => (
+            <li>
+              <a
+                href={`/photos/tags/${encodeURIComponent(tag)}/1`}
+                class="btn btn-ghost"
+              >
+                {" "}
+                {/* Added /1 for pagination */}
+                {tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-center">No photo tags found.</p>
+      )
+    }
   </div>
 </BaseLayout>
