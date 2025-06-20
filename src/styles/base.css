@@ -49,7 +49,8 @@
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  header {
     font-family: var(--font-sans);
     letter-spacing: -0.02em;
   }
@@ -176,7 +177,7 @@
   .link-interactive:active,
   .prose-serif a:active {
     color: var(--color-bg);
-    background: var(--color-accent);
+    background: var(--color-content);
     box-shadow: var(--color-shadow);
     transform: scale(0.97);
   }
