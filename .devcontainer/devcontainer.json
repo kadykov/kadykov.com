@@ -16,15 +16,12 @@
     "vscode": {
       "extensions": [
         "astro-build.astro-vscode",
-        "bradlc.vscode-tailwindcss",
         "SheltonLouis.astro-snippets",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "formulahendry.auto-rename-tag",
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
-        "eamodio.gitlens",
-        "emranweb.daisyui-snippet",
         "saoudrizwan.claude-dev"
       ]
     }

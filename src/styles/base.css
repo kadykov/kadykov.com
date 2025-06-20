@@ -1,287 +1,280 @@
-/* The integration's default injected base.css file */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
+:root {
+  --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
+  --font-serif: "Bitter Variable", Georgia, serif;
+  --color-bg: #fff;
+  --color-bg-muted: #eaeaea;
+  --color-content: #181818;
+  --color-content-muted: #515151;
+  --color-accent: #3b82f6;
+  --color-hover: rgba(0, 0, 0, 0.04); /* transparent overlay for hover */
+  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1); /* semantic shadow color */
 
-@layer utilities {
-  /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
-  :root {
-    --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
-    --font-serif: "Bitter Variable", Georgia, serif;
-    --color-bg: #fff;
-    --color-bg-muted: #f5f5f5;
-    --color-content: #181818;
-    --color-content-muted: #515151;
-    --color-accent: #3b82f6;
-    --color-hover: rgba(0, 0, 0, 0.04); /* transparent overlay for hover */
-    --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1); /* semantic shadow color */
+  --max-w-body: 40rem;
+  --max-w-body-xl: 48rem;
 
-    --max-w-body: 40rem;
-    --max-w-body-xl: 48rem;
+  /* Define breakpoint variables for documentation and DRYness */
+  --breakpoint-sm: 680px;
+  --breakpoint-md: 900px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1500px;
+  --breakpoint-2xl: 1800px;
+}
 
-    /* Define breakpoint variables for documentation and DRYness */
-    --breakpoint-sm: 680px;
-    --breakpoint-md: 900px;
-    --breakpoint-lg: 1200px;
-    --breakpoint-xl: 1500px;
-    --breakpoint-2xl: 1800px;
-  }
-
-  /* Set serif as the default font and base font size for body text */
+/* Set serif as the default font and base font size for body text */
+body {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: inherit;
+}
+@media (min-width: 680px) {
   body {
-    font-family: var(--font-serif);
-    font-size: 1.125rem;
-    line-height: 1.75;
-    color: inherit;
-  }
-  @media (min-width: 680px) {
-    body {
-      font-size: 1.25rem;
-    }
-  }
-  @media (min-width: 1500px) {
-    body {
-      font-size: 1.5rem;
-    }
-  }
-
-  /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
-  h1,
-  h2,
-  h3,
-  h4,
-  header {
-    font-family: var(--font-sans);
-    letter-spacing: -0.02em;
-  }
-
-  /* h1 styles */
-  h1 {
-    font-size: 4.5rem;
-    line-height: 1;
-    font-weight: 300;
-    margin-block: 0.3em;
-  }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    h1 {
-      font-size: 6rem;
-      font-weight: 250;
-    }
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    h1 {
-      font-size: 8rem;
-      font-weight: 200;
-    }
-  }
-
-  /* h2 styles */
-  h2 {
-    font-size: 3rem;
-    line-height: 1.1;
-    font-weight: 350;
-    margin-block: 0.5em;
-  }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    h2 {
-      font-size: 3.75rem;
-      line-height: 1;
-      font-weight: 325;
-    }
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    h2 {
-      font-size: 4.5rem;
-      font-weight: 300;
-    }
-  }
-
-  /* h3 styles */
-  h3 {
-    font-size: 1.875rem;
-    line-height: 1.2;
-    font-weight: 400;
-    margin-block: 0.7em;
-  }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    h3 {
-      font-size: 2.25rem;
-      line-height: 1.1;
-      font-weight: 375;
-    }
-  }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    h3 {
-      font-size: 3rem;
-      font-weight: 350;
-    }
-  }
-
-  /* h4 styles */
-  h4 {
     font-size: 1.25rem;
-    line-height: 1.2;
-    font-weight: 550;
-    margin-block: 0.9em;
   }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    h4 {
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
+}
+@media (min-width: 1500px) {
+  body {
+    font-size: 1.5rem;
   }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    h4 {
-      font-size: 1.875rem;
-      font-weight: 450;
-    }
-  }
+}
 
-  /* Meta/UI text: use sans-serif */
-  .text-meta {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.75;
-  }
+/* Headings: style h1-h4 directly, sans-serif, letter-spacing */
+h1,
+h2,
+h3,
+h4,
+header {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
 
-  /*
-    DRY link interaction styles:
-    - Group .link-interactive and .prose-serif a for shared hover/click/shape/color styles.
-    - Spacing (padding/margin) is only added to standalone links/buttons, not prose links.
-  */
-  .link-interactive,
-  .prose-serif a {
-    color: var(--color-content-muted);
-    border-radius: 0.3em;
-    transition:
-      color 0.2s,
-      background 0.2s,
-      box-shadow 0.2s,
-      transform 0.08s;
-    text-decoration: none;
+/* h1 styles */
+h1 {
+  font-size: 4.5rem;
+  line-height: 1;
+  font-weight: 300;
+  margin-block: 0.3em;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
+  h1 {
+    font-size: 6rem;
+    font-weight: 250;
   }
-  .link-interactive:hover,
-  .prose-serif a:hover {
-    color: var(--color-content);
-    background: var(--color-hover);
-    box-shadow: none;
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  h1 {
+    font-size: 8rem;
+    font-weight: 200;
   }
-  .link-interactive:active,
-  .prose-serif a:active {
-    color: var(--color-bg);
-    background: var(--color-content);
-    box-shadow: var(--color-shadow);
-    transform: scale(0.97);
-  }
+}
 
-  /* Standalone links/buttons get spacing */
-  .text-link,
-  .btn {
-    padding: 0.12em 0.35em;
-    margin: -0.12em -0.35em;
+/* h2 styles */
+h2 {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 350;
+  margin-block: 0.5em;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
+  h2 {
+    font-size: 3.75rem;
+    line-height: 1;
+    font-weight: 325;
   }
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  h2 {
+    font-size: 4.5rem;
+    font-weight: 300;
+  }
+}
 
-  /* Font-weight for different link contexts */
-  .text-link,
-  .text-body-large-serif a {
+/* h3 styles */
+h3 {
+  font-size: 1.875rem;
+  line-height: 1.2;
+  font-weight: 400;
+  margin-block: 0.7em;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
+  h3 {
+    font-size: 2.25rem;
+    line-height: 1.1;
+    font-weight: 375;
+  }
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  h3 {
+    font-size: 3rem;
+    font-weight: 350;
+  }
+}
+
+/* h4 styles */
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 550;
+  margin-block: 0.9em;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
+  h4 {
+    font-size: 1.5rem;
     font-weight: 500;
   }
-  .text-body-standard-serif a,
-  .prose-serif a {
-    font-weight: 550;
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  h4 {
+    font-size: 1.875rem;
+    font-weight: 450;
   }
+}
 
-  /* Menu and logo */
+/* Meta/UI text: use sans-serif */
+.text-meta {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+/*
+  DRY link interaction styles:
+  - Group .link-interactive and .prose-serif a for shared hover/click/shape/color styles.
+  - Spacing (padding/margin) is only added to standalone links/buttons, not prose links.
+*/
+.link-interactive,
+.prose-serif a {
+  color: var(--color-content-muted);
+  border-radius: 0.3em;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.08s;
+  text-decoration: none;
+}
+.link-interactive:hover,
+.prose-serif a:hover {
+  color: var(--color-content);
+  background: var(--color-hover);
+  box-shadow: none;
+}
+.link-interactive:active,
+.prose-serif a:active {
+  color: var(--color-bg);
+  background: var(--color-content);
+  box-shadow: var(--color-shadow);
+  transform: scale(0.97);
+}
+
+/* Standalone links/buttons get spacing */
+.text-link,
+.btn {
+  padding: 0.12em 0.35em;
+  margin: -0.12em -0.35em;
+}
+
+/* Font-weight for different link contexts */
+.text-link,
+.text-body-large-serif a {
+  font-weight: 500;
+}
+.text-body-standard-serif a,
+.prose-serif a {
+  font-weight: 550;
+}
+
+/* Menu and logo */
+.menu-item {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 350;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
   .menu-item {
-    font-size: 3rem;
-    line-height: 1.1;
-    font-weight: 350;
+    font-size: 1.5rem;
+    font-weight: 500;
   }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    .menu-item {
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  .menu-item {
+    font-size: 1.875rem;
+    font-weight: 450;
   }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    .menu-item {
-      font-size: 1.875rem;
-      font-weight: 450;
-    }
-  }
+}
+.logo-text {
+  font-size: 1.125rem;
+  line-height: 1.1;
+  font-weight: 550;
+}
+@media (min-width: 680px) {
+  /* var(--breakpoint-sm) */
   .logo-text {
-    font-size: 1.125rem;
-    line-height: 1.1;
-    font-weight: 550;
+    font-size: 1.25rem;
+    font-weight: 500;
   }
-  @media (min-width: 680px) {
-    /* var(--breakpoint-sm) */
-    .logo-text {
-      font-size: 1.25rem;
-      font-weight: 500;
-    }
+}
+@media (min-width: 1500px) {
+  /* var(--breakpoint-xl) */
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 450;
   }
-  @media (min-width: 1500px) {
-    /* var(--breakpoint-xl) */
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 450;
-    }
-  }
+}
 
-  /* Updated .prose-serif using direct application of utilities with prose modifiers */
-  /* .prose-serif controls max-width for content blocks */
+/* Updated .prose-serif using direct application of utilities with prose modifiers */
+/* .prose-serif controls max-width for content blocks */
+.prose-serif {
+  max-width: var(--max-w-body);
+  color: inherit;
+}
+@media (min-width: 1500px) {
   .prose-serif {
-    max-width: var(--max-w-body);
-    color: inherit;
+    max-width: var(--max-w-body-xl);
   }
-  @media (min-width: 1500px) {
-    .prose-serif {
-      max-width: var(--max-w-body-xl);
-    }
-  }
+}
 
-  /* Paragraphs, lists, and links inherit from .prose-serif, only override if needed */
-  .prose-serif ul,
-  .prose-serif ol {
-    padding-left: 1.5em;
-  }
-  .prose-serif li {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-  }
+/* Paragraphs, lists, and links inherit from .prose-serif, only override if needed */
+.prose-serif ul,
+.prose-serif ol {
+  padding-left: 1.5em;
+}
+.prose-serif li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
 
-  /* Ensure lists have bullets/numbers and improve paragraph spacing in prose-serif */
-  .prose-serif ul {
-    list-style-type: disc;
-    padding-left: 1.5em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
-  .prose-serif ol {
-    list-style-type: decimal;
-    padding-left: 1.5em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
-  .prose-serif li {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-  }
-  .prose-serif p {
-    margin-top: 1.2em;
-    margin-bottom: 1.2em;
-  }
+/* Ensure lists have bullets/numbers and improve paragraph spacing in prose-serif */
+.prose-serif ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.prose-serif ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.prose-serif li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+.prose-serif p {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
 }
 
 /* Custom transition for DaisyUI dropdowns */

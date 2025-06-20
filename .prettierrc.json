@@ -3,8 +3,7 @@
   "tabWidth": 2,
   "semi": false,
   "proseWrap": "preserve",
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-astro"],
-  "tailwindConfig": "./tailwind.config.cjs",
+  "plugins": ["prettier-plugin-astro"],
   "overrides": [
     {
       "files": "*.astro",
