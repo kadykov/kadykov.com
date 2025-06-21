@@ -179,15 +179,6 @@ h4 {
   line-height: 1.75;
 }
 
-/* Font-weight for different link contexts */
-.prose a {
-  font-weight: 550;
-}
-.prose a:hover,
-.prose a:active {
-  padding: 0.1em 0.2em;
-  margin: -0.1em -0.2em;
-}
 /* Menu and logo */
 .menu-item {
   font-size: 3rem;
@@ -270,6 +261,27 @@ h4 {
 .prose p {
   margin-top: 1.2em;
   margin-bottom: 1.2em;
+}
+
+.prose p a,
+.prose li a,
+.prose blockquote a,
+.prose td a,
+.prose th a {
+  font-weight: 550;
+}
+.prose p a:hover,
+.prose p a:active,
+.prose li a:hover,
+.prose li a:active,
+.prose blockquote a:hover,
+.prose blockquote a:active,
+.prose td a:hover,
+.prose td a:active,
+.prose th a:hover,
+.prose th a:active {
+  padding: 0.1em 0.2em;
+  margin: -0.1em -0.2em;
 }
 
 /* Custom transition for DaisyUI dropdowns */
