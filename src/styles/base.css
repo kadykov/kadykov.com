@@ -231,57 +231,21 @@ h4 {
   }
 }
 
-/* Paragraphs, lists, and links inherit from .prose, only override if needed */
-.prose ul,
-.prose ol {
-  padding-left: 1.5em;
-}
-.prose li {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-}
-
-/* Ensure lists have bullets/numbers and improve paragraph spacing in prose */
-.prose ul {
-  list-style-type: disc;
-  padding-left: 1.5em;
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-.prose ol {
-  list-style-type: decimal;
-  padding-left: 1.5em;
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-.prose li {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-}
-.prose p {
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
-}
-
-.prose p a,
-.prose li a,
-.prose blockquote a,
-.prose td a,
-.prose th a {
+.prose a {
   font-weight: 550;
 }
-.prose p a:hover,
-.prose p a:active,
-.prose li a:hover,
-.prose li a:active,
-.prose blockquote a:hover,
-.prose blockquote a:active,
-.prose td a:hover,
-.prose td a:active,
-.prose th a:hover,
-.prose th a:active {
+.prose a:hover,
+.prose a:active {
   padding: 0.1em 0.2em;
   margin: -0.1em -0.2em;
+}
+
+/* Make blockquote text italic and add a scalable vertical line on the left */
+blockquote {
+  font-style: italic;
+  border-left: 0.25em solid var(--color-accent);
+  padding-left: 1em;
+  margin-left: 0;
 }
 
 /* Custom transition for DaisyUI dropdowns */
