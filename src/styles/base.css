@@ -3,11 +3,11 @@
   --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
   --font-serif: "Bitter Variable", Georgia, serif;
   --color-bg: #fff;
-  --color-bg-muted: #eaeaea;
+  --color-bg-muted: #f7f7f7;
   --color-content: #181818;
-  --color-content-muted: #515151;
+  --color-content-muted: #494949;
   --color-accent: #3b82f6;
-  --color-hover: rgba(0, 0, 0, 0.04); /* transparent overlay for hover */
+  --color-hover: rgba(59, 130, 246, 0.1); /* transparent overlay for hover */
   --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1); /* semantic shadow color */
 
   --max-w-body: 40rem;
@@ -44,10 +44,26 @@ body {
     font-size: 1.5rem;
   }
 }
-
 a {
   text-decoration: none;
   color: inherit;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.08s;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-content);
+  background: var(--color-hover);
+  box-shadow: none;
+}
+a:active {
+  color: var(--color-bg);
+  background: var(--color-content);
+  box-shadow: var(--color-shadow);
+  transform: scale(0.97);
 }
 header {
   list-style: none;
@@ -163,46 +179,15 @@ h4 {
   line-height: 1.75;
 }
 
-/*
-  DRY link interaction styles:
-  - Group .link-interactive and .prose-serif a for shared hover/click/shape/color styles.
-  - Spacing (padding/margin) is only added to standalone links/buttons, not prose links.
-*/
-.link-interactive,
-.prose-serif a {
-  transition:
-    color 0.2s,
-    background 0.2s,
-    box-shadow 0.2s,
-    transform 0.08s;
-  text-decoration: none;
-}
-.link-interactive:hover,
-.prose-serif a:hover {
-  color: var(--color-content);
-  background: var(--color-hover);
-  box-shadow: none;
-}
-.link-interactive:active,
-.prose-serif a:active {
-  color: var(--color-bg);
-  background: var(--color-content);
-  box-shadow: var(--color-shadow);
-  transform: scale(0.97);
-}
-
-/* Standalone links/buttons get spacing */
-.text-link,
-.btn {
-  padding: 0.12em 0.35em;
-  margin: -0.12em -0.35em;
-}
-
 /* Font-weight for different link contexts */
-.prose-serif a {
+.prose a {
   font-weight: 550;
 }
-
+.prose a:hover,
+.prose a:active {
+  padding: 0.1em 0.2em;
+  margin: -0.1em -0.2em;
+}
 /* Menu and logo */
 .menu-item {
   font-size: 3rem;
@@ -243,46 +228,46 @@ h4 {
   }
 }
 
-/* Updated .prose-serif using direct application of utilities with prose modifiers */
-/* .prose-serif controls max-width for content blocks */
-.prose-serif {
+/* Updated .prose using direct application of utilities with prose modifiers */
+/* .prose controls max-width for content blocks */
+.prose {
   max-width: var(--max-w-body);
   color: inherit;
 }
 @media (min-width: 1500px) {
-  .prose-serif {
+  .prose {
     max-width: var(--max-w-body-xl);
   }
 }
 
-/* Paragraphs, lists, and links inherit from .prose-serif, only override if needed */
-.prose-serif ul,
-.prose-serif ol {
+/* Paragraphs, lists, and links inherit from .prose, only override if needed */
+.prose ul,
+.prose ol {
   padding-left: 1.5em;
 }
-.prose-serif li {
+.prose li {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
 
-/* Ensure lists have bullets/numbers and improve paragraph spacing in prose-serif */
-.prose-serif ul {
+/* Ensure lists have bullets/numbers and improve paragraph spacing in prose */
+.prose ul {
   list-style-type: disc;
   padding-left: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
 }
-.prose-serif ol {
+.prose ol {
   list-style-type: decimal;
   padding-left: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
 }
-.prose-serif li {
+.prose li {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
-.prose-serif p {
+.prose p {
   margin-top: 1.2em;
   margin-bottom: 1.2em;
 }
