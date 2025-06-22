@@ -61,8 +61,7 @@ a:hover {
 }
 a:active {
   color: var(--color-bg);
-  background: var(--color-content);
-  box-shadow: var(--color-shadow);
+  background: var(--color-accent);
   transform: scale(0.97);
 }
 header {
@@ -70,6 +69,7 @@ header {
 }
 p {
   font-weight: 450;
+  color: var(--color-content-muted);
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
