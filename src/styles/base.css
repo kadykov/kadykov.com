@@ -47,7 +47,8 @@ body {
     font-size: 1.5rem;
   }
 }
-a {
+a,
+.btn {
   text-decoration: none;
   color: inherit;
   transition:
@@ -57,12 +58,16 @@ a {
     transform 0.08s;
   text-decoration: none;
 }
-a:hover {
+
+a:hover,
+.btn:hover {
   color: var(--color-content);
   background: var(--color-hover);
   box-shadow: none;
 }
-a:active {
+
+a:active,
+.btn:active {
   color: var(--color-bg);
   background: var(--color-accent);
   transform: scale(0.97);
@@ -80,9 +85,40 @@ h1,
 h2,
 h3,
 h4,
-header {
+header,
+button,
+.btn {
   font-family: var(--font-sans);
   letter-spacing: -0.02em;
+}
+
+/* Button shape styles (no color or typography) */
+button,
+.btn {
+  background: none;
+  border: none;
+  padding: 0.5em 1.2em;
+  border-radius: 0.5em;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+}
+
+button,
+.btn-outline {
+  border: 2px solid var(--color-accent);
+  background: none;
+}
+
+button,
+.btn-outline:hover {
+  border-color: var(--color-content);
+}
+
+button,
+.btn-outline:active {
+  border-color: var(--color-accent);
 }
 
 /* h1 styles */
@@ -154,7 +190,10 @@ h3 {
 }
 
 /* h4 styles */
-h4 {
+h4,
+button,
+btn,
+.btn-outline {
   font-size: 1.25rem;
   line-height: 1.2;
   font-weight: 550;
@@ -162,14 +201,20 @@ h4 {
 }
 @media (min-width: 680px) {
   /* var(--breakpoint-sm) */
-  h4 {
+  h4,
+  button,
+  btn,
+  .btn-outline {
     font-size: 1.5rem;
     font-weight: 500;
   }
 }
 @media (min-width: 1500px) {
   /* var(--breakpoint-xl) */
-  h4 {
+  h4,
+  button,
+  btn,
+  .btn-outline {
     font-size: 1.875rem;
     font-weight: 450;
   }
