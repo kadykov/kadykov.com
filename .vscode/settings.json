@@ -20,12 +20,5 @@
   "prettier.documentSelectors": ["**/*.astro"],
   "[astro]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "spellright.language": ["English (American)"],
-  "spellright.documentTypes": ["markdown", "latex", "plaintext"],
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "file": "./.vscode/daisyui.md"
-    }
-  ]
+  }
 }
