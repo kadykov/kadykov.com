@@ -2,6 +2,10 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<label for="navbar-drawer" class="btn btn-ghost btn-square"
-  ><Icon name="ri:menu-line" class="h-8 w-8 sm:h-10 sm:w-10" /></label
+<button
+  type="button"
+  aria-label="Open navigation menu"
+  onclick="document.getElementById('navbar-drawer').checked = true"
 >
+  <Icon name="ri:menu-line" style="height: 2rem; width: 2rem;" />
+</button>
