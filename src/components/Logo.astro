@@ -2,11 +2,11 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<a href="/" class="logo-container">
+<a href="/" class="logo-container" aria-label="Home">
   <Icon name="logo" class="logo-icon" />
-  <p class="logo-text logo-text-responsive">
+  <span class="logo-text logo-text-responsive">
     Aleksandr<br />KADYKOV
-  </p>
+  </span>
 </a>
 
 <style is:global>
@@ -14,10 +14,12 @@ import { Icon } from "astro-icon/components"
     display: flex;
     gap: 0.25rem;
     align-items: center;
+    text-decoration: none;
   }
   .logo-icon {
     height: 2.5rem;
-    width: 100%;
+    width: auto;
+    flex-shrink: 0;
   }
   @media (min-width: 680px) {
     /* sm */
@@ -25,18 +27,18 @@ import { Icon } from "astro-icon/components"
       height: 3rem;
     }
   }
-  /* Responsive visibility for logo text */
+  /* Show logo text on mobile, hide on tablet, show on desktop */
   .logo-text-responsive {
     display: block;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--color-content);
+    margin: 0;
   }
-  @media (min-width: 680px) {
+  @media (min-width: 680px) and (max-width: 899px) {
     .logo-text-responsive {
       display: none;
-    }
-  }
-  @media (min-width: 1500px) {
-    .logo-text-responsive {
-      display: block;
     }
   }
 </style>

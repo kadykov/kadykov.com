@@ -6,33 +6,27 @@ import ThemeSwitch from "./ThemeSwitch.astro"
 import StandaloneShareButton from "./StandaloneShareButton.astro"
 ---
 
-<nav aria-label="Main navigation">
-  <div
-    style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0.5rem 1.5rem; min-height: 4.5rem; position: relative; z-index: 31; width: 100%;"
-  >
-    <a
-      href="/"
-      aria-label="Homepage"
-      style="display: flex; align-items: center; text-decoration: none; margin-right: 1.5rem;"
-    >
-      <Logo />
-    </a>
-    <ul>
-      <Navigation />
-      <li><ThemeSwitch /></li>
-      <li>
-        <StandaloneShareButton
-          buttonClass="btn"
-          dropdownAlignment="dropdown-end"
-        />
-      </li>
-    </ul>
+<header>
+  <div class="header-inner">
+    <Logo />
+    <nav aria-label="Main navigation">
+      <ul>
+        <Navigation />
+        <li><ThemeSwitch /></li>
+        <li>
+          <StandaloneShareButton
+            buttonClass="btn"
+            dropdownAlignment="dropdown-end"
+          />
+        </li>
+      </ul>
+    </nav>
     <Hamburger />
   </div>
-</nav>
+</header>
 
 <style is:global>
-  nav {
+  header {
     width: 100vw;
     position: relative;
     left: 50%;
@@ -42,6 +36,15 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     background: var(--color-bg-muted);
     box-shadow: var(--color-shadow);
     z-index: 20;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.5rem;
   }
   nav ul {
     display: flex;
@@ -57,14 +60,14 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     position: relative;
     text-align: left;
   }
-  nav button {
+  .mobile-only {
     display: none;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 680px) {
     nav ul {
       display: none;
     }
-    nav button {
+    .mobile-only {
       display: block;
     }
   }
