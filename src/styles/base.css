@@ -47,6 +47,7 @@ body {
     font-size: 1.5rem;
   }
 }
+/* Colors and animation for links and buttons */
 a,
 .btn,
 button {
@@ -75,9 +76,6 @@ button:active {
   background: var(--color-accent);
   transform: scale(0.97);
 }
-header {
-  list-style: none;
-}
 p {
   font-weight: 450;
   color: var(--color-content-muted);
@@ -97,6 +95,7 @@ button,
 
 /* Button shape styles (no color or typography) */
 button,
+nav ul li a,
 .btn {
   background: none;
   border: none;
@@ -195,9 +194,11 @@ h4 {
   line-height: 1.2;
 }
 
+/* h4 style is shared with buttons and nav links */
 h4,
 button,
-btn {
+nav ul li a,
+.btn {
   font-size: 1.25rem;
   font-weight: 550;
 }
@@ -205,7 +206,8 @@ btn {
   /* var(--breakpoint-sm) */
   h4,
   button,
-  btn {
+  nav ul li a,
+  .btn {
     font-size: 1.5rem;
     font-weight: 500;
   }
@@ -214,7 +216,8 @@ btn {
   /* var(--breakpoint-xl) */
   h4,
   button,
-  btn {
+  nav ul li a,
+  .btn {
     font-size: 1.875rem;
     font-weight: 450;
   }
