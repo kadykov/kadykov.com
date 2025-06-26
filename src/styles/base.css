@@ -48,7 +48,8 @@ body {
   }
 }
 a,
-.btn {
+.btn,
+button {
   text-decoration: none;
   color: inherit;
   transition:
@@ -60,14 +61,16 @@ a,
 }
 
 a:hover,
-.btn:hover {
+.btn:hover,
+button:hover {
   color: var(--color-content);
   background: var(--color-hover);
   box-shadow: none;
 }
 
 a:active,
-.btn:active {
+.btn:active,
+button:active {
   color: var(--color-bg);
   background: var(--color-accent);
   transform: scale(0.97);
@@ -105,18 +108,15 @@ button,
   appearance: none;
 }
 
-button,
 .btn-outline {
   border: 2px solid var(--color-accent);
   background: none;
 }
 
-button,
 .btn-outline:hover {
   border-color: var(--color-content);
 }
 
-button,
 .btn-outline:active {
   border-color: var(--color-accent);
 }
@@ -190,21 +190,22 @@ h3 {
 }
 
 /* h4 styles */
+h4 {
+  margin-block: 0.9em;
+  line-height: 1.2;
+}
+
 h4,
 button,
-btn,
-.btn-outline {
+btn {
   font-size: 1.25rem;
-  line-height: 1.2;
   font-weight: 550;
-  margin-block: 0.9em;
 }
 @media (min-width: 680px) {
   /* var(--breakpoint-sm) */
   h4,
   button,
-  btn,
-  .btn-outline {
+  btn {
     font-size: 1.5rem;
     font-weight: 500;
   }
@@ -213,8 +214,7 @@ btn,
   /* var(--breakpoint-xl) */
   h4,
   button,
-  btn,
-  .btn-outline {
+  btn {
     font-size: 1.875rem;
     font-weight: 450;
   }
