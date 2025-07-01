@@ -47,20 +47,27 @@ body {
     font-size: 1.5rem;
   }
 }
-/* Colors and animation for links and buttons */
+/* Shared shape and padding for interactive elements */
 a,
 .btn,
 button {
   text-decoration: none;
   color: inherit;
+  padding: 0.5em;
+  border-radius: 0.5em;
   transition:
     color 0.2s,
     background 0.2s,
     box-shadow 0.2s,
     transform 0.08s;
-  text-decoration: none;
 }
 
+/* Regular text links get negative margins to prevent affecting text flow */
+a {
+  margin: -0.5em;
+}
+
+/* Hover colors and effects */
 a:hover,
 .btn:hover,
 button:hover {
@@ -69,6 +76,7 @@ button:hover {
   box-shadow: none;
 }
 
+/* Active colors and effects */
 a:active,
 .btn:active,
 button:active {
@@ -93,18 +101,18 @@ button,
   letter-spacing: -0.02em;
 }
 
-/* Button shape styles (no color or typography) */
+/* Button-style elements: reset margins and add button appearance */
 button,
 nav ul li a,
 .btn {
+  margin: 0;
   background: none;
   border: none;
-  padding: 0.5em 1.2em;
-  border-radius: 0.5em;
   display: inline-block;
   text-align: center;
   cursor: pointer;
   appearance: none;
+  line-height: 1;
 }
 
 .btn-outline {
@@ -237,46 +245,6 @@ blockquote {
   line-height: 1.75;
 }
 
-/* Menu and logo */
-.menu-item {
-  font-size: 3rem;
-  line-height: 1.1;
-  font-weight: 350;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  .menu-item {
-    font-size: 1.5rem;
-    font-weight: 500;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  .menu-item {
-    font-size: 1.875rem;
-    font-weight: 450;
-  }
-}
-.logo-text {
-  font-size: 1.125rem;
-  line-height: 1.1;
-  font-weight: 550;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  .logo-text {
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  .logo-text {
-    font-size: 1.5rem;
-    font-weight: 450;
-  }
-}
-
 /* Updated .prose using direct application of utilities with prose modifiers */
 /* .prose controls max-width for content blocks */
 .prose {
@@ -291,11 +259,6 @@ blockquote {
 
 .prose a {
   font-weight: 550;
-}
-.prose a:hover,
-.prose a:active {
-  padding: 0.1em 0.2em;
-  margin: -0.1em -0.2em;
 }
 
 /* source-sans-3-latin-wght-normal */
