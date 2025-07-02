@@ -7,22 +7,20 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
 ---
 
 <header>
-  <div class="header-inner">
-    <nav aria-label="Main navigation">
-      <Logo />
-      <ul>
-        <Navigation />
-        <li><ThemeSwitch /></li>
-        <li>
-          <StandaloneShareButton
-            buttonClass="btn"
-            dropdownAlignment="dropdown-end"
-          />
-        </li>
-      </ul>
-    </nav>
-    <Hamburger />
-  </div>
+  <nav aria-label="Main navigation">
+    <Logo />
+    <ul>
+      <Navigation />
+      <li><ThemeSwitch /></li>
+      <li>
+        <StandaloneShareButton
+          buttonClass="btn"
+          dropdownAlignment="dropdown-end"
+        />
+      </li>
+    </ul>
+  </nav>
+  <Hamburger />
 </header>
 
 <style is:global>
@@ -36,23 +34,30 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     background: var(--color-bg-muted);
     box-shadow: var(--color-shadow);
     z-index: 20;
-  }
-  .header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0.5rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 4.5rem;
+    padding: 0.5rem 1.5rem;
+    max-width: 100vw;
   }
-  nav {
+
+  /* Add responsive padding to limit content width */
+  @media (min-width: 1200px) {
+    header {
+      padding-left: calc((100vw - 1200px) / 2 + 1.5rem);
+      padding-right: calc((100vw - 1200px) / 2 + 1.5rem);
+    }
+  }
+
+  header nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex: 1;
   }
-  nav ul {
+
+  header nav ul {
     display: flex;
     align-items: center;
     list-style: none;
@@ -60,22 +65,26 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     margin: 0;
     gap: 0.5rem;
   }
+
   header button {
     padding: 0.5rem;
     margin: 0.5rem;
     width: 3rem;
     height: 3rem;
   }
+
   header button svg {
     height: 2rem;
     width: 2rem;
     color: var(--color-content);
   }
+
   .mobile-only {
     display: none;
   }
+
   @media (max-width: 680px) {
-    nav ul {
+    header nav ul {
       display: none;
     }
     .mobile-only {
