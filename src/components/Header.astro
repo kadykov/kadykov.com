@@ -8,8 +8,8 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
 
 <header>
   <div class="header-inner">
-    <Logo />
     <nav aria-label="Main navigation">
+      <Logo />
       <ul>
         <Navigation />
         <li><ThemeSwitch /></li>
@@ -45,6 +45,12 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     align-items: center;
     justify-content: space-between;
     min-height: 4.5rem;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
   }
   nav ul {
     display: flex;

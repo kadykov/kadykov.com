@@ -2,42 +2,35 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<a href="/" class="logo-container" aria-label="Home">
-  <Icon name="logo" class="logo-icon" />
-  <span class="logo-text logo-text-responsive">
+<a href="/" aria-label="Home">
+  <Icon name="logo" />
+  <span>
     Aleksandr<br />KADYKOV
   </span>
 </a>
 
 <style is:global>
-  .logo-container {
+  nav > a {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.25em;
     align-items: center;
-    text-decoration: none;
   }
-  .logo-icon {
-    height: 2.5rem;
+  nav > a svg {
+    height: 2.5em;
     width: auto;
     flex-shrink: 0;
   }
-  @media (min-width: 680px) {
-    /* sm */
-    .logo-icon {
-      height: 3rem;
-    }
-  }
   /* Show logo text on mobile, hide on tablet, show on desktop */
-  .logo-text-responsive {
+  nav > a span {
     display: block;
-    font-size: 0.875rem;
+    font-size: 1.125em;
     line-height: 1.2;
     font-weight: 600;
     color: var(--color-content);
     margin: 0;
   }
   @media (min-width: 680px) and (max-width: 899px) {
-    .logo-text-responsive {
+    nav > a span {
       display: none;
     }
   }
