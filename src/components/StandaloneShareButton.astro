@@ -1,183 +1,352 @@
 ---
 // src/components/StandaloneShareButton.astro
-import { Icon } from 'astro-icon/components';
+import { Icon } from "astro-icon/components"
 
 interface Props {
-  shareUrl?: string;
-  shareTitle?: string;
-  buttonClass?: string;
-  buttonLabel?: string | any; // Allow Astro Component for default
-  dropdownAlignment?: 'dropdown-end' | 'dropdown-left' | 'dropdown-center' | 'dropdown-right' | 'dropdown-top' | 'dropdown-bottom';
+  shareUrl?: string
+  shareTitle?: string
+  buttonClass?: string
+  buttonLabel?: string | any // Allow Astro Component for default
+  dropdownAlignment?:
+    | "dropdown-end"
+    | "dropdown-left"
+    | "dropdown-center"
+    | "dropdown-right"
+    | "dropdown-top"
+    | "dropdown-bottom"
 }
 
 const {
   shareUrl,
   shareTitle,
-  buttonClass = "btn btn-outline",
+  buttonClass = "btn",
   // Default buttonLabel will be set using <Icon> directly in the template if not provided
   buttonLabel,
-  dropdownAlignment = "dropdown-end"
-}: Props = Astro.props;
+  dropdownAlignment = "dropdown-end",
+}: Props = Astro.props
 ---
 
-<details class:list={["dropdown", dropdownAlignment]}>
-  <summary class:list={[buttonClass, "m-1"]}>
-    {buttonLabel ? <Fragment set:html={buttonLabel} /> : <Icon name="ri:share-line" class="h-8 w-8 sm:h-10 sm:w-10" />}
+<details>
+  <summary class:list={[buttonClass]}>
+    {
+      buttonLabel ? (
+        <Fragment set:html={buttonLabel} />
+      ) : (
+        <Icon name="ri:share-line" />
+      )
+    }
   </summary>
-  <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-60 z-[1]">
-    <li><a class="share-link-facebook flex items-center text-meta" href="#" target="_blank" rel="noopener noreferrer"><Icon name="ri:facebook-line" class="w-5 h-5" /><span class="ml-2">Facebook</span></a></li>
-    <li><a class="share-link-twitter flex items-center text-meta" href="#" target="_blank" rel="noopener noreferrer"><Icon name="ri:twitter-x-line" class="w-5 h-5" /><span class="ml-2">Twitter/X</span></a></li>
-    <li><a class="share-link-linkedin flex items-center text-meta" href="#" target="_blank" rel="noopener noreferrer"><Icon name="ri:linkedin-line" class="w-5 h-5" /><span class="ml-2">LinkedIn</span></a></li>
-    <li><a class="share-link-telegram flex items-center text-meta" href="#" target="_blank" rel="noopener noreferrer"><Icon name="ri:telegram-line" class="w-5 h-5" /><span class="ml-2">Telegram</span></a></li>
-    <li><a class="share-link-whatsapp flex items-center text-meta" href="#" target="_blank" rel="noopener noreferrer"><Icon name="ri:whatsapp-line" class="w-5 h-5" /><span class="ml-2">WhatsApp</span></a></li>
-    <li><a class="share-link-email flex items-center text-meta" href="#"><Icon name="ri:mail-line" class="w-5 h-5" /><span class="ml-2">Email</span></a></li>
-    <li class="mt-1 pt-1 border-t border-base-300"><a class="share-link-copy flex items-center text-meta" href="#"><Icon name="ri:link" class="w-5 h-5" /><span class="ml-2">Copy Link</span></a></li>
+  <ul class="text-meta">
+    <li>
+      <a
+        class="share-link-facebook"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:facebook-line" /><span>Facebook</span></a>
+    </li>
+    <li>
+      <a
+        class="share-link-twitter"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:twitter-x-line" /><span>Twitter/X</span></a>
+    </li>
+    <li>
+      <a
+        class="share-link-linkedin"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:linkedin-line" /><span>LinkedIn</span></a>
+    </li>
+    <li>
+      <a
+        class="share-link-telegram"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:telegram-line" /><span>Telegram</span></a>
+    </li>
+    <li>
+      <a
+        class="share-link-whatsapp"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:whatsapp-line" /><span>WhatsApp</span></a>
+    </li>
+    <li>
+      <a class="share-link-email" href="#"
+        ><Icon name="ri:mail-line" /><span>Email</span></a>
+    </li>
+    <li class="share-divider">
+      <a class="share-link-copy" href="#"
+        ><Icon name="ri:link" /><span>Copy Link</span></a>
+    </li>
   </ul>
 </details>
 
-<script is:inline define:vars={{ initialShareUrl: shareUrl, initialShareTitle: shareTitle }}>
-  const scriptTag = document.currentScript;
-  let componentRoot = null;
+<script
+  is:inline
+  define:vars={{ initialShareUrl: shareUrl, initialShareTitle: shareTitle }}
+>
+  const scriptTag = document.currentScript
+  let componentRoot = null
 
   if (scriptTag) {
-    componentRoot = scriptTag.previousElementSibling;
-    if (!componentRoot || !componentRoot.matches('details.dropdown')) {
+    componentRoot = scriptTag.previousElementSibling
+    if (!componentRoot || !componentRoot.matches("details")) {
       console.error(
-        'StandaloneShareButton: Failed to find details.dropdown as previous sibling.',
+        "StandaloneShareButton: Failed to find details as previous sibling.",
         { scriptTag, previousSibling: componentRoot }
-      );
-      componentRoot = null;
+      )
+      componentRoot = null
     }
   } else {
-    console.error('StandaloneShareButton: document.currentScript is null. The script might be loaded in a way that prevents it from being identified (e.g., module, async/defer).');
+    console.error(
+      "StandaloneShareButton: document.currentScript is null. The script might be loaded in a way that prevents it from being identified (e.g., module, async/defer)."
+    )
   }
 
   if (componentRoot) {
-    const summaryElement = componentRoot.querySelector('summary');
+    const summaryElement = componentRoot.querySelector("summary")
 
     if (summaryElement) {
-      summaryElement.addEventListener('click', (event) => {
-        event.stopPropagation();
-      });
+      summaryElement.addEventListener("click", (event) => {
+        event.stopPropagation()
+      })
     }
 
-    const detailsElement = componentRoot; // componentRoot is the <details> element
+    const detailsElement = componentRoot // componentRoot is the <details> element
 
     const handleDocumentClick = (event) => {
       // Check if the dropdown is open and the click is outside the detailsElement
-      if (detailsElement.hasAttribute('open') && !detailsElement.contains(event.target)) {
-        detailsElement.removeAttribute('open');
+      if (
+        detailsElement.hasAttribute("open") &&
+        !detailsElement.contains(event.target)
+      ) {
+        detailsElement.removeAttribute("open")
         // The 'toggle' event on detailsElement will automatically handle removing this listener.
       }
-    };
+    }
 
-    detailsElement.addEventListener('toggle', () => {
-      const ulElement = detailsElement.querySelector('ul.dropdown-content.menu');
+    detailsElement.addEventListener("toggle", () => {
+      const ulElement = detailsElement.querySelector("ul")
       if (!ulElement) {
-        console.error('StandaloneShareButton: CRITICAL - Could not find ul.dropdown-content.menu inside detailsElement on toggle.');
-        return;
+        console.error(
+          "StandaloneShareButton: CRITICAL - Could not find ul inside detailsElement on toggle."
+        )
+        return
       }
 
-      if (detailsElement.hasAttribute('open')) {
+      if (detailsElement.hasAttribute("open")) {
         // Add the click listener to the document when the dropdown opens
         // Use a timeout to ensure this listener is added after the current click event cycle has completed.
         // This prevents the click that opened the dropdown from immediately triggering this listener.
         setTimeout(() => {
-          document.documentElement.addEventListener('click', handleDocumentClick);
-        }, 0);
+          document.documentElement.addEventListener(
+            "click",
+            handleDocumentClick
+          )
+        }, 0)
       } else {
         // Remove the click listener from the document when the dropdown closes
-        document.documentElement.removeEventListener('click', handleDocumentClick);
+        document.documentElement.removeEventListener(
+          "click",
+          handleDocumentClick
+        )
       }
-    });
+    })
 
     const shareLinks = {
-      facebook: componentRoot.querySelector('.share-link-facebook'),
-      twitter: componentRoot.querySelector('.share-link-twitter'),
-      linkedin: componentRoot.querySelector('.share-link-linkedin'),
-      telegram: componentRoot.querySelector('.share-link-telegram'),
-      whatsapp: componentRoot.querySelector('.share-link-whatsapp'),
-      email: componentRoot.querySelector('.share-link-email'),
-      copy: componentRoot.querySelector('.share-link-copy'),
-    };
-
-    const urlToShare = initialShareUrl || window.location.href;
-    // For title, attempt to get from prop, then document.title, then a fallback.
-    let titleToShare = initialShareTitle || (typeof document !== 'undefined' ? document.title : '');
-    // If it's a photo page, try to get a more specific title if one isn't passed.
-    if (!initialShareTitle && urlToShare.includes('/photos/') && typeof document !== 'undefined') {
-        const h1 = document.querySelector('h1');
-        if (h1 && h1.textContent) {
-            titleToShare = h1.textContent.trim();
-        }
+      facebook: componentRoot.querySelector(".share-link-facebook"),
+      twitter: componentRoot.querySelector(".share-link-twitter"),
+      linkedin: componentRoot.querySelector(".share-link-linkedin"),
+      telegram: componentRoot.querySelector(".share-link-telegram"),
+      whatsapp: componentRoot.querySelector(".share-link-whatsapp"),
+      email: componentRoot.querySelector(".share-link-email"),
+      copy: componentRoot.querySelector(".share-link-copy"),
     }
 
+    const urlToShare = initialShareUrl || window.location.href
+    // For title, attempt to get from prop, then document.title, then a fallback.
+    let titleToShare =
+      initialShareTitle ||
+      (typeof document !== "undefined" ? document.title : "")
+    // If it's a photo page, try to get a more specific title if one isn't passed.
+    if (
+      !initialShareTitle &&
+      urlToShare.includes("/photos/") &&
+      typeof document !== "undefined"
+    ) {
+      const h1 = document.querySelector("h1")
+      if (h1 && h1.textContent) {
+        titleToShare = h1.textContent.trim()
+      }
+    }
 
     if (shareLinks.facebook) {
-      shareLinks.facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+      shareLinks.facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`
     }
     if (shareLinks.twitter) {
-      shareLinks.twitter.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(titleToShare)}`;
+      shareLinks.twitter.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(titleToShare)}`
     }
     if (shareLinks.linkedin) {
-      shareLinks.linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(urlToShare)}`;
+      shareLinks.linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(urlToShare)}`
     }
     if (shareLinks.telegram) {
-      shareLinks.telegram.href = `https://t.me/share/url?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(titleToShare)}`;
+      shareLinks.telegram.href = `https://t.me/share/url?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(titleToShare)}`
     }
     if (shareLinks.whatsapp) {
-      shareLinks.whatsapp.href = `whatsapp://send?text=${encodeURIComponent(titleToShare + ' ' + urlToShare)}`;
+      shareLinks.whatsapp.href = `whatsapp://send?text=${encodeURIComponent(titleToShare + " " + urlToShare)}`
     }
     if (shareLinks.email) {
-      const emailSubject = encodeURIComponent(titleToShare);
-      const emailBody = encodeURIComponent(`${titleToShare}\n\n${urlToShare}`);
-      shareLinks.email.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+      const emailSubject = encodeURIComponent(titleToShare)
+      const emailBody = encodeURIComponent(`${titleToShare}\n\n${urlToShare}`)
+      shareLinks.email.href = `mailto:?subject=${emailSubject}&body=${emailBody}`
     }
 
     if (shareLinks.copy) {
-      shareLinks.copy.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText(urlToShare).then(() => {
-          const originalTextElement = shareLinks.copy.querySelector('span');
-          if (originalTextElement) {
-            const originalText = originalTextElement.textContent;
-            originalTextElement.textContent = 'Copied!';
-            // Ensure dropdown closes after copying
-            if (componentRoot.hasAttribute('open')) {
-              componentRoot.removeAttribute('open');
+      shareLinks.copy.addEventListener("click", (e) => {
+        e.preventDefault()
+        navigator.clipboard
+          .writeText(urlToShare)
+          .then(() => {
+            const originalTextElement = shareLinks.copy.querySelector("span")
+            if (originalTextElement) {
+              const originalText = originalTextElement.textContent
+              originalTextElement.textContent = "Copied!"
+              // Ensure dropdown closes after copying
+              if (componentRoot.hasAttribute("open")) {
+                componentRoot.removeAttribute("open")
+              }
+              setTimeout(() => {
+                originalTextElement.textContent = originalText
+              }, 2000)
             }
-            setTimeout(() => {
-              originalTextElement.textContent = originalText;
-            }, 2000);
-          }
-        }).catch(err => console.error('Failed to copy URL: ', err));
-      });
+          })
+          .catch((err) => console.error("Failed to copy URL: ", err))
+      })
     }
 
     // Close dropdown when a social share link is clicked
     // Exclude "Copy Link" and "Email" from this specific auto-close behavior,
     // as they have their own handling or don't navigate away immediately.
-    [
+    ;[
       shareLinks.facebook,
       shareLinks.twitter,
       shareLinks.linkedin,
       shareLinks.telegram,
-      shareLinks.whatsapp
-    ].forEach(link => {
-        if (link) {
-            link.addEventListener('click', () => {
-                // Use a small delay to allow the link to be processed before closing
-                setTimeout(() => {
-                    if (componentRoot.hasAttribute('open')) {
-                        componentRoot.removeAttribute('open');
-                    }
-                }, 150);
-            });
-        }
-    });
+      shareLinks.whatsapp,
+    ].forEach((link) => {
+      if (link) {
+        link.addEventListener("click", () => {
+          // Use a small delay to allow the link to be processed before closing
+          setTimeout(() => {
+            if (componentRoot.hasAttribute("open")) {
+              componentRoot.removeAttribute("open")
+            }
+          }, 150)
+        })
+      }
+    })
 
     // For the email link, we don't want to preventDefault or close the dropdown,
     // as the browser/OS handles opening the mail client.
     // The `href` is already set, so default behavior is fine.
   }
 </script>
+
+<style is:global>
+  /* Share dropdown using semantic selectors */
+  header details {
+    position: relative;
+    display: inline-block;
+  }
+
+  header details summary {
+    cursor: pointer;
+    list-style: none;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  header details summary::marker {
+    display: none;
+  }
+
+  header details ul {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 15rem;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-muted);
+    border-radius: 0.5rem;
+    box-shadow: var(--color-shadow);
+    list-style: none;
+  }
+
+  header details[open] ul {
+    display: block;
+    animation: shareDropdownIn 0.15s ease-out;
+  }
+
+  @keyframes shareDropdownIn {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  header details ul li {
+    margin: 0;
+    padding: 0;
+  }
+
+  header details ul a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    color: var(--color-content);
+    transition: all 0.15s ease-in-out;
+  }
+
+  header details ul a:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-content);
+    text-decoration: none;
+  }
+
+  header details ul svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  header details .share-divider {
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--color-bg-muted);
+  }
+</style>

@@ -12,14 +12,9 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     <ul>
       <Navigation />
       <li><ThemeSwitch /></li>
-      <li>
-        <StandaloneShareButton
-          buttonClass="btn"
-          dropdownAlignment="dropdown-end"
-        />
-      </li>
     </ul>
   </nav>
+  <StandaloneShareButton />
   <Hamburger />
 </header>
 
@@ -63,19 +58,21 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     list-style: none;
     padding: 0;
     margin: 0;
-    gap: 0.5rem;
+    gap: 0.5em;
   }
 
-  header button {
-    padding: 0.5rem;
-    margin: 0.5rem;
-    width: 3rem;
-    height: 3rem;
+  header button,
+  header details summary {
+    padding: 0.5em;
+    margin: 0.5em;
+    width: 2em;
+    height: 2em;
   }
 
-  header button svg {
-    height: 2rem;
-    width: 2rem;
+  header button svg,
+  header details summary svg {
+    height: 1em;
+    width: 1em;
     color: var(--color-content);
   }
 
