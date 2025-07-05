@@ -110,7 +110,8 @@ a {
 /* Hover colors and effects */
 a:hover,
 .btn:hover,
-button:hover {
+button:hover,
+header details ul a:hover {
   color: var(--color-content);
   background: var(--color-hover);
   box-shadow: none;
@@ -119,7 +120,8 @@ button:hover {
 /* Active colors and effects */
 a:active,
 .btn:active,
-button:active {
+button:active,
+header details ul a:active {
   color: var(--color-bg);
   background: var(--color-accent);
   transform: scale(0.97);
