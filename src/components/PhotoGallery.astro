@@ -154,12 +154,6 @@ function getLightboxWidths(photoWidth: number): number[] {
         id="photoswipe-data"
         set:html={JSON.stringify(photoSwipeJsonData)}
       />
-      {/* Using set:html on the script tag itself should work for this.
-        Alternatively, <Fragment set:html={`<script type="application/json" id="photoswipe-data">${JSON.stringify(photoSwipeJsonData)}</script>`} />
-        But Astro docs suggest set:html can be used directly on elements like <script> or <style>.
-        If this does not work, we will try the Fragment approach.
-        The `is:inline` is not needed when using `set:html` as `set:html` implies raw content.
-    */}
 
       {/* Render thumbnails for the current page */}
       {photos.map(async (photo, pageSpecificIndex) => {
