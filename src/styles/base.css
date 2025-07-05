@@ -1,7 +1,6 @@
 @import "modern-normalize/modern-normalize.css";
-/* @import "@picocss/pico/css/pico.css"; */
 
-/* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
+/* Dark mode support */
 :root {
   --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
   --font-serif: "Bitter Variable", Georgia, serif;
@@ -10,8 +9,8 @@
   --color-content: #181818;
   --color-content-muted: #494949;
   --color-accent: #3b82f6;
-  --color-hover: rgba(59, 130, 246, 0.1); /* transparent overlay for hover */
-  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1); /* semantic shadow color */
+  --color-hover: rgba(59, 130, 246, 0.1);
+  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
 
   --max-w-body: 40rem;
   --max-w-body-xl: 48rem;
@@ -24,6 +23,43 @@
   --breakpoint-2xl: 1800px;
 }
 
+/* Dark mode colors for auto theme (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f0f0f;
+    --color-bg-muted: #1a1a1a;
+    --color-content: #f0f0f0;
+    --color-content-muted: #a3a3a3;
+    --color-accent: #60a5fa;
+    --color-hover: rgba(96, 165, 250, 0.1);
+    --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Dark mode colors for explicit dark theme */
+[data-theme="dark"] {
+  --color-bg: #0f0f0f;
+  --color-bg-muted: #1a1a1a;
+  --color-content: #f0f0f0;
+  --color-content-muted: #a3a3a3;
+  --color-accent: #60a5fa;
+  --color-hover: rgba(96, 165, 250, 0.1);
+  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode colors for explicit light theme (overrides auto dark) */
+[data-theme="light"] {
+  --color-bg: #fff;
+  --color-bg-muted: #f7f7f7;
+  --color-content: #181818;
+  --color-content-muted: #494949;
+  --color-accent: #3b82f6;
+  --color-hover: rgba(59, 130, 246, 0.1);
+  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
+
 html,
 body {
   margin: 0;
@@ -35,7 +71,11 @@ body {
   font-family: var(--font-serif);
   font-size: 1.125rem;
   line-height: 1.75;
-  color: inherit;
+  color: var(--color-content);
+  background-color: var(--color-bg);
+  transition:
+    background-color 0.15s ease-in-out,
+    color 0.15s ease-in-out;
 }
 @media (min-width: 680px) {
   body {

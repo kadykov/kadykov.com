@@ -28,7 +28,6 @@
     "photoswipe": "^5.4.4",
     "photoswipe-dynamic-caption-plugin": "^1.2.7",
     "postcss": "^8.4.47",
-    "theme-change": "^2.5.0",
     "typescript": "^5.5.3"
   },
   "devDependencies": {

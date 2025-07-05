@@ -2,28 +2,94 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<label class="swap swap-rotate">
-  <!-- this hidden checkbox controls the state -->
-  <input type="checkbox" data-toggle-theme="dark,light" id="theme-switch" />
+<button class="btn">
+  <Icon name="ri:sun-line" class="theme-icon-light" />
+  <Icon name="ri:moon-line" class="theme-icon-dark" />
+  <Icon name="ri:contrast-line" class="theme-icon-auto" />
+</button>
 
-  <!-- light icon -->
-  <Icon name="ri:sun-line" class="swap-off h-8 w-8 sm:h-10 sm:w-10" />
+<script is:inline>
+  const scriptTag = document.currentScript
+  let componentRoot = null
 
-  <!-- dark icon -->
-  <Icon name="ri:moon-line" class="swap-on h-8 w-8 sm:h-10 sm:w-10" />
-</label>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const theme = localStorage.getItem("theme") ?? "light"
-    const themeSwitch = document.getElementById("theme-switch")
-    if (theme === "dark" && themeSwitch) {
-      ;(themeSwitch as HTMLInputElement).checked = true
-    } else if (themeSwitch) {
-      ;(themeSwitch as HTMLInputElement).checked = false
+  if (scriptTag) {
+    componentRoot = scriptTag.previousElementSibling
+    if (!componentRoot || !componentRoot.matches("button")) {
+      console.error("ThemeSwitch: Failed to find button as previous sibling.", {
+        scriptTag,
+        previousSibling: componentRoot,
+      })
+      componentRoot = null
     }
-  })
+  }
 
-  import { themeChange } from "theme-change"
-  themeChange()
+  if (componentRoot) {
+    // Theme order for cycling
+    const themes = ["auto", "light", "dark"]
+
+    // Get current theme from localStorage or default to auto
+    const getCurrentTheme = () => {
+      if (typeof localStorage !== "undefined") {
+        return localStorage.getItem("theme") || "auto"
+      }
+      return "auto"
+    }
+
+    // Apply theme to document
+    const applyTheme = (theme) => {
+      if (theme === "auto") {
+        // Remove explicit theme and let CSS media query handle it
+        document.documentElement.removeAttribute("data-theme")
+        if (typeof localStorage !== "undefined") {
+          localStorage.removeItem("theme")
+        }
+      } else {
+        document.documentElement.setAttribute("data-theme", theme)
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("theme", theme)
+        }
+      }
+      updateThemeIcon(theme)
+    }
+
+    // Update the icon in the button based on current theme
+    const updateThemeIcon = (theme) => {
+      const lightIcon = componentRoot.querySelector(".theme-icon-light")
+      const darkIcon = componentRoot.querySelector(".theme-icon-dark")
+      const autoIcon = componentRoot.querySelector(".theme-icon-auto")
+
+      // Hide all icons first
+      lightIcon.style.display = "none"
+      darkIcon.style.display = "none"
+      autoIcon.style.display = "none"
+
+      // Show appropriate icon
+      if (theme === "light") {
+        lightIcon.style.display = "block"
+      } else if (theme === "dark") {
+        darkIcon.style.display = "block"
+      } else {
+        autoIcon.style.display = "block"
+      }
+    }
+
+    // Get next theme in cycle
+    const getNextTheme = (currentTheme) => {
+      const currentIndex = themes.indexOf(currentTheme)
+      const nextIndex = (currentIndex + 1) % themes.length
+      return themes[nextIndex]
+    }
+
+    // Initialize theme on page load
+    const currentTheme = getCurrentTheme()
+    applyTheme(currentTheme)
+
+    // Handle button click to cycle through themes
+    componentRoot.addEventListener("click", (e) => {
+      e.preventDefault()
+      const currentTheme = getCurrentTheme()
+      const nextTheme = getNextTheme(currentTheme)
+      applyTheme(nextTheme)
+    })
+  }
 </script>

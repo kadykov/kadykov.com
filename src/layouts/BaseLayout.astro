@@ -20,24 +20,22 @@ import "../styles/base.css"
       data-website-id="8254b650-ea3c-461d-9f3e-0ad467230fa1"></script>
 
     <script is:inline>
-      const theme = (() => {
-        if (
-          typeof localStorage !== "undefined" &&
-          localStorage.getItem("theme")
-        ) {
-          return localStorage.getItem("theme") ?? "light"
-        }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          return "dark"
-        }
-        return "light"
-      })()
+      // Theme initialization to prevent flash
+      const initTheme = () => {
+        const savedTheme = localStorage.getItem("theme")
 
-      if (theme === "light") {
-        document.documentElement.setAttribute("data-theme", "light")
-      } else {
-        document.documentElement.setAttribute("data-theme", "dark")
+        if (savedTheme === "light") {
+          document.documentElement.setAttribute("data-theme", "light")
+        } else if (savedTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark")
+        } else {
+          // Auto mode - let CSS media query handle it
+          document.documentElement.removeAttribute("data-theme")
+        }
       }
+
+      // Run immediately to prevent flash
+      initTheme()
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
