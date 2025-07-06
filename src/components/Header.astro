@@ -20,12 +20,6 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
 
 <style is:global>
   header {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     background: var(--color-bg-muted);
     box-shadow: var(--color-shadow);
     z-index: 20;
@@ -33,16 +27,8 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     align-items: center;
     justify-content: space-between;
     min-height: 4em;
-    padding: 0.5em 1.5em;
-    max-width: 100vw;
-  }
-
-  /* Add responsive padding to limit content width */
-  @media (min-width: 1200px) {
-    header {
-      padding-left: calc((100vw - 1200px) / 2 + 1.5em);
-      padding-right: calc((100vw - 1200px) / 2 + 1.5em);
-    }
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
   }
 
   header nav {
