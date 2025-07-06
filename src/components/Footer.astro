@@ -3,36 +3,173 @@ import { Icon } from "astro-icon/components"
 const year = new Date().getFullYear()
 ---
 
-<footer class="footer py-10 items-center w-5/6 mx-auto max-w-screen-xl">
-  <aside class="flex items-center">
-    <Icon name="logo" class="h-10 w-10" />
-    <p>© 2024 - {year}. Aleksandr Kadykov</p>
-  </aside>
-  <nav class="grid grid-flow-col gap-4">
-    <a class="link link-hover" href="mailto:web@kadykov.com">
-      <Icon name="ri:mail-send-line" class="h-8 w-8" />
-    </a>
-    <a
-      class="link link-hover"
-      href="https://www.linkedin.com/in/aleksandr-kadykov/"
-    >
-      <Icon name="ri:linkedin-line" class="h-8 w-8" />
-    </a>
+<footer>
+  <section>
+    <Icon name="logo" />
+    <p>© 2024 - {year} Aleksandr Kadykov</p>
+  </section>
+
+  <nav aria-label="Footer navigation">
+    <section>
+      <h4>Pages</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/cv/">CV</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h4>Content</h4>
+      <ul>
+        <li><a href="/photos/1/">Photos</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/rss.xml">RSS Feed</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h4>Connect</h4>
+      <ul>
+        <li>
+          <a href="mailto:web@kadykov.com">
+            <Icon name="ri:mail-send-line" /> Email
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/aleksandr-kadykov/">
+            <Icon name="ri:linkedin-line" /> LinkedIn
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/kadykov">
+            <Icon name="ri:github-line" /> GitHub
+          </a>
+        </li>
+        <li>
+          <a href="https://gitlab.com/kadykov">
+            <Icon name="ri:gitlab-line" /> GitLab
+          </a>
+        </li>
+      </ul>
+    </section>
   </nav>
-  <nav class="grid grid-flow-col gap-4">
-    <a class="link link-hover" href="https://github.com/kadykov">
-      <Icon name="ri:github-line" class="h-8 w-8" />
-    </a>
-    <a class="link link-hover" href="https://gitlab.com/kadykov">
-      <Icon name="ri:gitlab-line" class="h-8 w-8" />
-    </a>
-  </nav>
-  <nav class="grid grid-flow-col gap-4">
-    <a class="link link-hover" href="https://kadykov.com/rss.xml">
-      <Icon name="ri:rss-line" class="h-8 w-8" />
-    </a>
-  </nav>
-  <nav class="grid grid-flow-col gap-4">
-    <a class="link link-hover" href="/privacy-policy"> Privacy Policy </a>
-  </nav>
+
+  <section>
+    <a href="/privacy-policy/">Privacy Policy</a>
+  </section>
 </footer>
+
+<style is:global>
+  footer {
+    /* Always dark background */
+    background-color: #0f0f0f;
+    color: #a3a3a3;
+
+    /* Layout - style footer directly */
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    margin-top: 4em;
+  }
+
+  /* Brand section - first section with logo and copyright */
+  footer > section:first-child {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
+  footer > section:first-child svg {
+    height: 2em;
+    width: 2em;
+    color: #f0f0f0;
+  }
+
+  footer > section:first-child p {
+    font-size: 1rem;
+    color: #a3a3a3;
+    margin: 0;
+  }
+
+  footer nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2em;
+  }
+
+  footer nav section h4 {
+    color: #f0f0f0;
+    margin: 0 0 1em 0;
+    font-size: 1.125rem;
+  }
+
+  footer nav section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  footer nav section a {
+    color: #a3a3a3;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.25em 0;
+    transition: color 0.2s;
+  }
+
+  footer nav section a:hover {
+    color: #f0f0f0;
+  }
+
+  footer nav section a svg {
+    height: 1.25em;
+    width: 1.25em;
+  }
+
+  /* Legal section - last section */
+  footer > section:last-child {
+    border-top: 1px solid #333;
+    padding-top: 1em;
+    text-align: center;
+  }
+
+  footer > section:last-child a {
+    color: #a3a3a3;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer > section:last-child a:hover {
+    color: #f0f0f0;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 680px) {
+    footer {
+      padding-top: 1.5em;
+      padding-bottom: 1.5em;
+      margin-top: 2em;
+    }
+
+    footer nav {
+      grid-template-columns: 1fr;
+      gap: 1.5em;
+    }
+
+    footer > section:first-child {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5em;
+    }
+  }
+</style>
