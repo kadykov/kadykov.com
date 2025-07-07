@@ -70,9 +70,9 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
 <style is:global>
   footer {
-    /* Always dark background */
-    background-color: #0f0f0f;
-    color: #a3a3a3;
+    /* Theme-aware muted background */
+    background-color: var(--color-bg-muted);
+    color: var(--color-content-muted);
 
     /* Inner shadow on top */
     box-shadow: inset 0 8px 16px 0 rgba(0, 0, 0, 0.3);
@@ -96,12 +96,11 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   footer > section:first-child svg {
     height: 2em;
     width: 2em;
-    color: #f0f0f0;
+    color: var(--color-content);
   }
 
   footer > section:first-child p {
     font-size: 1rem;
-    color: #a3a3a3;
     margin: 0;
   }
 
@@ -112,7 +111,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   }
 
   footer nav section h4 {
-    color: #f0f0f0;
+    color: var(--color-content);
     margin: 0 0 1em 0;
     font-size: 1.125rem;
   }
@@ -127,13 +126,12 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   }
 
   footer nav section a {
-    color: #a3a3a3;
     padding: 0.25em 0;
     transition: color 0.2s;
   }
 
   footer a:hover {
-    color: #f0f0f0;
+    color: var(--color-content);
   }
 
   /* Legal section - last section */
@@ -148,18 +146,16 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
   footer > section:last-child p {
     font-size: 0.875rem;
-    color: #666;
     margin: 0;
   }
 
   footer > section:last-child a {
-    color: #a3a3a3;
     text-decoration: none;
     transition: color 0.2s;
   }
 
   footer > section:last-child a:hover {
-    color: #f0f0f0;
+    color: var(--color-content);
   }
 
   /* Mobile adjustments */
