@@ -1,12 +1,25 @@
 ---
 import { Icon } from "astro-icon/components"
 const year = new Date().getFullYear()
+const lastUpdated = new Date().toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+})
 ---
 
 <footer>
   <section>
     <Icon name="logo" />
-    <p>© 2024 - {year} Aleksandr Kadykov</p>
+    <p>
+      <a
+        href="https://creativecommons.org/licenses/by/4.0/"
+        rel="license noopener"
+        target="_blank"
+      >
+        CC BY 4.0
+      </a> 2024 - {year} Aleksandr Kadykov
+    </p>
   </section>
 
   <nav aria-label="Footer navigation">
@@ -34,24 +47,16 @@ const year = new Date().getFullYear()
       <h4>Connect</h4>
       <ul>
         <li>
-          <a href="mailto:web@kadykov.com">
-            <Icon name="ri:mail-send-line" /> Email
-          </a>
+          <a href="mailto:web@kadykov.com">Email</a>
         </li>
         <li>
-          <a href="https://www.linkedin.com/in/aleksandr-kadykov/">
-            <Icon name="ri:linkedin-line" /> LinkedIn
-          </a>
+          <a href="https://www.linkedin.com/in/aleksandr-kadykov/">LinkedIn</a>
         </li>
         <li>
-          <a href="https://github.com/kadykov">
-            <Icon name="ri:github-line" /> GitHub
-          </a>
+          <a href="https://github.com/kadykov">GitHub</a>
         </li>
         <li>
-          <a href="https://gitlab.com/kadykov">
-            <Icon name="ri:gitlab-line" /> GitLab
-          </a>
+          <a href="https://gitlab.com/kadykov">GitLab</a>
         </li>
       </ul>
     </section>
@@ -59,6 +64,7 @@ const year = new Date().getFullYear()
 
   <section>
     <a href="/privacy-policy/">Privacy Policy</a>
+    <p>Last updated: {lastUpdated}</p>
   </section>
 </footer>
 
@@ -67,6 +73,9 @@ const year = new Date().getFullYear()
     /* Always dark background */
     background-color: #0f0f0f;
     color: #a3a3a3;
+
+    /* Inner shadow on top */
+    box-shadow: inset 0 8px 16px 0 rgba(0, 0, 0, 0.3);
 
     /* Layout - style footer directly */
     display: flex;
@@ -119,21 +128,12 @@ const year = new Date().getFullYear()
 
   footer nav section a {
     color: #a3a3a3;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
     padding: 0.25em 0;
     transition: color 0.2s;
   }
 
-  footer nav section a:hover {
+  footer a:hover {
     color: #f0f0f0;
-  }
-
-  footer nav section a svg {
-    height: 1.25em;
-    width: 1.25em;
   }
 
   /* Legal section - last section */
@@ -141,6 +141,15 @@ const year = new Date().getFullYear()
     border-top: 1px solid #333;
     padding-top: 1em;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  footer > section:last-child p {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0;
   }
 
   footer > section:last-child a {
