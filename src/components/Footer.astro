@@ -62,6 +62,8 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     </section>
   </nav>
 
+  <hr />
+
   <section>
     <a href="/privacy-policy/">Privacy Policy</a>
     <p>Last updated: {lastUpdated}</p>
@@ -86,20 +88,20 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     margin-top: 4em;
   }
 
-  /* Brand section - first section with logo and copyright */
-  footer > section:first-child {
-    display: flex;
-    align-items: center;
-    gap: 1em;
+  /* General section styling - center all direct child sections */
+  footer > section {
+    text-align: center;
   }
 
-  footer > section:first-child svg {
+  /* Brand section styling */
+  footer > section svg {
     height: 2em;
     width: 2em;
     color: var(--color-content);
+    margin-bottom: 0.5em;
   }
 
-  footer > section:first-child p {
+  footer > section p {
     font-size: 1rem;
     margin: 0;
   }
@@ -126,16 +128,14 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     gap: 0.5em;
   }
 
-  /* Legal section - last section */
-  footer > section:last-child {
+  /* Horizontal rule styling */
+  footer hr {
+    border: none;
     border-top: 1px solid #333;
-    padding-top: 1em;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+    margin: 1em 0;
   }
 
+  /* Legal section styling */
   footer > section:last-child p {
     font-size: 0.875rem;
     margin: 0;
@@ -152,12 +152,6 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     footer nav {
       grid-template-columns: 1fr;
       gap: 1.5em;
-    }
-
-    footer > section:first-child {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5em;
     }
   }
 </style>
