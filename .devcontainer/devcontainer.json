@@ -22,7 +22,8 @@
         "formulahendry.auto-rename-tag",
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
-        "saoudrizwan.claude-dev"
+        "saoudrizwan.claude-dev",
+        "Stripe.markdoc-language-support"
       ]
     }
   },
