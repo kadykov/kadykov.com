@@ -5,35 +5,14 @@ import { Icon } from "astro-icon/components"
 interface Props {
   shareUrl?: string
   shareTitle?: string
-  buttonClass?: string
-  buttonLabel?: string | any // Allow Astro Component for default
-  dropdownAlignment?:
-    | "dropdown-end"
-    | "dropdown-left"
-    | "dropdown-center"
-    | "dropdown-right"
-    | "dropdown-top"
-    | "dropdown-bottom"
 }
 
-const {
-  shareUrl,
-  shareTitle,
-  buttonClass = "btn",
-  // Default buttonLabel will be set using <Icon> directly in the template if not provided
-  buttonLabel,
-}: Props = Astro.props
+const { shareUrl, shareTitle }: Props = Astro.props
 ---
 
 <details>
-  <summary class:list={[buttonClass]}>
-    {
-      buttonLabel ? (
-        <Fragment set:html={buttonLabel} />
-      ) : (
-        <Icon name="ri:share-line" />
-      )
-    }
+  <summary class="btn">
+    <Icon name="ri:share-line" />
   </summary>
   <ul>
     <li>
