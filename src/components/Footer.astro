@@ -12,13 +12,14 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   <section>
     <Icon name="logo" />
     <p>
+      2024 - {year} Aleksandr Kadykov
       <a
         href="https://creativecommons.org/licenses/by/4.0/"
         rel="license noopener"
         target="_blank"
       >
         CC BY 4.0
-      </a> 2024 - {year} Aleksandr Kadykov
+      </a>
     </p>
   </section>
 
@@ -95,26 +96,19 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
   /* Brand section styling */
   footer > section svg {
-    height: 2em;
-    width: 2em;
+    height: 3em;
+    width: 3em;
     color: var(--color-content);
-    margin-bottom: 0.5em;
-  }
-
-  footer > section p {
-    font-size: 1rem;
-    margin: 0;
   }
 
   footer nav {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 2em;
   }
 
   footer nav section p {
     color: var(--color-content);
-    margin: 0 0 1em 0;
     font-size: 1.125rem;
     font-weight: 550;
   }
@@ -122,7 +116,6 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   footer nav section ul {
     list-style: none;
     padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
@@ -130,28 +123,12 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
   /* Horizontal rule styling */
   footer hr {
-    border: none;
-    border-top: 1px solid #333;
+    border-top: 1px solid;
     margin: 1em 0;
   }
 
   /* Legal section styling */
   footer > section:last-child p {
     font-size: 0.875rem;
-    margin: 0;
-  }
-
-  /* Mobile adjustments */
-  @media (max-width: 680px) {
-    footer {
-      padding-top: 1.5em;
-      padding-bottom: 1.5em;
-      margin-top: 2em;
-    }
-
-    footer nav {
-      grid-template-columns: 1fr;
-      gap: 1.5em;
-    }
   }
 </style>
