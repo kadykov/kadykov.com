@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/MarkDownLayout.astro"
+layout: "../layouts/ArticleLayout.astro"
 author: Aleksandr KADYKOV
 title: Research Engineer
 ---

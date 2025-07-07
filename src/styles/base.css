@@ -288,16 +288,13 @@ footer,
   line-height: 1.75;
 }
 
-/* Updated .prose using direct application of utilities with prose modifiers */
-/* .prose controls max-width for content blocks */
-.prose {
-  max-width: var(--max-w-body);
+/* Content containers - prose and article semantic styling */
+.prose,
+article {
+  max-width: 50ch;
+  margin: 0 auto;
+  padding: 2.5rem 0;
   color: inherit;
-}
-@media (min-width: 1500px) {
-  .prose {
-    max-width: var(--max-w-body-xl);
-  }
 }
 
 /* Full-width layout for header and footer */
