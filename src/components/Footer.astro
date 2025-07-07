@@ -24,7 +24,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
   <nav aria-label="Footer navigation">
     <section>
-      <h4>Pages</h4>
+      <p>Pages</p>
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/about/">About</a></li>
@@ -34,7 +34,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     </section>
 
     <section>
-      <h4>Content</h4>
+      <p>Content</p>
       <ul>
         <li><a href="/photos/1/">Photos</a></li>
         <li><a href="/blog/">Blog</a></li>
@@ -44,7 +44,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     </section>
 
     <section>
-      <h4>Connect</h4>
+      <p>Connect</p>
       <ul>
         <li>
           <a href="mailto:web@kadykov.com">Email</a>
@@ -74,8 +74,8 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     background-color: var(--color-bg-muted);
     color: var(--color-content-muted);
 
-    /* Inner shadow on top */
-    box-shadow: inset 0 8px 16px 0 rgba(0, 0, 0, 0.3);
+    /* Inner shadow on top - sharp edge like before */
+    box-shadow: inset 0 2px 8px 0 rgba(0, 0, 0, 0.3);
 
     /* Layout - style footer directly */
     display: flex;
@@ -110,10 +110,11 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
     gap: 2em;
   }
 
-  footer nav section h4 {
+  footer nav section p {
     color: var(--color-content);
     margin: 0 0 1em 0;
     font-size: 1.125rem;
+    font-weight: 550;
   }
 
   footer nav section ul {
