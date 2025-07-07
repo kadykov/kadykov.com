@@ -2,7 +2,15 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<button class="btn">
+<button
+  class="btn"
+  id="theme-switch"
+  type="button"
+  aria-label="Switch theme"
+  aria-live="polite"
+  aria-pressed="false"
+  title="Switch theme"
+>
   <Icon name="ri:sun-line" class="theme-icon-light" />
   <Icon name="ri:moon-line" class="theme-icon-dark" />
   <Icon name="ri:contrast-line" class="theme-icon-auto" />
@@ -52,7 +60,7 @@ import { Icon } from "astro-icon/components"
       updateThemeIcon(theme)
     }
 
-    // Update the icon in the button based on current theme
+    // Update the icon in the button and accessibility attributes based on current theme
     const updateThemeIcon = (theme) => {
       const lightIcon = componentRoot.querySelector(".theme-icon-light")
       const darkIcon = componentRoot.querySelector(".theme-icon-dark")
@@ -63,14 +71,25 @@ import { Icon } from "astro-icon/components"
       darkIcon.style.display = "none"
       autoIcon.style.display = "none"
 
-      // Show appropriate icon
+      // Show appropriate icon and update aria-label/aria-pressed
+      let label = "Switch theme"
+      let pressed = "false"
       if (theme === "light") {
         lightIcon.style.display = "block"
+        label = "Switch to dark theme"
+        pressed = "false"
       } else if (theme === "dark") {
         darkIcon.style.display = "block"
+        label = "Switch to auto theme"
+        pressed = "true"
       } else {
         autoIcon.style.display = "block"
+        label = "Switch to light theme"
+        pressed = "mixed"
       }
+      componentRoot.setAttribute("aria-label", label)
+      componentRoot.setAttribute("aria-pressed", pressed)
+      componentRoot.setAttribute("title", label)
     }
 
     // Get next theme in cycle
