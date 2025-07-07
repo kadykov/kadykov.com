@@ -11,7 +11,7 @@ const { shareUrl, shareTitle }: Props = Astro.props
 ---
 
 <details>
-  <summary>
+  <summary class="btn">
     <Icon name="ri:share-line" />
   </summary>
   <ul>
@@ -65,7 +65,8 @@ const { shareUrl, shareTitle }: Props = Astro.props
         ><Icon name="ri:mail-line" /><span>Email</span></a
       >
     </li>
-    <li class="share-divider">
+    <hr />
+    <li>
       <a class="share-link-copy" href="#"
         ><Icon name="ri:link" /><span>Copy Link</span></a
       >
@@ -278,8 +279,7 @@ const { shareUrl, shareTitle }: Props = Astro.props
     min-width: 15rem;
     padding: 0.5rem;
     margin-top: 0.25rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-bg-muted);
+    background: var(--color-bg-muted);
     border-radius: 0.5rem;
     box-shadow: var(--color-shadow);
     list-style: none;
@@ -323,9 +323,9 @@ const { shareUrl, shareTitle }: Props = Astro.props
     flex-shrink: 0;
   }
 
-  header details .share-divider {
-    margin-top: 0.25rem;
-    padding-top: 0.25rem;
-    border-top: 1px solid var(--color-bg-muted);
+  header details ul hr {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid var(--color-content-muted);
   }
 </style>
