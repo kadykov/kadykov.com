@@ -67,7 +67,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 
   <section>
     <a href="/privacy-policy/">Privacy Policy</a>
-    <p>Last updated: {lastUpdated}</p>
+    <p><small>Last updated: {lastUpdated}</small></p>
   </section>
 </footer>
 
@@ -116,6 +116,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   footer nav section ul {
     list-style: none;
     padding: 0;
+    margin: -0.5em;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
@@ -125,10 +126,5 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   footer hr {
     border-top: 1px solid;
     margin: 1em 0;
-  }
-
-  /* Legal section styling */
-  footer > section:last-child p {
-    font-size: 0.875rem;
   }
 </style>
