@@ -65,22 +65,17 @@ import "../styles/base.css"
         position: sticky;
         top: 0;
         z-index: 10;
-        box-shadow: var(--color-shadow);
-        background: var(--color-bg);
-        transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .layout-main {
+      main {
         min-height: 60vh;
         width: 100%;
         margin: 0 auto;
         padding: 0 1rem;
         max-width: 1200px;
       }
-      .layout-footer {
-        margin-top: 3rem;
-        background: var(--color-bg-muted);
-        color: var(--color-content);
-        box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.04);
+      footer {
+        margin-top: 4em;
       }
     </style>
   </head>
@@ -90,12 +85,10 @@ import "../styles/base.css"
         <div id="navbar" class="layout-navbar">
           <Header />
         </div>
-        <main class="layout-main">
+        <main>
           <slot />
         </main>
-        <div class="layout-footer">
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </Drawer>
     <script>
@@ -104,16 +97,35 @@ import "../styles/base.css"
 
       if (scroller && navbar) {
         let prevScrollpos = scroller.scrollTop
+        let scrollThreshold = 60 // Only hide after scrolling 60px
+        let isScrolling = false
 
-        scroller.addEventListener("scroll", function () {
-          let currentScrollPos = scroller.scrollTop
-          if (prevScrollpos > currentScrollPos) {
-            navbar.style.top = "0"
-          } else {
-            navbar.style.top = "-100px"
+        // Throttle scroll events for better performance
+        const throttledScroll = () => {
+          if (!isScrolling) {
+            window.requestAnimationFrame(() => {
+              let currentScrollPos = scroller.scrollTop
+              let scrollDifference = Math.abs(currentScrollPos - prevScrollpos)
+
+              // Only react if scrolled more than threshold
+              if (scrollDifference > scrollThreshold) {
+                if (prevScrollpos > currentScrollPos) {
+                  // Scrolling up - show navbar
+                  navbar.style.transform = "translateY(0)"
+                } else if (currentScrollPos > 100) {
+                  // Scrolling down and past initial area - hide navbar
+                  navbar.style.transform = "translateY(-100%)"
+                }
+                prevScrollpos = currentScrollPos
+              }
+
+              isScrolling = false
+            })
           }
-          prevScrollpos = currentScrollPos
-        })
+          isScrolling = true
+        }
+
+        scroller.addEventListener("scroll", throttledScroll)
       }
     </script>
   </body>
