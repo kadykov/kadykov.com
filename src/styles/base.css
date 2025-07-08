@@ -297,6 +297,18 @@ article {
   color: inherit;
 }
 
+/* Article image styling */
+article img,
+.article-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
 /* Full-width layout for header and footer */
 header,
 footer {

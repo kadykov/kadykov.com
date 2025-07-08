@@ -2,7 +2,7 @@ import { z, defineCollection } from "astro:content"
 
 // Define a `type` and `schema` for each collection
 const postsCollection = defineCollection({
-  type: "content", // For Markdown/MDX files in src/content/
+  type: "content", // For Markdown/MDX/Markdoc files in src/content/
   schema: z.object({
     title: z.string(),
     pubDate: z.date(),
@@ -18,5 +18,5 @@ const postsCollection = defineCollection({
 
 // Export a single `collections` object to register your collection(s)
 export const collections = {
-  blog: postsCollection
+  blog: postsCollection,
 }

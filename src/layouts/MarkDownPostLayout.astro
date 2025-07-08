@@ -1,57 +1,142 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
-import OptimizedImage from "../components/OptimizedImage.astro" // Import the new component
-const { frontmatter } = Astro.props
+import OptimizedImage from "../components/OptimizedImage.astro"
 
-// Helper function to format dates
-const formatDate = (date: Date | undefined | null) => {
-  if (!date) return ""
-  return new Date(date).toLocaleDateString("en-CA", {
+const { frontmatter } = Astro.props
+const { title, description, pubDate, lastUpdatedDate, image, tags } =
+  frontmatter
+
+// Format dates
+const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  })
+  }).format(new Date(date))
 }
-
-const pubDateFormatted = formatDate(frontmatter.pubDate)
-const lastUpdatedDateFormatted = frontmatter.lastUpdatedDate
-  ? formatDate(frontmatter.lastUpdatedDate)
-  : ""
-const showLastUpdated =
-  lastUpdatedDateFormatted && lastUpdatedDateFormatted !== pubDateFormatted
 ---
 
-<BaseLayout pageTitle={frontmatter.title}>
-  <article class="mx-auto my-10 w-11/12 sm:w-5/6 lg:w-4/6 xl:w-3/6">
-    <header class="mb-8 text-center">
-      <h1>{frontmatter.title}</h1>
-      <p class="mx-auto">
-        {frontmatter.description}
-      </p>
-      <div class="text-meta">
-        <span>Published: {pubDateFormatted}</span>
+<BaseLayout title={title} description={description}>
+  <article>
+    <header style="margin-bottom: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">{title}</h1>
+
+      <div
+        style="font-family: var(--font-sans); color: var(--color-content-muted); font-size: 1rem; margin-bottom: 1rem;"
+      >
+        <time datetime={pubDate.toISOString()}>
+          Published: {formatDate(pubDate)}
+        </time>
         {
-          showLastUpdated && (
-            <span class="ml-4">Last updated: {lastUpdatedDateFormatted}</span>
+          lastUpdatedDate && (
+            <span style="display: block; margin-top: 0.25rem;">
+              <time datetime={lastUpdatedDate.toISOString()}>
+                Updated: {formatDate(lastUpdatedDate)}
+              </time>
+            </span>
           )
         }
       </div>
+
       {
-        frontmatter.image && frontmatter.image.url && (
-          <OptimizedImage
-            src={frontmatter.image.url}
-            alt={frontmatter.image.alt || "Blog post image"}
-            displayWidth={800}
-            sizesAttr="(max-width: 800px) 100vw, 800px"
-            enforceAspectRatio="16:9"
-            class="mt-6 mb-8 block mx-auto max-w-full rounded-lg shadow-md overflow-hidden"
-            imgClass="w-full h-full object-cover"
-          />
+        tags && tags.length > 0 && (
+          <div style="margin-bottom: 1.5rem;">
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              {tags.map((tag: string) => (
+                <li>
+                  <a
+                    href={`/tags/${tag}`}
+                    style="
+                    font-family: var(--font-sans);
+                    font-size: 0.875rem;
+                    color: var(--color-accent);
+                    text-decoration: none;
+                    background: var(--color-bg-muted);
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.25rem;
+                    border: 1px solid var(--color-accent);
+                    transition: all 0.2s ease;
+                  "
+                    onmouseover="this.style.background='var(--color-accent)'; this.style.color='var(--color-bg)'"
+                    onmouseout="this.style.background='var(--color-bg-muted)'; this.style.color='var(--color-accent)'"
+                  >
+                    #{tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        image && (
+          <figure style="margin: 2rem 0;">
+            <OptimizedImage
+              src={image.url}
+              alt={image.alt}
+              displayWidth={800}
+              sizesAttr="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+              class="blog-post-image"
+              loading="eager"
+              imgClass="blog-post-img"
+            />
+            {image.alt && (
+              <figcaption
+                style="
+              font-family: var(--font-sans);
+              font-size: 0.875rem;
+              color: var(--color-content-muted);
+              text-align: center;
+              margin-top: 0.5rem;
+              font-style: italic;
+            "
+              >
+                {image.alt}
+              </figcaption>
+            )}
+          </figure>
         )
       }
     </header>
-    <div class="prose mx-auto">
+
+    <div class="prose">
       <slot />
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .blog-post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: var(--color-shadow);
+  }
+
+  .blog-post-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Ensure content flows properly */
+  article {
+    padding: 2rem 0;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    article {
+      padding: 1rem 0;
+    }
+
+    header {
+      margin-bottom: 1.5rem !important;
+    }
+
+    figure {
+      margin: 1.5rem 0 !important;
+    }
+  }
+</style>

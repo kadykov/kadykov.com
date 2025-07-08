@@ -1,20 +1,35 @@
 ---
-layout: "../layouts/ArticleLayout.astro"
-title: Example Markdown Document with Extended Content
-description: This document serves as a test case for typography, layout, and Markdown rendering in a web environment. It includes various elements like headings, paragraphs, lists, code blocks, and tables to evaluate how well the system handles longer content and complex structures.
+title: "Markdoc Typography Test"
+pubDate: 2025-05-10
+lastUpdatedDate: 2025-05-10
+description: "A comprehensive test of typography and Markdoc features with optimized images."
+image:
+  url: "https://share.kadykov.com/2024/12/26/DSC_2884.jpg"
+  alt: "A placeholder image for the typography test post"
+tags: ["test", "astro", "markdoc", "typography"]
 ---
 
 # Heading 1 and usually it is short
 
 ## Heading 2 could be longer than the title, but still concise
 
-### Heading 3
+### Heading 3 also works well for sub-sections. But it could be quite long if needed
 
-#### Heading 4
+#### Heading 4 is useful for deeper hierarchy. It also can be quite long, but should still be readable.
 
-This is a sample paragraph meant to test the visual rendering of body text. It contains multiple sentences to observe line spacing, font legibility, and overall flow. Typography should guide the reader’s eye comfortably across the screen, with good contrast, readable font size, and pleasant rhythm.
+This is a sample paragraph meant to test the visual rendering of body text. It contains multiple sentences to observe line spacing, font legibility, and overall flow. Typography should guide the reader's eye comfortably across the screen, with good contrast, readable font size, and pleasant rhythm.
 
 Here's a second paragraph to ensure spacing between paragraphs is visually clear and aesthetically pleasing. A good typographic system handles vertical rhythm with grace, making transitions from headings to body text natural and unobtrusive. Typography is as much about space as it is about letters.
+
+## Testing Optimized Images with Markdoc
+
+Now we can include images that will be automatically optimized! Here's an example with a local image:
+
+![Astro Logo](/favicon.svg)
+
+And here's how it works with remote images (these will fall back to standard img tags):
+
+![Remote Image](https://share.kadykov.com/2024/12/26/DSC_2884.jpg)
 
 This sentence includes **bold**, _italic_, and **_bold italic_** text. It also contains `inline code` to see how monospaced fonts appear inline.
 
@@ -40,44 +55,3 @@ This sentence includes **bold**, _italic_, and **_bold italic_** text. It also c
 2. Second, use this item to test how your font handles line breaks and whether multi-line content within a numbered list maintains correct vertical spacing. This is especially important in documentation or tutorials where instructions are long.
 
 3. Lastly, this final item can include a note about accessibility: ensure the font choice, color contrast, and spacing are friendly for readers with various visual needs. Good typography is inclusive.
-
----
-
-## Code Block
-
-```python
-def describe_typography():
-    """
-    This function simulates how comments in code blocks are rendered.
-    Comments might be long, and should wrap correctly if your CSS supports it.
-    """
-    print("Code blocks should be legible and distinguishable from body text.")
-
-describe_typography()
-```
-
----
-
-## Table
-
-| Feature     | Description                                                                |
-| ----------- | -------------------------------------------------------------------------- |
-| Readability | How easy is it to read large chunks of text, especially when skimming?     |
-| Hierarchy   | Are heading levels clearly distinct through size, weight, or spacing?      |
-| Alignment   | Do elements like tables, lists, and code blocks align neatly with margins? |
-
----
-
-## Task List
-
-- [x] Draft sample Markdown with longer paragraphs and extended list items that resemble real writing.
-- [x] Ensure spacing and readability hold up across multiple Markdown element types.
-- [ ] Review in light and dark themes to evaluate contrast and emphasis.
-
-## Line Width Test
-
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-## Image Test
-
-![Sample Image](https://share.kadykov.com/2024/12/26/DSC_2884.jpg "Caption for the sample image")

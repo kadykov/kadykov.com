@@ -1,0 +1,55 @@
+---
+import OptimizedImage from "./OptimizedImage.astro"
+
+interface Props {
+  src: string
+  alt: string
+  title?: string
+}
+
+const { src, alt, title } = Astro.props
+
+// Check if it's an image that can be optimized (common image extensions)
+const imageExtensions = [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".avif",
+  ".gif",
+  ".bmp",
+  ".tiff",
+]
+const isOptimizableImage = imageExtensions.some((ext) =>
+  src.toLowerCase().endsWith(ext)
+)
+
+// Content width is responsive:
+// - < 680px: full width
+// - 680px - 1500px: 50ch (scales with font size)
+// - > 1500px: 50ch at 1.5rem = ~800px
+const CONTENT_WIDTH = 770 // Max width for optimization
+---
+
+{
+  !isOptimizableImage ? (
+    <img
+      src={src}
+      alt={alt}
+      title={title}
+      loading="lazy"
+      decoding="async"
+      style="display: block; width: 100%; height: auto; max-width: 100%;"
+    />
+  ) : (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      displayWidth={CONTENT_WIDTH}
+      sizesAttr="(max-width: 680px) calc(100vw - 48px), (max-width: 1500px) 640px, 770px"
+      loading="lazy"
+      decoding="async"
+      imgClass="article-image"
+    />
+  )
+}

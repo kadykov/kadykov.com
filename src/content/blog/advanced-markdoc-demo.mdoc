@@ -1,0 +1,56 @@
+---
+title: "Advanced Markdoc Features Demo"
+pubDate: 2025-07-08
+lastUpdatedDate: 2025-07-08
+description: "Demonstrating advanced Markdoc features including custom figure tags and optimized images."
+image:
+  url: "https://share.kadykov.com/2024/12/26/DSC_2884.jpg"
+  alt: "Demo post featured image"
+tags: ["markdoc", "demo", "images", "optimization"]
+---
+
+# Advanced Markdoc Features
+
+This post demonstrates the powerful features available with Markdoc, especially our custom image optimization.
+
+## Standard Image Syntax
+
+Using the standard Markdown image syntax (renders with basic styling):
+
+![A beautiful favicon](/favicon.svg)
+
+## Basic Figure Tag
+
+For more control over image display, we can use the custom figure tag:
+
+{% figure src="/favicon.svg" alt="Astro favicon with custom styling" caption="This is the Astro favicon rendered with our custom figure component" /%}
+
+## Optimized Figure Tag
+
+For the best performance with local images, use the optimized figure tag with explicit dimensions:
+
+{% optimizedFigure src="/favicon.svg" alt="Optimized Astro favicon" width=32 height=32 caption="This uses OptimizedImage for maximum performance - WebP/AVIF formats, multiple sizes, lazy loading" optimized=true /%}
+
+## Remote Images
+
+Remote images automatically work with all tags:
+
+![Remote image example](https://share.kadykov.com/2024/12/26/DSC_2884.jpg)
+
+{% figure src="https://share.kadykov.com/2024/12/26/DSC_2884.jpg" alt="Remote image in figure" caption="Remote images work too, though without the optimization benefits" /%}
+
+## Benefits of This Approach
+
+1. **Standard Markdown syntax** - All existing `![alt](src)` syntax continues to work
+2. **Custom figure tags** - Enhanced control with captions and styling  
+3. **Optimized images** - When you need maximum performance with explicit dimensions
+4. **Fallback support** - Remote images and missing dimensions gracefully degrade
+5. **Flexible integration** - Use your existing OptimizedImage component when needed
+
+### When to Use Each Approach
+
+- **Standard `![]()`** - For quick images where basic responsive behavior is enough
+- **`{% figure %}`** - When you want captions and better styling
+- **`{% optimizedFigure %}`** - For local images where you can provide dimensions and want maximum optimization
+
+The migration to Markdoc gives us much more flexibility while maintaining all the content we already have!

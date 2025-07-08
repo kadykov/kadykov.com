@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-// Use the modern entry.render() method
+// Use the modern entry.render() method - works for both .md and .mdoc files
 const { Content } = await entry.render()
 ---
 
