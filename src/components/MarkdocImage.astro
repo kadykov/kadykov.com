@@ -24,11 +24,9 @@ const isOptimizableImage = imageExtensions.some((ext) =>
   src.toLowerCase().endsWith(ext)
 )
 
-// Content width is responsive:
-// - < 680px: full width
-// - 680px - 1500px: 50ch (scales with font size)
-// - > 1500px: 50ch at 1.5rem = ~800px
-const CONTENT_WIDTH = 770 // Max width for optimization
+// Images should be displayed at full width for better visual impact
+// Maximum width: 1200px for optimal viewing experience
+const IMAGE_MAX_WIDTH = 1200
 ---
 
 {
@@ -45,8 +43,8 @@ const CONTENT_WIDTH = 770 // Max width for optimization
     <OptimizedImage
       src={src}
       alt={alt}
-      displayWidth={CONTENT_WIDTH}
-      sizesAttr="(max-width: 680px) calc(100vw - 48px), (max-width: 1500px) 640px, 770px"
+      displayWidth={IMAGE_MAX_WIDTH}
+      sizesAttr="(max-width: 1200px) calc(100vw - 48px), 1200px"
       loading="lazy"
       decoding="async"
       imgClass="article-image"

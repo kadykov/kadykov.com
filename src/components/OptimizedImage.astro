@@ -1,22 +1,22 @@
 ---
 // src/components/OptimizedImage.astro
-import { getImage, inferRemoteSize } from "astro:assets";
-import { widthSet as globalWidthSet } from "../utils/widthSet";
+import { getImage, inferRemoteSize } from "astro:assets"
+import { widthSet as globalWidthSet } from "../utils/widthSet"
 
 interface Props {
-  src: string;
-  alt: string;
-  width?: number; // Intrinsic width of the image, optional
-  height?: number; // Intrinsic height of the image, optional
-  displayWidth: number;
-  sizesAttr: string;
-  maxScaling?: number;
-  class?: string;
-  loading?: "lazy" | "eager";
-  decoding?: "async" | "sync" | "auto";
-  quality?: number;
-  enforceAspectRatio?: string | number;
-  imgClass?: string; // New prop for img tag classes
+  src: string
+  alt: string
+  width?: number // Intrinsic width of the image, optional
+  height?: number // Intrinsic height of the image, optional
+  displayWidth: number
+  sizesAttr: string
+  maxScaling?: number
+  class?: string
+  loading?: "lazy" | "eager"
+  decoding?: "async" | "sync" | "auto"
+  quality?: number
+  enforceAspectRatio?: string | number
+  imgClass?: string // New prop for img tag classes
 }
 
 const {
@@ -34,110 +34,129 @@ const {
   // Destructure new width and height props
   width: intrinsicWidth,
   height: intrinsicHeight,
-} = Astro.props;
+} = Astro.props
 
-let fullWidth: number;
-let fullHeight: number;
+let fullWidth: number
+let fullHeight: number
 
 if (intrinsicWidth && intrinsicHeight) {
-  fullWidth = intrinsicWidth;
-  fullHeight = intrinsicHeight;
+  fullWidth = intrinsicWidth
+  fullHeight = intrinsicHeight
 } else {
   // Fallback to inferring size if not provided
-  const inferred = await inferRemoteSize(src);
-  fullWidth = inferred.width;
-  fullHeight = inferred.height;
+  const inferred = await inferRemoteSize(src)
+  fullWidth = inferred.width
+  fullHeight = inferred.height
 }
 
-const DEFAULT_SMALLEST_IMG_WIDTH = 100;
-const ABSOLUTE_FALLBACK_IMG_WIDTH = 320;
+const DEFAULT_SMALLEST_IMG_WIDTH = 100
+const ABSOLUTE_FALLBACK_IMG_WIDTH = 320
 
 // Calculate cappedMaxWidth based on displayWidth, maxScaling, and fullWidth
-const cappedMaxWidth = Math.min(displayWidth * maxScaling, fullWidth);
+const cappedMaxWidth = Math.min(displayWidth * maxScaling, fullWidth)
 
 // Calculate currentWidthSet using the "replace largest global width with cappedMaxWidth" logic
-let currentWidthSet: number[]; // Declare currentWidthSet
+let currentWidthSet: number[] // Declare currentWidthSet
 
 if (cappedMaxWidth <= 0) {
   // Fallback if cappedMaxWidth is not positive: use displayWidth or a small default, ensuring it's <= fullWidth
-  const basicFallback = displayWidth > 0 ? displayWidth : (fullWidth > 0 ? Math.min(DEFAULT_SMALLEST_IMG_WIDTH, fullWidth) : DEFAULT_SMALLEST_IMG_WIDTH);
-  currentWidthSet = [Math.min(basicFallback, fullWidth > 0 ? fullWidth : basicFallback)];
+  const basicFallback =
+    displayWidth > 0
+      ? displayWidth
+      : fullWidth > 0
+        ? Math.min(DEFAULT_SMALLEST_IMG_WIDTH, fullWidth)
+        : DEFAULT_SMALLEST_IMG_WIDTH
+  currentWidthSet = [
+    Math.min(basicFallback, fullWidth > 0 ? fullWidth : basicFallback),
+  ]
 } else {
   // Start with global widths strictly less than cappedMaxWidth
-  currentWidthSet = globalWidthSet.filter((w: number) => w < cappedMaxWidth);
+  currentWidthSet = globalWidthSet.filter((w: number) => w < cappedMaxWidth)
 
   // Always add cappedMaxWidth itself to the set
   // This ensures cappedMaxWidth is the largest, replacing any global width just below it if they were "too close".
-  currentWidthSet.push(cappedMaxWidth);
+  currentWidthSet.push(cappedMaxWidth)
 
   // Ensure unique and sorted
-  currentWidthSet = [...new Set(currentWidthSet)].sort((a: number, b: number) => a - b);
+  currentWidthSet = [...new Set(currentWidthSet)].sort(
+    (a: number, b: number) => a - b
+  )
 }
 
 // Ensure displayWidth is included if it's smaller than the smallest value in currentWidthSet,
 // or if currentWidthSet is empty. This is important for providing a sensible base for the <img> tag.
-if (displayWidth > 0 && (currentWidthSet.length === 0 || displayWidth < currentWidthSet[0])) {
+if (
+  displayWidth > 0 &&
+  (currentWidthSet.length === 0 || displayWidth < currentWidthSet[0])
+) {
   if (!currentWidthSet.includes(displayWidth)) {
-    currentWidthSet.push(displayWidth);
-    currentWidthSet.sort((a: number, b: number) => a - b);
+    currentWidthSet.push(displayWidth)
+    currentWidthSet.sort((a: number, b: number) => a - b)
   }
 }
 
 // Final filter: ensure all widths are not greater than fullWidth.
 // (cappedMaxWidth is already <= fullWidth. displayWidth might be > fullWidth if not capped by it earlier).
-currentWidthSet = currentWidthSet.filter((w: number) => w <= fullWidth);
+currentWidthSet = currentWidthSet.filter((w: number) => w <= fullWidth)
 
 // Final safeguard: if currentWidthSet is empty for any reason, add a sensible default.
 if (currentWidthSet.length === 0) {
   // Prioritize displayWidth if positive and <= fullWidth. Otherwise, use fullWidth or a small default.
-  let fallbackWidth = (displayWidth > 0 && displayWidth <= fullWidth && fullWidth > 0) ? displayWidth : fullWidth;
-  if (fallbackWidth <= 0) { // If fullWidth was also 0 or negative
-      fallbackWidth = (displayWidth > 0 ? displayWidth : ABSOLUTE_FALLBACK_IMG_WIDTH);
+  let fallbackWidth =
+    displayWidth > 0 && displayWidth <= fullWidth && fullWidth > 0
+      ? displayWidth
+      : fullWidth
+  if (fallbackWidth <= 0) {
+    // If fullWidth was also 0 or negative
+    fallbackWidth =
+      displayWidth > 0 ? displayWidth : ABSOLUTE_FALLBACK_IMG_WIDTH
   }
   // Ensure the fallback is positive and not exceeding fullWidth (if fullWidth is positive)
-  fallbackWidth = Math.max(1, fallbackWidth); // Ensure positive
-  if (fullWidth > 0) { // Only cap by fullWidth if fullWidth itself is positive
-      fallbackWidth = Math.min(fallbackWidth, fullWidth);
-  } else if (fallbackWidth <=0 ) { // If fullWidth is not positive and fallbackWidth also became non-positive
-      fallbackWidth = ABSOLUTE_FALLBACK_IMG_WIDTH; // Absolute fallback
+  fallbackWidth = Math.max(1, fallbackWidth) // Ensure positive
+  if (fullWidth > 0) {
+    // Only cap by fullWidth if fullWidth itself is positive
+    fallbackWidth = Math.min(fallbackWidth, fullWidth)
+  } else if (fallbackWidth <= 0) {
+    // If fullWidth is not positive and fallbackWidth also became non-positive
+    fallbackWidth = ABSOLUTE_FALLBACK_IMG_WIDTH // Absolute fallback
   }
-  currentWidthSet.push(fallbackWidth);
+  currentWidthSet.push(fallbackWidth)
   // No sort needed for a single element if pushing one, but if logic changes, sort might be needed.
   // currentWidthSet.sort((a,b) => a-b);
 }
 
-
-let displayHeight: number | undefined = undefined;
+let displayHeight: number | undefined = undefined
 if (enforceAspectRatio && displayWidth) {
   const ratio =
     typeof enforceAspectRatio === "string"
       ? parseFloat(enforceAspectRatio.split(":")[0]) /
         parseFloat(enforceAspectRatio.split(":")[1])
-      : enforceAspectRatio;
+      : enforceAspectRatio
   if (ratio > 0) {
-    displayHeight = Math.round(displayWidth / ratio);
+    displayHeight = Math.round(displayWidth / ratio)
   }
 }
 
 // Determine the base width/height for the getImage service calls for AVIF/WebP.
 // This should reflect the cap we want for the generated srcset.
-let imageServiceBaseWidth: number;
+let imageServiceBaseWidth: number
 if (cappedMaxWidth > 0) {
-  imageServiceBaseWidth = cappedMaxWidth;
+  imageServiceBaseWidth = cappedMaxWidth
 } else if (displayWidth > 0) {
-  imageServiceBaseWidth = displayWidth;
+  imageServiceBaseWidth = displayWidth
 } else if (fullWidth > 0) {
-  imageServiceBaseWidth = Math.min(DEFAULT_SMALLEST_IMG_WIDTH, fullWidth); // Small default if others are not positive
+  imageServiceBaseWidth = Math.min(DEFAULT_SMALLEST_IMG_WIDTH, fullWidth) // Small default if others are not positive
 } else {
-  imageServiceBaseWidth = DEFAULT_SMALLEST_IMG_WIDTH; // Absolute fallback
+  imageServiceBaseWidth = DEFAULT_SMALLEST_IMG_WIDTH // Absolute fallback
 }
 // Ensure imageServiceBaseWidth is positive.
-imageServiceBaseWidth = Math.max(1, imageServiceBaseWidth);
+imageServiceBaseWidth = Math.max(1, imageServiceBaseWidth)
 
 // Calculate corresponding height, ensuring no division by zero if fullWidth is somehow 0.
-const imageServiceBaseHeight = (fullWidth > 0 && fullHeight > 0)
-  ? Math.round((fullHeight / fullWidth) * imageServiceBaseWidth)
-  : imageServiceBaseWidth; // Fallback to square if full dimensions are invalid
+const imageServiceBaseHeight =
+  fullWidth > 0 && fullHeight > 0
+    ? Math.round((fullHeight / fullWidth) * imageServiceBaseWidth)
+    : imageServiceBaseWidth // Fallback to square if full dimensions are invalid
 
 const avifImage = await getImage({
   src: src,
@@ -146,7 +165,7 @@ const avifImage = await getImage({
   quality: quality,
   width: imageServiceBaseWidth, // Tell getImage the context is capped
   height: imageServiceBaseHeight, // Corresponding height for the capped context
-});
+})
 
 const webpImage = await getImage({
   src: src,
@@ -155,19 +174,21 @@ const webpImage = await getImage({
   quality: quality,
   width: imageServiceBaseWidth, // Tell getImage the context is capped
   height: imageServiceBaseHeight, // Corresponding height for the capped context
-});
+})
 
 // Calculate height for the fallback image
-let heightForFallback: number;
-if (displayHeight) { // If enforceAspectRatio was used and displayHeight was calculated
-  heightForFallback = displayHeight;
-} else if (fullWidth && fullHeight && displayWidth) { // Otherwise, calculate from intrinsic aspect ratio
-  heightForFallback = Math.round((fullHeight / fullWidth) * displayWidth);
+let heightForFallback: number
+if (displayHeight) {
+  // If enforceAspectRatio was used and displayHeight was calculated
+  heightForFallback = displayHeight
+} else if (fullWidth && fullHeight && displayWidth) {
+  // Otherwise, calculate from intrinsic aspect ratio
+  heightForFallback = Math.round((fullHeight / fullWidth) * displayWidth)
 } else {
   // Fallback if dimensions couldn't be determined, though inferRemoteSize should provide them
   // Or if displayWidth is 0 for some reason.
   // This case should ideally not be hit if src is valid and displayWidth > 0.
-  heightForFallback = displayWidth; // Default to square or let it break if displayWidth is also problematic
+  heightForFallback = displayWidth // Default to square or let it break if displayWidth is also problematic
 }
 
 const fallbackImage = await getImage({
@@ -176,15 +197,33 @@ const fallbackImage = await getImage({
   height: heightForFallback,
   format: "jpeg",
   quality: quality,
-});
+})
 ---
 
 <picture
   class:list={[className]}
-  style={enforceAspectRatio ? `aspect-ratio: ${typeof enforceAspectRatio === 'string' ? enforceAspectRatio.replace(':', '/') : (fullWidth && fullHeight && fullWidth > 0 ? String(fullWidth/fullHeight) : 'auto')};` : ''}
+  style={enforceAspectRatio
+    ? `aspect-ratio: ${typeof enforceAspectRatio === "string" ? enforceAspectRatio.replace(":", "/") : fullWidth && fullHeight && fullWidth > 0 ? String(fullWidth / fullHeight) : "auto"};`
+    : ""}
 >
-  {avifImage?.srcSet && <source type="image/avif" srcset={avifImage.srcSet.attribute} sizes={sizesAttr} />}
-  {webpImage?.srcSet && <source type="image/webp" srcset={webpImage.srcSet.attribute} sizes={sizesAttr} />}
+  {
+    avifImage?.srcSet && (
+      <source
+        type="image/avif"
+        srcset={avifImage.srcSet.attribute}
+        sizes={sizesAttr}
+      />
+    )
+  }
+  {
+    webpImage?.srcSet && (
+      <source
+        type="image/webp"
+        srcset={webpImage.srcSet.attribute}
+        sizes={sizesAttr}
+      />
+    )
+  }
   <img
     src={fallbackImage.src}
     width={fallbackImage.attributes.width}
@@ -192,6 +231,6 @@ const fallbackImage = await getImage({
     alt={alt}
     loading={loading}
     decoding={decoding}
-    class:list={["block w-full h-full object-cover", imgClass]}
+    class:list={[imgClass]}
   />
 </picture>

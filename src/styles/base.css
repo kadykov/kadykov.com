@@ -297,16 +297,50 @@ article {
   color: inherit;
 }
 
-/* Article image styling */
-article img,
-.article-image {
+/* Option 1: Article images with margins, shadows, and rounded corners */
+
+/* Edge-to-edge images (no margins, no shadows, sharp corners) */
+/* Images break out of content width and extend to full viewport width */
+/* Height limited to small viewport height (100svh) for optimal mobile experience */
+
+/* Style for picture elements (from OptimizedImage component) */
+article picture {
+  display: block;
+  width: 100vw;
+  max-height: 100svh;
+  margin: 1.5rem 0;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+  overflow: hidden;
+}
+
+/* Style for img elements inside picture */
+article picture img {
   display: block;
   width: 100%;
+  height: 100%;
+  max-height: 100svh;
+  object-fit: contain;
+  margin: 0;
+}
+
+/* Style for standalone img elements (not inside picture) */
+/* This handles non-optimizable images from MarkdocImage component */
+article img:not(picture img),
+.article-image {
+  display: block;
+  width: 100vw;
+  max-height: 100svh;
   height: auto;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
   margin: 1.5rem 0;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Full-width layout for header and footer */
