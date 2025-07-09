@@ -8,52 +8,14 @@ interface Props {
 }
 
 const { src, alt, title } = Astro.props
-
-// Check if it's an image that can be optimized (common image extensions)
-const imageExtensions = [
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".webp",
-  ".avif",
-  ".gif",
-  ".bmp",
-  ".tiff",
-]
-const isOptimizableImage = imageExtensions.some((ext) =>
-  src.toLowerCase().endsWith(ext)
-)
-
-// Images should be displayed edge-to-edge for maximum visual impact
-// OptimizedImage will auto-generate optimal display width and sizes
 ---
 
 {
   title ? (
     <figure>
-      {!isOptimizableImage ? (
-        <img
-          src={src}
-          alt={alt}
-          title={title}
-          loading="lazy"
-          decoding="async"
-          style="display: block; width: 100%; height: auto; max-width: 100%;"
-        />
-      ) : (
-        <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
-      )}
+      <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
       <figcaption>{title}</figcaption>
     </figure>
-  ) : !isOptimizableImage ? (
-    <img
-      src={src}
-      alt={alt}
-      title={title}
-      loading="lazy"
-      decoding="async"
-      style="display: block; width: 100%; height: auto; max-width: 100%;"
-    />
   ) : (
     <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
   )
