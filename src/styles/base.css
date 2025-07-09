@@ -382,17 +382,7 @@ footer {
   margin-left: -50vw;
   margin-right: -50vw;
   max-width: 100vw;
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-}
-
-/* Add responsive padding to limit content width */
-@media (min-width: 1200px) {
-  header,
-  footer {
-    padding-left: calc((100vw - 1200px) / 2 + 1.5em);
-    padding-right: calc((100vw - 1200px) / 2 + 1.5em);
-  }
+  padding: 0 calc(max(1.5em, (100vw - 1200px) / 2));
 }
 
 .prose a {
