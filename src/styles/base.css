@@ -303,9 +303,8 @@ article {
 /* Images break out of content width and extend to full viewport width */
 /* Height limited to small viewport height (100svh) for optimal mobile experience */
 
-/* Style for picture and figure elements (from OptimizedImage component) */
-article picture,
-article figure {
+/* Style for picture elements (from OptimizedImage component) */
+article picture {
   display: block;
   width: 100vw;
   max-height: 100svh;
@@ -316,6 +315,25 @@ article figure {
   transform: translateX(-50%);
 
   overflow: hidden;
+}
+
+/* Style for figure elements (contains picture + caption) */
+article figure {
+  display: block;
+  width: 100vw;
+  margin: 1.5rem 0;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Picture inside figure should not have its own margins */
+article figure picture {
+  margin: 0;
+  left: 0;
+  transform: none;
+  position: static;
 }
 
 /* Style for img elements inside picture and figure */
@@ -350,6 +368,8 @@ article figcaption {
   font-size: 80%;
   color: var(--color-content-muted);
   text-align: center;
+  margin: 1.5rem auto;
+  max-width: 70ch;
 }
 
 /* Full-width layout for header and footer */
