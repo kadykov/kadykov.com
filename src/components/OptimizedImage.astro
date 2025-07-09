@@ -9,7 +9,7 @@ interface Props {
   width?: number // Intrinsic width of the image, optional
   height?: number // Intrinsic height of the image, optional
   displayWidth: number
-  sizesAttr: string
+  sizesAttr?: string // Made optional - will auto-generate if not provided
   maxScaling?: number
   class?: string
   loading?: "lazy" | "eager"
@@ -45,6 +45,23 @@ if (intrinsicWidth && intrinsicHeight) {
   const inferred = await inferRemoteSize(src)
   fullWidth = inferred.width
   fullHeight = inferred.height
+}
+
+// Auto-generate sizes attribute if not provided
+let finalSizesAttr: string
+if (sizesAttr) {
+  finalSizesAttr = sizesAttr
+} else {
+  // Calculate optimal sizes based on aspect ratio and edge-to-edge display
+  const aspectRatio = Math.round((fullWidth / fullHeight) * 1000) / 1000 // Round to 3 decimal places
+
+  // For edge-to-edge images constrained by both width (100vw) and height (100svh)
+  // We need to determine which constraint is more restrictive
+  const heightConstrainedWidth = `calc(100svh * ${aspectRatio})`
+
+  // Generate sizes that considers both width and height constraints
+  // The image will take the minimum of viewport width and height-constrained width
+  finalSizesAttr = `min(100vw, ${heightConstrainedWidth})`
 }
 
 const DEFAULT_SMALLEST_IMG_WIDTH = 100
@@ -209,7 +226,7 @@ const fallbackImage = await getImage({
       <source
         type="image/avif"
         srcset={avifImage.srcSet.attribute}
-        sizes={sizesAttr}
+        sizes={finalSizesAttr}
       />
     )
   }
@@ -218,7 +235,7 @@ const fallbackImage = await getImage({
       <source
         type="image/webp"
         srcset={webpImage.srcSet.attribute}
-        sizes={sizesAttr}
+        sizes={finalSizesAttr}
       />
     )
   }

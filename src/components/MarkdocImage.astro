@@ -24,9 +24,9 @@ const isOptimizableImage = imageExtensions.some((ext) =>
   src.toLowerCase().endsWith(ext)
 )
 
-// Images should be displayed at full width for better visual impact
-// Maximum width: 1200px for optimal viewing experience
-const IMAGE_MAX_WIDTH = 1200
+// Images should be displayed edge-to-edge for maximum visual impact
+// No width constraints - let OptimizedImage auto-generate optimal sizes
+const IMAGE_DISPLAY_WIDTH = 1920 // High enough to generate good srcset options
 ---
 
 {
@@ -43,8 +43,7 @@ const IMAGE_MAX_WIDTH = 1200
     <OptimizedImage
       src={src}
       alt={alt}
-      displayWidth={IMAGE_MAX_WIDTH}
-      sizesAttr="(max-width: 1200px) calc(100vw - 48px), 1200px"
+      displayWidth={IMAGE_DISPLAY_WIDTH}
       loading="lazy"
       decoding="async"
     />
