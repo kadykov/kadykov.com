@@ -303,8 +303,9 @@ article {
 /* Images break out of content width and extend to full viewport width */
 /* Height limited to small viewport height (100svh) for optimal mobile experience */
 
-/* Style for picture elements (from OptimizedImage component) */
-article picture {
+/* Style for picture and figure elements (from OptimizedImage component) */
+article picture,
+article figure {
   display: block;
   width: 100vw;
   max-height: 100svh;
@@ -317,8 +318,9 @@ article picture {
   overflow: hidden;
 }
 
-/* Style for img elements inside picture */
-article picture img {
+/* Style for img elements inside picture and figure */
+article picture img,
+article figure img {
   display: block;
   width: 100%;
   height: 100%;
@@ -340,6 +342,14 @@ article img:not(picture img) {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Figure captions */
+article figcaption {
+  font-family: var(--font-sans);
+  font-size: 80%;
+  color: var(--color-content-muted);
+  text-align: center;
 }
 
 /* Full-width layout for header and footer */
