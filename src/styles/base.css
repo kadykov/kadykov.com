@@ -329,8 +329,7 @@ article picture img {
 
 /* Style for standalone img elements (not inside picture) */
 /* This handles non-optimizable images from MarkdocImage component */
-article img:not(picture img),
-.article-image {
+article img:not(picture img) {
   display: block;
   width: 100vw;
   max-height: 100svh;

@@ -16,7 +16,6 @@ interface Props {
   decoding?: "async" | "sync" | "auto"
   quality?: number
   enforceAspectRatio?: string | number
-  imgClass?: string // New prop for img tag classes
 }
 
 const {
@@ -30,7 +29,6 @@ const {
   decoding = "async",
   quality,
   enforceAspectRatio,
-  imgClass, // Get the new prop
   // Destructure new width and height props
   width: intrinsicWidth,
   height: intrinsicHeight,
@@ -231,6 +229,5 @@ const fallbackImage = await getImage({
     alt={alt}
     loading={loading}
     decoding={decoding}
-    class:list={[imgClass]}
   />
 </picture>
