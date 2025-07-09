@@ -25,8 +25,7 @@ const isOptimizableImage = imageExtensions.some((ext) =>
 )
 
 // Images should be displayed edge-to-edge for maximum visual impact
-// No width constraints - let OptimizedImage auto-generate optimal sizes
-const IMAGE_DISPLAY_WIDTH = 1920 // High enough to generate good srcset options
+// OptimizedImage will auto-generate optimal display width and sizes
 ---
 
 {
@@ -40,12 +39,6 @@ const IMAGE_DISPLAY_WIDTH = 1920 // High enough to generate good srcset options
       style="display: block; width: 100%; height: auto; max-width: 100%;"
     />
   ) : (
-    <OptimizedImage
-      src={src}
-      alt={alt}
-      displayWidth={IMAGE_DISPLAY_WIDTH}
-      loading="lazy"
-      decoding="async"
-    />
+    <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
   )
 }
