@@ -7,6 +7,7 @@ import Header from "../components/Header.astro"
 const {
   title = "kadykov.com",
   description = "A photo gallery and blog by Kadykov.",
+  hasHero = false,
 } = Astro.props
 import "../styles/base.css"
 ---
@@ -67,6 +68,11 @@ import "../styles/base.css"
         z-index: 10;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
+      .layout-navbar.has-hero {
+        transition:
+          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
       main {
         min-height: 60vh;
         width: 100%;
@@ -79,7 +85,7 @@ import "../styles/base.css"
   <body>
     <Drawer>
       <div slot="content">
-        <div id="navbar" class="layout-navbar">
+        <div id="navbar" class={`layout-navbar ${hasHero ? "has-hero" : ""}`}>
           <Header />
         </div>
         <main>
@@ -88,7 +94,7 @@ import "../styles/base.css"
         <Footer />
       </div>
     </Drawer>
-    <script>
+    <script define:vars={{ hasHero }}>
       const scroller = document.querySelector(".drawer-root")
       const navbar = document.getElementById("navbar")
 
@@ -103,6 +109,15 @@ import "../styles/base.css"
             window.requestAnimationFrame(() => {
               let currentScrollPos = scroller.scrollTop
               let scrollDifference = Math.abs(currentScrollPos - prevScrollpos)
+
+              // Only manage shadow for hero layouts
+              if (hasHero) {
+                if (currentScrollPos > 200) {
+                  navbar.classList.add("show-shadow")
+                } else {
+                  navbar.classList.remove("show-shadow")
+                }
+              }
 
               // Only react if scrolled more than threshold
               if (scrollDifference > scrollThreshold) {

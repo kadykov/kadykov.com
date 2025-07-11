@@ -30,6 +30,17 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     padding-bottom: 0.5em;
   }
 
+  /* Hide shadow initially for hero layouts, show on scroll */
+  .layout-navbar.has-hero header {
+    box-shadow: none;
+    background-color: var(--color-bg-muted);
+  }
+
+  .layout-navbar.has-hero.show-shadow header {
+    box-shadow: var(--color-shadow);
+    background-color: var(--color-bg);
+  }
+
   header nav {
     display: flex;
     align-items: center;

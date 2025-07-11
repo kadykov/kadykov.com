@@ -1,0 +1,32 @@
+---
+import HeroLayout from "./HeroLayout.astro"
+
+interface Props {
+  title?: string
+  description?: string
+  pageTitle?: string
+  frontmatter?: {
+    title: string
+    description: string
+    pageTitle?: string
+  }
+}
+
+const { title, description, pageTitle, frontmatter } = Astro.props
+
+// Handle both direct props and frontmatter
+const finalTitle = title || frontmatter?.title || "Untitled"
+const finalDescription =
+  description || frontmatter?.description || "No description"
+const finalPageTitle = pageTitle || frontmatter?.pageTitle
+---
+
+<HeroLayout
+  title={finalTitle}
+  description={finalDescription}
+  pageTitle={finalPageTitle}
+>
+  <article>
+    <slot />
+  </article>
+</HeroLayout>

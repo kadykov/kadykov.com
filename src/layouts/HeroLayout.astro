@@ -1,0 +1,54 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+
+interface Props {
+  title: string
+  description: string
+  pageTitle?: string
+}
+
+const { title, description, pageTitle } = Astro.props
+const finalPageTitle = pageTitle || `${title} | kadykov.com`
+---
+
+<BaseLayout title={finalPageTitle} description={description} hasHero={true}>
+  <hgroup>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </hgroup>
+  <slot />
+</BaseLayout>
+
+<style>
+  hgroup {
+    background-color: var(--color-bg-muted);
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    margin-top: calc(-1 * var(--header-height, 80px));
+    padding-top: calc(2rem + var(--header-height, 80px));
+
+    /* Full-width background */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    max-width: 100vw;
+  }
+
+  hgroup h1 {
+    margin-bottom: 1rem;
+    max-width: 30ch;
+  }
+
+  hgroup p {
+    margin: 0;
+    max-width: 60ch;
+  }
+</style>
