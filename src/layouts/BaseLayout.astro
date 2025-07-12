@@ -103,6 +103,9 @@ import "../styles/base.css"
         let scrollThreshold = 60 // Only hide after scrolling 60px
         let isScrolling = false
 
+        // Calculate 80% of viewport height for shadow trigger
+        const shadowTriggerHeight = window.innerHeight * 0.8
+
         // Throttle scroll events for better performance
         const throttledScroll = () => {
           if (!isScrolling) {
@@ -112,7 +115,7 @@ import "../styles/base.css"
 
               // Only manage shadow for hero layouts
               if (hasHero) {
-                if (currentScrollPos > 200) {
+                if (currentScrollPos > shadowTriggerHeight) {
                   navbar.classList.add("show-shadow")
                 } else {
                   navbar.classList.remove("show-shadow")
