@@ -64,6 +64,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 /* Set serif as the default font and base font size for body text */
