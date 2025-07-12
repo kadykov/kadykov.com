@@ -1,12 +1,10 @@
 ---
 import { Icon } from "astro-icon/components"
+import Dropdown from "./Dropdown.astro"
+import Navigation from "./Navigation.astro"
 ---
 
-<button
-  type="button"
-  class="mobile-only"
-  aria-label="Open navigation menu"
-  onclick="document.getElementById('navbar-drawer').checked = true"
->
-  <Icon name="ri:menu-line" />
-</button>
+<Dropdown class="mobile-only">
+  <Icon name="ri:menu-line" slot="trigger" />
+  <Navigation />
+</Dropdown>

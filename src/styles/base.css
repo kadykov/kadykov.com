@@ -90,7 +90,9 @@ body {
 /* Shared shape and padding for interactive elements */
 a,
 .btn,
-button {
+button,
+header details ul a,
+header details summary {
   text-decoration: none;
   color: inherit;
   padding: 0.5em;
@@ -111,7 +113,8 @@ a {
 a:hover,
 .btn:hover,
 button:hover,
-header details ul a:hover {
+header details ul a:hover,
+header details summary:hover {
   color: var(--color-content);
   background: var(--color-hover);
   box-shadow: none;
@@ -121,7 +124,8 @@ header details ul a:hover {
 a:active,
 .btn:active,
 button:active,
-header details ul a:active {
+header details ul a:active,
+header details summary:active {
   color: var(--color-bg);
   background: var(--color-accent);
   transform: scale(0.97);
@@ -296,8 +300,6 @@ article {
   padding: 2.5rem 0;
   color: inherit;
 }
-
-/* Option 1: Article images with margins, shadows, and rounded corners */
 
 /* Edge-to-edge images (no margins, no shadows, sharp corners) */
 /* Images break out of content width and extend to full viewport width */

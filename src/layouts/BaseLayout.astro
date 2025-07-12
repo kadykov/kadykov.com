@@ -1,6 +1,5 @@
 ---
 import Footer from "../components/Footer.astro"
-import Drawer from "../components/Drawer.astro"
 import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
 import Header from "../components/Header.astro"
@@ -83,23 +82,18 @@ import "../styles/base.css"
     </style>
   </head>
   <body>
-    <Drawer>
-      <div slot="content">
-        <div id="navbar" class={`layout-navbar ${hasHero ? "has-hero" : ""}`}>
-          <Header />
-        </div>
-        <main>
-          <slot />
-        </main>
-        <Footer />
-      </div>
-    </Drawer>
-    <script define:vars={{ hasHero }}>
-      const scroller = document.querySelector(".drawer-root")
+    <div id="navbar" class={`layout-navbar ${hasHero ? "has-hero" : ""}`}>
+      <Header />
+    </div>
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline define:vars={{ hasHero }}>
       const navbar = document.getElementById("navbar")
 
-      if (scroller && navbar) {
-        let prevScrollpos = scroller.scrollTop
+      if (navbar) {
+        let prevScrollpos = window.scrollY
         let scrollThreshold = 60 // Only hide after scrolling 60px
         let isScrolling = false
 
@@ -110,7 +104,7 @@ import "../styles/base.css"
         const throttledScroll = () => {
           if (!isScrolling) {
             window.requestAnimationFrame(() => {
-              let currentScrollPos = scroller.scrollTop
+              let currentScrollPos = window.scrollY
               let scrollDifference = Math.abs(currentScrollPos - prevScrollpos)
 
               // Only manage shadow for hero layouts
@@ -140,7 +134,7 @@ import "../styles/base.css"
           isScrolling = true
         }
 
-        scroller.addEventListener("scroll", throttledScroll)
+        window.addEventListener("scroll", throttledScroll)
       }
     </script>
   </body>

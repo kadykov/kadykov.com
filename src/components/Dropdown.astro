@@ -1,0 +1,114 @@
+---
+interface Props {
+  class?: string
+  triggerLabel?: string
+}
+
+const { class: className = "", triggerLabel } = Astro.props
+---
+
+<details class={className}>
+  <summary>
+    <slot name="trigger" />
+    {triggerLabel && <span>{triggerLabel}</span>}
+  </summary>
+  <ul>
+    <slot />
+  </ul>
+</details>
+
+<script is:inline>
+  // Handle click outside to close dropdown
+  document.addEventListener("DOMContentLoaded", () => {
+    const dropdowns = document.querySelectorAll("header details")
+
+    const handleDocumentClick = (event) => {
+      dropdowns.forEach((dropdown) => {
+        if (!dropdown.contains(event.target)) {
+          dropdown.removeAttribute("open")
+        }
+      })
+    }
+
+    dropdowns.forEach((dropdown) => {
+      dropdown.addEventListener("toggle", () => {
+        if (dropdown.hasAttribute("open")) {
+          document.addEventListener("click", handleDocumentClick)
+        } else {
+          document.removeEventListener("click", handleDocumentClick)
+        }
+      })
+    })
+  })
+</script>
+
+<style is:global>
+  /* Dropdown positioning and list styles */
+  header details {
+    position: relative;
+  }
+
+  header details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  header details summary::marker {
+    display: none;
+  }
+
+  header details ul {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 12rem;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    background: var(--color-bg-muted);
+    border-radius: 0.5rem;
+    box-shadow: var(--color-shadow);
+    list-style: none;
+  }
+
+  header details[open] ul {
+    display: block;
+    animation: dropdownIn 0.15s ease-out;
+  }
+
+  @keyframes dropdownIn {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  header details ul li {
+    margin: 0;
+    padding: 0;
+  }
+
+  header details ul a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    margin: 0;
+  }
+
+  header details ul svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  header details ul hr {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid var(--color-content-muted);
+  }
+</style>
