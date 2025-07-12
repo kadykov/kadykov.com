@@ -252,6 +252,7 @@ h4 {
 h4,
 button,
 header nav ul li a,
+header details summary,
 .btn {
   font-size: 1.25rem;
   font-weight: 550;
@@ -261,6 +262,7 @@ header nav ul li a,
   h4,
   button,
   header nav ul li a,
+  header details summary,
   .btn {
     font-size: 1.5rem;
     font-weight: 500;
@@ -271,6 +273,7 @@ header nav ul li a,
   h4,
   button,
   header nav ul li a,
+  header details summary,
   .btn {
     font-size: 1.875rem;
     font-weight: 450;
