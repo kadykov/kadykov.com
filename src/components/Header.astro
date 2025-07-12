@@ -57,6 +57,11 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     gap: 0.5em;
   }
 
+  /* Hide icons in main navigation on large screens */
+  header nav ul svg {
+    display: none;
+  }
+
   header button,
   header details summary {
     padding: 0.5em;
