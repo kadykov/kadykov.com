@@ -6,7 +6,6 @@ import Header from "../components/Header.astro"
 const {
   title = "kadykov.com",
   description = "A photo gallery and blog by Kadykov.",
-  hasHero = false,
 } = Astro.props
 import "../styles/base.css"
 ---
@@ -61,17 +60,6 @@ import "../styles/base.css"
       @view-transition {
         navigation: auto;
       }
-      .layout-navbar {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .layout-navbar.has-hero {
-        transition:
-          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
       main {
         min-height: 60vh;
         width: 100%;
@@ -82,60 +70,10 @@ import "../styles/base.css"
     </style>
   </head>
   <body>
-    <div id="navbar" class={`layout-navbar ${hasHero ? "has-hero" : ""}`}>
-      <Header />
-    </div>
+    <Header />
     <main>
       <slot />
     </main>
     <Footer />
-    <script is:inline define:vars={{ hasHero }}>
-      const navbar = document.getElementById("navbar")
-
-      if (navbar) {
-        let prevScrollpos = window.scrollY
-        let scrollThreshold = 60 // Only hide after scrolling 60px
-        let isScrolling = false
-
-        // Calculate 80% of viewport height for shadow trigger
-        const shadowTriggerHeight = window.innerHeight * 0.8
-
-        // Throttle scroll events for better performance
-        const throttledScroll = () => {
-          if (!isScrolling) {
-            window.requestAnimationFrame(() => {
-              let currentScrollPos = window.scrollY
-              let scrollDifference = Math.abs(currentScrollPos - prevScrollpos)
-
-              // Only manage shadow for hero layouts
-              if (hasHero) {
-                if (currentScrollPos > shadowTriggerHeight) {
-                  navbar.classList.add("show-shadow")
-                } else {
-                  navbar.classList.remove("show-shadow")
-                }
-              }
-
-              // Only react if scrolled more than threshold
-              if (scrollDifference > scrollThreshold) {
-                if (prevScrollpos > currentScrollPos) {
-                  // Scrolling up - show navbar
-                  navbar.style.transform = "translateY(0)"
-                } else if (currentScrollPos > 100) {
-                  // Scrolling down and past initial area - hide navbar
-                  navbar.style.transform = "translateY(-100%)"
-                }
-                prevScrollpos = currentScrollPos
-              }
-
-              isScrolling = false
-            })
-          }
-          isScrolling = true
-        }
-
-        window.addEventListener("scroll", throttledScroll)
-      }
-    </script>
   </body>
 </html>

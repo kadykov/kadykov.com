@@ -11,7 +11,7 @@ const { title, description, pageTitle } = Astro.props
 const finalPageTitle = pageTitle || `${title} | kadykov.com`
 ---
 
-<BaseLayout title={finalPageTitle} description={description} hasHero={true}>
+<BaseLayout title={finalPageTitle} description={description}>
   <hgroup>
     <h1>{title}</h1>
     <p>{description}</p>
@@ -19,7 +19,7 @@ const finalPageTitle = pageTitle || `${title} | kadykov.com`
   <slot />
 </BaseLayout>
 
-<style>
+<style is:global>
   hgroup {
     background-color: var(--color-bg-muted);
     min-height: 80vh;
@@ -50,5 +50,9 @@ const finalPageTitle = pageTitle || `${title} | kadykov.com`
   hgroup p {
     margin: 0;
     max-width: 60ch;
+  }
+  /* Remove shadow when header is immediately followed by hgroup */
+  header:has(+ main hgroup) {
+    box-shadow: none;
   }
 </style>
