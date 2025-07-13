@@ -65,28 +65,19 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  /* font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
+  font-size: clamp(16px, 0.526vw + 13.89px, 24px);
 }
 
 /* Set serif as the default font and base font size for body text */
 body {
   font-family: var(--font-serif);
-  font-size: 1.125rem;
   line-height: 1.75;
   color: var(--color-content);
   background-color: var(--color-bg);
   transition:
     background-color 0.15s ease-in-out,
     color 0.15s ease-in-out;
-}
-@media (min-width: 680px) {
-  body {
-    font-size: 1.25rem;
-  }
-}
-@media (min-width: 1500px) {
-  body {
-    font-size: 1.5rem;
-  }
 }
 /* Shared shape and padding for interactive elements */
 a,
@@ -177,76 +168,32 @@ nav ul li a,
 
 /* h1 styles */
 h1 {
-  font-size: 4.5rem;
+  font-size: 4rem;
+  font-weight: 250;
   line-height: 1;
-  font-weight: 300;
   margin-block: 0.3em;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  h1 {
-    font-size: 6rem;
-    font-weight: 250;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  h1 {
-    font-size: 8rem;
-    font-weight: 200;
-  }
 }
 
 /* h2 styles */
 h2 {
-  font-size: 3rem;
+  font-size: 2.7rem;
   line-height: 1.1;
-  font-weight: 350;
+  font-weight: 320;
   margin-block: 0.5em;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  h2 {
-    font-size: 3.75rem;
-    line-height: 1;
-    font-weight: 325;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  h2 {
-    font-size: 4.5rem;
-    font-weight: 300;
-  }
 }
 
 /* h3 styles */
 h3 {
-  font-size: 1.875rem;
+  font-size: 1.8rem;
   line-height: 1.2;
-  font-weight: 400;
+  font-weight: 370;
   margin-block: 0.7em;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  h3 {
-    font-size: 2.25rem;
-    line-height: 1.1;
-    font-weight: 375;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  h3 {
-    font-size: 3rem;
-    font-weight: 350;
-  }
 }
 
 /* h4 styles */
 h4 {
   margin-block: 0.9em;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 /* h4 style is shared with buttons and nav links */
@@ -255,30 +202,8 @@ button,
 header nav ul li a,
 header details summary,
 .btn {
-  font-size: 1.25rem;
-  font-weight: 550;
-}
-@media (min-width: 680px) {
-  /* var(--breakpoint-sm) */
-  h4,
-  button,
-  header nav ul li a,
-  header details summary,
-  .btn {
-    font-size: 1.5rem;
-    font-weight: 500;
-  }
-}
-@media (min-width: 1500px) {
-  /* var(--breakpoint-xl) */
-  h4,
-  button,
-  header nav ul li a,
-  header details summary,
-  .btn {
-    font-size: 1.875rem;
-    font-weight: 450;
-  }
+  font-size: 1.3rem;
+  font-weight: 420;
 }
 
 blockquote {
@@ -299,7 +224,7 @@ footer,
 /* Content containers - prose and article semantic styling */
 .prose,
 article {
-  max-width: 50ch;
+  max-width: 48ch;
   margin: 0 auto;
   padding: 2.5rem 0;
   color: inherit;
