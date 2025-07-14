@@ -2,24 +2,18 @@
 import { Icon } from "astro-icon/components"
 
 interface Props {
-  role?: string
   icon: string
   "aria-label"?: string
 }
 
-const { role, icon, "aria-label": ariaLabel } = Astro.props
+const { icon, "aria-label": ariaLabel } = Astro.props
 ---
 
-<details
-  {...role && { role: role as any }}
-  {...ariaLabel && { "aria-label": ariaLabel }}
->
+<details {...ariaLabel && { "aria-label": ariaLabel }}>
   <summary>
     <Icon name={icon} />
   </summary>
-  <ul>
-    <slot />
-  </ul>
+  <slot />
 </details>
 
 <script is:inline>

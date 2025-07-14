@@ -12,61 +12,63 @@ const { shareUrl, shareTitle }: Props = Astro.props
 ---
 
 <Dropdown icon="ri:share-line" aria-label="Share this page">
-  <li>
-    <a
-      class="share-link-facebook"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      ><Icon name="ri:facebook-line" /><span>Facebook</span></a
-    >
-  </li>
-  <li>
-    <a
-      class="share-link-twitter"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      ><Icon name="ri:twitter-x-line" /><span>Twitter/X</span></a
-    >
-  </li>
-  <li>
-    <a
-      class="share-link-linkedin"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      ><Icon name="ri:linkedin-line" /><span>LinkedIn</span></a
-    >
-  </li>
-  <li>
-    <a
-      class="share-link-telegram"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      ><Icon name="ri:telegram-line" /><span>Telegram</span></a
-    >
-  </li>
-  <li>
-    <a
-      class="share-link-whatsapp"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      ><Icon name="ri:whatsapp-line" /><span>WhatsApp</span></a
-    >
-  </li>
-  <li>
-    <a class="share-link-email" href="#"
-      ><Icon name="ri:mail-line" /><span>Email</span></a
-    >
-  </li>
-  <li>
-    <a class="share-link-copy" href="#"
-      ><Icon name="ri:link" /><span>Copy Link</span></a
-    >
-  </li>
+  <ul>
+    <li>
+      <a
+        class="share-link-facebook"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:facebook-line" /><span>Facebook</span></a
+      >
+    </li>
+    <li>
+      <a
+        class="share-link-twitter"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:twitter-x-line" /><span>Twitter/X</span></a
+      >
+    </li>
+    <li>
+      <a
+        class="share-link-linkedin"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:linkedin-line" /><span>LinkedIn</span></a
+      >
+    </li>
+    <li>
+      <a
+        class="share-link-telegram"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:telegram-line" /><span>Telegram</span></a
+      >
+    </li>
+    <li>
+      <a
+        class="share-link-whatsapp"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><Icon name="ri:whatsapp-line" /><span>WhatsApp</span></a
+      >
+    </li>
+    <li>
+      <a class="share-link-email" href="#"
+        ><Icon name="ri:mail-line" /><span>Email</span></a
+      >
+    </li>
+    <li>
+      <a class="share-link-copy" href="#"
+        ><Icon name="ri:link" /><span>Copy Link</span></a
+      >
+    </li>
+  </ul>
 </Dropdown>
 
 <script

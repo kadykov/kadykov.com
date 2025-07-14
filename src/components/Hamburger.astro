@@ -3,10 +3,10 @@ import Dropdown from "./Dropdown.astro"
 import Navigation from "./Navigation.astro"
 ---
 
-<Dropdown
-  role="navigation"
-  icon="ri:menu-line"
-  aria-label="Main navigation menu"
->
-  <Navigation />
+<Dropdown icon="ri:menu-line" aria-label="Main navigation menu">
+  <nav>
+    <ul>
+      <Navigation />
+    </ul>
+  </nav>
 </Dropdown>
