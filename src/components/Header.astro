@@ -70,7 +70,7 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     color: var(--color-content);
   }
 
-  .mobile-only {
+  details[role="navigation"] {
     display: none;
   }
 
@@ -78,7 +78,7 @@ import StandaloneShareButton from "./StandaloneShareButton.astro"
     header nav ul {
       display: none;
     }
-    .mobile-only {
+    details[role="navigation"] {
       display: block;
     }
   }

@@ -11,8 +11,7 @@ interface Props {
 const { shareUrl, shareTitle }: Props = Astro.props
 ---
 
-<Dropdown>
-  <Icon name="ri:share-line" slot="trigger" />
+<Dropdown icon="ri:share-line" aria-label="Share this page">
   <li>
     <a
       class="share-link-facebook"

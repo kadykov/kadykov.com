@@ -1,16 +1,21 @@
 ---
+import { Icon } from "astro-icon/components"
+
 interface Props {
-  class?: string
-  triggerLabel?: string
+  role?: string
+  icon: string
+  "aria-label"?: string
 }
 
-const { class: className = "", triggerLabel } = Astro.props
+const { role, icon, "aria-label": ariaLabel } = Astro.props
 ---
 
-<details class={className}>
+<details
+  {...role && { role: role as any }}
+  {...ariaLabel && { "aria-label": ariaLabel }}
+>
   <summary>
-    <slot name="trigger" />
-    {triggerLabel && <span>{triggerLabel}</span>}
+    <Icon name={icon} />
   </summary>
   <ul>
     <slot />
