@@ -3,13 +3,13 @@ import { Icon } from "astro-icon/components"
 
 interface Props {
   icon: string
-  "aria-label"?: string
+  "aria-label": string
 }
 
 const { icon, "aria-label": ariaLabel } = Astro.props
 ---
 
-<details {...ariaLabel && { "aria-label": ariaLabel }}>
+<details aria-label={ariaLabel}>
   <summary>
     <Icon name={icon} />
   </summary>
