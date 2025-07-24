@@ -1,21 +1,122 @@
 @import "modern-normalize/modern-normalize.css";
 
-/* Dark mode support */
+/* HSL-Based Calculated Color System */
 :root {
   --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
   --font-serif: "Bitter Variable", Georgia, serif;
-  --color-bg: #fff;
-  --color-bg-muted: #f7f7f7;
-  --color-content: #181818;
-  --color-content-muted: #494949;
-  --color-accent: #3b82f6;
-  --color-hover: rgba(59, 130, 246, 0.1);
-  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
 
+  /* Base HSL Values - Define only these core colors */
+  --surface-h: 0;
+  --surface-s: 0%;
+  --surface-l: 100%;
+
+  --primary-h: 220;
+  --primary-s: 91%;
+  --primary-l: 58%;
+
+  --accent-h: 14;
+  --accent-s: 100%;
+  --accent-l: 59%;
+
+  /* Calculated Surface Colors - Material Design hierarchy */
+  --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
+  --color-surface-container-lowest: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(var(--surface-l) - 1%)
+  );
+  --color-surface-container-low: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(var(--surface-l) - 3%)
+  );
+  --color-surface-container: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(var(--surface-l) - 6%)
+  );
+  --color-surface-container-high: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(var(--surface-l) - 9%)
+  );
+  --color-surface-container-highest: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(var(--surface-l) - 12%)
+  );
+
+  /* Calculated Content Colors (inverted lightness for contrast) */
+  --color-on-surface: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(100% - var(--surface-l))
+  );
+  --color-on-surface-variant: hsl(
+    var(--surface-h),
+    var(--surface-s),
+    calc(100% - var(--surface-l) + 30%)
+  );
+
+  /* Calculated Primary Colors */
+  --color-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+  --color-primary-container: hsl(
+    var(--primary-h),
+    calc(var(--primary-s) * 0.3),
+    calc(var(--primary-l) + 35%)
+  );
+  --color-on-primary: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(100% - var(--primary-l))
+  );
+  --color-on-primary-container: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) * 0.4)
+  );
+
+  /* Calculated Accent Colors */
+  --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-container: hsl(
+    var(--accent-h),
+    calc(var(--accent-s) * 0.2),
+    calc(var(--accent-l) + 35%)
+  );
+  --color-on-accent: hsl(
+    var(--accent-h),
+    var(--accent-s),
+    calc(100% - var(--accent-l))
+  );
+  --color-on-accent-container: hsl(
+    var(--accent-h),
+    var(--accent-s),
+    calc(var(--accent-l) * 0.4)
+  );
+
+  /* Calculated Interactive States */
+  --color-hover: hsla(
+    var(--primary-h),
+    var(--primary-s),
+    var(--primary-l),
+    0.08
+  );
+  --color-active: hsla(
+    var(--primary-h),
+    var(--primary-s),
+    var(--primary-l),
+    0.12
+  );
+
+  /* Calculated Shadows */
+  --color-shadow: 0 2px 8px 0
+    hsla(var(--surface-h), var(--surface-s), calc(100% - var(--surface-l)), 0.1);
+
+  /* Layout */
   --max-w-body: 40rem;
   --max-w-body-xl: 48rem;
 
-  /* Define breakpoint variables for documentation and DRYness */
+  /* Breakpoints */
   --breakpoint-sm: 680px;
   --breakpoint-md: 900px;
   --breakpoint-lg: 1200px;
@@ -23,39 +124,63 @@
   --breakpoint-2xl: 1800px;
 }
 
-/* Dark mode colors for auto theme (prefers-color-scheme) */
+/* Dark Mode - Only change base HSL values */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0f0f0f;
-    --color-bg-muted: #1a1a1a;
-    --color-content: #f0f0f0;
-    --color-content-muted: #a3a3a3;
-    --color-accent: #60a5fa;
-    --color-hover: rgba(96, 165, 250, 0.1);
-    --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+    /* Dark surface - very dark */
+    --surface-h: 0;
+    --surface-s: 0%;
+    --surface-l: 6%;
+
+    /* Lighter primary for dark mode */
+    --primary-h: 220;
+    --primary-s: 91%;
+    --primary-l: 72%;
+
+    /* Lighter accent for dark mode */
+    --accent-h: 14;
+    --accent-s: 100%;
+    --accent-l: 75%;
+
+    /* Darker shadow for dark mode */
+    --color-shadow: 0 2px 8px 0
+      hsla(var(--surface-h), var(--surface-s), 0%, 0.4);
   }
 }
 
-/* Dark mode colors for explicit dark theme */
+/* Explicit Dark Theme */
 [data-theme="dark"] {
-  --color-bg: #0f0f0f;
-  --color-bg-muted: #1a1a1a;
-  --color-content: #f0f0f0;
-  --color-content-muted: #a3a3a3;
-  --color-accent: #60a5fa;
-  --color-hover: rgba(96, 165, 250, 0.1);
-  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  --surface-h: 0;
+  --surface-s: 0%;
+  --surface-l: 6%;
+
+  --primary-h: 220;
+  --primary-s: 91%;
+  --primary-l: 72%;
+
+  --accent-h: 14;
+  --accent-s: 100%;
+  --accent-l: 75%;
+
+  --color-shadow: 0 2px 8px 0 hsla(var(--surface-h), var(--surface-s), 0%, 0.4);
 }
 
-/* Light mode colors for explicit light theme (overrides auto dark) */
+/* Explicit Light Theme */
 [data-theme="light"] {
-  --color-bg: #fff;
-  --color-bg-muted: #f7f7f7;
-  --color-content: #181818;
-  --color-content-muted: #494949;
-  --color-accent: #3b82f6;
-  --color-hover: rgba(59, 130, 246, 0.1);
-  --color-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+  --surface-h: 0;
+  --surface-s: 0%;
+  --surface-l: 100%;
+
+  --primary-h: 220;
+  --primary-s: 91%;
+  --primary-l: 58%;
+
+  --accent-h: 14;
+  --accent-s: 100%;
+  --accent-l: 59%;
+
+  --color-shadow: 0 2px 8px 0
+    hsla(var(--surface-h), var(--surface-s), calc(100% - var(--surface-l)), 0.1);
 }
 
 /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
@@ -73,12 +198,13 @@ body {
 body {
   font-family: var(--font-serif);
   line-height: 1.75;
-  color: var(--color-content);
-  background-color: var(--color-bg);
+  color: var(--color-on-surface);
+  background-color: var(--color-surface);
   transition:
     background-color 0.15s ease-in-out,
     color 0.15s ease-in-out;
 }
+
 /* Shared shape and padding for interactive elements */
 a,
 .btn,
@@ -107,7 +233,7 @@ a:hover,
 button:hover,
 header details ul a:hover,
 header details summary:hover {
-  color: var(--color-content);
+  color: var(--color-on-surface);
   background: var(--color-hover);
   box-shadow: none;
 }
@@ -118,13 +244,14 @@ a:active,
 button:active,
 header details ul a:active,
 header details summary:active {
-  color: var(--color-bg);
-  background: var(--color-accent);
+  color: var(--color-surface);
+  background: var(--color-primary);
   transform: scale(0.97);
 }
+
 p {
   font-weight: 450;
-  color: var(--color-content-muted);
+  color: var(--color-on-surface-variant);
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -139,7 +266,7 @@ button,
   letter-spacing: -0.02em;
 }
 
-/* Button-style elements: reset margins and add button appearance */
+/* Button Elements */
 button,
 nav ul li a,
 .btn {
@@ -153,17 +280,169 @@ nav ul li a,
   line-height: 1;
 }
 
+/* Semantic Button Styling - Based on Type and Purpose */
+
+/* Primary action buttons - submit type */
+button[type="submit"],
+input[type="submit"] {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: 2px solid var(--color-primary);
+}
+
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+  background-color: var(--color-primary);
+  filter: brightness(1.1);
+}
+
+button[type="submit"]:active,
+input[type="submit"]:active {
+  background-color: var(--color-primary);
+  transform: scale(0.97);
+}
+
+/* Secondary action buttons - regular button type */
+button[type="button"],
+input[type="button"] {
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface);
+  border: 2px solid var(--color-surface-container);
+}
+
+button[type="button"]:hover,
+input[type="button"]:hover {
+  background-color: var(--color-surface-container-high);
+  border-color: var(--color-surface-container-high);
+}
+
+/* Destructive action buttons - reset type */
+button[type="reset"],
+input[type="reset"] {
+  background-color: var(--color-accent-container);
+  color: var(--color-on-accent-container);
+  border: 2px solid var(--color-accent-container);
+}
+
+button[type="reset"]:hover,
+input[type="reset"]:hover {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+/* Disabled state for all buttons */
+button:disabled,
+input:disabled {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface-variant);
+  border-color: var(--color-surface-container-low);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+button:disabled:hover,
+input:disabled:hover {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface-variant);
+  border-color: var(--color-surface-container-low);
+  filter: none;
+  transform: none;
+}
+
+/* Navigation and utility classes (keeping minimal classes for specific components) */
 .btn-outline {
-  border: 2px solid var(--color-accent);
+  border: 2px solid var(--color-primary);
   background: none;
+  color: var(--color-primary);
 }
 
 .btn-outline:hover {
-  border-color: var(--color-content);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border-color: var(--color-primary);
 }
 
 .btn-outline:active {
+  border-color: var(--color-primary);
+}
+
+/* Surface Utilities - Semantic contexts */
+blockquote,
+pre,
+fieldset {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+}
+
+details[open] {
+  background-color: var(--color-surface-container);
+}
+
+/* Semantic card-like containers */
+article,
+section > article {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+/* Primary context containers (for highlighting important content) */
+header[role="banner"],
+.primary-content {
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+}
+
+/* Accent context containers (for special highlights) */
+aside,
+.accent-content {
+  background-color: var(--color-accent-container);
+  color: var(--color-on-accent-container);
+}
+
+/* Form Elements Semantic Styling */
+input,
+select,
+textarea {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  border: 2px solid var(--color-surface-container);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
   border-color: var(--color-accent);
+}
+
+fieldset {
+  border: 2px solid var(--color-surface-container);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+legend {
+  color: var(--color-on-surface);
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+label {
+  color: var(--color-on-surface);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
 /* h1 styles */
@@ -207,10 +486,11 @@ header details summary,
 }
 
 blockquote {
-  background-color: var(--color-bg-muted);
-  border-left: 0.3em solid var(--color-accent);
+  background-color: var(--color-surface-container);
+  border-left: 0.3em solid var(--color-primary);
   padding: 0.5em 1em;
   margin-left: 0;
+  color: var(--color-on-surface-variant);
 }
 
 /* Meta/UI text: use sans-serif */
@@ -219,6 +499,7 @@ footer,
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.75;
+  color: var(--color-on-surface-variant);
 }
 
 /* Content containers - prose and article semantic styling */
@@ -297,7 +578,7 @@ article img:not(picture img) {
 article figcaption {
   font-family: var(--font-sans);
   font-size: 80%;
-  color: var(--color-content-muted);
+  color: var(--color-on-surface-variant);
   text-align: center;
   margin: 1.5rem auto;
   max-width: 70ch;
@@ -318,6 +599,12 @@ footer {
 
 .prose a {
   font-weight: 550;
+  color: var(--color-primary);
+}
+
+.prose a:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-container);
 }
 
 /* source-sans-3-latin-wght-normal */

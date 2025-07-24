@@ -74,8 +74,8 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
 <style is:global>
   footer {
     /* Theme-aware muted background */
-    background-color: var(--color-bg-muted);
-    color: var(--color-content-muted);
+    background-color: var(--color-surface-container-low);
+    color: var(--color-on-surface-variant);
 
     /* Inner shadow on top - sharp edge like before */
     box-shadow: inset 0 15px 15px -15px rgba(0, 0, 0, 0.1);
@@ -97,7 +97,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   footer > section svg {
     height: 3em;
     width: 3em;
-    color: var(--color-content);
+    color: var(--color-on-surface);
   }
 
   footer nav {
@@ -107,7 +107,7 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   }
 
   footer nav section p {
-    color: var(--color-content);
+    color: var(--color-on-surface);
     font-size: 1.125rem;
     font-weight: 550;
   }
