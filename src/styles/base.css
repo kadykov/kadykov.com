@@ -18,7 +18,7 @@
   --accent-s: 100%;
   --accent-l: 59%;
 
-  /* Calculated Surface Colors - Material Design hierarchy */
+  /* Calculated Surface Colors */
   --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
   --color-surface-container-lowest: hsl(
     var(--surface-h),
@@ -46,7 +46,7 @@
     calc(var(--surface-l) - 12%)
   );
 
-  /* Calculated Content Colors (inverted lightness for contrast) */
+  /* Calculated Content Colors */
   --color-on-surface: hsl(
     var(--surface-h),
     var(--surface-s),
@@ -108,9 +108,35 @@
     0.12
   );
 
-  /* Calculated Shadows */
-  --color-shadow: 0 2px 8px 0
-    hsla(var(--surface-h), var(--surface-s), calc(100% - var(--surface-l)), 0.1);
+  /* Calculated Shadow Properties */
+  /* Shadows should always be darker than the surface, regardless of theme */
+  /* Take surface lightness and subtract 50%, with minimum of 0% */
+  --shadow-lightness: calc(max(0%, var(--surface-l) - 50%));
+
+  /* Base alpha values that work for both themes */
+  --shadow-alpha-1: 0.15;
+  --shadow-alpha-2: 0.12;
+  --shadow-alpha-3: 0.1;
+  --shadow-alpha-4: 0.08;
+  --shadow-alpha-5: 0.06;
+
+  /* Material Design Elevation Shadows */
+  --elevation-0: none;
+  --elevation-1:
+    0 1px 3px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
+    0 1px 2px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-2));
+  --elevation-2:
+    0 3px 6px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
+    0 2px 4px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-2));
+  --elevation-3:
+    0 10px 20px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
+    0 6px 6px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-3));
+  --elevation-4:
+    0 14px 28px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
+    0 10px 10px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-3));
+  --elevation-5:
+    0 19px 38px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
+    0 15px 12px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-4));
 
   /* Layout */
   --max-w-body: 40rem;
@@ -130,7 +156,7 @@
     /* Dark surface - very dark */
     --surface-h: 0;
     --surface-s: 0%;
-    --surface-l: 6%;
+    --surface-l: 15%;
 
     /* Lighter primary for dark mode */
     --primary-h: 220;
@@ -142,9 +168,8 @@
     --accent-s: 100%;
     --accent-l: 75%;
 
-    /* Darker shadow for dark mode */
-    --color-shadow: 0 2px 8px 0
-      hsla(var(--surface-h), var(--surface-s), 0%, 0.4);
+    /* Shadows are now automatically calculated based on surface-l value */
+    /* No need to override shadow colors - they calculate automatically! */
   }
 }
 
@@ -152,7 +177,7 @@
 [data-theme="dark"] {
   --surface-h: 0;
   --surface-s: 0%;
-  --surface-l: 6%;
+  --surface-l: 15%;
 
   --primary-h: 220;
   --primary-s: 91%;
@@ -162,7 +187,7 @@
   --accent-s: 100%;
   --accent-l: 75%;
 
-  --color-shadow: 0 2px 8px 0 hsla(var(--surface-h), var(--surface-s), 0%, 0.4);
+  /* Shadows automatically calculated - no overrides needed */
 }
 
 /* Explicit Light Theme */
@@ -179,8 +204,7 @@
   --accent-s: 100%;
   --accent-l: 59%;
 
-  --color-shadow: 0 2px 8px 0
-    hsla(var(--surface-h), var(--surface-s), calc(100% - var(--surface-l)), 0.1);
+  /* Shadows automatically calculated - no overrides needed */
 }
 
 /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
@@ -288,17 +312,20 @@ input[type="submit"] {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
   border: 2px solid var(--color-primary);
+  box-shadow: var(--elevation-1);
 }
 
 button[type="submit"]:hover,
 input[type="submit"]:hover {
   background-color: var(--color-primary);
+  box-shadow: var(--elevation-2);
   filter: brightness(1.1);
 }
 
 button[type="submit"]:active,
 input[type="submit"]:active {
   background-color: var(--color-primary);
+  box-shadow: var(--elevation-1);
   transform: scale(0.97);
 }
 
@@ -308,12 +335,14 @@ input[type="button"] {
   background-color: var(--color-surface-container);
   color: var(--color-on-surface);
   border: 2px solid var(--color-surface-container);
+  box-shadow: var(--elevation-1);
 }
 
 button[type="button"]:hover,
 input[type="button"]:hover {
   background-color: var(--color-surface-container-high);
   border-color: var(--color-surface-container-high);
+  box-shadow: var(--elevation-2);
 }
 
 /* Destructive action buttons - reset type */
@@ -322,6 +351,7 @@ input[type="reset"] {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
   border: 2px solid var(--color-accent-container);
+  box-shadow: var(--elevation-1);
 }
 
 button[type="reset"]:hover,
@@ -329,25 +359,18 @@ input[type="reset"]:hover {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
   border-color: var(--color-accent);
+  box-shadow: var(--elevation-2);
 }
 
 /* Disabled state for all buttons */
 button:disabled,
 input:disabled {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface-variant);
-  border-color: var(--color-surface-container-low);
+  border-color: var(--color-surface-container-lowest);
+  box-shadow: none;
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-button:disabled:hover,
-input:disabled:hover {
-  background-color: var(--color-surface-container-low);
-  color: var(--color-on-surface-variant);
-  border-color: var(--color-surface-container-low);
-  filter: none;
-  transform: none;
 }
 
 /* Navigation and utility classes (keeping minimal classes for specific components) */
@@ -371,8 +394,10 @@ input:disabled:hover {
 blockquote,
 pre,
 fieldset {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
 
 details[open] {
@@ -383,7 +408,10 @@ details[open] {
 article,
 section > article {
   background-color: var(--color-surface);
-  color: var(--color-on-surface);
+  border-radius: 0.75rem;
+  box-shadow: var(--elevation-1);
+  padding: 1.5rem;
+  margin: 1rem 0;
 }
 
 /* Primary context containers (for highlighting important content) */
@@ -391,6 +419,7 @@ header[role="banner"],
 .primary-content {
   background-color: var(--color-primary-container);
   color: var(--color-on-primary-container);
+  box-shadow: var(--elevation-2);
 }
 
 /* Accent context containers (for special highlights) */
@@ -398,25 +427,27 @@ aside,
 .accent-content {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
+  box-shadow: var(--elevation-1);
 }
 
 /* Form Elements Semantic Styling */
 input,
 select,
 textarea {
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
-  border: 2px solid var(--color-surface-container);
-  border-radius: 0.375rem;
+  border: 1px solid var(--color-surface-container-high);
   padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--color-primary);
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  box-shadow: var(--elevation-1);
+  outline: none;
 }
 
 input:invalid,
