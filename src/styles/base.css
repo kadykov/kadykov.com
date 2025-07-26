@@ -242,6 +242,7 @@ header details summary {
   transition:
     color 0.2s,
     background 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s,
     transform 0.08s;
 }
@@ -258,7 +259,7 @@ header details ul a:hover,
 header details summary:hover {
   color: var(--color-on-surface);
   background: var(--color-hover);
-  box-shadow: none;
+  /* box-shadow: none; */
 }
 
 /* Active colors and effects */
@@ -292,7 +293,7 @@ button,
 nav ul li a {
   margin: 0;
   background: none;
-  border: none;
+  /* border: none; */
   display: inline-block;
   text-align: center;
   cursor: pointer;
