@@ -233,8 +233,8 @@ body {
 /* Shared shape and padding for interactive elements */
 a,
 button,
-header details ul a,
-header details summary {
+body > header details ul a,
+body > header details summary {
   text-decoration: none;
   color: inherit;
   padding: 0.5em;
@@ -255,8 +255,8 @@ a {
 /* Hover colors and effects */
 a:hover,
 button:hover,
-header details ul a:hover,
-header details summary:hover {
+body > header details ul a:hover,
+body > header details summary:hover {
   color: var(--color-on-surface);
   background: var(--color-hover);
   /* box-shadow: none; */
@@ -265,8 +265,8 @@ header details summary:hover {
 /* Active colors and effects */
 a:active,
 button:active,
-header details ul a:active,
-header details summary:active {
+body > header details ul a:active,
+body > header details summary:active {
   color: var(--color-surface);
   background: var(--color-primary);
   transform: scale(0.97);
@@ -282,7 +282,7 @@ h1,
 h2,
 h3,
 h4,
-header,
+body > header,
 button {
   font-family: var(--font-sans);
   letter-spacing: -0.02em;
@@ -487,8 +487,8 @@ h4 {
 /* h4 style is shared with buttons and nav links */
 h4,
 button,
-header nav ul li a,
-header details summary {
+body > header nav ul li a,
+body > header details summary {
   font-size: 1.3rem;
   font-weight: 420;
 }
@@ -502,7 +502,7 @@ blockquote {
 }
 
 /* Meta/UI text: use sans-serif */
-footer {
+body > footer {
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.75;
@@ -591,8 +591,8 @@ article figcaption {
 }
 
 /* Full-width layout for header and footer */
-header,
-footer {
+body > header,
+body > footer {
   width: 100vw;
   position: relative;
   left: 50%;

@@ -19,7 +19,7 @@ import ThemeSwitch from "./ThemeSwitch.astro"
 </header>
 
 <style is:global>
-  header {
+  body > header {
     background: var(--color-surface-container-low);
     box-shadow: var(--elevation-2);
     display: flex;
@@ -31,14 +31,14 @@ import ThemeSwitch from "./ThemeSwitch.astro"
     z-index: 10;
   }
 
-  header nav {
+  body > header nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex: 1;
   }
 
-  header nav ul {
+  body > header nav ul {
     display: flex;
     align-items: center;
     list-style: none;
@@ -48,12 +48,12 @@ import ThemeSwitch from "./ThemeSwitch.astro"
   }
 
   /* Hide icons in main navigation on large screens */
-  header nav ul svg {
+  body > header nav ul svg {
     display: none;
   }
 
-  header button,
-  header details summary {
+  body > header button,
+  body > header details summary {
     padding: 0.5em;
     margin: 0;
     width: 2em;
@@ -63,8 +63,8 @@ import ThemeSwitch from "./ThemeSwitch.astro"
     justify-content: center;
   }
 
-  header button svg,
-  header details summary svg {
+  body > header button svg,
+  body > header details summary svg {
     height: 1em;
     width: 1em;
     color: var(--color-on-surface);
@@ -75,7 +75,7 @@ import ThemeSwitch from "./ThemeSwitch.astro"
   }
 
   @media (max-width: 680px) {
-    header nav ul {
+    body > header nav ul {
       display: none;
     }
     details:has(nav) {
