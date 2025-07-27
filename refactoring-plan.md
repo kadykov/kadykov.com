@@ -8,11 +8,11 @@ This phase focuses on finishing the core migration and establishing a solid, con
 
 - **Task 1.1: Finalize the Color System.**
 
-  - [ ] Decide on a primary color palette (e.g., 4-5 base colors).
-  - [ ] Define CSS variables for these base colors in `src/styles/base.css`.
-  - [ ] Derive other colors (e.g., muted, hover, component-specific) from the base colors, potentially using CSS `calc()` or `hsl()` functions to ensure consistency.
+  - [x] Decide on a primary color palette (e.g., 4-5 base colors).
+  - [x] Define CSS variables for these base colors in `src/styles/base.css`.
+  - [x] Derive other colors (e.g., muted, hover, component-specific) from the base colors, potentially using CSS `calc()` or `hsl()` functions to ensure consistency.
   - [ ] Create distinct styles for inline text links vs. standalone buttons to resolve the transparent `hover` color issue.
-  - [ ] Apply the new color system consistently across `light` and `dark` themes.
+  - [x] Apply the new color system consistently across `light` and `dark` themes.
 
 - **Task 1.2: Refactor the Hero Layout.**
 
