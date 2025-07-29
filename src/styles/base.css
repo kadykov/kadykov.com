@@ -138,10 +138,6 @@
     0 19px 38px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
     0 15px 12px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-4));
 
-  /* Layout */
-  --max-w-body: 40rem;
-  --max-w-body-xl: 48rem;
-
   /* Breakpoints */
   --breakpoint-sm: 680px;
   --breakpoint-md: 900px;
