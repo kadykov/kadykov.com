@@ -596,7 +596,7 @@ body > footer {
   margin-left: -50vw;
   margin-right: -50vw;
   max-width: 100vw;
-  padding: 0 calc(max(1.5em, (100vw - 1200px) / 2));
+  padding: 0 calc(max(1rem, (100vw - 1200px) / 2));
 }
 
 /* source-sans-3-latin-wght-normal */
