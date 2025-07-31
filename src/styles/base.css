@@ -19,31 +19,32 @@
   --accent-l: 59%;
 
   /* Calculated Surface Colors */
+  /* Smart direction: move toward 50% based on current lightness */
   --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
   --color-surface-container-lowest: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) - 1%)
+    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.02)
   );
   --color-surface-container-low: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) - 3%)
+    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.06)
   );
   --color-surface-container: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) - 6%)
+    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.12)
   );
   --color-surface-container-high: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) - 9%)
+    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.18)
   );
   --color-surface-container-highest: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) - 12%)
+    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.24)
   );
 
   /* Calculated Content Colors */
@@ -55,7 +56,7 @@
   --color-on-surface-variant: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(100% - var(--surface-l) + 30%)
+    calc(100% - var(--surface-l) + (50% - var(--surface-l)) * 0.6)
   );
 
   /* Calculated Primary Colors */

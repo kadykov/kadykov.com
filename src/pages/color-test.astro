@@ -1,0 +1,436 @@
+---
+// Color Test Page - Material Design Color System Testing
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Material Design Color System Test</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <style>
+      /* Test-specific styles */
+      .color-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .color-swatch {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+      }
+
+      .surface-stack {
+        margin: 2rem 0;
+      }
+
+      .surface-container {
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin: 0.5rem 0;
+      }
+
+      .nested-container {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+
+      .color-info {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        font-family: monospace;
+      }
+
+      .interactive-test {
+        margin: 1rem 0;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+      }
+
+      .elevation-test {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .elevation-card {
+        background-color: var(--color-surface);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      body {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Material Design Color System Test</h1>
+      <p>
+        Testing the HSL-based calculated color system with surface containers,
+        interactive states, and contrast ratios.
+      </p>
+    </header>
+
+    <main>
+      <!-- Color Palette Overview -->
+      <section>
+        <h2>Core Color Palette</h2>
+        <div class="color-grid">
+          <div
+            class="color-swatch"
+            style="background-color: var(--color-surface); color: var(--color-on-surface);"
+          >
+            <strong>Surface</strong>
+            <div class="color-info">--color-surface</div>
+            <div class="color-info">
+              HSL({`var(--surface-h), var(--surface-s), var(--surface-l)`})
+            </div>
+          </div>
+
+          <div
+            class="color-swatch"
+            style="background-color: var(--color-primary); color: var(--color-on-primary);"
+          >
+            <strong>Primary</strong>
+            <div class="color-info">--color-primary</div>
+            <div class="color-info">
+              HSL({`var(--primary-h), var(--primary-s), var(--primary-l)`})
+            </div>
+          </div>
+
+          <div
+            class="color-swatch"
+            style="background-color: var(--color-accent); color: var(--color-on-accent);"
+          >
+            <strong>Accent</strong>
+            <div class="color-info">--color-accent</div>
+            <div class="color-info">
+              HSL({`var(--accent-h), var(--accent-s), var(--accent-l)`})
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Surface Container Hierarchy -->
+      <section>
+        <h2>Surface Container Hierarchy</h2>
+        <div class="surface-stack">
+          <div
+            class="surface-container"
+            style="background-color: var(--color-surface); color: var(--color-on-surface);"
+          >
+            <h3>Surface (Base Level)</h3>
+            <p>
+              This is the base surface level. All other containers sit on top of
+              this.
+            </p>
+
+            <div
+              class="nested-container"
+              style="background-color: var(--color-surface-container-lowest); color: var(--color-on-surface);"
+            >
+              <h4>Surface Container Lowest</h4>
+              <p>
+                Subtle elevation above base surface. Used for form fields, code
+                blocks.
+              </p>
+
+              <div
+                class="nested-container"
+                style="background-color: var(--color-surface-container-low); color: var(--color-on-surface);"
+              >
+                <h4>Surface Container Low</h4>
+                <p>Low elevation container for grouping related content.</p>
+
+                <div
+                  class="nested-container"
+                  style="background-color: var(--color-surface-container); color: var(--color-on-surface);"
+                >
+                  <h4>Surface Container</h4>
+                  <p>Standard container elevation for cards and panels.</p>
+
+                  <div
+                    class="nested-container"
+                    style="background-color: var(--color-surface-container-high); color: var(--color-on-surface);"
+                  >
+                    <h4>Surface Container High</h4>
+                    <p>Higher elevation for emphasized containers.</p>
+
+                    <div
+                      class="nested-container"
+                      style="background-color: var(--color-surface-container-highest); color: var(--color-on-surface);"
+                    >
+                      <h4>Surface Container Highest</h4>
+                      <p>
+                        Highest elevation for modals, tooltips, floating
+                        elements.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Semantic Containers -->
+      <section>
+        <h2>Semantic Containers</h2>
+
+        <div
+          class="surface-container"
+          style="background-color: var(--color-primary-container); color: var(--color-on-primary-container);"
+        >
+          <h3>Primary Container</h3>
+          <p>
+            Used for highlighting important content, call-to-action areas, or
+            primary information blocks.
+          </p>
+          <div class="interactive-test">
+            <a href="#">Primary container link</a> |
+            <button type="button">Secondary button in primary container</button>
+          </div>
+        </div>
+
+        <div
+          class="surface-container"
+          style="background-color: var(--color-accent-container); color: var(--color-on-accent-container);"
+        >
+          <h3>Accent Container</h3>
+          <p>
+            Used for special highlights, warnings, or accent information that
+            needs attention.
+          </p>
+          <div class="interactive-test">
+            <a href="#">Accent container link</a> |
+            <button type="reset">Reset button in accent container</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Elements Test -->
+      <section>
+        <h2>Interactive Elements & Button Types</h2>
+
+        <div
+          class="surface-container"
+          style="background-color: var(--color-surface-container); color: var(--color-on-surface);"
+        >
+          <h3>Button Semantic Types</h3>
+          <div class="button-group">
+            <button type="submit">Submit (Primary Action)</button>
+            <button type="button">Button (Secondary Action)</button>
+            <button type="reset">Reset (Destructive Action)</button>
+            <button type="button" disabled>Disabled Button</button>
+          </div>
+
+          <h3>Text Links & Hover States</h3>
+          <p>
+            This paragraph contains <a href="#">regular text links</a> that should
+            have proper contrast and hover states. The links use negative margins
+            to not affect text flow, while <a href="#"
+              >maintaining good readability</a
+            > and accessibility.
+          </p>
+
+          <blockquote>
+            <p>
+              This is a blockquote container to test <a href="#"
+                >links within quoted content</a
+              > and ensure proper contrast across different background levels.
+            </p>
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Form Elements Test -->
+      <section>
+        <h2>Form Elements</h2>
+
+        <fieldset>
+          <legend>Contact Information</legend>
+          <div style="margin-bottom: 1rem;">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter your name" />
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label for="category">Category</label>
+            <select id="category">
+              <option>General Inquiry</option>
+              <option>Technical Support</option>
+              <option>Business</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label for="message">Message</label>
+            <textarea id="message" rows="4" placeholder="Enter your message"
+            ></textarea>
+          </div>
+
+          <div class="button-group">
+            <button type="submit">Send Message</button>
+            <button type="reset">Clear Form</button>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Elevation/Shadow Test -->
+      <section>
+        <h2>Material Design Elevation System</h2>
+        <div class="elevation-test">
+          <div class="elevation-card" style="box-shadow: var(--elevation-0);">
+            <div>
+              <strong>Elevation 0</strong><br />
+              <small>No shadow</small>
+            </div>
+          </div>
+
+          <div class="elevation-card" style="box-shadow: var(--elevation-1);">
+            <div>
+              <strong>Elevation 1</strong><br />
+              <small>Subtle depth</small>
+            </div>
+          </div>
+
+          <div class="elevation-card" style="box-shadow: var(--elevation-2);">
+            <div>
+              <strong>Elevation 2</strong><br />
+              <small>Card elevation</small>
+            </div>
+          </div>
+
+          <div class="elevation-card" style="box-shadow: var(--elevation-3);">
+            <div>
+              <strong>Elevation 3</strong><br />
+              <small>Raised elements</small>
+            </div>
+          </div>
+
+          <div class="elevation-card" style="box-shadow: var(--elevation-4);">
+            <div>
+              <strong>Elevation 4</strong><br />
+              <small>Navigation</small>
+            </div>
+          </div>
+
+          <div class="elevation-card" style="box-shadow: var(--elevation-5);">
+            <div>
+              <strong>Elevation 5</strong><br />
+              <small>Modals, FABs</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Typography Hierarchy -->
+      <section>
+        <h2>Typography & Text Contrast</h2>
+
+        <div
+          class="surface-container"
+          style="background-color: var(--color-surface-container); color: var(--color-on-surface);"
+        >
+          <h1>Heading 1 - Primary Text</h1>
+          <h2>Heading 2 - Primary Text</h2>
+          <h3>Heading 3 - Primary Text</h3>
+          <h4>Heading 4 - Primary Text</h4>
+
+          <p>
+            This is body text using the primary text color (--color-on-surface)
+            which should have high contrast against the surface background.
+          </p>
+
+          <p style="color: var(--color-on-surface-variant);">
+            This is secondary body text using the variant text color
+            (--color-on-surface-variant) which should have slightly reduced
+            contrast for hierarchy.
+          </p>
+        </div>
+      </section>
+
+      <!-- Theme Toggle Test -->
+      <section>
+        <h2>Theme Testing</h2>
+        <p>
+          Test both light and dark modes using your system preferences or by
+          manually toggling. All color relationships should maintain proper
+          contrast ratios in both themes.
+        </p>
+
+        <div class="color-grid">
+          <div
+            class="color-swatch"
+            style="background-color: var(--color-hover);"
+          >
+            <strong>Hover State</strong>
+            <div class="color-info">--color-hover</div>
+            <div class="color-info">8% opacity overlay</div>
+          </div>
+
+          <div
+            class="color-swatch"
+            style="background-color: var(--color-active);"
+          >
+            <strong>Active State</strong>
+            <div class="color-info">--color-active</div>
+            <div class="color-info">12% opacity overlay</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-surface-container);"
+    >
+      <p>Material Design Color System Test Page</p>
+      <p>
+        <small
+          >Check this page in both light and dark modes to verify color
+          relationships and contrast ratios.</small>
+      </p>
+    </footer>
+  </body>
+</html>
