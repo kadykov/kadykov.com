@@ -9,7 +9,7 @@
   /* Base HSL Values - Define only these core colors */
   --surface-h: 0;
   --surface-s: 0%;
-  --surface-l: 100%;
+  --surface-l: 99%;
 
   --primary-h: 220;
   --primary-s: 91%;
