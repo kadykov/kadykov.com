@@ -1,5 +1,6 @@
 ---
 // Color Test Page - Material Design Color System Testing
+import "../styles/base.css"
 ---
 
 <html lang="en">
@@ -9,7 +10,6 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Material Design Color System Test</title>
-    <link rel="stylesheet" href="/src/styles/base.css" />
     <style>
       /* Test-specific styles */
       .color-grid {
@@ -151,8 +151,8 @@
           >
             <h3>Surface (Base Level)</h3>
             <p>
-              This is the base surface level. All other containers sit on top of
-              this.
+              This is the <strong>base</strong> surface level. All other containers
+              sit on top of this.
             </p>
 
             <div
@@ -161,8 +161,8 @@
             >
               <h4>Surface Container Lowest</h4>
               <p>
-                Subtle elevation above base surface. Used for form fields, code
-                blocks.
+                <strong>Lowest</strong> subtle elevation above base surface. Used
+                for form fields, code blocks.
               </p>
 
               <div
@@ -170,21 +170,27 @@
                 style="background-color: var(--color-surface-container-low); color: var(--color-on-surface);"
               >
                 <h4>Surface Container Low</h4>
-                <p>Low elevation container for grouping related content.</p>
+                <p>
+                  <strong>Low</strong> elevation container for grouping related content.
+                </p>
 
                 <div
                   class="nested-container"
                   style="background-color: var(--color-surface-container); color: var(--color-on-surface);"
                 >
                   <h4>Surface Container</h4>
-                  <p>Standard container elevation for cards and panels.</p>
+                  <p>
+                    <strong>Standard</strong> container elevation for cards and panels.
+                  </p>
 
                   <div
                     class="nested-container"
                     style="background-color: var(--color-surface-container-high); color: var(--color-on-surface);"
                   >
                     <h4>Surface Container High</h4>
-                    <p>Higher elevation for emphasized containers.</p>
+                    <p>
+                      <strong>Higher</strong> elevation for emphasized containers.
+                    </p>
 
                     <div
                       class="nested-container"
@@ -192,8 +198,8 @@
                     >
                       <h4>Surface Container Highest</h4>
                       <p>
-                        Highest elevation for modals, tooltips, floating
-                        elements.
+                        <strong>Highest</strong> elevation for modals, tooltips,
+                        floating elements.
                       </p>
                     </div>
                   </div>
@@ -429,7 +435,8 @@
       <p>
         <small
           >Check this page in both light and dark modes to verify color
-          relationships and contrast ratios.</small>
+          relationships and contrast ratios.</small
+        >
       </p>
     </footer>
   </body>
