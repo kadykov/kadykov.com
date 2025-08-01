@@ -4,6 +4,7 @@
 :root {
   --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
   --font-serif: "Bitter Variable", Georgia, serif;
+  --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
   /* Base HSL Values - Define only these core colors */
   --surface-h: 0;
@@ -19,44 +20,44 @@
   --accent-l: 59%;
 
   /* Calculated Surface Colors */
-  /* Smart direction: move toward 50% based on current lightness */
+  /* Smart direction: move toward 56% based on current lightness */
   --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
   --color-surface-container-lowest: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.02)
+    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.03)
   );
   --color-surface-container-low: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.06)
+    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.06)
   );
   --color-surface-container: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.12)
+    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.12)
   );
   --color-surface-container-high: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.18)
+    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.18)
   );
   --color-surface-container-highest: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(var(--surface-l) + (50% - var(--surface-l)) * 0.24)
+    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.24)
   );
 
   /* Calculated Content Colors */
   --color-on-surface: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(100% - var(--surface-l))
+    calc(100% - var(--surface-l) - (44% - var(--surface-l)) * 0.35)
   );
   --color-on-surface-variant: hsl(
     var(--surface-h),
     var(--surface-s),
-    calc(100% - var(--surface-l) + (50% - var(--surface-l)) * 0.6)
+    calc(100% - var(--surface-l) - (44% - var(--surface-l)) * 0.7)
   );
 
   /* Calculated Primary Colors */
@@ -214,6 +215,7 @@ body {
   /* This is equivalent to the following CSS */
   /* font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
   font-size: clamp(16px, 0.526vw + 13.89px, 24px);
+  font-weight: 450;
 }
 
 /* Set serif as the default font and base font size for body text */
@@ -267,11 +269,6 @@ body > header details summary:active {
   color: var(--color-surface);
   background: var(--color-primary);
   transform: scale(0.97);
-}
-
-p {
-  font-weight: 450;
-  color: var(--color-on-surface-variant);
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -496,6 +493,48 @@ blockquote {
   padding: 0.5em 1em;
   margin-left: 0;
   color: var(--color-on-surface-variant);
+}
+
+/* Code Elements */
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  line-height: 1.4;
+}
+
+code {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+kbd {
+  background-color: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-surface-container-highest);
+  box-shadow: var(--elevation-1);
+  font-size: 0.85em;
 }
 
 /* Meta/UI text: use sans-serif */
@@ -757,7 +796,7 @@ body > footer {
 } */
 
 /* source-code-pro-latin-wght-normal */
-/* @font-face {
+@font-face {
   font-family: "Source Code Pro Variable";
   font-style: normal;
   font-display: block;
@@ -768,7 +807,7 @@ body > footer {
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
     U+2215, U+FEFF, U+FFFD;
-} */
+}
 
 /* source-code-pro-latin-ext-wght-normal */
 /* @font-face {
@@ -796,7 +835,7 @@ body > footer {
 } */
 
 /* source-code-pro-latin-wght-italic */
-/* @font-face {
+@font-face {
   font-family: "Source Code Pro Variable";
   font-style: italic;
   font-display: block;
@@ -807,7 +846,7 @@ body > footer {
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
     U+2215, U+FEFF, U+FFFD;
-} */
+}
 
 /* source-code-pro-latin-ext-wght-italic */
 /* @font-face {
