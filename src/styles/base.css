@@ -11,16 +11,27 @@
   --surface-s: 0%;
   --surface-l: 99%;
 
-  --primary-h: 220;
-  --primary-s: 91%;
-  --primary-l: 58%;
+  /* LCH values for perceptually accurate contrast calculations */
+  /* LCH: L (0-100), C (chroma 0-150+), H (hue 0-360) */
+  --primary-l: 45; /* Perceptual lightness */
+  --primary-c: 85; /* Chroma (saturation) */
+  --primary-h: 270; /* Hue in LCH space */
 
-  --accent-h: 14;
-  --accent-s: 100%;
-  --accent-l: 59%;
+  --accent-l: 65; /* Perceptual lightness */
+  --accent-c: 75; /* Chroma (saturation) */
+  --accent-h: 35; /* Hue in LCH space */
 
   /* Calculated Surface Colors */
   /* Smart direction: move toward 56% based on current lightness */
+  /* 
+   * Asymmetric Pivoting System:
+   * - Surface containers pivot toward 56% (not 50%) because human eyes are more
+   *   sensitive to gradients in lighter tones than darker tones
+   * - Light theme (99%): containers get darker (99% → 95% → 92% → ...)
+   * - Dark theme (15%): containers get lighter (15% → 18% → 20% → ...)
+   * - The formula: calc(current + (56% - current) * multiplier)
+   *   automatically determines direction and creates proper hierarchy
+   */
   --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
   --color-surface-container-lowest: hsl(
     var(--surface-h),
@@ -49,6 +60,14 @@
   );
 
   /* Calculated Content Colors */
+  /*
+   * Text Contrast with Asymmetric Pivoting:
+   * - Text colors pivot around 44% for optimal contrast
+   * - Light theme: text gets darker for better readability
+   * - Dark theme: text gets lighter for better readability
+   * - Formula: calc(100% - lightness - (44% - lightness) * multiplier)
+   *   ensures sufficient contrast regardless of background lightness
+   */
   --color-on-surface: hsl(
     var(--surface-h),
     var(--surface-s),
@@ -61,52 +80,72 @@
   );
 
   /* Calculated Primary Colors */
-  --color-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
-  --color-primary-container: hsl(
-    var(--primary-h),
-    calc(var(--primary-s) * 0.3),
-    calc(var(--primary-l) + 35%)
+  /*
+   * Primary Color System with LCH for Perceptual Accuracy:
+   * - Uses LCH color space for perceptually accurate contrast calculations
+   * - LCH lightness corresponds to human perception, unlike HSL
+   * - Container and on-colors calculated based on perceptual lightness
+   */
+
+  /* LCH-based colors */
+  --color-primary: lch(var(--primary-l) var(--primary-c) var(--primary-h));
+
+  --color-primary-container: lch(
+    calc(var(--primary-l) + (75 - var(--primary-l)) * 0.6)
+      calc(var(--primary-c) * 0.3) var(--primary-h)
   );
-  --color-on-primary: hsl(
-    var(--primary-h),
-    var(--primary-s),
-    calc(100% - var(--primary-l))
+
+  /* On-primary: High contrast against primary */
+  --color-on-primary: lch(
+    calc((50 - var(--primary-l)) * 100) calc(var(--primary-c) * 0.1)
+      var(--primary-h)
   );
-  --color-on-primary-container: hsl(
-    var(--primary-h),
-    var(--primary-s),
-    calc(var(--primary-l) * 0.4)
+
+  /* On-primary-container: High contrast against container */
+  --color-on-primary-container: lch(
+    calc(25 - (var(--primary-l) + (75 - var(--primary-l)) * 0.6) * 0.2)
+      calc(var(--primary-c) * 0.2) var(--primary-h)
   );
 
   /* Calculated Accent Colors */
-  --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
-  --color-accent-container: hsl(
-    var(--accent-h),
-    calc(var(--accent-s) * 0.2),
-    calc(var(--accent-l) + 35%)
+  /*
+   * Accent Color System with LCH for Perceptual Accuracy:
+   * - Same LCH approach as primary colors for consistent contrast
+   * - Reduced chroma for containers to maintain subtlety
+   * - Perceptually accurate text contrast calculations
+   */
+
+  /* LCH-based colors */
+  --color-accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
+
+  --color-accent-container: lch(
+    calc(var(--accent-l) + (75 - var(--accent-l)) * 0.5)
+      calc(var(--accent-c) * 0.2) var(--accent-h)
   );
-  --color-on-accent: hsl(
-    var(--accent-h),
-    var(--accent-s),
-    calc(100% - var(--accent-l))
+
+  /* On-accent: High contrast against accent */
+  --color-on-accent: lch(
+    calc((50 - var(--accent-l)) * 100) calc(var(--accent-c) * 0.1)
+      var(--accent-h)
   );
-  --color-on-accent-container: hsl(
-    var(--accent-h),
-    var(--accent-s),
-    calc(var(--accent-l) * 0.4)
+
+  /* On-accent-container: High contrast against container */
+  --color-on-accent-container: lch(
+    calc(25 - (var(--accent-l) + (75 - var(--accent-l)) * 0.5) * 0.2)
+      calc(var(--accent-c) * 0.2) var(--accent-h)
   );
 
   /* Calculated Interactive States */
   --color-hover: hsla(
-    var(--primary-h),
-    var(--primary-s),
-    var(--primary-l),
+    var(--surface-h),
+    var(--surface-s),
+    var(--surface-l),
     0.08
   );
   --color-active: hsla(
-    var(--primary-h),
-    var(--primary-s),
-    var(--primary-l),
+    var(--surface-h),
+    var(--surface-s),
+    var(--surface-l),
     0.12
   );
 
@@ -156,18 +195,16 @@
     --surface-s: 0%;
     --surface-l: 15%;
 
-    /* Lighter primary for dark mode */
-    --primary-h: 220;
-    --primary-s: 91%;
-    --primary-l: 72%;
+    /* LCH values for dark mode - higher lightness for better contrast */
+    --primary-l: 70; /* Lighter for dark backgrounds */
+    --primary-c: 80; /* Slightly reduced chroma */
+    --primary-h: 270; /* Same hue */
 
-    /* Lighter accent for dark mode */
-    --accent-h: 14;
-    --accent-s: 100%;
-    --accent-l: 75%;
+    --accent-l: 75; /* Lighter for dark backgrounds */
+    --accent-c: 70; /* Slightly reduced chroma */
+    --accent-h: 35; /* Same hue */
 
-    /* Shadows are now automatically calculated based on surface-l value */
-    /* No need to override shadow colors - they calculate automatically! */
+    /* All other colors automatically calculated! */
   }
 }
 
@@ -177,15 +214,14 @@
   --surface-s: 0%;
   --surface-l: 15%;
 
-  --primary-h: 220;
-  --primary-s: 91%;
-  --primary-l: 72%;
+  /* LCH values for dark mode */
+  --primary-l: 70;
+  --primary-c: 80;
+  --primary-h: 270;
 
-  --accent-h: 14;
-  --accent-s: 100%;
-  --accent-l: 75%;
-
-  /* Shadows automatically calculated - no overrides needed */
+  --accent-l: 75;
+  --accent-c: 70;
+  --accent-h: 35;
 }
 
 /* Explicit Light Theme */
@@ -194,15 +230,14 @@
   --surface-s: 0%;
   --surface-l: 100%;
 
-  --primary-h: 220;
-  --primary-s: 91%;
-  --primary-l: 58%;
+  /* LCH values for light mode */
+  --primary-l: 55;
+  --primary-c: 85;
+  --primary-h: 270;
 
-  --accent-h: 14;
-  --accent-s: 100%;
-  --accent-l: 59%;
-
-  /* Shadows automatically calculated - no overrides needed */
+  --accent-l: 65;
+  --accent-c: 75;
+  --accent-h: 35;
 }
 
 /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
