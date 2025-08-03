@@ -13,7 +13,7 @@
 
   /* LCH values for perceptually accurate contrast calculations */
   /* LCH: L (0-100), C (chroma 0-150+), H (hue 0-360) */
-  --primary-l: 45; /* Perceptual lightness */
+  --primary-l: 40; /* Perceptual lightness */
   --primary-c: 85; /* Chroma (saturation) */
   --primary-h: 270; /* Hue in LCH space */
 
