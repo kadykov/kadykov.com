@@ -97,8 +97,8 @@
 
   /* On-primary: High contrast against primary */
   --color-on-primary: lch(
-    calc((50 - var(--primary-l)) * 100) calc(var(--primary-c) * 0.1)
-      var(--primary-h)
+    clamp(0, var(--primary-l) + 60 * clamp(-1, (50 - var(--primary-l)), 1), 100)
+      calc(var(--primary-c) * 0.1) var(--primary-h)
   );
 
   /* On-primary-container: High contrast against container */
@@ -125,8 +125,8 @@
 
   /* On-accent: High contrast against accent */
   --color-on-accent: lch(
-    calc((50 - var(--accent-l)) * 100) calc(var(--accent-c) * 0.1)
-      var(--accent-h)
+    clamp(0, var(--accent-l) + 60 * clamp(-1, (50 - var(--accent-l)), 1), 100)
+      calc(var(--accent-c) * 0.1) var(--accent-h)
   );
 
   /* On-accent-container: High contrast against container */
