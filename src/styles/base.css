@@ -95,9 +95,12 @@
       calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
+  /* Primary color lightness sign: -1 to 1 based on lightness */
+  --primary-sign: clamp(-1, (50 - var(--primary-l)), 1);
+
   /* On-primary: High contrast against primary */
   --color-on-primary: lch(
-    clamp(0, var(--primary-l) + 60 * clamp(-1, (50 - var(--primary-l)), 1), 100)
+    calc(var(--primary-l) + 60 * var(--primary-sign))
       calc(var(--primary-c) * 0.1) var(--primary-h)
   );
 
@@ -118,6 +121,9 @@
   /* LCH-based colors */
   --color-accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
 
+  /* Accent color lightness sign: -1 to 1 based on lightness */
+  --accent-sign: clamp(-1, (50 - var(--accent-l)), 1);
+
   --color-accent-container: lch(
     calc(var(--accent-l) + (75 - var(--accent-l)) * 0.5)
       calc(var(--accent-c) * 0.2) var(--accent-h)
@@ -125,8 +131,8 @@
 
   /* On-accent: High contrast against accent */
   --color-on-accent: lch(
-    clamp(0, var(--accent-l) + 60 * clamp(-1, (50 - var(--accent-l)), 1), 100)
-      calc(var(--accent-c) * 0.1) var(--accent-h)
+    calc(var(--accent-l) + 60 * var(--accent-sign)) calc(var(--accent-c) * 0.1)
+      var(--accent-h)
   );
 
   /* On-accent-container: High contrast against container */
