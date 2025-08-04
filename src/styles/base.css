@@ -6,13 +6,14 @@
   --font-serif: "Bitter Variable", Georgia, serif;
   --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
-  /* Base HSL Values - Define only these core colors */
-  --surface-h: 0;
-  --surface-s: 0%;
-  --surface-l: 99%;
-
   /* LCH values for perceptually accurate contrast calculations */
   /* LCH: L (0-100), C (chroma 0-150+), H (hue 0-360) */
+
+  /* Surface colors - now using LCH for perceptual accuracy */
+  --surface-l: 98; /* Perceptual lightness */
+  --surface-c: 2; /* Very low chroma for neutral surfaces */
+  --surface-h: 0; /* Hue in LCH space */
+
   --primary-l: 40; /* Perceptual lightness */
   --primary-c: 85; /* Chroma (saturation) */
   --primary-h: 270; /* Hue in LCH space */
@@ -21,62 +22,62 @@
   --accent-c: 75; /* Chroma (saturation) */
   --accent-h: 35; /* Hue in LCH space */
 
-  /* Calculated Surface Colors */
-  /* Smart direction: move toward 56% based on current lightness */
-  /* 
-   * Asymmetric Pivoting System:
-   * - Surface containers pivot toward 56% (not 50%) because human eyes are more
-   *   sensitive to gradients in lighter tones than darker tones
-   * - Light theme (99%): containers get darker (99% → 95% → 92% → ...)
-   * - Dark theme (15%): containers get lighter (15% → 18% → 20% → ...)
-   * - The formula: calc(current + (56% - current) * multiplier)
-   *   automatically determines direction and creates proper hierarchy
+  /* Calculated Surface Colors using LCH */
+  /*
+   * LCH-based Surface System with Sign-based Stepping:
+   * - Uses LCH color space for perceptually accurate surface variations
+   * - Surface lightness sign determines direction (light vs dark surfaces)
+   * - Container hierarchy created by stepping away from base surface
+   * - Light theme (95%): containers get darker (95 → 92 → 89 → 83 → 77 → 71)
+   * - Dark theme (15%): containers get lighter (15 → 18 → 21 → 27 → 33 → 39)
+   * - Consistent visual hierarchy with perceptually uniform steps
    */
-  --color-surface: hsl(var(--surface-h), var(--surface-s), var(--surface-l));
-  --color-surface-container-lowest: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.03)
+
+  /* Surface color lightness sign: -1 to 1 based on lightness */
+  --surface-sign: clamp(-1, (50 - var(--surface-l)), 1);
+
+  /* LCH-based surface colors */
+  --color-surface: lch(var(--surface-l) var(--surface-c) var(--surface-h));
+  --color-surface-container-lowest: lch(
+    calc(var(--surface-l) + 2 * var(--surface-sign)) var(--surface-c)
+      var(--surface-h)
   );
-  --color-surface-container-low: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.06)
+  --color-surface-container-low: lch(
+    calc(var(--surface-l) + 4 * var(--surface-sign)) var(--surface-c)
+      var(--surface-h)
   );
-  --color-surface-container: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.12)
+  --color-surface-container: lch(
+    calc(var(--surface-l) + 6 * var(--surface-sign)) var(--surface-c)
+      var(--surface-h)
   );
-  --color-surface-container-high: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.18)
+  --color-surface-container-high: lch(
+    calc(var(--surface-l) + 8 * var(--surface-sign)) var(--surface-c)
+      var(--surface-h)
   );
-  --color-surface-container-highest: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(var(--surface-l) + (56% - var(--surface-l)) * 0.24)
+  --color-surface-container-highest: lch(
+    calc(var(--surface-l) + 10 * var(--surface-sign)) var(--surface-c)
+      var(--surface-h)
   );
 
-  /* Calculated Content Colors */
+  /* Calculated Content Colors using LCH */
   /*
-   * Text Contrast with Asymmetric Pivoting:
-   * - Text colors pivot around 44% for optimal contrast
-   * - Light theme: text gets darker for better readability
-   * - Dark theme: text gets lighter for better readability
-   * - Formula: calc(100% - lightness - (44% - lightness) * multiplier)
-   *   ensures sufficient contrast regardless of background lightness
+   * LCH-based Content Colors:
+   * - Uses perceptually accurate LCH contrast calculations
+   * - Surface sign determines text direction (light text on dark, dark on light)
+   * - Sufficient contrast ensured through perceptual lightness stepping
+   * - Consistent readability across all surface variations
    */
-  --color-on-surface: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(100% - var(--surface-l) - (44% - var(--surface-l)) * 0.35)
+
+  /* On-surface: High contrast against surface */
+  --color-on-surface: lch(
+    calc(var(--surface-l) + 75 * var(--surface-sign))
+      calc(var(--surface-c) * 0.5) var(--surface-h)
   );
-  --color-on-surface-variant: hsl(
-    var(--surface-h),
-    var(--surface-s),
-    calc(100% - var(--surface-l) - (44% - var(--surface-l)) * 0.7)
+
+  /* On-surface-variant: Medium contrast against surface */
+  --color-on-surface-variant: lch(
+    calc(var(--surface-l) + 55 * var(--surface-sign))
+      calc(var(--surface-c) * 0.3) var(--surface-h)
   );
 
   /* Calculated Primary Colors */
@@ -100,7 +101,7 @@
 
   /* On-primary: High contrast against primary */
   --color-on-primary: lch(
-    calc(var(--primary-l) + 60 * var(--primary-sign))
+    calc(var(--primary-l) + 55 * var(--primary-sign))
       calc(var(--primary-c) * 0.5) var(--primary-h)
   );
 
@@ -131,7 +132,7 @@
 
   /* On-accent: High contrast against accent */
   --color-on-accent: lch(
-    calc(var(--accent-l) + 60 * var(--accent-sign)) calc(var(--accent-c) * 0.5)
+    calc(var(--accent-l) + 55 * var(--accent-sign)) calc(var(--accent-c) * 0.5)
       var(--accent-h)
   );
 
@@ -141,24 +142,16 @@
       calc(var(--accent-c) * 0.2) var(--accent-h)
   );
 
-  /* Calculated Interactive States */
-  --color-hover: hsla(
-    var(--surface-h),
-    var(--surface-s),
-    var(--surface-l),
-    0.08
-  );
-  --color-active: hsla(
-    var(--surface-h),
-    var(--surface-s),
-    var(--surface-l),
-    0.12
+  /* Calculated Interactive States using LCH */
+  --color-hover: lch(var(--surface-l) var(--surface-c) var(--surface-h) / 0.08);
+  --color-active: lch(
+    var(--surface-l) var(--surface-c) var(--surface-h) / 0.12
   );
 
-  /* Calculated Shadow Properties */
-  /* Shadows should always be darker than the surface, regardless of theme */
-  /* Take surface lightness and subtract 50%, with minimum of 0% */
-  --shadow-lightness: calc(max(0%, var(--surface-l) - 50%));
+  /* Calculated Shadow Properties using LCH */
+  /* Shadows use perceptually accurate LCH calculations */
+  /* Always darker than surface, with proper contrast regardless of theme */
+  --shadow-lightness: calc(max(0, var(--surface-l) - 40));
 
   /* Base alpha values that work for both themes */
   --shadow-alpha-1: 0.15;
@@ -167,23 +160,23 @@
   --shadow-alpha-4: 0.08;
   --shadow-alpha-5: 0.06;
 
-  /* Material Design Elevation Shadows */
+  /* Material Design Elevation Shadows using LCH */
   --elevation-0: none;
   --elevation-1:
-    0 1px 3px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
-    0 1px 2px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-2));
+    0 1px 3px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 1px 2px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
   --elevation-2:
-    0 3px 6px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
-    0 2px 4px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-2));
+    0 3px 6px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 2px 4px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
   --elevation-3:
-    0 10px 20px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
-    0 6px 6px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-3));
+    0 10px 20px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 6px 6px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
   --elevation-4:
-    0 14px 28px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
-    0 10px 10px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-3));
+    0 14px 28px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 10px 10px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
   --elevation-5:
-    0 19px 38px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-1)),
-    0 15px 12px 0 hsla(0, 0%, var(--shadow-lightness), var(--shadow-alpha-4));
+    0 19px 38px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 15px 12px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-4));
 
   /* Breakpoints */
   --breakpoint-sm: 680px;
@@ -193,13 +186,13 @@
   --breakpoint-2xl: 1800px;
 }
 
-/* Dark Mode - Only change base HSL values */
+/* Dark Mode - Only change base LCH values */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark surface - very dark */
-    --surface-h: 0;
-    --surface-s: 0%;
-    --surface-l: 15%;
+    /* Dark surface - very dark with minimal chroma */
+    --surface-l: 15; /* Very dark perceptual lightness */
+    --surface-c: 2; /* Very low chroma for neutral surfaces */
+    --surface-h: 0; /* Neutral hue */
 
     /* LCH values for dark mode - higher lightness for better contrast */
     --primary-l: 70; /* Lighter for dark backgrounds */
@@ -216,9 +209,10 @@
 
 /* Explicit Dark Theme */
 [data-theme="dark"] {
+  /* Dark surface using LCH */
+  --surface-l: 15;
+  --surface-c: 2;
   --surface-h: 0;
-  --surface-s: 0%;
-  --surface-l: 15%;
 
   /* LCH values for dark mode */
   --primary-l: 70;
@@ -232,9 +226,10 @@
 
 /* Explicit Light Theme */
 [data-theme="light"] {
+  /* Light surface using LCH */
+  --surface-l: 95;
+  --surface-c: 2;
   --surface-h: 0;
-  --surface-s: 0%;
-  --surface-l: 100%;
 
   /* LCH values for light mode */
   --primary-l: 55;
