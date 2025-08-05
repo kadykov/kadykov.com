@@ -12,7 +12,7 @@
   /* Surface colors - now using LCH for perceptual accuracy */
   --surface-l: 98; /* Perceptual lightness */
   --surface-c: 2; /* Very low chroma for neutral surfaces */
-  --surface-h: 0; /* Hue in LCH space */
+  --surface-h: 270; /* Hue in LCH space */
 
   --primary-l: 40; /* Perceptual lightness */
   --primary-c: 85; /* Chroma (saturation) */
@@ -160,7 +160,7 @@
   /* Calculated Shadow Properties using LCH */
   /* Shadows use perceptually accurate LCH calculations */
   /* Always darker than surface, with proper contrast regardless of theme */
-  --shadow-lightness: calc(max(0, var(--surface-l) - 40));
+  --shadow-lightness: calc(max(0, var(--surface-l) - 50));
 
   /* Base alpha values that work for both themes */
   --shadow-alpha-1: 0.15;
@@ -201,7 +201,7 @@
     /* Dark surface - very dark with minimal chroma */
     --surface-l: 15; /* Very dark perceptual lightness */
     --surface-c: 2; /* Very low chroma for neutral surfaces */
-    --surface-h: 0; /* Neutral hue */
+    --surface-h: 270; /* Neutral hue */
 
     /* LCH values for dark mode - higher lightness for better contrast */
     --primary-l: 70; /* Lighter for dark backgrounds */
@@ -221,7 +221,7 @@
   /* Dark surface using LCH */
   --surface-l: 15;
   --surface-c: 2;
-  --surface-h: 0;
+  --surface-h: 270;
 
   /* LCH values for dark mode */
   --primary-l: 70;
@@ -238,7 +238,7 @@
   /* Light surface using LCH */
   --surface-l: 95;
   --surface-c: 2;
-  --surface-h: 0;
+  --surface-h: 270;
 
   /* LCH values for light mode */
   --primary-l: 55;
