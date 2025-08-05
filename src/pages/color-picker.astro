@@ -1,0 +1,767 @@
+---
+title: "Interactive OKLCH Color Picker"
+description: "Real-time color system editor for surface, primary, and accent colors"
+import "../styles/base.css"
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>OKLCH Color Picker</title>
+    <style>
+      body {
+        background: var(--color-surface);
+        color: var(--color-on-surface);
+        margin: 0;
+        padding: 0;
+        transition: all 0.2s ease;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        height: 100vh;
+      }
+
+      .controls {
+        background: var(--color-surface-container);
+        padding: 1.5rem;
+        box-shadow: var(--elevation-2);
+        overflow-y: auto;
+        border-right: 1px solid var(--color-surface-container-high);
+      }
+
+      .control-group {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: var(--color-surface-container-low);
+        border-radius: 0.5rem;
+      }
+
+      .control-group h3 {
+        margin: 0 0 1rem 0;
+        color: var(--color-on-surface);
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .slider-group {
+        margin-bottom: 1rem;
+      }
+
+      .slider-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--color-on-surface-variant);
+        font-weight: 500;
+      }
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--color-surface-container-highest);
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        cursor: pointer;
+        border: 2px solid var(--color-surface);
+        box-shadow: var(--elevation-1);
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        cursor: pointer;
+        border: 2px solid var(--color-surface);
+        box-shadow: var(--elevation-1);
+      }
+
+      .value-display {
+        min-width: 60px;
+        text-align: right;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--color-on-surface);
+        background: var(--color-surface-container-highest);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+      }
+
+      .color-preview {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid var(--color-surface-container-highest);
+        margin-left: 0.5rem;
+      }
+
+      .preview-area {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.5rem;
+        overflow-y: auto;
+        background: var(--color-surface);
+      }
+
+      .copy-button {
+        width: 100%;
+        background: var(--color-accent);
+        color: var(--color-on-accent);
+        border: none;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .copy-button:hover {
+        background: var(--color-accent);
+        filter: brightness(1.1);
+        box-shadow: var(--elevation-2);
+      }
+
+      .copy-button:active {
+        transform: scale(0.98);
+      }
+
+      .preview-section {
+        background: var(--color-surface-container);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: var(--elevation-1);
+        margin-bottom: 1rem;
+      }
+
+      .preview-section h2 {
+        margin: 0 0 1rem 0;
+        color: var(--color-on-surface);
+      }
+
+      .color-swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .color-swatch {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .component-examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .example-card {
+        background: var(--color-surface);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: var(--elevation-1);
+      }
+
+      .example-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+
+      .btn-primary {
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .btn-secondary {
+        background: var(--color-surface-container);
+        color: var(--color-on-surface);
+        border: 2px solid var(--color-surface-container);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .btn-accent {
+        background: var(--color-accent);
+        color: var(--color-on-accent);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .code-output {
+        background: var(--color-surface-container-lowest);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        margin-top: 1rem;
+        white-space: pre-line;
+        color: var(--color-on-surface);
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        .controls {
+          max-height: 40vh;
+          border-right: none;
+          border-bottom: 1px solid var(--color-surface-container-high);
+        }
+
+        .preview-area {
+          max-height: 60vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="controls">
+        <h2>OKLCH Color Controls</h2>
+
+        <!-- Surface Color Controls -->
+        <div class="control-group">
+          <h3>Surface Color</h3>
+          <div class="slider-group">
+            <label>Lightness (L)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="surface-l"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.99"
+              />
+              <span class="value-display" id="surface-l-value">0.99</span>
+              <div class="color-preview" id="surface-preview"></div>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Chroma (C)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="surface-c"
+                min="0"
+                max="0.3"
+                step="0.01"
+                value="0.01"
+              />
+              <span class="value-display" id="surface-c-value">0.01</span>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Hue (H)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="surface-h"
+                min="0"
+                max="360"
+                step="1"
+                value="254"
+              />
+              <span class="value-display" id="surface-h-value">254</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Color Controls -->
+        <div class="control-group">
+          <h3>Primary Color</h3>
+          <div class="slider-group">
+            <label>Lightness (L)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="primary-l"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.55"
+              />
+              <span class="value-display" id="primary-l-value">0.55</span>
+              <div class="color-preview" id="primary-preview"></div>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Chroma (C)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="primary-c"
+                min="0"
+                max="0.4"
+                step="0.01"
+                value="0.12"
+              />
+              <span class="value-display" id="primary-c-value">0.12</span>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Hue (H)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="primary-h"
+                min="0"
+                max="360"
+                step="1"
+                value="254"
+              />
+              <span class="value-display" id="primary-h-value">254</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent Color Controls -->
+        <div class="control-group">
+          <h3>Accent Color</h3>
+          <div class="slider-group">
+            <label>Lightness (L)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="accent-l"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.75"
+              />
+              <span class="value-display" id="accent-l-value">0.75</span>
+              <div class="color-preview" id="accent-preview"></div>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Chroma (C)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="accent-c"
+                min="0"
+                max="0.4"
+                step="0.01"
+                value="0.18"
+              />
+              <span class="value-display" id="accent-c-value">0.18</span>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label>Hue (H)</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="accent-h"
+                min="0"
+                max="360"
+                step="1"
+                value="44"
+              />
+              <span class="value-display" id="accent-h-value">44</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="copy-button" id="copy-button">
+          Copy CSS Variables
+        </button>
+      </div>
+
+      <div class="preview-area">
+        <!-- Color Swatches -->
+        <div class="preview-section">
+          <h2>Color System Preview</h2>
+          <div class="color-swatches">
+            <div
+              class="color-swatch"
+              style="background: var(--color-surface); color: var(--color-on-surface);"
+            >
+              Surface<br />var(--color-surface)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-surface-container); color: var(--color-on-surface);"
+            >
+              Surface Container<br />var(--color-surface-container)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-primary); color: var(--color-on-primary);"
+            >
+              Primary<br />var(--color-primary)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-primary-container); color: var(--color-on-primary-container);"
+            >
+              Primary Container<br />var(--color-primary-container)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-accent); color: var(--color-on-accent);"
+            >
+              Accent<br />var(--color-accent)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-accent-container); color: var(--color-on-accent-container);"
+            >
+              Accent Container<br />var(--color-accent-container)
+            </div>
+          </div>
+        </div>
+
+        <!-- Component Examples -->
+        <div class="preview-section">
+          <h2>Component Examples</h2>
+          <div class="component-examples">
+            <div class="example-card">
+              <h3>Buttons</h3>
+              <div class="example-buttons">
+                <button class="btn-primary">Primary</button>
+                <button class="btn-secondary">Secondary</button>
+                <button class="btn-accent">Accent</button>
+              </div>
+            </div>
+
+            <div class="example-card">
+              <h3>Links & Navigation</h3>
+              <p>
+                Here are some <a href="#">regular links</a> within text. You can
+                also see <a href="#" style="color: var(--color-primary);"
+                  >primary colored links</a
+                > and <a href="#" style="color: var(--color-accent);"
+                  >accent colored links</a
+                >.
+              </p>
+              <nav style="margin-top: 1rem;">
+                <a href="#" style="margin-right: 1rem;">Home</a>
+                <a href="#" style="margin-right: 1rem;">About</a>
+                <a href="#" style="margin-right: 1rem;">Contact</a>
+              </nav>
+            </div>
+
+            <div class="example-card">
+              <h3>Form Elements</h3>
+              <input
+                type="text"
+                placeholder="Text input"
+                style="width: 100%; margin-bottom: 0.5rem;"
+              />
+              <select style="width: 100%;">
+                <option>Select option</option>
+              </select>
+            </div>
+
+            <div
+              class="example-card"
+              style="background: var(--color-primary-container); color: var(--color-on-primary-container);"
+            >
+              <h3>Primary Container</h3>
+              <p>This card uses primary container colors.</p>
+            </div>
+
+            <div
+              class="example-card"
+              style="background: var(--color-accent-container); color: var(--color-on-accent-container);"
+            >
+              <h3>Accent Container</h3>
+              <p>This card uses accent container colors.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Article Content Examples -->
+        <div class="preview-section">
+          <h2>Article Content Examples</h2>
+          <article style="max-width: none; padding: 0;">
+            <h1>Sample Article Title</h1>
+            <p>
+              This is a sample article paragraph demonstrating how regular body
+              text looks with the current color scheme. The text should have
+              good contrast and readability.
+            </p>
+
+            <h2>Typography Examples</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. <strong
+                >This text is bold</strong
+              > and <em>this text is italic</em>. You can also see <a href="#"
+                >links within paragraphs</a
+              > that maintain good contrast.
+            </p>
+
+            <h3>Lists and Structure</h3>
+            <ul>
+              <li>First unordered list item</li>
+              <li>Second item with <a href="#">a link</a></li>
+              <li>Third item</li>
+            </ul>
+
+            <ol>
+              <li>First ordered list item</li>
+              <li>Second ordered item</li>
+              <li>Third ordered item</li>
+            </ol>
+
+            <h4>Code and Technical Content</h4>
+            <p>
+              Here's some inline <code>code syntax</code> within a paragraph. You
+              can also see keyboard shortcuts like <kbd>Ctrl+C</kbd> and <kbd
+                >Cmd+V</kbd
+              >.
+            </p>
+
+            <pre><code>// Sample code block
+function colorPicker() &#123;
+  const surface = 'oklch(0.99 0.01 254)';
+  const primary = 'oklch(0.55 0.15 254)';
+  return &#123; surface, primary &#125;;
+&#125;</code></pre>
+
+            <blockquote>
+              <p>
+                This is a blockquote example. It demonstrates how quoted text
+                appears with the current color system. Blockquotes often contain
+                important information or citations.
+              </p>
+              <footer>— Quote Attribution</footer>
+            </blockquote>
+
+            <h4>More Text Elements</h4>
+            <p>
+              Additional text elements include <mark
+                style="background: var(--color-accent-container); color: var(--color-on-accent-container); padding: 0.1em 0.2em;"
+                >highlighted text</mark
+              >, <small>small text</small>, and <del>deleted text</del>.
+            </p>
+
+            <hr
+              style="border: none; border-top: 1px solid var(--color-surface-container-high); margin: 2rem 0;"
+            />
+
+            <p>
+              <strong>Conclusion:</strong> This article content demonstrates how
+              various text elements work together with the OKLCH color system, ensuring
+              good readability and visual hierarchy.
+            </p>
+          </article>
+        </div>
+
+        <!-- CSS Output -->
+        <div class="preview-section">
+          <h2>Generated CSS Variables</h2>
+          <div class="code-output" id="css-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      // Wait for DOM to be fully loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize all sliders and their event listeners
+        const sliders = {
+          "surface-l": document.getElementById("surface-l"),
+          "surface-c": document.getElementById("surface-c"),
+          "surface-h": document.getElementById("surface-h"),
+          "primary-l": document.getElementById("primary-l"),
+          "primary-c": document.getElementById("primary-c"),
+          "primary-h": document.getElementById("primary-h"),
+          "accent-l": document.getElementById("accent-l"),
+          "accent-c": document.getElementById("accent-c"),
+          "accent-h": document.getElementById("accent-h"),
+        }
+
+        // Add event listeners to all sliders
+        Object.entries(sliders).forEach(([id, slider]) => {
+          if (slider) {
+            slider.addEventListener("input", updateColors)
+            // Update initial display values
+            const valueDisplay = document.getElementById(id + "-value")
+            if (valueDisplay) {
+              valueDisplay.textContent = slider.value
+            }
+          }
+        })
+
+        // Add copy button event listener
+        const copyButton = document.getElementById("copy-button")
+        if (copyButton) {
+          copyButton.addEventListener("click", copyCSS)
+        }
+
+        function updateColors() {
+          // Update CSS custom properties
+          Object.entries(sliders).forEach(([id, slider]) => {
+            if (slider) {
+              document.documentElement.style.setProperty(
+                "--" + id,
+                slider.value
+              )
+              const valueDisplay = document.getElementById(id + "-value")
+              if (valueDisplay) {
+                valueDisplay.textContent = slider.value
+              }
+            }
+          })
+
+          // Update color previews
+          updateColorPreviews()
+          updateCSSOutput()
+        }
+
+        function updateColorPreviews() {
+          const surfaceL = sliders["surface-l"]?.value || "0.99"
+          const surfaceC = sliders["surface-c"]?.value || "0.01"
+          const surfaceH = sliders["surface-h"]?.value || "254"
+          const primaryL = sliders["primary-l"]?.value || "0.55"
+          const primaryC = sliders["primary-c"]?.value || "0.12"
+          const primaryH = sliders["primary-h"]?.value || "254"
+          const accentL = sliders["accent-l"]?.value || "0.70"
+          const accentC = sliders["accent-c"]?.value || "0.18"
+          const accentH = sliders["accent-h"]?.value || "44"
+
+          const surfacePreview = document.getElementById("surface-preview")
+          const primaryPreview = document.getElementById("primary-preview")
+          const accentPreview = document.getElementById("accent-preview")
+
+          if (surfacePreview) {
+            surfacePreview.style.background = `oklch(${surfaceL} ${surfaceC} ${surfaceH})`
+          }
+          if (primaryPreview) {
+            primaryPreview.style.background = `oklch(${primaryL} ${primaryC} ${primaryH})`
+          }
+          if (accentPreview) {
+            accentPreview.style.background = `oklch(${accentL} ${accentC} ${accentH})`
+          }
+        }
+
+        function updateCSSOutput() {
+          const css = `/* Theme Colors */
+--surface-l: ${sliders["surface-l"]?.value || "0.99"};
+--surface-c: ${sliders["surface-c"]?.value || "0.01"};
+--surface-h: ${sliders["surface-h"]?.value || "254"};
+
+--primary-l: ${sliders["primary-l"]?.value || "0.55"};
+--primary-c: ${sliders["primary-c"]?.value || "0.12"};
+--primary-h: ${sliders["primary-h"]?.value || "254"};
+
+--accent-l: ${sliders["accent-l"]?.value || "0.70"};
+--accent-c: ${sliders["accent-c"]?.value || "0.18"};
+--accent-h: ${sliders["accent-h"]?.value || "44"};`
+
+          const cssOutput = document.getElementById("css-output")
+          if (cssOutput) {
+            cssOutput.textContent = css
+          }
+        }
+
+        function copyCSS() {
+          const cssOutput = document.getElementById("css-output")
+          const cssText = cssOutput?.textContent
+          if (cssText) {
+            // Try to use the Clipboard API
+            if (navigator.clipboard) {
+              navigator.clipboard
+                .writeText(cssText)
+                .then(() => {
+                  showCopyFeedback()
+                })
+                .catch(() => {
+                  // Fallback to selection method
+                  fallbackCopy(cssText)
+                })
+            } else {
+              // Fallback for older browsers
+              fallbackCopy(cssText)
+            }
+          }
+        }
+
+        function fallbackCopy(text) {
+          // Create a temporary textarea
+          const textarea = document.createElement("textarea")
+          textarea.value = text
+          textarea.style.position = "fixed"
+          textarea.style.opacity = "0"
+          document.body.appendChild(textarea)
+          textarea.select()
+
+          try {
+            document.execCommand("copy")
+            showCopyFeedback()
+          } catch (err) {
+            console.error("Failed to copy:", err)
+            alert("Copy failed. Please manually select and copy the CSS code.")
+          }
+
+          document.body.removeChild(textarea)
+        }
+
+        function showCopyFeedback() {
+          const button = document.getElementById("copy-button")
+          if (button) {
+            const originalText = button.textContent
+            button.textContent = "Copied!"
+            button.style.background = "var(--color-primary)"
+            setTimeout(() => {
+              button.textContent = originalText
+              button.style.background = "var(--color-accent)"
+            }, 1500)
+          }
+        }
+
+        // Initialize everything
+        updateColors()
+        updateColorPreviews()
+        updateCSSOutput()
+      })
+    </script>
+  </body>
+</html>

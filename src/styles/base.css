@@ -10,18 +10,17 @@
   /* OKLCH: L (0-1), C (chroma 0-0.4+), H (hue 0-360) */
 
   /* Surface colors - now using OKLCH for perceptual accuracy */
-  --surface-l: 0.99; /* Perceptual lightness (0-1) */
-  --surface-c: 0.02; /* Very low chroma for neutral surfaces */
-  --surface-h: 270; /* Hue in OKLCH space */
+  --surface-l: 0.99;
+  --surface-c: 0.01;
+  --surface-h: 254;
 
-  --primary-l: 0.55; /* Perceptual lightness (0-1) */
-  --primary-c: 0.15; /* Chroma (saturation) */
-  --primary-h: 270; /* Hue in OKLCH space */
+  --primary-l: 0.55;
+  --primary-c: 0.14;
+  --primary-h: 254;
 
-  --accent-l: 0.65; /* Perceptual lightness (0-1) */
-  --accent-c: 0.12; /* Chroma (saturation) */
-  --accent-h: 35; /* Hue in OKLCH space */
-
+  --accent-l: 0.75;
+  --accent-c: 0.18;
+  --accent-h: 44;
   /* Calculated Surface Colors using OKLCH */
   /*
    * OKLCH-based Surface System with Sign-based Stepping:
@@ -39,23 +38,23 @@
   /* OKLCH-based surface colors */
   --color-surface: oklch(var(--surface-l) var(--surface-c) var(--surface-h));
   --color-surface-container-lowest: oklch(
-    calc(var(--surface-l) + 0.02 * var(--surface-sign)) var(--surface-c)
+    calc(var(--surface-l) + 0.015 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
   --color-surface-container-low: oklch(
-    calc(var(--surface-l) + 0.04 * var(--surface-sign)) var(--surface-c)
+    calc(var(--surface-l) + 0.03 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
   --color-surface-container: oklch(
-    calc(var(--surface-l) + 0.06 * var(--surface-sign)) var(--surface-c)
+    calc(var(--surface-l) + 0.045 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
   --color-surface-container-high: oklch(
-    calc(var(--surface-l) + 0.08 * var(--surface-sign)) var(--surface-c)
+    calc(var(--surface-l) + 0.06 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
   --color-surface-container-highest: oklch(
-    calc(var(--surface-l) + 0.1 * var(--surface-sign)) var(--surface-c)
+    calc(var(--surface-l) + 0.075 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
 
@@ -71,13 +70,13 @@
   /* On-surface: High contrast against surface */
   --color-on-surface: oklch(
     clamp(0, var(--surface-l) + 0.75 * var(--surface-sign), 1)
-      calc(var(--surface-c) * 0.5) var(--surface-h)
+      calc(var(--surface-c) * 0.1) var(--surface-h)
   );
 
   /* On-surface-variant: Medium contrast against surface */
   --color-on-surface-variant: oklch(
     clamp(0, var(--surface-l) + 0.55 * var(--surface-sign), 1)
-      calc(var(--surface-c) * 0.3) var(--surface-h)
+      calc(var(--surface-c) * 0.1) var(--surface-h)
   );
 
   /* Calculated Primary Colors */
@@ -99,7 +98,7 @@
           clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
         1
       )
-      calc(var(--primary-c) * 0.3) var(--primary-h)
+      calc(var(--primary-c) * 0.1) var(--primary-h)
   );
 
   /* Primary container lightness */
@@ -110,7 +109,7 @@
   --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
 
   --color-primary-container: oklch(
-    var(--primary-container-l) calc(var(--primary-c) * 0.3) var(--primary-h)
+    var(--primary-container-l) calc(var(--primary-c) * 0.5) var(--primary-h)
   );
 
   /* On-primary-container: High contrast against container */
@@ -121,7 +120,7 @@
           clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
         1
       )
-      calc(var(--primary-c) * 0.3) var(--primary-h)
+      calc(var(--primary-c) * 0.1) var(--primary-h)
   );
 
   /* Calculated Accent Colors */
@@ -143,7 +142,7 @@
           clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
         1
       )
-      calc(var(--accent-c) * 0.3) var(--accent-h)
+      calc(var(--accent-c) * 0.1) var(--accent-h)
   );
 
   /* Accent container lightness is the average of accent and surface lightness
@@ -153,7 +152,7 @@
   --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
 
   --color-accent-container: oklch(
-    var(--accent-container-l) calc(var(--accent-c) * 0.3) var(--accent-h)
+    var(--accent-container-l) calc(var(--accent-c) * 0.5) var(--accent-h)
   );
 
   /* On-accent-container: High contrast against container */
@@ -164,7 +163,7 @@
           clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
         1
       )
-      calc(var(--accent-c) * 0.3) var(--accent-h)
+      calc(var(--accent-c) * 0.1) var(--accent-h)
   );
 
   /* Calculated Interactive States using OKLCH */
@@ -213,18 +212,17 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark surface - very dark with minimal chroma */
-    --surface-l: 0.3; /* Very dark perceptual lightness */
-    --surface-c: 0.02; /* Very low chroma for neutral surfaces */
-    --surface-h: 270; /* Neutral hue */
+    --surface-l: 0.27;
+    --surface-c: 0.02;
+    --surface-h: 254;
 
-    /* OKLCH values for dark mode - higher lightness for better contrast */
-    --primary-l: 0.7; /* Lighter for dark backgrounds */
-    --primary-c: 0.13; /* Slightly reduced chroma */
-    --primary-h: 270; /* Same hue */
+    --primary-l: 0.68;
+    --primary-c: 0.1;
+    --primary-h: 254;
 
-    --accent-l: 0.75; /* Lighter for dark backgrounds */
-    --accent-c: 0.1; /* Slightly reduced chroma */
-    --accent-h: 35; /* Same hue */
+    --accent-l: 0.85;
+    --accent-c: 0.15;
+    --accent-h: 44;
 
     /* All other colors automatically calculated! */
   }
@@ -233,35 +231,33 @@
 /* Explicit Dark Theme */
 [data-theme="dark"] {
   /* Dark surface using OKLCH */
-  --surface-l: 0.3;
+  --surface-l: 0.27;
   --surface-c: 0.02;
-  --surface-h: 270;
+  --surface-h: 254;
 
-  /* OKLCH values for dark mode */
-  --primary-l: 0.7;
-  --primary-c: 0.13;
-  --primary-h: 270;
+  --primary-l: 0.68;
+  --primary-c: 0.1;
+  --primary-h: 254;
 
-  --accent-l: 0.75;
-  --accent-c: 0.1;
-  --accent-h: 35;
+  --accent-l: 0.85;
+  --accent-c: 0.15;
+  --accent-h: 44;
 }
 
 /* Explicit Light Theme */
 [data-theme="light"] {
   /* Light surface using OKLCH */
-  --surface-l: 0.95;
-  --surface-c: 0.02;
-  --surface-h: 270;
+  --surface-l: 0.99;
+  --surface-c: 0.01;
+  --surface-h: 254;
 
-  /* OKLCH values for light mode */
   --primary-l: 0.55;
-  --primary-c: 0.15;
-  --primary-h: 270;
+  --primary-c: 0.14;
+  --primary-h: 254;
 
-  --accent-l: 0.65;
-  --accent-c: 0.12;
-  --accent-h: 35;
+  --accent-l: 0.75;
+  --accent-c: 0.18;
+  --accent-h: 44;
 }
 
 /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
