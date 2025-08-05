@@ -91,24 +91,30 @@
   /* LCH-based colors */
   --color-primary: lch(var(--primary-l) var(--primary-c) var(--primary-h));
 
-  /* Primary color lightness sign: -1 to 1 based on lightness */
-  --primary-sign: clamp(-1, (50 - var(--primary-l)), 1);
+  /* Primary container lightness */
+  /* Primary container lightness is the average of primary and surface lightness
+   * This ensures the container is perceptually distinct from both primary and surface
+   * It creates a balanced contrast for primary elements against the surface
+   */
+  --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
 
   --color-primary-container: lch(
-    calc(var(--primary-l) + (75 - var(--primary-l)) * 0.6)
-      calc(var(--primary-c) * 0.3) var(--primary-h)
+    var(--primary-container-l) calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
   /* On-primary: High contrast against primary */
   --color-on-primary: lch(
-    calc(var(--primary-l) + 55 * var(--primary-sign))
+    calc(var(--primary-l) + 55 * clamp(-1, 50 - var(--primary-l), 1))
       calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
   /* On-primary-container: High contrast against container */
   --color-on-primary-container: lch(
-    calc(25 - (var(--primary-l) + (75 - var(--primary-l)) * 0.6) * 0.2)
-      calc(var(--primary-c) * 0.2) var(--primary-h)
+    calc(
+        var(--primary-container-l) + 55 *
+          clamp(-1, 50 - var(--primary-container-l), 1)
+      )
+      calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
   /* Calculated Accent Colors */
@@ -122,24 +128,29 @@
   /* LCH-based colors */
   --color-accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
 
-  /* Accent color lightness sign: -1 to 1 based on lightness */
-  --accent-sign: clamp(-1, (50 - var(--accent-l)), 1);
+  /* Accent container lightness is the average of accent and surface lightness
+   * This ensures the container is perceptually distinct from both accent and surface
+   * It creates a balanced contrast for accent elements against the surface
+   */
+  --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
 
   --color-accent-container: lch(
-    calc(var(--accent-l) + (75 - var(--accent-l)) * 0.5)
-      calc(var(--accent-c) * 0.2) var(--accent-h)
+    var(--accent-container-l) calc(var(--accent-c) * 0.3) var(--accent-h)
   );
 
   /* On-accent: High contrast against accent */
   --color-on-accent: lch(
-    calc(var(--accent-l) + 55 * var(--accent-sign)) calc(var(--accent-c) * 0.3)
-      var(--accent-h)
+    calc(var(--accent-l) + 55 * clamp(-1, 50 - var(--accent-l), 1))
+      calc(var(--accent-c) * 0.3) var(--accent-h)
   );
 
   /* On-accent-container: High contrast against container */
   --color-on-accent-container: lch(
-    calc(25 - (var(--accent-l) + (75 - var(--accent-l)) * 0.5) * 0.2)
-      calc(var(--accent-c) * 0.2) var(--accent-h)
+    calc(
+        var(--accent-container-l) + 55 *
+          clamp(-1, 50 - var(--accent-container-l), 1)
+      )
+      calc(var(--accent-c) * 0.3) var(--accent-h)
   );
 
   /* Calculated Interactive States using LCH */
