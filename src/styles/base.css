@@ -6,90 +6,99 @@
   --font-serif: "Bitter Variable", Georgia, serif;
   --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
-  /* LCH values for perceptually accurate contrast calculations */
-  /* LCH: L (0-100), C (chroma 0-150+), H (hue 0-360) */
+  /* OKLCH values for perceptually accurate contrast calculations */
+  /* OKLCH: L (0-1), C (chroma 0-0.4+), H (hue 0-360) */
 
-  /* Surface colors - now using LCH for perceptual accuracy */
-  --surface-l: 98; /* Perceptual lightness */
-  --surface-c: 2; /* Very low chroma for neutral surfaces */
-  --surface-h: 270; /* Hue in LCH space */
+  /* Surface colors - now using OKLCH for perceptual accuracy */
+  --surface-l: 0.98; /* Perceptual lightness (0-1) */
+  --surface-c: 0.02; /* Very low chroma for neutral surfaces */
+  --surface-h: 270; /* Hue in OKLCH space */
 
-  --primary-l: 40; /* Perceptual lightness */
-  --primary-c: 85; /* Chroma (saturation) */
-  --primary-h: 270; /* Hue in LCH space */
+  --primary-l: 0.4; /* Perceptual lightness (0-1) */
+  --primary-c: 0.15; /* Chroma (saturation) */
+  --primary-h: 270; /* Hue in OKLCH space */
 
-  --accent-l: 65; /* Perceptual lightness */
-  --accent-c: 75; /* Chroma (saturation) */
-  --accent-h: 35; /* Hue in LCH space */
+  --accent-l: 0.65; /* Perceptual lightness (0-1) */
+  --accent-c: 0.12; /* Chroma (saturation) */
+  --accent-h: 35; /* Hue in OKLCH space */
 
-  /* Calculated Surface Colors using LCH */
+  /* Calculated Surface Colors using OKLCH */
   /*
-   * LCH-based Surface System with Sign-based Stepping:
-   * - Uses LCH color space for perceptually accurate surface variations
+   * OKLCH-based Surface System with Sign-based Stepping:
+   * - Uses OKLCH color space for perceptually accurate surface variations
    * - Surface lightness sign determines direction (light vs dark surfaces)
    * - Container hierarchy created by stepping away from base surface
-   * - Light theme (95%): containers get darker (95 → 92 → 89 → 83 → 77 → 71)
-   * - Dark theme (15%): containers get lighter (15 → 18 → 21 → 27 → 33 → 39)
+   * - Light theme (0.95): containers get darker (0.95 → 0.92 → 0.89 → 0.83 → 0.77 → 0.71)
+   * - Dark theme (0.15): containers get lighter (0.15 → 0.18 → 0.21 → 0.27 → 0.33 → 0.39)
    * - Consistent visual hierarchy with perceptually uniform steps
    */
 
   /* Surface color lightness sign: -1 to 1 based on lightness */
-  --surface-sign: clamp(-1, (50 - var(--surface-l)), 1);
+  --surface-sign: clamp(-1, (0.5 - var(--surface-l)) * infinity, 1);
 
-  /* LCH-based surface colors */
-  --color-surface: lch(var(--surface-l) var(--surface-c) var(--surface-h));
-  --color-surface-container-lowest: lch(
-    calc(var(--surface-l) + 2 * var(--surface-sign)) var(--surface-c)
+  /* OKLCH-based surface colors */
+  --color-surface: oklch(var(--surface-l) var(--surface-c) var(--surface-h));
+  --color-surface-container-lowest: oklch(
+    calc(var(--surface-l) + 0.02 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
-  --color-surface-container-low: lch(
-    calc(var(--surface-l) + 4 * var(--surface-sign)) var(--surface-c)
+  --color-surface-container-low: oklch(
+    calc(var(--surface-l) + 0.04 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
-  --color-surface-container: lch(
-    calc(var(--surface-l) + 6 * var(--surface-sign)) var(--surface-c)
+  --color-surface-container: oklch(
+    calc(var(--surface-l) + 0.06 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
-  --color-surface-container-high: lch(
-    calc(var(--surface-l) + 8 * var(--surface-sign)) var(--surface-c)
+  --color-surface-container-high: oklch(
+    calc(var(--surface-l) + 0.08 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
-  --color-surface-container-highest: lch(
-    calc(var(--surface-l) + 10 * var(--surface-sign)) var(--surface-c)
+  --color-surface-container-highest: oklch(
+    calc(var(--surface-l) + 0.1 * var(--surface-sign)) var(--surface-c)
       var(--surface-h)
   );
 
-  /* Calculated Content Colors using LCH */
+  /* Calculated Content Colors using OKLCH */
   /*
-   * LCH-based Content Colors:
-   * - Uses perceptually accurate LCH contrast calculations
+   * OKLCH-based Content Colors:
+   * - Uses perceptually accurate OKLCH contrast calculations
    * - Surface sign determines text direction (light text on dark, dark on light)
    * - Sufficient contrast ensured through perceptual lightness stepping
    * - Consistent readability across all surface variations
    */
 
   /* On-surface: High contrast against surface */
-  --color-on-surface: lch(
-    calc(var(--surface-l) + 75 * var(--surface-sign))
+  --color-on-surface: oklch(
+    calc(var(--surface-l) + 0.75 * var(--surface-sign))
       calc(var(--surface-c) * 0.5) var(--surface-h)
   );
 
   /* On-surface-variant: Medium contrast against surface */
-  --color-on-surface-variant: lch(
-    calc(var(--surface-l) + 55 * var(--surface-sign))
+  --color-on-surface-variant: oklch(
+    calc(var(--surface-l) + 0.55 * var(--surface-sign))
       calc(var(--surface-c) * 0.3) var(--surface-h)
   );
 
   /* Calculated Primary Colors */
   /*
-   * Primary Color System with LCH for Perceptual Accuracy:
-   * - Uses LCH color space for perceptually accurate contrast calculations
-   * - LCH lightness corresponds to human perception, unlike HSL
+   * Primary Color System with OKLCH for Perceptual Accuracy:
+   * - Uses OKLCH color space for perceptually accurate contrast calculations
+   * - OKLCH lightness corresponds to human perception, unlike HSL
    * - Container and on-colors calculated based on perceptual lightness
    */
 
-  /* LCH-based colors */
-  --color-primary: lch(var(--primary-l) var(--primary-c) var(--primary-h));
+  /* OKLCH-based colors */
+  --color-primary: oklch(var(--primary-l) var(--primary-c) var(--primary-h));
+
+  /* On-primary: High contrast against primary */
+  --color-on-primary: oklch(
+    calc(
+        var(--primary-l) + 0.55 *
+          clamp(-1, (0.5 - var(--primary-l)) * infinity, 1)
+      )
+      calc(var(--primary-c) * 0.3) var(--primary-h)
+  );
 
   /* Primary container lightness */
   /* Primary container lightness is the average of primary and surface lightness
@@ -98,35 +107,38 @@
    */
   --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
 
-  --color-primary-container: lch(
+  --color-primary-container: oklch(
     var(--primary-container-l) calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
-  /* On-primary: High contrast against primary */
-  --color-on-primary: lch(
-    calc(var(--primary-l) + 55 * clamp(-1, 50 - var(--primary-l), 1))
-      calc(var(--primary-c) * 0.3) var(--primary-h)
-  );
-
   /* On-primary-container: High contrast against container */
-  --color-on-primary-container: lch(
+  --color-on-primary-container: oklch(
     calc(
-        var(--primary-container-l) + 55 *
-          clamp(-1, 50 - var(--primary-container-l), 1)
+        var(--primary-container-l) + 0.55 *
+          clamp(-1, (0.5 - var(--primary-container-l)) * infinity, 1)
       )
       calc(var(--primary-c) * 0.3) var(--primary-h)
   );
 
   /* Calculated Accent Colors */
   /*
-   * Accent Color System with LCH for Perceptual Accuracy:
-   * - Same LCH approach as primary colors for consistent contrast
+   * Accent Color System with OKLCH for Perceptual Accuracy:
+   * - Same OKLCH approach as primary colors for consistent contrast
    * - Reduced chroma for containers to maintain subtlety
    * - Perceptually accurate text contrast calculations
    */
 
-  /* LCH-based colors */
-  --color-accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
+  /* OKLCH-based colors */
+  --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+
+  /* On-accent: High contrast against accent */
+  --color-on-accent: oklch(
+    calc(
+        var(--accent-l) + 0.55 *
+          clamp(-1, (0.5 - var(--accent-l)) * infinity, 1)
+      )
+      calc(var(--accent-c) * 0.3) var(--accent-h)
+  );
 
   /* Accent container lightness is the average of accent and surface lightness
    * This ensures the container is perceptually distinct from both accent and surface
@@ -134,33 +146,27 @@
    */
   --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
 
-  --color-accent-container: lch(
+  --color-accent-container: oklch(
     var(--accent-container-l) calc(var(--accent-c) * 0.3) var(--accent-h)
   );
 
-  /* On-accent: High contrast against accent */
-  --color-on-accent: lch(
-    calc(var(--accent-l) + 55 * clamp(-1, 50 - var(--accent-l), 1))
-      calc(var(--accent-c) * 0.3) var(--accent-h)
-  );
-
   /* On-accent-container: High contrast against container */
-  --color-on-accent-container: lch(
+  --color-on-accent-container: oklch(
     calc(
-        var(--accent-container-l) + 55 *
-          clamp(-1, 50 - var(--accent-container-l), 1)
+        var(--accent-container-l) + 0.55 *
+          clamp(-1, (0.5 - var(--accent-container-l)) * infinity, 1)
       )
       calc(var(--accent-c) * 0.3) var(--accent-h)
   );
 
-  /* Calculated Interactive States using LCH */
-  --color-hover: lch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.08);
-  --color-active: lch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.12);
+  /* Calculated Interactive States using OKLCH */
+  --color-hover: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.08);
+  --color-active: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.12);
 
-  /* Calculated Shadow Properties using LCH */
-  /* Shadows use perceptually accurate LCH calculations */
+  /* Calculated Shadow Properties using OKLCH */
+  /* Shadows use perceptually accurate OKLCH calculations */
   /* Always darker than surface, with proper contrast regardless of theme */
-  --shadow-lightness: calc(max(0, var(--surface-l) - 50));
+  --shadow-lightness: calc(max(0, var(--surface-l) - 0.5));
 
   /* Base alpha values that work for both themes */
   --shadow-alpha-1: 0.15;
@@ -169,23 +175,23 @@
   --shadow-alpha-4: 0.08;
   --shadow-alpha-5: 0.06;
 
-  /* Material Design Elevation Shadows using LCH */
+  /* Material Design Elevation Shadows using OKLCH */
   --elevation-0: none;
   --elevation-1:
-    0 1px 3px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 1px 2px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
+    0 1px 3px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 1px 2px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
   --elevation-2:
-    0 3px 6px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 2px 4px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
+    0 3px 6px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 2px 4px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
   --elevation-3:
-    0 10px 20px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 6px 6px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
+    0 10px 20px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 6px 6px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
   --elevation-4:
-    0 14px 28px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 10px 10px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
+    0 14px 28px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 10px 10px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
   --elevation-5:
-    0 19px 38px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 15px 12px 0 lch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-4));
+    0 19px 38px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
+    0 15px 12px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-4));
 
   /* Breakpoints */
   --breakpoint-sm: 680px;
@@ -195,21 +201,21 @@
   --breakpoint-2xl: 1800px;
 }
 
-/* Dark Mode - Only change base LCH values */
+/* Dark Mode - Only change base OKLCH values */
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark surface - very dark with minimal chroma */
-    --surface-l: 15; /* Very dark perceptual lightness */
-    --surface-c: 2; /* Very low chroma for neutral surfaces */
+    --surface-l: 0.3; /* Very dark perceptual lightness */
+    --surface-c: 0.02; /* Very low chroma for neutral surfaces */
     --surface-h: 270; /* Neutral hue */
 
-    /* LCH values for dark mode - higher lightness for better contrast */
-    --primary-l: 70; /* Lighter for dark backgrounds */
-    --primary-c: 80; /* Slightly reduced chroma */
+    /* OKLCH values for dark mode - higher lightness for better contrast */
+    --primary-l: 0.7; /* Lighter for dark backgrounds */
+    --primary-c: 0.13; /* Slightly reduced chroma */
     --primary-h: 270; /* Same hue */
 
-    --accent-l: 75; /* Lighter for dark backgrounds */
-    --accent-c: 70; /* Slightly reduced chroma */
+    --accent-l: 0.75; /* Lighter for dark backgrounds */
+    --accent-c: 0.1; /* Slightly reduced chroma */
     --accent-h: 35; /* Same hue */
 
     /* All other colors automatically calculated! */
@@ -218,35 +224,35 @@
 
 /* Explicit Dark Theme */
 [data-theme="dark"] {
-  /* Dark surface using LCH */
-  --surface-l: 15;
-  --surface-c: 2;
+  /* Dark surface using OKLCH */
+  --surface-l: 0.3;
+  --surface-c: 0.02;
   --surface-h: 270;
 
-  /* LCH values for dark mode */
-  --primary-l: 70;
-  --primary-c: 80;
+  /* OKLCH values for dark mode */
+  --primary-l: 0.7;
+  --primary-c: 0.13;
   --primary-h: 270;
 
-  --accent-l: 75;
-  --accent-c: 70;
+  --accent-l: 0.75;
+  --accent-c: 0.1;
   --accent-h: 35;
 }
 
 /* Explicit Light Theme */
 [data-theme="light"] {
-  /* Light surface using LCH */
-  --surface-l: 95;
-  --surface-c: 2;
+  /* Light surface using OKLCH */
+  --surface-l: 0.95;
+  --surface-c: 0.02;
   --surface-h: 270;
 
-  /* LCH values for light mode */
-  --primary-l: 55;
-  --primary-c: 85;
+  /* OKLCH values for light mode */
+  --primary-l: 0.55;
+  --primary-c: 0.15;
   --primary-h: 270;
 
-  --accent-l: 65;
-  --accent-c: 75;
+  --accent-l: 0.65;
+  --accent-c: 0.12;
   --accent-h: 35;
 }
 
