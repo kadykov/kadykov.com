@@ -10,11 +10,11 @@
   /* OKLCH: L (0-1), C (chroma 0-0.4+), H (hue 0-360) */
 
   /* Surface colors - now using OKLCH for perceptual accuracy */
-  --surface-l: 0.98; /* Perceptual lightness (0-1) */
+  --surface-l: 0.99; /* Perceptual lightness (0-1) */
   --surface-c: 0.02; /* Very low chroma for neutral surfaces */
   --surface-h: 270; /* Hue in OKLCH space */
 
-  --primary-l: 0.4; /* Perceptual lightness (0-1) */
+  --primary-l: 0.55; /* Perceptual lightness (0-1) */
   --primary-c: 0.15; /* Chroma (saturation) */
   --primary-h: 270; /* Hue in OKLCH space */
 
