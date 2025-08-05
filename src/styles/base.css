@@ -34,7 +34,7 @@
    */
 
   /* Surface color lightness sign: -1 to 1 based on lightness */
-  --surface-sign: clamp(-1, (0.5 - var(--surface-l)) * infinity, 1);
+  --surface-sign: clamp(-1, (0.57 - var(--surface-l)) * infinity, 1);
 
   /* OKLCH-based surface colors */
   --color-surface: oklch(var(--surface-l) var(--surface-c) var(--surface-h));
@@ -96,7 +96,7 @@
     clamp(
         0,
         var(--primary-l) + 0.55 *
-          clamp(-1, (0.5 - var(--primary-l)) * infinity, 1),
+          clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
         1
       )
       calc(var(--primary-c) * 0.3) var(--primary-h)
@@ -118,7 +118,7 @@
     clamp(
         0,
         var(--primary-container-l) + 0.55 *
-          clamp(-1, (0.5 - var(--primary-container-l)) * infinity, 1),
+          clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
         1
       )
       calc(var(--primary-c) * 0.3) var(--primary-h)
@@ -140,7 +140,7 @@
     clamp(
         0,
         var(--accent-l) + 0.55 *
-          clamp(-1, (0.5 - var(--accent-l)) * infinity, 1),
+          clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
         1
       )
       calc(var(--accent-c) * 0.3) var(--accent-h)
@@ -161,7 +161,7 @@
     clamp(
         0,
         var(--accent-container-l) + 0.55 *
-          clamp(-1, (0.5 - var(--accent-container-l)) * infinity, 1),
+          clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
         1
       )
       calc(var(--accent-c) * 0.3) var(--accent-h)

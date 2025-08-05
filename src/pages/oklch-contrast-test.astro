@@ -1,0 +1,258 @@
+---
+// OKLCH Contrast Test Page
+// This page helps determine the optimal pivot point for OKLCH lightness values
+// where contrast with white and black is approximately equal
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OKLCH Contrast Test</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f5f5f5;
+      }
+
+      .test-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+      }
+
+      .description {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      .test-patch {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .patch-header {
+        background: white;
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .color-sample {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .contrast-text {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin: 0 0.25rem;
+        min-width: 60px;
+      }
+
+      .lightness-info {
+        background: white;
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #666;
+        border-top: 1px solid #ddd;
+      }
+
+      /* Fine-grained test around 0.5 */
+      .fine-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.5rem;
+        margin-top: 2rem;
+      }
+
+      .fine-test-patch {
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .fine-color-sample {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      .fine-patch-header {
+        background: white;
+        padding: 0.25rem;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem 0;
+        color: #333;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>OKLCH Lightness Contrast Test</h1>
+
+      <div class="description">
+        <h3>Purpose</h3>
+        <p>
+          This test helps determine the optimal pivot point for OKLCH lightness
+          values where the contrast with white and black text is approximately
+          equal. Currently using 0.5 as the pivot point, but we need to verify
+          if this is optimal.
+        </p>
+
+        <h3>How to use</h3>
+        <p>
+          Look at each grey patch and compare the readability of the white "W"
+          and black "B" text. The optimal pivot point is where both have similar
+          contrast/readability.
+        </p>
+
+        <h3>Current assumption</h3>
+        <p>
+          We assume 0.5 lightness in OKLCH is the middle point, but perceptual
+          contrast might suggest a different value.
+        </p>
+      </div>
+
+      <div class="section-title">Broad Range Test (0.1 to 0.9)</div>
+      <div class="grid">
+        <!-- Generate test patches from 0.1 to 0.9 in 0.1 increments -->
+        {
+          [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map((lightness) => (
+            <div class="test-patch">
+              <div class="patch-header">Lightness: {lightness.toFixed(1)}</div>
+              <div
+                class="color-sample"
+                style={`background-color: oklch(${lightness} 0 0)`}
+              >
+                <span
+                  class="contrast-text"
+                  style="color: white; background: rgba(0,0,0,0.1);"
+                >
+                  W
+                </span>
+                <span
+                  class="contrast-text"
+                  style="color: black; background: rgba(255,255,255,0.1);"
+                >
+                  B
+                </span>
+              </div>
+              <div class="lightness-info">
+                OKLCH: {lightness} 0 0<br />
+                RGB: oklch({lightness} 0 0)
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="section-title">
+        Fine-grained Test Around 0.5 (0.35 to 0.65)
+      </div>
+      <div class="fine-grid">
+        <!-- Generate fine test patches from 0.35 to 0.65 in 0.02 increments -->
+        {
+          Array.from({ length: 16 }, (_, i) => 0.35 + i * 0.02).map(
+            (lightness) => (
+              <div class="fine-test-patch">
+                <div class="fine-patch-header">L: {lightness.toFixed(2)}</div>
+                <div
+                  class="fine-color-sample"
+                  style={`background-color: oklch(${lightness} 0 0)`}
+                >
+                  <span style="color: white; margin-right: 0.5rem;">W</span>
+                  <span style="color: black;">B</span>
+                </div>
+              </div>
+            )
+          )
+        }
+      </div>
+
+      <div class="section-title">
+        Ultra-fine Test Around Potential Pivot (0.5 to 0.6)
+      </div>
+      <div class="fine-grid">
+        <!-- Generate ultra-fine test patches from 0.5 to 0.6 in 0.005 increments -->
+        {
+          Array.from({ length: 21 }, (_, i) => 0.5 + i * 0.005).map(
+            (lightness) => (
+              <div class="fine-test-patch">
+                <div class="fine-patch-header">L: {lightness.toFixed(3)}</div>
+                <div
+                  class="fine-color-sample"
+                  style={`background-color: oklch(${lightness} 0 0)`}
+                >
+                  <span style="color: white; margin-right: 0.5rem;">W</span>
+                  <span style="color: black;">B</span>
+                </div>
+              </div>
+            )
+          )
+        }
+      </div>
+
+      <div class="description" style="margin-top: 3rem;">
+        <h3>Additional Testing</h3>
+        <p>
+          Once you identify the optimal pivot point visually, you can also test
+          it programmatically using contrast ratio calculations. The WCAG
+          contrast ratio formula can be adapted for OKLCH values.
+        </p>
+
+        <h3>Expected Results</h3>
+        <p>
+          Based on perceptual color theory, the optimal pivot point for OKLCH
+          might be around 0.47-0.53, rather than exactly 0.5. This is because
+          human perception of lightness is not perfectly linear.
+        </p>
+
+        <h3>Next Steps</h3>
+        <p>
+          After identifying the optimal pivot point, update the <code
+            >--surface-sign</code
+          > calculation in your CSS to use the new value instead of 0.5.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
