@@ -87,8 +87,11 @@
   --color-on-surface: oklch(
     var(--on-surface-l)
       calc(
-        var(--surface-c) * min(var(--on-surface-l), 1 - var(--on-surface-l)) /
-          max(var(--surface-l), 1 - var(--surface-l))
+        var(--surface-c) *
+          min(
+            var(--on-surface-l) / var(--surface-l),
+            (1 - var(--on-surface-l)) / (1 - var(--surface-l))
+          )
       )
       var(--surface-h)
   );
@@ -104,8 +107,10 @@
     var(--on-surface-variant-l)
       calc(
         var(--surface-c) *
-          min(var(--on-surface-variant-l), 1 - var(--on-surface-variant-l)) /
-          max(var(--surface-l), 1 - var(--surface-l))
+          min(
+            var(--on-surface-variant-l) / var(--surface-l),
+            (1 - var(--on-surface-variant-l)) / (1 - var(--surface-l))
+          )
       )
       var(--surface-h)
   );
@@ -131,8 +136,11 @@
   --color-on-primary: oklch(
     var(--on-primary-l)
       calc(
-        var(--primary-c) * min(var(--on-primary-l), 1 - var(--on-primary-l)) /
-          max(var(--primary-l), 1 - var(--primary-l))
+        var(--primary-c) *
+          min(
+            var(--on-primary-l) / var(--primary-l),
+            (1 - var(--on-primary-l)) / (1 - var(--primary-l))
+          )
       )
       var(--primary-h)
   );
@@ -148,8 +156,10 @@
     var(--primary-container-l)
       calc(
         var(--primary-c) *
-          min(var(--primary-container-l), 1 - var(--primary-container-l)) /
-          max(var(--primary-l), 1 - var(--primary-l))
+          min(
+            var(--primary-container-l) / var(--primary-l),
+            (1 - var(--primary-container-l)) / (1 - var(--primary-l))
+          )
       )
       var(--primary-h)
   );
@@ -167,10 +177,9 @@
       calc(
         var(--primary-c) *
           min(
-            var(--on-primary-container-l),
-            1 - var(--on-primary-container-l)
-          ) /
-          max(var(--primary-l), 1 - var(--primary-l))
+            var(--on-primary-container-l) / var(--primary-l),
+            (1 - var(--on-primary-container-l)) / (1 - var(--primary-l))
+          )
       )
       var(--primary-h)
   );
@@ -196,8 +205,11 @@
   --color-on-accent: oklch(
     var(--on-accent-l)
       calc(
-        var(--accent-c) * min(var(--on-accent-l), 1 - var(--on-accent-l)) /
-          max(var(--accent-l), 1 - var(--accent-l))
+        var(--accent-c) *
+          min(
+            var(--on-accent-l) / var(--accent-l),
+            (1 - var(--on-accent-l)) / (1 - var(--accent-l))
+          )
       )
       var(--accent-h)
   );
@@ -212,8 +224,10 @@
     var(--accent-container-l)
       calc(
         var(--accent-c) *
-          min(var(--accent-container-l), 1 - var(--accent-container-l)) /
-          max(var(--accent-l), 1 - var(--accent-l))
+          min(
+            var(--accent-container-l) / var(--accent-l),
+            (1 - var(--accent-container-l)) / (1 - var(--accent-l))
+          )
       )
       var(--accent-h)
   );
@@ -230,8 +244,10 @@
     var(--on-accent-container-l)
       calc(
         var(--accent-c) *
-          min(var(--on-accent-container-l), 1 - var(--on-accent-container-l)) /
-          max(var(--accent-l), 1 - var(--accent-l))
+          min(
+            var(--on-accent-container-l) / var(--accent-l),
+            (1 - var(--on-accent-container-l)) / (1 - var(--accent-l))
+          )
       )
       var(--accent-h)
   );
