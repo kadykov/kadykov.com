@@ -81,16 +81,33 @@
    * - Consistent readability across all surface variations
    */
 
+  --on-surface-l: clamp(0, var(--surface-l) + 0.75 * var(--surface-sign), 1);
+
   /* On-surface: High contrast against surface */
   --color-on-surface: oklch(
-    clamp(0, var(--surface-l) + 0.75 * var(--surface-sign), 1)
-      calc(var(--surface-c) * 0.1) var(--surface-h)
+    var(--on-surface-l)
+      calc(
+        var(--surface-c) * min(var(--on-surface-l), 1 - var(--on-surface-l)) /
+          max(var(--surface-l), 1 - var(--surface-l))
+      )
+      var(--surface-h)
+  );
+
+  --on-surface-variant-l: clamp(
+    0,
+    var(--surface-l) + 0.55 * var(--surface-sign),
+    1
   );
 
   /* On-surface-variant: Medium contrast against surface */
   --color-on-surface-variant: oklch(
-    clamp(0, var(--surface-l) + 0.55 * var(--surface-sign), 1)
-      calc(var(--surface-c) * 0.1) var(--surface-h)
+    var(--on-surface-variant-l)
+      calc(
+        var(--surface-c) *
+          min(var(--on-surface-variant-l), 1 - var(--on-surface-variant-l)) /
+          max(var(--surface-l), 1 - var(--surface-l))
+      )
+      var(--surface-h)
   );
 
   /* Calculated Primary Colors */
@@ -105,14 +122,19 @@
   --color-primary: oklch(var(--primary-l) var(--primary-c) var(--primary-h));
 
   /* On-primary: High contrast against primary */
+  --on-primary-l: clamp(
+    0,
+    var(--primary-l) + 0.55 * clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
+    1
+  );
+
   --color-on-primary: oklch(
-    clamp(
-        0,
-        var(--primary-l) + 0.55 *
-          clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
-        1
+    var(--on-primary-l)
+      calc(
+        var(--primary-c) * min(var(--on-primary-l), 1 - var(--on-primary-l)) /
+          max(var(--primary-l), 1 - var(--primary-l))
       )
-      calc(var(--primary-c) * 0.1) var(--primary-h)
+      var(--primary-h)
   );
 
   /* Primary container lightness */
@@ -123,18 +145,34 @@
   --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
 
   --color-primary-container: oklch(
-    var(--primary-container-l) calc(var(--primary-c) * 0.3) var(--primary-h)
+    var(--primary-container-l)
+      calc(
+        var(--primary-c) *
+          min(var(--primary-container-l), 1 - var(--primary-container-l)) /
+          max(var(--primary-l), 1 - var(--primary-l))
+      )
+      var(--primary-h)
   );
 
   /* On-primary-container: High contrast against container */
+  --on-primary-container-l: clamp(
+    0,
+    var(--primary-container-l) + 0.55 *
+      clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
+    1
+  );
+
   --color-on-primary-container: oklch(
-    clamp(
-        0,
-        var(--primary-container-l) + 0.55 *
-          clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
-        1
+    var(--on-primary-container-l)
+      calc(
+        var(--primary-c) *
+          min(
+            var(--on-primary-container-l),
+            1 - var(--on-primary-container-l)
+          ) /
+          max(var(--primary-l), 1 - var(--primary-l))
       )
-      calc(var(--primary-c) * 0.1) var(--primary-h)
+      var(--primary-h)
   );
 
   /* Calculated Accent Colors */
@@ -149,14 +187,19 @@
   --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
 
   /* On-accent: High contrast against accent */
+  --on-accent-l: clamp(
+    0,
+    var(--accent-l) + 0.55 * clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
+    1
+  );
+
   --color-on-accent: oklch(
-    clamp(
-        0,
-        var(--accent-l) + 0.55 *
-          clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
-        1
+    var(--on-accent-l)
+      calc(
+        var(--accent-c) * min(var(--on-accent-l), 1 - var(--on-accent-l)) /
+          max(var(--accent-l), 1 - var(--accent-l))
       )
-      calc(var(--accent-c) * 0.1) var(--accent-h)
+      var(--accent-h)
   );
 
   /* Accent container lightness is the average of accent and surface lightness
@@ -166,18 +209,31 @@
   --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
 
   --color-accent-container: oklch(
-    var(--accent-container-l) calc(var(--accent-c) * 0.3) var(--accent-h)
+    var(--accent-container-l)
+      calc(
+        var(--accent-c) *
+          min(var(--accent-container-l), 1 - var(--accent-container-l)) /
+          max(var(--accent-l), 1 - var(--accent-l))
+      )
+      var(--accent-h)
   );
 
   /* On-accent-container: High contrast against container */
+  --on-accent-container-l: clamp(
+    0,
+    var(--accent-container-l) + 0.55 *
+      clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
+    1
+  );
+
   --color-on-accent-container: oklch(
-    clamp(
-        0,
-        var(--accent-container-l) + 0.55 *
-          clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
-        1
+    var(--on-accent-container-l)
+      calc(
+        var(--accent-c) *
+          min(var(--on-accent-container-l), 1 - var(--on-accent-container-l)) /
+          max(var(--accent-l), 1 - var(--accent-l))
       )
-      calc(var(--accent-c) * 0.1) var(--accent-h)
+      var(--accent-h)
   );
 
   /* Calculated Interactive States using OKLCH */
