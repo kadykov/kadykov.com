@@ -20,5 +20,15 @@
   "prettier.documentSelectors": ["**/*.astro"],
   "[astro]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "stylelint.validate": [
+    // ↓ Add "html" language.
+    "html",
+    // ↓ Add "vue" language.
+    // "vue",
+    // ↓ Add "svelte" language.
+    // "svelte",
+    // ↓ Add "astro" language.
+    "astro"
+  ]
 }

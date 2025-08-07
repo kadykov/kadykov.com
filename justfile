@@ -22,8 +22,20 @@ bp:
 
 # Format code with Prettier
 fmt:
-    npx prettier --write .
+    npm run format
+
+# Lint CSS with Stylelint
+lint-css:
+    npm run lint:css
+
+# Fix CSS linting issues automatically
+lint-css-fix:
+    npm run lint:css:fix
 
 # Lint code with ESLint
 lint:
-    npx eslint .
+    npm run lint
+
+# Run all linting (ESLint + Stylelint)
+lint-all:
+    npm run lint:all

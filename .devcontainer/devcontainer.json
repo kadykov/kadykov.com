@@ -23,7 +23,8 @@
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
         "saoudrizwan.claude-dev",
-        "Stripe.markdoc-language-support"
+        "Stripe.markdoc-language-support",
+        "stylelint.vscode-stylelint"
       ]
     }
   },
@@ -32,11 +33,6 @@
     {
       "source": "${localWorkspaceFolderBasename}-vscode-home",
       "target": "/home/vscode",
-      "type": "volume"
-    },
-    {
-      "source": "${localWorkspaceFolderBasename}-gcloud",
-      "target": "/home/vscode/.config/gcloud",
       "type": "volume"
     }
   ]

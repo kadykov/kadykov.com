@@ -15,11 +15,13 @@ import { Icon } from "astro-icon/components"
     gap: 0.25em;
     align-items: center;
   }
+
   header nav > a svg {
     height: 2em;
     width: auto;
     flex-shrink: 0;
   }
+
   /* Show logo text on mobile, hide on tablet, show on desktop */
   header nav > a span {
     display: block;
@@ -29,7 +31,8 @@ import { Icon } from "astro-icon/components"
     color: var(--color-on-surface);
     margin: 0;
   }
-  @media (min-width: 680px) and (max-width: 899px) {
+
+  @media (width >= 680px) and (width <= 899px) {
     header nav > a span {
       display: none;
     }

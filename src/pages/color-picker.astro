@@ -44,7 +44,7 @@ import "../styles/base.css"
       }
 
       .control-group h3 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 1rem;
         color: var(--color-on-surface);
         font-size: 1.1rem;
         font-weight: 600;
@@ -74,11 +74,11 @@ import "../styles/base.css"
         border-radius: 3px;
         background: var(--color-surface-container-highest);
         outline: none;
-        -webkit-appearance: none;
+        appearance: none;
       }
 
       input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
+        appearance: none;
         appearance: none;
         width: 20px;
         height: 20px;
@@ -159,7 +159,7 @@ import "../styles/base.css"
       }
 
       .preview-section h2 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 1rem;
         color: var(--color-on-surface);
       }
 
@@ -240,7 +240,7 @@ import "../styles/base.css"
         color: var(--color-on-surface);
       }
 
-      @media (max-width: 1024px) {
+      @media (width <= 1024px) {
         .container {
           grid-template-columns: 1fr;
           grid-template-rows: auto 1fr;

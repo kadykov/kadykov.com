@@ -1,29 +1,30 @@
-@import "modern-normalize/modern-normalize.css";
+@import url("modern-normalize/modern-normalize.css");
 
 /* HSL-Based Calculated Color System */
 :root {
-  --font-sans: "Source Sans 3 Variable", Arial, sans-serif;
-  --font-serif: "Bitter Variable", Georgia, serif;
+  --font-sans: "Source Sans 3 Variable", arial, sans-serif;
+  --font-serif: "Bitter Variable", georgia, serif;
   --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
   /* OKLCH values for perceptually accurate contrast calculations */
+
   /* OKLCH: L (0-1), C (chroma 0-0.4+), H (hue 0-360) */
 
   /* Surface colors - now using OKLCH for perceptual accuracy */
+
   /* https://coolors.co/palette/ff6700-ebebeb-c0c0c0-3a6ea5-004e98 */
   --surface-l: 0.99;
   --surface-c: 0;
   --surface-h: 0;
-
   --primary-l: 0.44;
   --primary-c: 0.14;
   --primary-h: 254;
-
   --accent-l: 0.7;
   --accent-c: 0.2;
   --accent-h: 44;
 
   /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
+
   /* --surface-l: 0.99;
   --surface-c: 0.01;
   --surface-h: 138;
@@ -35,7 +36,9 @@
   --accent-l: 0.55;
   --accent-c: 0.21;
   --accent-h: 22; */
+
   /* Calculated Surface Colors using OKLCH */
+
   /*
    * OKLCH-based Surface System with Sign-based Stepping:
    * - Uses OKLCH color space for perceptually accurate surface variations
@@ -73,6 +76,7 @@
   );
 
   /* Calculated Content Colors using OKLCH */
+
   /*
    * OKLCH-based Content Colors:
    * - Uses perceptually accurate OKLCH contrast calculations
@@ -95,7 +99,6 @@
       )
       var(--surface-h)
   );
-
   --on-surface-variant-l: clamp(
     0,
     var(--surface-l) + 0.55 * var(--surface-sign),
@@ -116,6 +119,7 @@
   );
 
   /* Calculated Primary Colors */
+
   /*
    * Primary Color System with OKLCH for Perceptual Accuracy:
    * - Uses OKLCH color space for perceptually accurate contrast calculations
@@ -132,7 +136,6 @@
     var(--primary-l) + 0.55 * clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
     1
   );
-
   --color-on-primary: oklch(
     var(--on-primary-l)
       calc(
@@ -146,12 +149,12 @@
   );
 
   /* Primary container lightness */
+
   /* Primary container lightness is the average of primary and surface lightness
    * This ensures the container is perceptually distinct from both primary and surface
    * It creates a balanced contrast for primary elements against the surface
    */
   --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
-
   --color-primary-container: oklch(
     var(--primary-container-l)
       calc(
@@ -171,7 +174,6 @@
       clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
     1
   );
-
   --color-on-primary-container: oklch(
     var(--on-primary-container-l)
       calc(
@@ -185,6 +187,7 @@
   );
 
   /* Calculated Accent Colors */
+
   /*
    * Accent Color System with OKLCH for Perceptual Accuracy:
    * - Same OKLCH approach as primary colors for consistent contrast
@@ -201,7 +204,6 @@
     var(--accent-l) + 0.55 * clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
     1
   );
-
   --color-on-accent: oklch(
     var(--on-accent-l)
       calc(
@@ -219,7 +221,6 @@
    * It creates a balanced contrast for accent elements against the surface
    */
   --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
-
   --color-accent-container: oklch(
     var(--accent-container-l)
       calc(
@@ -239,7 +240,6 @@
       clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
     1
   );
-
   --color-on-accent-container: oklch(
     var(--on-accent-container-l)
       calc(
@@ -253,11 +253,13 @@
   );
 
   /* Calculated Interactive States using OKLCH */
-  --color-hover: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.08);
-  --color-active: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.12);
+  --color-hover: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 8%);
+  --color-active: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 12%);
 
   /* Calculated Shadow Properties using OKLCH */
+
   /* Shadows use perceptually accurate OKLCH calculations */
+
   /* Always darker than surface, with proper contrast regardless of theme */
   --shadow-lightness: calc(max(0, var(--surface-l) - 0.5));
 
@@ -271,20 +273,20 @@
   /* Material Design Elevation Shadows using OKLCH */
   --elevation-0: none;
   --elevation-1:
-    0 1px 3px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 1px 2px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
+    0 1px 3px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 1px 2px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-2));
   --elevation-2:
-    0 3px 6px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 2px 4px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-2));
+    0 3px 6px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 2px 4px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-2));
   --elevation-3:
-    0 10px 20px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 6px 6px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
+    0 10px 20px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 6px 6px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-3));
   --elevation-4:
-    0 14px 28px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 10px 10px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-3));
+    0 14px 28px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 10px 10px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-3));
   --elevation-5:
-    0 19px 38px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-1)),
-    0 15px 12px 0 oklch(var(--shadow-lightness) 0 0 / var(--shadow-alpha-4));
+    0 19px 38px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 15px 12px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-4));
 
   /* Breakpoints */
   --breakpoint-sm: 680px;
@@ -301,11 +303,9 @@
     --surface-l: 0.27;
     --surface-c: 0.02;
     --surface-h: 254;
-
     --primary-l: 0.68;
     --primary-c: 0.1;
     --primary-h: 254;
-
     --accent-l: 0.85;
     --accent-c: 0.15;
     --accent-h: 44;
@@ -320,11 +320,9 @@
   --surface-l: 0.27;
   --surface-c: 0.02;
   --surface-h: 254;
-
   --primary-l: 0.68;
   --primary-c: 0.1;
   --primary-h: 254;
-
   --accent-l: 0.85;
   --accent-c: 0.15;
   --accent-h: 44;
@@ -336,11 +334,9 @@
   --surface-l: 0.99;
   --surface-c: 0.01;
   --surface-h: 254;
-
   --primary-l: 0.55;
   --primary-c: 0.14;
   --primary-h: 254;
-
   --accent-l: 0.75;
   --accent-c: 0.18;
   --accent-h: 44;
@@ -353,7 +349,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+
   /* This is equivalent to the following CSS */
+
   /* font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
   font-size: clamp(16px, 0.526vw + 13.89px, 24px);
   font-weight: 450;
@@ -370,11 +368,9 @@ body {
     color 0.15s ease-in-out;
 }
 
-/* Shared shape and padding for interactive elements */
+/* Base interactive elements */
 a,
-button,
-body > header details ul a,
-body > header details summary {
+button {
   text-decoration: none;
   color: inherit;
   padding: 0.5em;
@@ -392,19 +388,81 @@ a {
   margin: -0.5em;
 }
 
+/* Button Elements */
+button {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+  font-size: 1.3rem;
+  font-weight: 420;
+  margin: 0;
+  background: none;
+
+  /* border: none; */
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+  line-height: 1;
+}
+
+/* Higher specificity base selectors - must come before pseudo-classes */
+nav ul li a {
+  margin: 0;
+  background: none;
+
+  /* border: none; */
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+  line-height: 1;
+}
+
+body > header details ul a,
+body > header details summary {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.08s;
+}
+
+body > header nav ul li a,
+body > header details summary {
+  font-size: 1.3rem;
+  font-weight: 420;
+}
+
 /* Hover colors and effects */
 a:hover,
-button:hover,
-body > header details ul a:hover,
-body > header details summary:hover {
+button:hover {
   color: var(--color-on-surface);
   background: var(--color-hover);
+
   /* box-shadow: none; */
 }
 
 /* Active colors and effects */
 a:active,
-button:active,
+button:active {
+  color: var(--color-surface);
+  background: var(--color-primary);
+  transform: scale(0.97);
+}
+
+body > header details ul a:hover,
+body > header details summary:hover {
+  color: var(--color-on-surface);
+  background: var(--color-hover);
+
+  /* box-shadow: none; */
+}
+
 body > header details ul a:active,
 body > header details summary:active {
   color: var(--color-surface);
@@ -416,24 +474,9 @@ body > header details summary:active {
 h1,
 h2,
 h3,
-h4,
-body > header,
-button {
+h4 {
   font-family: var(--font-sans);
   letter-spacing: -0.02em;
-}
-
-/* Button Elements */
-button,
-nav ul li a {
-  margin: 0;
-  background: none;
-  /* border: none; */
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  appearance: none;
-  line-height: 1;
 }
 
 /* Semantic Button Styling - Based on Type and Purpose */
@@ -494,6 +537,32 @@ input[type="reset"]:hover {
   box-shadow: var(--elevation-2);
 }
 
+/* Form Elements Semantic Styling */
+input,
+select,
+textarea {
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+  border: 1px solid var(--color-surface-container-high);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--elevation-1);
+  outline: none;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: var(--color-accent);
+}
+
 /* Disabled state for all buttons */
 button:disabled,
 input:disabled {
@@ -519,16 +588,6 @@ details[open] {
   background-color: var(--color-surface-container);
 }
 
-/* Semantic card-like containers */
-article,
-section > article {
-  background-color: var(--color-surface);
-  border-radius: 0.75rem;
-  box-shadow: var(--elevation-1);
-  padding: 1.5rem;
-  margin: 1rem 0;
-}
-
 /* Primary context containers (for highlighting important content) */
 header[role="banner"] {
   background-color: var(--color-primary-container);
@@ -541,32 +600,6 @@ aside {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
   box-shadow: var(--elevation-1);
-}
-
-/* Form Elements Semantic Styling */
-input,
-select,
-textarea {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  border: 1px solid var(--color-surface-container-high);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: var(--elevation-1);
-  outline: none;
-}
-
-input:invalid,
-select:invalid,
-textarea:invalid {
-  border-color: var(--color-accent);
 }
 
 fieldset {
@@ -615,17 +648,10 @@ h3 {
 
 /* h4 styles */
 h4 {
-  margin-block: 0.9em;
-  line-height: 1.3;
-}
-
-/* h4 style is shared with buttons and nav links */
-h4,
-button,
-body > header nav ul li a,
-body > header details summary {
   font-size: 1.3rem;
   font-weight: 420;
+  margin-block: 0.9em;
+  line-height: 1.3;
 }
 
 blockquote {
@@ -694,8 +720,19 @@ article {
   color: inherit;
 }
 
+/* Semantic card-like containers */
+section > article {
+  background-color: var(--color-surface);
+  border-radius: 0.75rem;
+  box-shadow: var(--elevation-1);
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
 /* Edge-to-edge images (no margins, no shadows, sharp corners) */
+
 /* Images break out of content width and extend to full viewport width */
+
 /* Height limited to small viewport height (100svh) for optimal mobile experience */
 
 /* Style for picture elements (from OptimizedImage component) */
@@ -704,11 +741,9 @@ article picture {
   width: 100vw;
   max-height: 100svh;
   margin: 1.5rem 0;
-
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-
   overflow: hidden;
 }
 
@@ -717,7 +752,6 @@ article figure {
   display: block;
   width: 100vw;
   margin: 1.5rem 0;
-
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -743,6 +777,7 @@ article figure img {
 }
 
 /* Style for standalone img elements (not inside picture) */
+
 /* This handles non-optimizable images from MarkdocImage component */
 article img:not(picture img) {
   display: block;
@@ -751,7 +786,6 @@ article img:not(picture img) {
   height: auto;
   object-fit: contain;
   margin: 1.5rem 0;
-
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -780,13 +814,21 @@ body > footer {
   padding: 0 calc(max(1rem, (100vw - 1200px) / 2));
 }
 
+/* Higher Specificity Selectors - Must come after all lower specificity selectors */
+
+/* Header typography */
+body > header {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
 /* source-sans-3-latin-wght-normal */
 @font-face {
   font-family: "Source Sans 3 Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2)
+  src: url("@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -795,6 +837,7 @@ body > footer {
 }
 
 /* source-sans-3-cyrillic-wght-normal */
+
 /* @font-face {
   font-family: "Source Sans 3 Variable";
   font-style: normal;
@@ -806,6 +849,7 @@ body > footer {
 } */
 
 /* source-sans-3-latin-ext-wght-normal */
+
 /* @font-face {
   font-family: "Source Sans 3 Variable";
   font-style: normal;
@@ -825,7 +869,7 @@ body > footer {
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2)
+  src: url("@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -834,6 +878,7 @@ body > footer {
 }
 
 /* source-sans-3-cyrillic-wght-italic */
+
 /* @font-face {
   font-family: "Source Sans 3 Variable";
   font-style: italic;
@@ -845,6 +890,7 @@ body > footer {
 } */
 
 /* source-sans-3-latin-ext-wght-italic */
+
 /* @font-face {
   font-family: "Source Sans 3 Variable";
   font-style: italic;
@@ -864,7 +910,7 @@ body > footer {
   font-style: normal;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2)
+  src: url("@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -873,6 +919,7 @@ body > footer {
 }
 
 /* bitter-cyrillic-wght-normal */
+
 /* @font-face {
   font-family: "Bitter Variable";
   font-style: normal;
@@ -884,6 +931,7 @@ body > footer {
 } */
 
 /* bitter-latin-ext-wght-normal */
+
 /* @font-face {
   font-family: "Bitter Variable";
   font-style: normal;
@@ -903,7 +951,7 @@ body > footer {
   font-style: italic;
   font-display: block;
   font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2)
+  src: url("@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -912,6 +960,7 @@ body > footer {
 }
 
 /* bitter-cyrillic-wght-italic */
+
 /* @font-face {
   font-family: "Bitter Variable";
   font-style: italic;
@@ -923,6 +972,7 @@ body > footer {
 } */
 
 /* bitter-latin-ext-wght-italic */
+
 /* @font-face {
   font-family: "Bitter Variable";
   font-style: italic;
@@ -942,7 +992,7 @@ body > footer {
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2)
+  src: url("@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -951,6 +1001,7 @@ body > footer {
 }
 
 /* source-code-pro-latin-ext-wght-normal */
+
 /* @font-face {
   font-family: "Source Code Pro Variable";
   font-style: normal;
@@ -965,6 +1016,7 @@ body > footer {
 } */
 
 /* source-code-pro-cyrillic-wght-normal */
+
 /* @font-face {
   font-family: "Source Code Pro Variable";
   font-style: normal;
@@ -981,7 +1033,7 @@ body > footer {
   font-style: italic;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-italic.woff2)
+  src: url("@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-italic.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -990,6 +1042,7 @@ body > footer {
 }
 
 /* source-code-pro-latin-ext-wght-italic */
+
 /* @font-face {
   font-family: "Source Code Pro Variable";
   font-style: italic;
@@ -1004,6 +1057,7 @@ body > footer {
 } */
 
 /* source-code-pro-cyrillic-wght-italic */
+
 /* @font-face {
   font-family: "Source Code Pro Variable";
   font-style: italic;

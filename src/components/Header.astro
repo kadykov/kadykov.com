@@ -74,10 +74,11 @@ import ThemeSwitch from "./ThemeSwitch.astro"
     display: none;
   }
 
-  @media (max-width: 680px) {
+  @media (width <= 680px) {
     body > header nav ul {
       display: none;
     }
+
     details:has(nav) {
       display: block;
     }
