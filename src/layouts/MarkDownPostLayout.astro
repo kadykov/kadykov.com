@@ -22,7 +22,7 @@ const formatDate = (date: Date) => {
       <h1 style="margin-bottom: 0.5rem;">{title}</h1>
 
       <div
-        style="font-family: var(--font-sans); color: var(--color-content-muted); font-size: 1rem; margin-bottom: 1rem;"
+        style="font-family: var(--font-sans); color: var(--color-on-surface-variant); font-size: 1rem; margin-bottom: 1rem;"
       >
         <time datetime={pubDate.toISOString()}>
           Published: {formatDate(pubDate)}
@@ -51,14 +51,14 @@ const formatDate = (date: Date) => {
                     font-size: 0.875rem;
                     color: var(--color-accent);
                     text-decoration: none;
-                    background: var(--color-bg-muted);
+                    background: var(--color-surface-container-low);
                     padding: 0.25rem 0.5rem;
                     border-radius: 0.25rem;
                     border: 1px solid var(--color-accent);
                     transition: all 0.2s ease;
                   "
-                    onmouseover="this.style.background='var(--color-accent)'; this.style.color='var(--color-bg)'"
-                    onmouseout="this.style.background='var(--color-bg-muted)'; this.style.color='var(--color-accent)'"
+                    onmouseover="this.style.background='var(--color-accent)'; this.style.color='var(--color-surface)'"
+                    onmouseout="this.style.background='var(--color-surface-container-low)'; this.style.color='var(--color-accent)'"
                   >
                     #{tag}
                   </a>
@@ -85,7 +85,7 @@ const formatDate = (date: Date) => {
                 style="
               font-family: var(--font-sans);
               font-size: 0.875rem;
-              color: var(--color-content-muted);
+              color: var(--color-on-surface-variant);
               text-align: center;
               margin-top: 0.5rem;
               font-style: italic;
@@ -107,7 +107,7 @@ const formatDate = (date: Date) => {
     width: 100%;
     height: auto;
     border-radius: 0.5rem;
-    box-shadow: var(--color-shadow);
+    box-shadow: var(--elevation-1);
   }
 
   .blog-post-img {

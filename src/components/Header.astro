@@ -47,11 +47,6 @@ import ThemeSwitch from "./ThemeSwitch.astro"
     gap: 0.5em;
   }
 
-  /* Hide icons in main navigation on large screens */
-  body > header nav ul svg {
-    display: none;
-  }
-
   body > header button,
   body > header details summary {
     padding: 0.5em;
@@ -68,6 +63,11 @@ import ThemeSwitch from "./ThemeSwitch.astro"
     height: 1em;
     width: 1em;
     color: var(--color-on-surface);
+  }
+
+  /* Hide icons in main navigation on large screens */
+  body > header nav ul svg {
+    display: none;
   }
 
   details:has(nav) {
