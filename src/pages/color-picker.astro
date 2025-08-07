@@ -1,6 +1,7 @@
 ---
-title: "Interactive OKLCH Color Picker"
-description: "Real-time color system editor for surface, primary, and accent colors"
+// So far we have not used any Astro layout in this file, so we can keep it simple.
+// title: "Interactive OKLCH Color Picker"
+// description: "Real-time color system editor for surface, primary, and accent colors"
 import "../styles/base.css"
 ---
 
@@ -271,7 +272,7 @@ import "../styles/base.css"
               <input
                 type="range"
                 id="surface-l"
-                min="0"
+                min="0.15"
                 max="1"
                 step="0.01"
                 value="0.99"
@@ -319,7 +320,7 @@ import "../styles/base.css"
               <input
                 type="range"
                 id="primary-l"
-                min="0"
+                min="0.15"
                 max="1"
                 step="0.01"
                 value="0.55"
@@ -335,7 +336,7 @@ import "../styles/base.css"
                 type="range"
                 id="primary-c"
                 min="0"
-                max="0.4"
+                max="0.3"
                 step="0.01"
                 value="0.12"
               />
@@ -367,8 +368,8 @@ import "../styles/base.css"
               <input
                 type="range"
                 id="accent-l"
-                min="0"
-                max="1"
+                min="0.15"
+                max="0.98"
                 step="0.01"
                 value="0.75"
               />
@@ -383,7 +384,7 @@ import "../styles/base.css"
                 type="range"
                 id="accent-c"
                 min="0"
-                max="0.4"
+                max="0.3"
                 step="0.01"
                 value="0.18"
               />
@@ -705,42 +706,26 @@ function colorPicker() &#123;
           const cssOutput = document.getElementById("css-output")
           const cssText = cssOutput?.textContent
           if (cssText) {
-            // Try to use the Clipboard API
-            if (navigator.clipboard) {
+            // Use modern Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
               navigator.clipboard
                 .writeText(cssText)
                 .then(() => {
                   showCopyFeedback()
                 })
-                .catch(() => {
-                  // Fallback to selection method
-                  fallbackCopy(cssText)
+                .catch((err) => {
+                  console.error("Failed to copy:", err)
+                  alert(
+                    "Copy failed. Please manually select and copy the CSS code."
+                  )
                 })
             } else {
-              // Fallback for older browsers
-              fallbackCopy(cssText)
+              // Browser doesn't support Clipboard API
+              alert(
+                "Copy not supported in this browser. Please manually select and copy the CSS code."
+              )
             }
           }
-        }
-
-        function fallbackCopy(text) {
-          // Create a temporary textarea
-          const textarea = document.createElement("textarea")
-          textarea.value = text
-          textarea.style.position = "fixed"
-          textarea.style.opacity = "0"
-          document.body.appendChild(textarea)
-          textarea.select()
-
-          try {
-            document.execCommand("copy")
-            showCopyFeedback()
-          } catch (err) {
-            console.error("Failed to copy:", err)
-            alert("Copy failed. Please manually select and copy the CSS code.")
-          }
-
-          document.body.removeChild(textarea)
         }
 
         function showCopyFeedback() {
