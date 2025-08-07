@@ -42,6 +42,12 @@ import "../styles/base.css"
         padding: 1rem;
         background: var(--color-surface-container-low);
         border-radius: 0.5rem;
+        transition: border 0.2s ease;
+      }
+
+      .control-group.out-of-gamut {
+        border: 2px solid #f44;
+        background: var(--color-surface-container);
       }
 
       .control-group h3 {
@@ -116,6 +122,25 @@ import "../styles/base.css"
         border-radius: 50%;
         border: 2px solid var(--color-surface-container-highest);
         margin-left: 0.5rem;
+        position: relative;
+      }
+
+      .gamut-warning {
+        color: #f44;
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        font-weight: 600;
+        display: none;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .gamut-warning.visible {
+        display: flex;
+      }
+
+      .gamut-warning-icon {
+        font-size: 0.9rem;
       }
 
       .preview-area {
@@ -264,7 +289,7 @@ import "../styles/base.css"
         <h2>OKLCH Color Controls</h2>
 
         <!-- Surface Color Controls -->
-        <div class="control-group">
+        <div class="control-group" id="surface-control-group">
           <h3>Surface Color</h3>
           <div class="slider-group">
             <label>Lightness (L)</label>
@@ -309,10 +334,14 @@ import "../styles/base.css"
               <span class="value-display" id="surface-h-value">254</span>
             </div>
           </div>
+          <div class="gamut-warning" id="surface-gamut-warning">
+            <span class="gamut-warning-icon">⚠️</span>
+            <span>Out of sRGB gamut - color may not display accurately</span>
+          </div>
         </div>
 
         <!-- Primary Color Controls -->
-        <div class="control-group">
+        <div class="control-group" id="primary-control-group">
           <h3>Primary Color</h3>
           <div class="slider-group">
             <label>Lightness (L)</label>
@@ -357,10 +386,14 @@ import "../styles/base.css"
               <span class="value-display" id="primary-h-value">254</span>
             </div>
           </div>
+          <div class="gamut-warning" id="primary-gamut-warning">
+            <span class="gamut-warning-icon">⚠️</span>
+            <span>Out of sRGB gamut - color may not display accurately</span>
+          </div>
         </div>
 
         <!-- Accent Color Controls -->
-        <div class="control-group">
+        <div class="control-group" id="accent-control-group">
           <h3>Accent Color</h3>
           <div class="slider-group">
             <label>Lightness (L)</label>
@@ -404,6 +437,10 @@ import "../styles/base.css"
               />
               <span class="value-display" id="accent-h-value">44</span>
             </div>
+          </div>
+          <div class="gamut-warning" id="accent-gamut-warning">
+            <span class="gamut-warning-icon">⚠️</span>
+            <span>Out of sRGB gamut - color may not display accurately</span>
           </div>
         </div>
 
@@ -605,6 +642,196 @@ function colorPicker() &#123;
     <script is:inline>
       // Wait for DOM to be fully loaded
       document.addEventListener("DOMContentLoaded", function () {
+        /*
+         * OKLCH to sRGB Gamut Checking Implementation
+         *
+         * This implementation uses the official OKLCH specification coefficients
+         * from the CSS Color Module Level 4 working draft and related standards.
+         *
+         * Conversion chain: OKLCH → OKLab → XYZ → linear sRGB → gamma-corrected sRGB
+         *
+         * Gamut checking: Colors are considered out-of-gamut if any RGB component
+         * falls outside the [0, 1] range after conversion.
+         *
+         * The matrices and coefficients are sourced from:
+         * - https://bottosson.github.io/posts/oklab/
+         * - CSS Color Module Level 4 specification
+         * - Official W3C CSSWG working drafts
+         */
+        function multiplyMatrices(A, B) {
+          // Simple matrix multiplication for 3x3 matrix and 3x1 vector
+          return [
+            A[0][0] * B[0] + A[0][1] * B[1] + A[0][2] * B[2],
+            A[1][0] * B[0] + A[1][1] * B[1] + A[1][2] * B[2],
+            A[2][0] * B[0] + A[2][1] * B[1] + A[2][2] * B[2],
+          ]
+        }
+
+        function OKLCH_to_OKLab(OKLCH) {
+          return [
+            OKLCH[0], // L is still L
+            OKLCH[1] * Math.cos((OKLCH[2] * Math.PI) / 180), // a
+            OKLCH[1] * Math.sin((OKLCH[2] * Math.PI) / 180), // b
+          ]
+        }
+
+        function OKLab_to_XYZ(OKLab) {
+          // Given OKLab, convert to XYZ relative to D65
+          // Using official matrices from the OKLCH specification
+          // https://www.w3.org/TR/css-color-4/#color-conversion-code
+          // https://bottosson.github.io/posts/oklab/
+          var LMStoXYZ = [
+            [1.2268798758459243, -0.5578149944602171, 0.2813910456659647],
+            [-0.0405757452148008, 1.112286803280317, -0.0717110580655164],
+            [-0.0763729366746601, -0.4214933324022432, 1.5869240198367816],
+          ]
+          var OKLabtoLMS = [
+            [1.0, 0.3963377773761749, 0.2158037573099136],
+            [1.0, -0.1055613458156586, -0.0638541728258133],
+            [1.0, -0.0894841775298119, -1.2914855480194092],
+          ]
+
+          var LMSnl = multiplyMatrices(OKLabtoLMS, OKLab)
+          return multiplyMatrices(
+            LMStoXYZ,
+            LMSnl.map((c) => c ** 3)
+          )
+        }
+
+        function XYZ_to_lin_sRGB(XYZ) {
+          // convert XYZ to linear-light sRGB
+          // Using official matrix from the specification
+          var M = [
+            [12831 / 3959, -329 / 214, -1974 / 3959],
+            [-851781 / 878810, 1648619 / 878810, 36519 / 878810],
+            [705 / 12673, -2585 / 12673, 705 / 667],
+          ]
+
+          return multiplyMatrices(M, XYZ)
+        }
+
+        function gam_sRGB(RGB) {
+          // convert an array of linear-light sRGB values in the range 0.0-1.0
+          // to gamma corrected form
+          // https://en.wikipedia.org/wiki/SRGB
+          // Extended transfer function:
+          // For negative values, linear portion extends on reflection
+          // of axis, then uses reflected pow below that
+          return RGB.map(function (val) {
+            let sign = val < 0 ? -1 : 1
+            let abs = Math.abs(val)
+
+            if (abs > 0.0031308) {
+              return sign * (1.055 * Math.pow(abs, 1 / 2.4) - 0.055)
+            }
+
+            return 12.92 * val
+          })
+        }
+
+        function oklchToRgb(l, c, h) {
+          // Convert OKLCH to OKLab
+          const oklab = OKLCH_to_OKLab([l, c, h])
+
+          // Convert OKLab to XYZ
+          const xyz = OKLab_to_XYZ(oklab)
+
+          // Convert XYZ to linear sRGB
+          const rgb_linear = XYZ_to_lin_sRGB(xyz)
+
+          // Apply gamma correction
+          const rgb = gam_sRGB(rgb_linear)
+
+          return { r: rgb[0], g: rgb[1], b: rgb[2] }
+        }
+
+        function isInSrgbGamut(l, c, h) {
+          const rgb = oklchToRgb(l, c, h)
+          // Check if all RGB values are within valid range [0, 1]
+          // Use a tighter tolerance for more accurate gamut detection
+          const tolerance = 0.0001
+          return (
+            rgb.r >= -tolerance &&
+            rgb.r <= 1 + tolerance &&
+            rgb.g >= -tolerance &&
+            rgb.g <= 1 + tolerance &&
+            rgb.b >= -tolerance &&
+            rgb.b <= 1 + tolerance
+          )
+        }
+
+        function findGamutBoundary(l, h, maxChroma = 0.5) {
+          // Binary search to find the maximum chroma that stays in gamut
+          // This helps users understand what the maximum safe chroma is
+          let low = 0
+          let high = maxChroma
+          let bestChroma = 0
+
+          for (let i = 0; i < 20; i++) {
+            // 20 iterations gives us good precision
+            const mid = (low + high) / 2
+            if (isInSrgbGamut(l, mid, h)) {
+              bestChroma = mid
+              low = mid
+            } else {
+              high = mid
+            }
+          }
+
+          return bestChroma
+        }
+
+        function updateGamutWarnings() {
+          // Check each color group for gamut violations
+          const colorGroups = [
+            {
+              prefix: "surface",
+              l: parseFloat(sliders["surface-l"]?.value || "0.99"),
+              c: parseFloat(sliders["surface-c"]?.value || "0.01"),
+              h: parseFloat(sliders["surface-h"]?.value || "254"),
+            },
+            {
+              prefix: "primary",
+              l: parseFloat(sliders["primary-l"]?.value || "0.55"),
+              c: parseFloat(sliders["primary-c"]?.value || "0.12"),
+              h: parseFloat(sliders["primary-h"]?.value || "254"),
+            },
+            {
+              prefix: "accent",
+              l: parseFloat(sliders["accent-l"]?.value || "0.75"),
+              c: parseFloat(sliders["accent-c"]?.value || "0.18"),
+              h: parseFloat(sliders["accent-h"]?.value || "44"),
+            },
+          ]
+
+          colorGroups.forEach((group) => {
+            const isInGamut = isInSrgbGamut(group.l, group.c, group.h)
+            const controlGroup = document.getElementById(
+              `${group.prefix}-control-group`
+            )
+            const warning = document.getElementById(
+              `${group.prefix}-gamut-warning`
+            )
+
+            if (controlGroup && warning) {
+              if (isInGamut) {
+                controlGroup.classList.remove("out-of-gamut")
+                warning.classList.remove("visible")
+              } else {
+                controlGroup.classList.add("out-of-gamut")
+                warning.classList.add("visible")
+
+                // Calculate the maximum safe chroma for better user guidance
+                const maxSafeChroma = findGamutBoundary(group.l, group.h)
+                const warningText = warning.querySelector("span:last-child")
+                if (warningText) {
+                  warningText.textContent = `Out of sRGB gamut - try chroma ≤ ${maxSafeChroma.toFixed(3)}`
+                }
+              }
+            }
+          })
+        }
+
         // Initialize all sliders and their event listeners
         const sliders = {
           "surface-l": document.getElementById("surface-l"),
@@ -654,6 +881,7 @@ function colorPicker() &#123;
           // Update color previews
           updateColorPreviews()
           updateCSSOutput()
+          updateGamutWarnings()
         }
 
         function updateColorPreviews() {
@@ -745,6 +973,7 @@ function colorPicker() &#123;
         updateColors()
         updateColorPreviews()
         updateCSSOutput()
+        updateGamutWarnings()
       })
     </script>
   </body>
