@@ -729,14 +729,6 @@ kbd {
   font-size: 0.85em;
 }
 
-/* Meta/UI text: use sans-serif */
-body > footer {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.75;
-  color: var(--color-on-surface-variant);
-}
-
 /* Content containers - prose and article semantic styling */
 article {
   /* Total width: 48ch content + padding (grows from 50ch to 68ch)
@@ -840,16 +832,7 @@ body > footer {
   right: 50%;
   margin-left: -50%;
   margin-right: -50%;
-  max-width: 100%;
   padding: 0 calc(max(1rem, (100% - 1200px) / 2));
-}
-
-/* Higher Specificity Selectors - Must come after all lower specificity selectors */
-
-/* Header typography */
-body > header {
-  font-family: var(--font-sans);
-  letter-spacing: -0.02em;
 }
 
 /* source-sans-3-latin-wght-normal */
