@@ -38,6 +38,7 @@
   --accent-h: 22; */
 
   /* Muted blue-yellow */
+
   /* --surface-l: 0.99;
 --surface-c: 0.01;
 --surface-h: 111;
@@ -362,20 +363,18 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-
-  /* This is equivalent to the following CSS */
-
-  /* font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
-  font-size: clamp(16px, 0.526vw + 13.89px, 24px);
-  font-weight: 450;
 }
 
 /* Set serif as the default font and base font size for body text */
 body {
+  /* This is equivalent to the following CSS:
+  font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
+  font-size: clamp(16px, 0.526vw + 13.89px, 24px);
   font-family: var(--font-serif);
+  font-weight: 450;
   line-height: 1.75;
   color: var(--color-on-surface);
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-container-lowest);
   transition:
     background-color 0.15s ease-in-out,
     color 0.15s ease-in-out;
@@ -492,6 +491,40 @@ h4 {
   letter-spacing: -0.02em;
 }
 
+/* h1 styles */
+h1 {
+  font-size: 4rem;
+  font-weight: 250;
+  line-height: 1;
+  margin-block: 0.3em;
+}
+
+/* h2 styles */
+h2 {
+  font-size: 2.7rem;
+  line-height: 1.1;
+  font-weight: 320;
+  margin-block: 0.5em;
+
+  /* border-top: 0.1em solid var(--color-primary); */
+}
+
+/* h3 styles */
+h3 {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-weight: 370;
+  margin-block: 0.7em;
+}
+
+/* h4 styles */
+h4 {
+  font-size: 1.3rem;
+  font-weight: 420;
+  margin-block: 0.9em;
+  line-height: 1.3;
+}
+
 /* Semantic Button Styling - Based on Type and Purpose */
 
 /* Primary action buttons - submit type */
@@ -594,7 +627,15 @@ fieldset {
   background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
   padding: 1rem;
-  border-radius: 0.5rem;
+
+  /* border-radius: 0.5rem; */
+}
+
+blockquote {
+  border-left: 0.3rem solid var(--color-primary);
+  padding: 0.5rem 1rem;
+  margin-left: 0;
+  color: var(--color-on-surface-variant);
 }
 
 details[open] {
@@ -633,46 +674,6 @@ label {
   font-weight: 500;
   display: block;
   margin-bottom: 0.25rem;
-}
-
-/* h1 styles */
-h1 {
-  font-size: 4rem;
-  font-weight: 250;
-  line-height: 1;
-  margin-block: 0.3em;
-}
-
-/* h2 styles */
-h2 {
-  font-size: 2.7rem;
-  line-height: 1.1;
-  font-weight: 320;
-  margin-block: 0.5em;
-}
-
-/* h3 styles */
-h3 {
-  font-size: 1.8rem;
-  line-height: 1.2;
-  font-weight: 370;
-  margin-block: 0.7em;
-}
-
-/* h4 styles */
-h4 {
-  font-size: 1.3rem;
-  font-weight: 420;
-  margin-block: 0.9em;
-  line-height: 1.3;
-}
-
-blockquote {
-  background-color: var(--color-surface-container);
-  border-left: 0.3em solid var(--color-primary);
-  padding: 0.5em 1em;
-  margin-left: 0;
-  color: var(--color-on-surface-variant);
 }
 
 /* Code Elements */
@@ -727,10 +728,18 @@ body > footer {
 
 /* Content containers - prose and article semantic styling */
 article {
-  max-width: 48ch;
+  /* Total width: 48ch content + padding (grows from 50ch to 68ch)
+  Content width stays at 48ch, padding grows from 1ch to 10ch per side */
+  max-width: calc(48ch + min(100vw - 50ch, 20ch));
   margin: 0 auto;
-  padding: 2.5rem 0;
+
+  /* Responsive padding using explicit linear interpolation
+  Below 680px: 1ch horizontal padding (minimal borders on narrow screens)
+  680px to 1200px: grows linearly from 1ch to 10ch */
+  padding: 2.5rem clamp(1rem, (100vw - 50ch) / 2, 10ch);
   color: inherit;
+  background-color: var(--color-surface);
+  box-shadow: var(--elevation-1);
 }
 
 /* Semantic card-like containers */
@@ -742,13 +751,10 @@ section > article {
   margin: 1rem 0;
 }
 
-/* Edge-to-edge images (no margins, no shadows, sharp corners) */
-
-/* Images break out of content width and extend to full viewport width */
-
-/* Height limited to small viewport height (100svh) for optimal mobile experience */
-
-/* Style for picture elements (from OptimizedImage component) */
+/* Edge-to-edge images (no margins, no shadows, sharp corners)
+Images break out of content width and extend to full viewport width
+Height limited to small viewport height (100svh) for optimal mobile experience
+Style for picture elements (from OptimizedImage component) */
 article picture {
   display: block;
   width: 100vw;
