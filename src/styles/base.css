@@ -1,17 +1,29 @@
 @import url("modern-normalize/modern-normalize.css");
 
-/* HSL-Based Calculated Color System */
+/*
+ * OKLCH-Based Calculated Color System
+ * 
+ * This system uses OKLCH color space for perceptually accurate contrast calculations
+ * and automatic color derivation. Only base OKLCH values need to be defined - all
+ * surface variations, text colors, and interactive states are mathematically derived.
+ */
 :root {
   --font-sans: "Source Sans 3 Variable", arial, sans-serif;
   --font-serif: "Bitter Variable", georgia, serif;
   --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
-  /* OKLCH values for perceptually accurate contrast calculations */
+  /*
+   * Base OKLCH Color Values
+   * OKLCH: L (lightness 0-1), C (chroma 0-0.4+), H (hue 0-360°)
+   * 
+   * These are the only values that need to be manually defined.
+   * All other colors are mathematically derived to ensure:
+   * - Perceptually uniform contrast ratios
+   * - Gamut-safe color calculations
+   * - Consistent visual hierarchy across themes
+   */
 
-  /* OKLCH: L (0-1), C (chroma 0-0.4+), H (hue 0-360) */
-
-  /* Surface colors - now using OKLCH for perceptual accuracy */
-
+  /* Active palette - keep others commented for future testing */
   /* https://coolors.co/palette/ff6700-ebebeb-c0c0c0-3a6ea5-004e98 */
   --surface-l: 0.99;
   --surface-c: 0;
@@ -23,8 +35,10 @@
   --accent-c: 0.2;
   --accent-h: 44;
 
-  /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
+  /* Alternative palettes for testing - keep commented until final selection */
 
+  /* Warm red-blue palette */
+  /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
   /* --surface-l: 0.99;
   --surface-c: 0.01;
   --surface-h: 138;
@@ -37,8 +51,7 @@
   --accent-c: 0.21;
   --accent-h: 22; */
 
-  /* Muted blue-yellow */
-
+  /* Cool blue-yellow palette */
   /* --surface-l: 0.99;
 --surface-c: 0.01;
 --surface-h: 111;
@@ -54,16 +67,22 @@
   /* Calculated Surface Colors using OKLCH */
 
   /*
-   * OKLCH-based Surface System with Sign-based Stepping:
-   * - Uses OKLCH color space for perceptually accurate surface variations
-   * - Surface lightness sign determines direction (light vs dark surfaces)
-   * - Container hierarchy created by stepping away from base surface
-   * - Light theme (0.95): containers get darker (0.95 → 0.92 → 0.89 → 0.83 → 0.77 → 0.71)
-   * - Dark theme (0.15): containers get lighter (0.15 → 0.18 → 0.21 → 0.27 → 0.33 → 0.39)
-   * - Consistent visual hierarchy with perceptually uniform steps
+   * Surface Hierarchy System with Directional Stepping
+   * 
+   * The surface-sign calculation determines stepping direction based on lightness:
+   * - Light themes (surface-l > 0.5): containers get progressively darker
+   * - Dark themes (surface-l < 0.5): containers get progressively lighter
+   * 
+   * This creates consistent visual hierarchy where containers are always
+   * distinguishable from the base surface, regardless of theme.
+   * 
+   * The infinity multiplication creates a step function:
+   * - Returns -1 for light surfaces (step darker)
+   * - Returns +1 for dark surfaces (step lighter)
+   * - Threshold at 0.57 accounts for perceptual lightness differences
    */
 
-  /* Surface color lightness sign: -1 to 1 based on lightness */
+  /* Surface color lightness sign: determines stepping direction */
   --surface-sign: clamp(-1, (0.57 - var(--surface-l)) * infinity, 1);
 
   /* OKLCH-based surface colors */
@@ -89,19 +108,32 @@
       var(--surface-h)
   );
 
-  /* Calculated Content Colors using OKLCH */
+  /* Calculated Text Colors using OKLCH */
 
   /*
-   * OKLCH-based Content Colors:
-   * - Uses perceptually accurate OKLCH contrast calculations
-   * - Surface sign determines text direction (light text on dark, dark on light)
-   * - Sufficient contrast ensured through perceptual lightness stepping
-   * - Consistent readability across all surface variations
+   * Automatic Text Color Generation with Proportional Desaturation
+   * 
+   * Text colors are calculated to ensure sufficient contrast while preventing
+   * gamut clipping through proportional chroma scaling:
+   * 
+   * 1. Lightness: Stepped away from surface using surface-sign direction
+   * 2. Chroma: Proportionally scaled based on lightness change direction
+   * 3. Hue: Inherited from surface to maintain color relationship
+   * 
+   * The min() function calculates the correct chroma scaling ratio by comparing
+   * two possible lightness relationships:
+   * - Brightening ratio: new_lightness / base_lightness
+   * - Darkening ratio: (1 - new_lightness) / (1 - base_lightness)
+   * 
+   * One ratio will be >1 (incorrect direction), the other <1 (correct direction).
+   * min() automatically selects the correct scaling ratio regardless of whether
+   * we brightened or darkened the base color.
    */
 
+  /* High-contrast text: 75% lightness step from surface */
   --on-surface-l: clamp(0, var(--surface-l) + 0.75 * var(--surface-sign), 1);
 
-  /* On-surface: High contrast against surface */
+  /* On-surface: High contrast text with proportional desaturation */
   --color-on-surface: oklch(
     var(--on-surface-l)
       calc(
@@ -113,13 +145,15 @@
       )
       var(--surface-h)
   );
+
+  /* Medium-contrast text: 55% lightness step from surface */
   --on-surface-variant-l: clamp(
     0,
     var(--surface-l) + 0.55 * var(--surface-sign),
     1
   );
 
-  /* On-surface-variant: Medium contrast against surface */
+  /* On-surface-variant: Medium contrast text with proportional desaturation */
   --color-on-surface-variant: oklch(
     var(--on-surface-variant-l)
       calc(
@@ -135,16 +169,24 @@
   /* Calculated Primary Colors */
 
   /*
-   * Primary Color System with OKLCH for Perceptual Accuracy:
-   * - Uses OKLCH color space for perceptually accurate contrast calculations
-   * - OKLCH lightness corresponds to human perception, unlike HSL
-   * - Container and on-colors calculated based on perceptual lightness
+   * Primary Color System with Gamut-Safe Calculations
+   * 
+   * The primary color system uses the same proportional desaturation technique
+   * as text colors to ensure all derived colors stay within the OKLCH gamut:
+   * 
+   * 1. Base primary: Uses defined OKLCH values directly
+   * 2. Container colors: Averaged lightness between primary and surface
+   * 3. Text colors: Calculated with sufficient contrast steps
+   * 4. Chroma scaling: Prevents gamut overflow through proportional reduction
+   * 
+   * This ensures consistent color relationships and prevents browser
+   * from clipping colors to sRGB boundaries.
    */
 
-  /* OKLCH-based colors */
+  /* Base primary color using defined OKLCH values */
   --color-primary: oklch(var(--primary-l) var(--primary-c) var(--primary-h));
 
-  /* On-primary: High contrast against primary */
+  /* Text on primary: High contrast with gamut-safe chroma */
   --on-primary-l: clamp(
     0,
     var(--primary-l) + 0.55 * clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
@@ -162,11 +204,14 @@
       var(--primary-h)
   );
 
-  /* Primary container lightness */
+  /* Container Strategy: Perceptual Midpoint for Balanced Contrast */
 
-  /* Primary container lightness is the average of primary and surface lightness
-   * This ensures the container is perceptually distinct from both primary and surface
-   * It creates a balanced contrast for primary elements against the surface
+  /* 
+   * Primary container lightness uses the average of primary and surface lightness.
+   * This creates a perceptually balanced intermediate color that provides:
+   * - Sufficient contrast against both primary and surface
+   * - Visual hierarchy without being too prominent
+   * - Consistent behavior across different base color combinations
    */
   --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
   --color-primary-container: oklch(
@@ -181,7 +226,7 @@
       var(--primary-h)
   );
 
-  /* On-primary-container: High contrast against container */
+  /* Text on primary container: High contrast with directional stepping */
   --on-primary-container-l: clamp(
     0,
     var(--primary-container-l) + 0.55 *
@@ -203,16 +248,21 @@
   /* Calculated Accent Colors */
 
   /*
-   * Accent Color System with OKLCH for Perceptual Accuracy:
-   * - Same OKLCH approach as primary colors for consistent contrast
-   * - Reduced chroma for containers to maintain subtlety
-   * - Perceptually accurate text contrast calculations
+   * Accent Color System - Mirror of Primary System
+   * 
+   * Uses identical calculation logic as primary colors to ensure:
+   * - Consistent contrast behavior across color roles
+   * - Predictable visual hierarchy
+   * - Gamut-safe color derivation
+   * 
+   * Accent colors typically have higher chroma for visual interest
+   * while maintaining the same mathematical relationships.
    */
 
-  /* OKLCH-based colors */
+  /* Base accent color using defined OKLCH values */
   --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
 
-  /* On-accent: High contrast against accent */
+  /* Text on accent: High contrast with gamut-safe chroma */
   --on-accent-l: clamp(
     0,
     var(--accent-l) + 0.55 * clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
@@ -230,9 +280,9 @@
       var(--accent-h)
   );
 
-  /* Accent container lightness is the average of accent and surface lightness
-   * This ensures the container is perceptually distinct from both accent and surface
-   * It creates a balanced contrast for accent elements against the surface
+  /* 
+   * Accent container uses the same midpoint strategy as primary container
+   * for consistent visual behavior across color roles.
    */
   --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
   --color-accent-container: oklch(
@@ -247,7 +297,7 @@
       var(--accent-h)
   );
 
-  /* On-accent-container: High contrast against container */
+  /* Text on accent container: High contrast with directional stepping */
   --on-accent-container-l: clamp(
     0,
     var(--accent-container-l) + 0.55 *
@@ -267,24 +317,45 @@
   );
 
   /* Calculated Interactive States using OKLCH */
+
+  /*
+   * Interactive State Colors
+   * 
+   * Uses accent color with low alpha for subtle state feedback.
+   * OKLCH alpha blending provides more predictable results than
+   * traditional RGB alpha blending, especially with saturated colors.
+   */
   --color-hover: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 8%);
   --color-active: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 12%);
 
   /* Calculated Shadow Properties using OKLCH */
 
-  /* Shadows use perceptually accurate OKLCH calculations */
+  /*
+   * Adaptive Shadow System
+   * 
+   * Shadows are calculated to work across both light and dark themes:
+   * 
+   * 1. Shadow lightness: Always darker than surface (max 0.5 reduction)
+   *    - Light themes: shadows are much darker than surface
+   *    - Dark themes: shadows are slightly darker than surface
+   * 
+   * 2. Alpha values: Consistent across themes for predictable depth
+   * 
+   * 3. OKLCH color space: Ensures shadows don't shift hue unexpectedly
+   *    compared to RGB-based shadow calculations
+   */
 
-  /* Always darker than surface, with proper contrast regardless of theme */
+  /* Shadow color: always darker than surface, theme-adaptive */
   --shadow-lightness: calc(max(0, var(--surface-l) - 0.5));
 
-  /* Base alpha values that work for both themes */
+  /* Graduated alpha values for elevation hierarchy */
   --shadow-alpha-1: 0.15;
   --shadow-alpha-2: 0.12;
   --shadow-alpha-3: 0.1;
   --shadow-alpha-4: 0.08;
   --shadow-alpha-5: 0.06;
 
-  /* Material Design Elevation Shadows using OKLCH */
+  /* Material Design Elevation Shadows with OKLCH Color Space */
   --elevation-0: none;
   --elevation-1:
     0 1px 3px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
@@ -310,10 +381,25 @@
   --breakpoint-2xl: 1800px;
 }
 
-/* Dark Mode - Only change base OKLCH values */
+/* Theme Variants - Only Base OKLCH Values Need Changes */
+
+/*
+ * Theme System Design
+ * 
+ * Only the base OKLCH values (surface, primary, accent) need to be defined
+ * for each theme. All derived colors (containers, text, shadows, etc.) are
+ * automatically recalculated using the same mathematical relationships.
+ * 
+ * This ensures:
+ * - Consistent contrast ratios across themes
+ * - Predictable color relationships
+ * - Minimal maintenance when adding new themes
+ */
+
+/* Dark Mode - Automatic based on system preference */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark surface - very dark with minimal chroma */
+    /* Dark theme base colors - all others automatically calculated */
     --surface-l: 0.27;
     --surface-c: 0.02;
     --surface-h: 254;
@@ -323,14 +409,12 @@
     --accent-l: 0.85;
     --accent-c: 0.15;
     --accent-h: 44;
-
-    /* All other colors automatically calculated! */
   }
 }
 
-/* Explicit Dark Theme */
+/* Explicit Theme Control - Manual override of system preference */
 [data-theme="dark"] {
-  /* Dark surface using OKLCH */
+  /* Dark theme OKLCH base values */
   --surface-l: 0.27;
   --surface-c: 0.02;
   --surface-h: 254;
@@ -342,9 +426,9 @@
   --accent-h: 44;
 }
 
-/* Explicit Light Theme */
+/* Explicit Light Theme - Manual override of system preference */
 [data-theme="light"] {
-  /* Light surface using OKLCH */
+  /* Light theme OKLCH base values */
   --surface-l: 0.99;
   --surface-c: 0.01;
   --surface-h: 254;
@@ -731,14 +815,25 @@ kbd {
 
 /* Content containers - prose and article semantic styling */
 article {
-  /* Total width: 48ch content + padding (grows from 50ch to 68ch)
-  Content width stays at 48ch, padding grows from 1ch to 10ch per side */
+  /*
+   * Dynamic max-width calculation:
+   * - Base: 48ch (optimal reading line length) + 2ch minimum padding = 50ch minimum
+   * - Growth: When viewport > 50ch, extra space becomes padding (up to 20ch max)
+   * - Result: Total width grows from 50ch to 68ch (48ch + 2×10ch padding)
+   * - Why 50ch baseline: Ensures content never gets smaller than 48ch + minimal borders
+   */
   max-width: calc(48ch + min(100vw - 50ch, 20ch));
   margin: 0 auto;
 
-  /* Responsive padding using explicit linear interpolation
-  Below 680px: 1ch horizontal padding (minimal borders on narrow screens)
-  680px to 1200px: grows linearly from 1ch to 10ch */
+  /*
+   * Responsive padding calculation:
+   * - Formula: clamp(1rem, (100vw - 50ch) / 2, 10ch)
+   * - When viewport ≤ 50ch: Fixed at 1rem (minimal padding for narrow screens)
+   * - When viewport > 50ch: (100vw - 50ch) / 2 distributes extra space as padding
+   * - Why divide by 2: Extra space gets split equally between left and right padding
+   * - Maximum: 10ch (generous "paper borders" on wide screens)
+   * - Transition: Smooth growth from minimal to generous padding as screen widens
+   */
   padding: 2.5rem clamp(1rem, (100vw - 50ch) / 2, 10ch);
   color: inherit;
   background-color: var(--color-surface);
@@ -754,10 +849,12 @@ section > article {
   margin: 1rem 0;
 }
 
-/* Edge-to-edge images (no margins, no shadows, sharp corners)
-Images break out of content width and extend to full viewport width
-Height limited to small viewport height (100svh) for optimal mobile experience
-Style for picture elements (from OptimizedImage component) */
+/*
+ * Edge-to-edge images (no margins, no shadows, sharp corners)
+ * Images break out of content width and extend to full viewport width
+ * Height limited to small viewport height (100svh) for optimal mobile experience
+ * Style for picture elements (from OptimizedImage component)
+ */
 article picture {
   display: block;
   width: 100vw;
