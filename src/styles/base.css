@@ -356,28 +356,39 @@
   --accent-h: 44;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 /* Semantic Text Utilities (No TailwindCSS, DRY & Cascading) */
 
 html,
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-}
+  min-height: 100vh;
+  width: 100%;
+  font-family: var(--font-sans);
 
-/* Set serif as the default font and base font size for body text */
-body {
   /* This is equivalent to the following CSS:
   font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
   font-size: clamp(16px, 0.526vw + 13.89px, 24px);
-  font-family: var(--font-serif);
-  font-weight: 450;
-  line-height: 1.75;
   color: var(--color-on-surface);
   background-color: var(--color-surface-container-lowest);
   transition:
     background-color 0.15s ease-in-out,
     color 0.15s ease-in-out;
+}
+
+/* Set serif as the default font and base font size for main content */
+main {
+  margin: 0 auto;
+  padding: 0;
+
+  /* max-width: 1200px; */
+  font-family: var(--font-serif);
+  font-weight: 450;
+  line-height: 1.75;
 }
 
 /* Base interactive elements */
@@ -823,14 +834,14 @@ article figcaption {
 /* Full-width layout for header and footer */
 body > header,
 body > footer {
-  width: 100vw;
+  width: 100%;
   position: relative;
   left: 50%;
   right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  max-width: 100vw;
-  padding: 0 calc(max(1rem, (100vw - 1200px) / 2));
+  margin-left: -50%;
+  margin-right: -50%;
+  max-width: 100%;
+  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
 }
 
 /* Higher Specificity Selectors - Must come after all lower specificity selectors */
