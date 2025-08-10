@@ -24,6 +24,7 @@
    */
 
   /* Active palette - keep others commented for future testing */
+
   /* https://coolors.co/palette/ff6700-ebebeb-c0c0c0-3a6ea5-004e98 */
   --surface-l: 0.99;
   --surface-c: 0;
@@ -38,7 +39,9 @@
   /* Alternative palettes for testing - keep commented until final selection */
 
   /* Warm red-blue palette */
+
   /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
+
   /* --surface-l: 0.99;
   --surface-c: 0.01;
   --surface-h: 138;
@@ -52,6 +55,7 @@
   --accent-h: 22; */
 
   /* Cool blue-yellow palette */
+
   /* --surface-l: 0.99;
 --surface-c: 0.01;
 --surface-h: 111;
