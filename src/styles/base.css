@@ -539,10 +539,6 @@ main a {
   font-weight: 500;
 }
 
-blockquote a {
-  color: var(--color-on-surface);
-}
-
 a:hover {
   text-decoration-color: var(--color-accent);
   text-underline-offset: 0.3ex;
@@ -687,17 +683,16 @@ fieldset {
 }
 
 blockquote {
-  border-left: 0.3rem solid var(--color-on-surface-low);
+  border-left: 0.3rem solid var(--color-primary);
   padding: 0.5rem 1rem;
   margin-left: 0;
-  color: var(--color-on-surface-variant);
   box-shadow: var(--elevation-1);
 }
 
 /* List Elements - Subdued markers for better content hierarchy */
 ul > li::marker,
 ol > li::marker {
-  color: var(--color-on-surface-low);
+  color: var(--color-primary);
 }
 
 ul > li,
