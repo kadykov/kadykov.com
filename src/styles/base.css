@@ -132,12 +132,38 @@
    * One ratio will be >1 (incorrect direction), the other <1 (correct direction).
    * min() automatically selects the correct scaling ratio regardless of whether
    * we brightened or darkened the base color.
+   * 
+   * Text Contrast Hierarchy:
+   * - High contrast (85% step): Hyperlinks and emphasized content
+   * - Regular contrast (60% step): General text and main content
+   * - Medium contrast (50% step): Secondary text and descriptions
+   * - Low contrast (40% step): Subdued text and less important content
    */
 
-  /* High-contrast text: 75% lightness step from surface */
-  --on-surface-l: clamp(0, var(--surface-l) + 0.75 * var(--surface-sign), 1);
+  /* High-contrast text: 85% lightness step from surface - for hyperlinks */
+  --on-surface-high-l: clamp(
+    0,
+    var(--surface-l) + 0.85 * var(--surface-sign),
+    1
+  );
 
-  /* On-surface: High contrast text with proportional desaturation */
+  /* On-surface-high: High contrast text with proportional desaturation */
+  --color-on-surface-high: oklch(
+    var(--on-surface-high-l)
+      calc(
+        var(--surface-c) *
+          min(
+            var(--on-surface-high-l) / var(--surface-l),
+            (1 - var(--on-surface-high-l)) / (1 - var(--surface-l))
+          )
+      )
+      var(--surface-h)
+  );
+
+  /* Regular-contrast text: 60% lightness step from surface - for general content */
+  --on-surface-l: clamp(0, var(--surface-l) + 0.6 * var(--surface-sign), 1);
+
+  /* On-surface: Regular contrast text with proportional desaturation */
   --color-on-surface: oklch(
     var(--on-surface-l)
       calc(
@@ -150,10 +176,10 @@
       var(--surface-h)
   );
 
-  /* Medium-contrast text: 55% lightness step from surface */
+  /* Medium-contrast text: 50% lightness step from surface - for secondary content */
   --on-surface-variant-l: clamp(
     0,
-    var(--surface-l) + 0.55 * var(--surface-sign),
+    var(--surface-l) + 0.5 * var(--surface-sign),
     1
   );
 
@@ -165,6 +191,22 @@
           min(
             var(--on-surface-variant-l) / var(--surface-l),
             (1 - var(--on-surface-variant-l)) / (1 - var(--surface-l))
+          )
+      )
+      var(--surface-h)
+  );
+
+  /* Low-contrast text: 40% lightness step from surface - for subdued content */
+  --on-surface-low-l: clamp(0, var(--surface-l) + 0.4 * var(--surface-sign), 1);
+
+  /* On-surface-low: Low contrast text with proportional desaturation */
+  --color-on-surface-low: oklch(
+    var(--on-surface-low-l)
+      calc(
+        var(--surface-c) *
+          min(
+            var(--on-surface-low-l) / var(--surface-l),
+            (1 - var(--on-surface-low-l)) / (1 - var(--surface-l))
           )
       )
       var(--surface-h)
@@ -495,8 +537,11 @@ button {
 }
 
 /* Regular text links get negative margins to prevent affecting text flow */
-a {
+main a {
   margin: -0.5em;
+  color: var(--color-on-surface-high);
+  font-weight: 500;
+  /* color: white; */
 }
 
 /* Button Elements */
@@ -624,6 +669,128 @@ h4 {
   line-height: 1.3;
 }
 
+/* Content containers - prose and article semantic styling */
+article {
+  /*
+   * Dynamic max-width calculation:
+   * - Base: 48ch (optimal reading line length) + 2ch minimum padding = 50ch minimum
+   * - Growth: When viewport > 50ch, extra space becomes padding (up to 20ch max)
+   * - Result: Total width grows from 50ch to 68ch (48ch + 2×10ch padding)
+   * - Why 50ch baseline: Ensures content never gets smaller than 48ch + minimal borders
+   */
+  max-width: calc(48ch + min(100% - 50ch, 20ch));
+  margin: 0 auto;
+
+  /*
+   * Responsive padding calculation:
+   * - Formula: clamp(1rem, (100% - 50ch) / 2, 10ch)
+   * - When viewport ≤ 50ch: Fixed at 1rem (minimal padding for narrow screens)
+   * - When viewport > 50ch: (100% - 50ch) / 2 distributes extra space as padding
+   * - Why divide by 2: Extra space gets split equally between left and right padding
+   * - Maximum: 10ch (generous "paper borders" on wide screens)
+   * - Transition: Smooth growth from minimal to generous padding as screen widens
+   */
+  padding: 2.5rem clamp(1rem, (100% - 50ch) / 2, 10ch);
+  color: inherit;
+  background-color: var(--color-surface);
+  box-shadow: var(--elevation-1);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  box-shadow: var(--elevation-1);
+  border-radius: 0.2rem;
+}
+
+/* Surface Utilities - Semantic contexts */
+blockquote,
+pre,
+fieldset {
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+  padding: 1rem;
+
+  /* border-radius: 0.5rem; */
+}
+
+blockquote {
+  border-left: 0.3rem solid var(--color-on-surface-low);
+  padding: 0.5rem 1rem;
+  margin-left: 0;
+  color: var(--color-on-surface-variant);
+  box-shadow: var(--elevation-1);
+}
+
+blockquote a {
+  color: var(--color-on-surface);
+}
+
+/* List Elements - Subdued markers for better content hierarchy */
+ul > li::marker,
+ol > li::marker {
+  color: var(--color-on-surface-low);
+}
+
+ul > li,
+ol > li {
+  color: var(--color-on-surface);
+}
+
+/* Code Elements */
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  line-height: 1.4;
+}
+
+code {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+kbd {
+  background-color: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-surface-container-highest);
+  box-shadow: var(--elevation-1);
+  font-size: 0.85em;
+}
+
+/* Full-width layout for header and footer */
+body > header,
+body > footer {
+  width: 100%;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50%;
+  margin-right: -50%;
+  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
+}
+
 /* Semantic Button Styling - Based on Type and Purpose */
 
 /* Primary action buttons - submit type */
@@ -717,223 +884,6 @@ input:disabled {
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-/* Surface Utilities - Semantic contexts */
-blockquote,
-pre,
-fieldset {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  padding: 1rem;
-
-  /* border-radius: 0.5rem; */
-}
-
-blockquote {
-  border-left: 0.3rem solid var(--color-primary);
-  padding: 0.5rem 1rem;
-  margin-left: 0;
-  color: var(--color-on-surface-variant);
-}
-
-details[open] {
-  background-color: var(--color-surface-container);
-}
-
-/* Primary context containers (for highlighting important content) */
-header[role="banner"] {
-  background-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
-  box-shadow: var(--elevation-2);
-}
-
-/* Accent context containers (for special highlights) */
-aside {
-  background-color: var(--color-accent-container);
-  color: var(--color-on-accent-container);
-  box-shadow: var(--elevation-1);
-}
-
-fieldset {
-  border: 2px solid var(--color-surface-container);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem 0;
-}
-
-legend {
-  color: var(--color-on-surface);
-  font-weight: 600;
-  padding: 0 0.5rem;
-}
-
-label {
-  color: var(--color-on-surface);
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-/* Code Elements */
-code,
-pre,
-kbd,
-samp {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-}
-
-pre {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  line-height: 1.4;
-}
-
-code {
-  background-color: var(--color-surface-container-low);
-  color: var(--color-on-surface);
-  padding: 0.125em 0.25em;
-  border-radius: 0.25rem;
-}
-
-pre code {
-  background: none;
-  padding: 0;
-  border-radius: 0;
-  font-size: inherit;
-}
-
-kbd {
-  background-color: var(--color-surface-container-high);
-  color: var(--color-on-surface);
-  padding: 0.125em 0.25em;
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-surface-container-highest);
-  box-shadow: var(--elevation-1);
-  font-size: 0.85em;
-}
-
-/* Content containers - prose and article semantic styling */
-article {
-  /*
-   * Dynamic max-width calculation:
-   * - Base: 48ch (optimal reading line length) + 2ch minimum padding = 50ch minimum
-   * - Growth: When viewport > 50ch, extra space becomes padding (up to 20ch max)
-   * - Result: Total width grows from 50ch to 68ch (48ch + 2×10ch padding)
-   * - Why 50ch baseline: Ensures content never gets smaller than 48ch + minimal borders
-   */
-  max-width: calc(48ch + min(100vw - 50ch, 20ch));
-  margin: 0 auto;
-
-  /*
-   * Responsive padding calculation:
-   * - Formula: clamp(1rem, (100vw - 50ch) / 2, 10ch)
-   * - When viewport ≤ 50ch: Fixed at 1rem (minimal padding for narrow screens)
-   * - When viewport > 50ch: (100vw - 50ch) / 2 distributes extra space as padding
-   * - Why divide by 2: Extra space gets split equally between left and right padding
-   * - Maximum: 10ch (generous "paper borders" on wide screens)
-   * - Transition: Smooth growth from minimal to generous padding as screen widens
-   */
-  padding: 2.5rem clamp(1rem, (100vw - 50ch) / 2, 10ch);
-  color: inherit;
-  background-color: var(--color-surface);
-  box-shadow: var(--elevation-1);
-}
-
-/* Semantic card-like containers */
-section > article {
-  background-color: var(--color-surface);
-  border-radius: 0.75rem;
-  box-shadow: var(--elevation-1);
-  padding: 1.5rem;
-  margin: 1rem 0;
-}
-
-/*
- * Edge-to-edge images (no margins, no shadows, sharp corners)
- * Images break out of content width and extend to full viewport width
- * Height limited to small viewport height (100svh) for optimal mobile experience
- * Style for picture elements (from OptimizedImage component)
- */
-article picture {
-  display: block;
-  width: 100vw;
-  max-height: 100svh;
-  margin: 1.5rem 0;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  overflow: hidden;
-}
-
-/* Style for figure elements (contains picture + caption) */
-article figure {
-  display: block;
-  width: 100vw;
-  margin: 1.5rem 0;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Picture inside figure should not have its own margins */
-article figure picture {
-  margin: 0;
-  left: 0;
-  transform: none;
-  position: static;
-}
-
-/* Style for img elements inside picture and figure */
-article picture img,
-article figure img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-height: 100svh;
-  object-fit: contain;
-  margin: 0;
-}
-
-/* Style for standalone img elements (not inside picture) */
-
-/* This handles non-optimizable images from MarkdocImage component */
-article img:not(picture img) {
-  display: block;
-  width: 100vw;
-  max-height: 100svh;
-  height: auto;
-  object-fit: contain;
-  margin: 1.5rem 0;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Figure captions */
-article figcaption {
-  font-family: var(--font-sans);
-  font-size: 80%;
-  color: var(--color-on-surface-variant);
-  text-align: center;
-  margin: 1.5rem auto;
-  max-width: 70ch;
-}
-
-/* Full-width layout for header and footer */
-body > header,
-body > footer {
-  width: 100%;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50%;
-  margin-right: -50%;
-  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
 }
 
 /* source-sans-3-latin-wght-normal */

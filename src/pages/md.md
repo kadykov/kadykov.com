@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/HeroArticleLayout.astro"
+layout: "../layouts/ArticleLayout.astro"
 title: Example Markdown Document with Extended Content
 description: This document serves as a test case for typography, layout, and Markdown rendering in a web environment. It includes various elements like headings, paragraphs, lists, code blocks, and tables to evaluate how well the system handles longer content and complex structures.
 ---
@@ -25,11 +25,11 @@ This sentence includes **bold**, _italic_, and **_bold italic_** text. It also c
 
 ## Unordered List
 
-- This item describes a full idea or observation. The goal here is to simulate a bullet point that might be found in technical documentation, meeting notes, or a blog post outline. It contains more than one sentence, allowing for evaluation of text wrapping, line spacing, and padding within the list item.
+- This item describes a full idea or observation. The goal here is to simulate a bullet point that might be found in technical documentation, meeting notes, or a blog post outline. It contains more than one sentence, allowing for evaluation of text wrapping, line spacing, and padding within the list item. See [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style) for CSS list styling.
 
-- Another example of a longer list item. Imagine this is a design note or a comment during a code review. You might mention how a component behaves under certain conditions, discuss alternatives, and propose changes—all within a single bullet.
+- Another example of a longer list item. Imagine this is a design note or a comment during a code review. You might mention how a component behaves under certain conditions, discuss alternatives, and propose changes—all within a single bullet. Resources like [CSS-Tricks](https://css-tricks.com/) can be helpful.
 
-- Finally, a third item to test how multiple long items stack visually. This ensures that readers don't lose their place and that the layout remains clean and scannable, even when content in each item is substantial.
+- Finally, a third item to test how multiple long items stack visually. This ensures that readers don't lose their place and that the layout remains clean and scannable, even when content in each item is substantial. For accessibility guidelines, visit [WCAG documentation](https://www.w3.org/WAI/WCAG21/quickref/).
 
 ---
 
@@ -68,15 +68,37 @@ describe_typography()
 
 ---
 
-## Task List
+<!-- ## Task List
 
 - [x] Draft sample Markdown with longer paragraphs and extended list items that resemble real writing.
 - [x] Ensure spacing and readability hold up across multiple Markdown element types.
 - [ ] Review in light and dark themes to evaluate contrast and emphasis.
+- [ ] Test link appearance in [various contexts](https://example.com/context) and states. -->
+
+## Links Testing Section
+
+Here are different types of links to test their appearance:
+
+- Regular inline link: [Visit Astro documentation](https://astro.build/)
+- Link with title attribute: [GitHub](https://github.com "GitHub Homepage")
+- Reference-style link: [Typography guide][typography-ref]
+- Autolink: <https://kadykov.com>
+- Email link: <contact@kadykov.com>
+
+### Links in Different Contexts
+
+In a sentence, [this link](https://example.com/sentence) should blend well with the surrounding text. When you have a [longer link text that spans multiple words](https://example.com/long-link), it should still be readable and not break the flow.
+
+> Blockquotes can also contain [links](https://example.com/blockquote) that should maintain proper styling and contrast.
+
+**Bold text with [embedded link](https://example.com/bold)** and _italic text with [embedded link](https://example.com/italic)_.
+
+[typography-ref]: https://practicaltypography.com/
+[rhythm-link]: https://24ways.org/2006/compose-to-a-vertical-rhythm/
 
 ## Line Width Test
 
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+<!-- 0000000000000000000000000000000000000000000000000000000000 -->
 
 ## Image Test
 
