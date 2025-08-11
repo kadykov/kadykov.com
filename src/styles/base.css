@@ -521,27 +521,36 @@ main {
   line-height: 1.75;
 }
 
-/* Base interactive elements */
-a,
-button {
-  text-decoration: none;
+a {
   color: inherit;
-  padding: 0.5em;
-  border-radius: 0.5em;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.3ex;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.6ex;
   transition:
-    color 0.2s,
-    background 0.2s,
-    border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.08s;
+    text-decoration-color 0.2s ease-out,
+    text-underline-offset 0.2s ease-out;
 }
 
 /* Regular text links get negative margins to prevent affecting text flow */
 main a {
-  margin: -0.5em;
   color: var(--color-on-surface-high);
   font-weight: 500;
-  /* color: white; */
+}
+
+blockquote a {
+  color: var(--color-on-surface);
+}
+
+a:hover {
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 0.3ex;
+}
+
+a:active {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 /* Button Elements */
@@ -561,20 +570,6 @@ button {
   line-height: 1;
 }
 
-/* Higher specificity base selectors - must come before pseudo-classes */
-nav ul li a {
-  margin: 0;
-  background: none;
-
-  /* border: none; */
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  appearance: none;
-  line-height: 1;
-}
-
-body > header details ul a,
 body > header details summary {
   text-decoration: none;
   color: inherit;
@@ -586,32 +581,10 @@ body > header details summary {
     border-color 0.2s,
     box-shadow 0.2s,
     transform 0.08s;
-}
-
-body > header nav ul li a,
-body > header details summary {
   font-size: 1.3rem;
   font-weight: 420;
 }
 
-/* Hover colors and effects */
-a:hover,
-button:hover {
-  color: var(--color-on-surface);
-  background: var(--color-hover);
-
-  /* box-shadow: none; */
-}
-
-/* Active colors and effects */
-a:active,
-button:active {
-  color: var(--color-surface);
-  background: var(--color-primary);
-  transform: scale(0.97);
-}
-
-body > header details ul a:hover,
 body > header details summary:hover {
   color: var(--color-on-surface);
   background: var(--color-hover);
@@ -619,7 +592,6 @@ body > header details summary:hover {
   /* box-shadow: none; */
 }
 
-body > header details ul a:active,
 body > header details summary:active {
   color: var(--color-surface);
   background: var(--color-primary);
@@ -720,10 +692,6 @@ blockquote {
   margin-left: 0;
   color: var(--color-on-surface-variant);
   box-shadow: var(--elevation-1);
-}
-
-blockquote a {
-  color: var(--color-on-surface);
 }
 
 /* List Elements - Subdued markers for better content hierarchy */
