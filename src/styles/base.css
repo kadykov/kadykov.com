@@ -774,6 +774,57 @@ ol > li {
   color: var(--color-on-surface);
 }
 
+/* Table Elements - Material Design inspired styling */
+table {
+  font-family: var(--font-sans);
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: var(--color-surface);
+  border-radius: 0.2rem;
+  /* overflow: hidden; */
+  box-shadow: var(--elevation-1);
+}
+
+thead {
+  background-color: var(--color-surface-container-low);
+  /* background-color: var(--color-primary-container); */
+}
+
+th {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.1em;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  color: var(--color-on-surface);
+  /* color: var(--color-on-primary-container); */
+  /* border-bottom: 0.2rem solid var(--color-on-surface-low); */
+  border-bottom: 0.15rem solid var(--color-primary);
+}
+
+td {
+  font-family: var(--font-sans);
+  padding: 0.5rem 1rem;
+  font-size: max(0.9em, 16px);
+  color: var(--color-on-surface);
+  border-bottom: 0.07rem solid var(--color-surface-container);
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* Alternating row colors for better readability */
+tbody tr:nth-child(even) {
+  background-color: var(--color-surface-container-lowest);
+}
+
+tbody tr:hover {
+  background-color: var(--color-surface-container-low);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* Code Elements */
 code,
 pre,
