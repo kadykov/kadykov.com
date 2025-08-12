@@ -539,6 +539,14 @@ main a {
   font-weight: 500;
 }
 
+article h1 a,
+article h2 a,
+article h3 a,
+article h4 a {
+  color: inherit;
+  font-weight: inherit;
+}
+
 a:hover {
   text-decoration-color: var(--color-accent);
   text-underline-offset: 0.3ex;
@@ -662,6 +670,29 @@ article {
   color: inherit;
   background-color: var(--color-surface);
   box-shadow: var(--elevation-1);
+}
+
+article h1,
+article h2,
+article h3,
+article h4 {
+  padding: 0.2em 0 0.2em 0.2em;
+  border-left-color: var(--color-primary);
+  border-left-width: 0.1em;
+  margin-left: -0.4em;
+}
+
+article h1,
+article h2 {
+  border-left-style: solid;
+}
+
+article h3 {
+  border-left-style: dashed;
+}
+
+article h4 {
+  border-left-style: dotted;
 }
 
 img {
