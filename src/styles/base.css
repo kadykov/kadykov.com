@@ -735,6 +735,17 @@ blockquote::before {
   line-height: 1;
 }
 
+/* Horizontal Rule - Material Design divider styling */
+article hr {
+  width: 70%;
+  border-width: 0 0.5rem 0.15rem 0;
+  border-color: var(--color-primary);
+  height: 0.55rem;
+  background-color: inherit;
+  margin: 1.4rem 0 2rem auto;
+  padding: 0;
+}
+
 /* List Elements - Subdued markers for better content hierarchy */
 ul > li::marker,
 ol > li::marker {
