@@ -473,6 +473,16 @@
     --accent-c: 0.15;
     --accent-h: 44;
   }
+
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    /* Optional, if you also want font styles */
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
 }
 
 /* Explicit Theme Control - Manual override of system preference */
@@ -487,6 +497,16 @@
   --accent-l: 0.85;
   --accent-c: 0.15;
   --accent-h: 44;
+
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    /* Optional, if you also want font styles */
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
 }
 
 /* Explicit Light Theme - Manual override of system preference */
@@ -827,16 +847,18 @@ pre,
 kbd,
 samp {
   font-family: var(--font-mono);
-  font-size: 0.9em;
+  /* font-size: 0.9em; */
 }
 
 pre {
   background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   overflow-x: auto;
   line-height: 1.4;
+  box-shadow: var(--elevation-1);
+  font-size: 0.9em;
 }
 
 code {

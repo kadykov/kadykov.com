@@ -52,6 +52,7 @@ def describe_typography():
     Comments might be long, and should wrap correctly if your CSS supports it.
     """
     print("Code blocks should be legible and distinguishable from body text.")
+    # Long comments should wrap properly within the code block
 
 describe_typography()
 ```
