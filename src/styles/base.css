@@ -419,6 +419,39 @@
     0 19px 38px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
     0 15px 12px 0 oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-4));
 
+  /* Material Design Text Shadows with OKLCH Color Space */
+
+  /*
+   * Text Shadow System with Double Shadow Technique
+   * 
+   * Material Design inspired text shadows adapted for OKLCH color space.
+   * Uses the same double-shadow approach as box shadows for consistency:
+   * 
+   * 1. Ambient shadow: Larger, more diffuse (simulates ambient light)
+   * 2. Key shadow: Smaller, sharper (simulates direct light source)
+   * 
+   * This creates more realistic depth perception while maintaining the
+   * same elevation hierarchy as the box shadow system.
+   * 
+   * Text shadows are proportionally smaller than box shadows since they
+   * apply directly to letterforms and can become overwhelming if too prominent.
+   */
+  --text-shadow-1:
+    0 1px 3px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 1px 2px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-2));
+  --text-shadow-2:
+    0 2px 4px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 1px 2px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-2));
+  --text-shadow-3:
+    0 4px 8px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 2px 3px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-3));
+  --text-shadow-4:
+    0 6px 12px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 3px 4px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-3));
+  --text-shadow-5:
+    0 8px 16px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-1)),
+    0 4px 6px oklch(var(--shadow-lightness) 0 0deg / var(--shadow-alpha-4));
+
   /* Breakpoints */
   --breakpoint-sm: 680px;
   --breakpoint-md: 900px;
@@ -733,6 +766,7 @@ blockquote::before {
   font-weight: 600;
   color: var(--color-primary);
   line-height: 1;
+  text-shadow: var(--text-shadow-2);
 }
 
 /* Horizontal Rule - Material Design divider styling */
