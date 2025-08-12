@@ -654,7 +654,8 @@ h3 {
   margin-block: 0.7em;
 }
 
-/* h4 styles */
+/* h4 and blockquote styles */
+blockquote,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
@@ -719,35 +720,33 @@ img {
   border-radius: 0.2rem;
 }
 
-/* Surface Utilities - Semantic contexts */
+/* Surface containers */
 pre,
+blockquote,
 fieldset {
   background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  padding: 1rem;
-
-  /* border-radius: 0.5rem; */
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
 }
 
+/* Blockquote shares some styles with h4 and uses surface container */
 blockquote {
-  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface-variant);
   box-shadow: var(--elevation-1);
-  padding: 0.5rem 1rem;
-  margin: 2rem 0;
-  border-radius: 0.2rem;
   position: relative;
 
-  /* border-left: 0.25rem solid var(--color-primary); */
+  /* Blockquote uses the same typography as <h4>, so we need to add missing styles */
+  font-family: var(--font-sans);
+  margin-inline: 0;
 }
 
 blockquote::before {
   content: "\201C";
   position: absolute;
-  top: -0.5rem;
+  top: -1rem;
   left: 1rem;
-  font-size: 4rem;
-  font-weight: 600;
+  font-size: 5rem;
+  font-weight: 500;
   color: var(--color-primary);
   line-height: 1;
   text-shadow: var(--elevation-2);
