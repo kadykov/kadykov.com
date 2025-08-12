@@ -782,13 +782,11 @@ table {
   margin: 1.5rem 0;
   background-color: var(--color-surface);
   border-radius: 0.2rem;
-  /* overflow: hidden; */
   box-shadow: var(--elevation-1);
 }
 
 thead {
   background-color: var(--color-surface-container-low);
-  /* background-color: var(--color-primary-container); */
 }
 
 th {
@@ -798,8 +796,6 @@ th {
   text-align: left;
   padding: 0.5rem 1rem;
   color: var(--color-on-surface);
-  /* color: var(--color-on-primary-container); */
-  /* border-bottom: 0.2rem solid var(--color-on-surface-low); */
   border-bottom: 0.15rem solid var(--color-primary);
 }
 
