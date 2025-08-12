@@ -703,7 +703,6 @@ img {
 }
 
 /* Surface Utilities - Semantic contexts */
-blockquote,
 pre,
 fieldset {
   background-color: var(--color-surface-container-lowest);
@@ -714,10 +713,26 @@ fieldset {
 }
 
 blockquote {
-  border-left: 0.3rem solid var(--color-primary);
-  padding: 0.5rem 1rem;
-  margin-left: 0;
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
   box-shadow: var(--elevation-1);
+  padding: 0.5rem 1rem;
+  margin: 2rem 0;
+  border-radius: 0.2rem;
+  position: relative;
+
+  /* border-left: 0.25rem solid var(--color-primary); */
+}
+
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 4rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  line-height: 1;
 }
 
 /* List Elements - Subdued markers for better content hierarchy */
