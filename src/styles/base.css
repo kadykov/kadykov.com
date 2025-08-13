@@ -832,6 +832,7 @@ table {
   border-collapse: collapse;
   margin: 1.5rem 0;
   background-color: var(--color-surface);
+  color: var(--color-on-surface);
   border-radius: 0.2rem;
   box-shadow: var(--elevation-1);
 }
@@ -846,14 +847,12 @@ th {
   font-size: 1.1em;
   text-align: left;
   padding: 0.5rem 1rem;
-  color: var(--color-on-surface);
   border-bottom: 0.15rem solid var(--color-primary);
 }
 
 td {
   padding: 0.5rem 1rem;
   font-size: 0.9em;
-  color: var(--color-on-surface);
   border-bottom: 0.07rem solid var(--color-surface-container);
   transition: background-color 0.15s ease-in-out;
 }
