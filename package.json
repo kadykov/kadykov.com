@@ -22,7 +22,7 @@
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.2",
     "@fontsource-variable/bitter": "^5.2.7",
-    "@fontsource-variable/source-code-pro": "^5.1.0",
+    "@fontsource-variable/inconsolata": "^5.2.6",
     "@fontsource-variable/source-sans-3": "^5.2.7",
     "@iconify-json/ri": "^1.2.3",
     "@playform/compress": "^0.1.6",
