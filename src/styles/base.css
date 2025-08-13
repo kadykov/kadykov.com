@@ -788,7 +788,6 @@ ol > li {
 
 /* Table Elements - Material Design inspired styling */
 table {
-  font-family: var(--font-sans);
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
@@ -812,9 +811,8 @@ th {
 }
 
 td {
-  font-family: var(--font-sans);
   padding: 0.5rem 1rem;
-  font-size: max(0.9em, 16px);
+  font-size: 0.9em;
   color: var(--color-on-surface);
   border-bottom: 0.07rem solid var(--color-surface-container);
   transition: background-color 0.15s ease-in-out;
@@ -850,6 +848,7 @@ pre {
   overflow-x: auto;
   line-height: 1.4;
   box-shadow: var(--elevation-1);
+  font-size: 1em;
 }
 
 code {
