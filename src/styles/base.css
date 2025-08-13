@@ -732,13 +732,21 @@ img {
   border-radius: 0.2rem;
 }
 
-/* Surface containers */
+/* Surface block containers */
 pre,
 blockquote,
 fieldset {
   background-color: var(--color-surface-container-lowest);
   padding: 0.5rem 1rem;
   border-radius: 0.2rem;
+}
+
+/* Surface inline containers */
+kbd,
+code {
+  background-color: var(--color-surface-container-low);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
 }
 
 /* Blockquote shares some styles with h4 and uses surface container */
@@ -762,6 +770,38 @@ blockquote::before {
   color: var(--color-primary);
   line-height: 1;
   text-shadow: var(--elevation-2);
+}
+
+/* Code Elements */
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 1.1em;
+}
+
+pre {
+  padding: 1rem;
+  border-radius: 0.2rem;
+  overflow-x: auto;
+  line-height: 1.4;
+  box-shadow: var(--elevation-1);
+  font-size: 1em;
+}
+
+/* Reset styles for code blocks because they are styled with Shiki */
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+kbd {
+  border: 1px solid var(--color-surface-container-highest);
+  box-shadow: var(--elevation-1);
+  font-size: 1em;
 }
 
 /* Horizontal Rule - Material Design divider styling */
@@ -829,50 +869,6 @@ tbody tr:hover {
 
 tbody tr:last-child td {
   border-bottom: none;
-}
-
-/* Code Elements */
-code,
-pre,
-kbd,
-samp {
-  font-family: var(--font-mono);
-  font-size: 1.1em;
-}
-
-pre {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  padding: 1rem;
-  border-radius: 0.2rem;
-  overflow-x: auto;
-  line-height: 1.4;
-  box-shadow: var(--elevation-1);
-  font-size: 1em;
-}
-
-code {
-  background-color: var(--color-surface-container-low);
-  color: var(--color-on-surface);
-  padding: 0.125em 0.25em;
-  border-radius: 0.25rem;
-}
-
-pre code {
-  background: none;
-  padding: 0;
-  border-radius: 0;
-  font-size: inherit;
-}
-
-kbd {
-  background-color: var(--color-surface-container-high);
-  color: var(--color-on-surface);
-  padding: 0.125em 0.25em;
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-surface-container-highest);
-  box-shadow: var(--elevation-1);
-  font-size: 0.85em;
 }
 
 /* Full-width layout for header and footer */
@@ -1152,7 +1148,7 @@ input:disabled {
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url(@fontsource-variable/inconsolata/files/inconsolata-latin-wght-normal.woff2)
+  src: url("@fontsource-variable/inconsolata/files/inconsolata-latin-wght-normal.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -1161,6 +1157,7 @@ input:disabled {
 }
 
 /* inconsolata-latin-ext-wght-normal */
+
 /* @font-face {
   font-family: 'Inconsolata Variable';
   font-style: normal;
