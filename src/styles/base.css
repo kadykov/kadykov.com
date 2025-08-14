@@ -679,24 +679,24 @@ h4 {
 article {
   /*
    * Dynamic max-width calculation:
-   * - Base: 48ch (optimal reading line length) + 2ch minimum padding = 50ch minimum
-   * - Growth: When viewport > 50ch, extra space becomes padding (up to 20ch max)
-   * - Result: Total width grows from 50ch to 68ch (48ch + 2×10ch padding)
-   * - Why 50ch baseline: Ensures content never gets smaller than 48ch + minimal borders
+   * - Base: 30rem (optimal reading line length) + 2rem minimum padding = 32rem minimum
+   * - Growth: When viewport > 32rem, extra space becomes padding (up to 12rem max)
+   * - Result: Total width grows from 32rem to 42rem (30rem + 2×6rem padding)
+   * - Why 32rem baseline: Ensures content never gets smaller than 30rem + minimal borders
    */
-  max-width: calc(48ch + min(100% - 50ch, 20ch));
+  max-width: calc(30rem + min(100% - 32rem, 12rem));
   margin: 0 auto;
 
   /*
    * Responsive padding calculation:
-   * - Formula: clamp(1rem, (100% - 50ch) / 2, 10ch)
-   * - When viewport ≤ 50ch: Fixed at 1rem (minimal padding for narrow screens)
-   * - When viewport > 50ch: (100% - 50ch) / 2 distributes extra space as padding
+   * - Formula: clamp(1rem, (100% - 32rem) / 2, 6rem)
+   * - When viewport ≤ 32rem: Fixed at 1rem (minimal padding for narrow screens)
+   * - When viewport > 32rem: (100% - 32rem) / 2 distributes extra space as padding
    * - Why divide by 2: Extra space gets split equally between left and right padding
-   * - Maximum: 10ch (generous "paper borders" on wide screens)
+   * - Maximum: 6rem (generous "paper borders" on wide screens)
    * - Transition: Smooth growth from minimal to generous padding as screen widens
    */
-  padding: 2.5rem clamp(1rem, (100% - 50ch) / 2, 10ch);
+  padding: 2.5rem clamp(1rem, (100% - 32rem) / 2, 6rem);
   color: inherit;
   background-color: var(--color-surface);
   box-shadow: var(--elevation-1);
