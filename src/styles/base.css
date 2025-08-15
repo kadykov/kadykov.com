@@ -848,9 +848,12 @@ ol > li::marker {
   color: var(--color-primary);
 }
 
-ul > li,
-ol > li {
-  color: var(--color-on-surface);
+ul > li::marker {
+  font-size: 1.2em;
+}
+
+ul {
+  list-style-type: square;
 }
 
 /* Table Elements - Material Design inspired styling */
