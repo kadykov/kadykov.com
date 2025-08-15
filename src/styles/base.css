@@ -678,25 +678,27 @@ h4 {
 /* Content containers - prose and article semantic styling */
 article {
   /*
-   * Dynamic max-width calculation:
-   * - Base: 30rem (optimal reading line length) + 2rem minimum padding = 32rem minimum
-   * - Growth: When viewport > 32rem, extra space becomes padding (up to 12rem max)
-   * - Result: Total width grows from 32rem to 42rem (30rem + 2×6rem padding)
-   * - Why 32rem baseline: Ensures content never gets smaller than 30rem + minimal borders
+   * Paper-like article container with coordinated width and padding:
+   * 
+   * Design goal: Create a sheet of paper effect where the container grows
+   * from 32rem to 42rem, while padding grows from minimal to generous.
+   * 
+   * The 30rem value in padding calculation is 2rem less than the minimum
+   * max-width (32rem) to ensure padding starts growing immediately when
+   * the container has room to expand beyond its minimum size.
    */
-  max-width: calc(30rem + min(100% - 32rem, 12rem));
+  max-width: clamp(32rem, 100%, 42rem);
   margin: 0 auto;
 
   /*
-   * Responsive padding calculation:
-   * - Formula: clamp(1rem, (100% - 32rem) / 2, 6rem)
-   * - When viewport ≤ 32rem: Fixed at 1rem (minimal padding for narrow screens)
-   * - When viewport > 32rem: (100% - 32rem) / 2 distributes extra space as padding
-   * - Why divide by 2: Extra space gets split equally between left and right padding
-   * - Maximum: 6rem (generous "paper borders" on wide screens)
-   * - Transition: Smooth growth from minimal to generous padding as screen widens
+   * Responsive padding that creates "paper borders":
+   * 
+   * Uses 30rem as the breakpoint (2rem less than min container width)
+   * so padding growth begins as soon as the container itself can grow.
+   * Division by 2 distributes extra space equally to left and right sides.
+   * Result: smooth transition from cramped mobile to spacious desktop layout.
    */
-  padding: 2.5rem clamp(1rem, (100% - 32rem) / 2, 6rem);
+  padding: 2.5rem clamp(1rem, (100% - 30rem) / 2, 6rem);
   color: inherit;
   background-color: var(--color-surface);
   box-shadow: var(--elevation-1);
