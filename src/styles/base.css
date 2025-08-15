@@ -675,7 +675,6 @@ h4 {
   line-height: 1.3;
 }
 
-/* Content containers - prose and article semantic styling */
 article {
   /*
    * Paper-like article container with coordinated width and padding:
@@ -683,20 +682,22 @@ article {
    * Design goal: Create a sheet of paper effect where the container grows
    * from 32rem to 42rem, while padding grows from minimal to generous.
    * 
-   * The 30rem value in padding calculation is 2rem less than the minimum
-   * max-width (32rem) to ensure padding starts growing immediately when
-   * the container has room to expand beyond its minimum size.
+   * Key insight: Content area is fixed at 30rem width on wide screens.
+   * When viewport is narrower than 30rem + 2rem padding = 32rem total,
+   * we're on a narrow screen and need different behavior.
    */
   max-width: clamp(32rem, 100%, 42rem);
   margin: 0 auto;
 
   /*
-   * Responsive padding that creates "paper borders":
+   * Responsive padding calculation:
    * 
-   * Uses 30rem as the breakpoint (2rem less than min container width)
-   * so padding growth begins as soon as the container itself can grow.
-   * Division by 2 distributes extra space equally to left and right sides.
-   * Result: smooth transition from cramped mobile to spacious desktop layout.
+   * (100% - 30rem) tells us how much extra space we have beyond the 30rem content width:
+   * - Wide screens: Positive value = extra space available for generous padding
+   * - Narrow screens: Negative value = constrained space, use minimal padding
+   * 
+   * Division by 2 distributes the extra space equally to left and right padding.
+   * Result: Content stays 30rem wide on wide screens, adapts gracefully on narrow screens.
    */
   padding: 2.5rem clamp(1rem, (100% - 30rem) / 2, 6rem);
   color: inherit;
@@ -704,16 +705,40 @@ article {
   box-shadow: var(--elevation-1);
 }
 
+/*
+ * Heading Visual Hierarchy with Sheet Border Bars
+ * 
+ * Design goal: Create visual hierarchy bars that appear to extend from the
+ * article's "paper borders" while keeping heading text aligned with body content.
+ * 
+ * Key insight: Same logic as article padding - (100% - 30rem) determines if we're
+ * on wide screens (positive value) or narrow screens (negative value).
+ */
 article h1,
 article h2,
 article h3,
 article h4 {
-  padding: 0.2em 0 0.2em 0.2em;
   border-left-color: var(--color-primary);
   border-left-width: 0.1em;
-  margin-left: -0.4em;
+
+  /*
+   * Responsive left padding:
+   * - Uses (100% - 30rem) to detect screen width relative to content area
+   * - Wide screens: Extra space allows generous bar extension
+   * - Narrow screens: Minimal padding prevents overflow
+   */
+  padding: 0.2em 0 0.2em max(0.1em, 100% - 30rem + 0.2em);
+
+  /*
+   * Responsive left margin:
+   * - Pulls bars leftward into the article's padding area
+   * - Wide screens: Can pull further left due to generous padding
+   * - Narrow screens: Limited leftward pull to prevent overflow
+   */
+  margin-left: min(30rem - 100% - 0.4em, -0.2em);
 }
 
+/* Bar style represents different heading levels */
 article h1,
 article h2 {
   border-left-style: solid;
@@ -813,7 +838,7 @@ article hr {
   border-color: var(--color-primary);
   height: 0.55rem;
   background-color: inherit;
-  margin: 1.4rem 0 2rem auto;
+  margin: 1.4rem -0.5rem 2rem auto;
   padding: 0;
 }
 
