@@ -846,9 +846,8 @@ article hr {
 ul > li::marker,
 ol > li::marker {
   color: var(--color-primary);
-}
-
-ul > li::marker {
+  font-family: var(--font-sans);
+  font-weight: 550;
   font-size: 1.2em;
 }
 
