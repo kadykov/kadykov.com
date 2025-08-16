@@ -1,87 +1,128 @@
 ---
 import Logo from "./Logo.astro"
 import Navigation from "./Navigation.astro"
-import Hamburger from "./Hamburger.astro"
 import ThemeSwitch from "./ThemeSwitch.astro"
-// import StandaloneShareButton from "./StandaloneShareButton.astro"
 ---
 
 <header>
   <nav aria-label="Main navigation">
     <Logo />
+
+    <!-- Simple navigation list -->
     <ul>
       <Navigation />
     </ul>
+
+    <ThemeSwitch />
   </nav>
-  <ThemeSwitch />
-  <!-- <StandaloneShareButton /> -->
-  <Hamburger />
 </header>
 
-<style is:global>
-  body > header {
+<script>
+  /**
+   * Natural Header Hide/Show Behavior
+   *
+   * This implements a smooth, natural-feeling header that hides when scrolling down
+   * and reappears when scrolling up, without using JavaScript animations or thresholds.
+   *
+   * Key Concept: Coordinate System Conversion
+   * - We switch between two CSS positioning systems:
+   *   1. `position: sticky` - Element positioned relative to screen/viewport
+   *   2. `position: relative` - Element positioned relative to page content
+   *
+   * How it works:
+   * 1. Default: Header is `relative` and scrolls naturally with page content
+   * 2. Scrolling down from top: Convert to `relative` positioned at current scroll position
+   * 3. Scrolling up when header is hidden: Position header just above viewport
+   * 4. Header flows into view naturally as user scrolls up (browser handles smoothness)
+   * 5. Header becomes fully visible: Convert back to `sticky` to lock at screen top
+   *
+   * Benefits:
+   * - Perfectly smooth movement (uses browser's native rendering)
+   * - No JavaScript animation lag or easing artifacts
+   * - Header feels "physically attached" to page content
+   * - No threshold tuning needed - completely natural behavior
+   */
+
+  let lastScrollY = window.scrollY
+  let headerMode = "relative" // Tracks current positioning mode: 'relative' or 'sticky'
+  const header = document.querySelector("header")
+
+  const handleScroll = () => {
+    if (!header) return
+
+    const currentScrollY = window.scrollY
+    const scrollingDown = currentScrollY > lastScrollY
+    const scrollingUp = currentScrollY < lastScrollY
+    const headerHeight = header.offsetHeight
+    const headerRect = header.getBoundingClientRect()
+    const isHeaderVisible = headerRect.bottom > 0 // Any part of header visible on screen
+
+    if (headerMode === "sticky" && scrollingDown) {
+      // Convert from sticky (screen coordinates) to relative (page coordinates)
+      // Place header at current scroll position so it maintains same visual position
+      header.style.position = "relative"
+      header.style.top = `${currentScrollY}px`
+      headerMode = "relative"
+    } else if (
+      headerMode === "relative" &&
+      scrollingUp &&
+      currentScrollY > headerHeight &&
+      !isHeaderVisible
+    ) {
+      // User scrolling up but header is completely hidden
+      // Position header just above current viewport (hidden but ready to flow in)
+      header.style.position = "relative"
+      header.style.top = `${currentScrollY - headerHeight}px`
+    } else if (headerMode === "relative" && headerRect.top >= 0) {
+      // Header has naturally flowed to top of screen
+      // Convert back to sticky to lock it in place
+      header.style.position = "sticky"
+      header.style.top = "0"
+      headerMode = "sticky"
+    }
+
+    lastScrollY = currentScrollY
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true })
+</script>
+
+<style>
+  header {
     background: var(--color-surface-container-low);
     box-shadow: var(--elevation-2);
+    position: relative;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 4rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    z-index: 10;
-    letter-spacing: -0.02em;
+    padding: 0.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  body > header nav {
+  nav ul {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-  }
-
-  body > header nav ul {
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     list-style: none;
     padding: 0;
     margin: 0;
-    gap: 0.5em;
+    gap: 0.5rem;
   }
 
-  body > header button,
-  body > header details summary {
-    padding: 0.5em;
-    margin: 0;
-    width: 2em;
-    height: 2em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  nav ul li a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
   }
 
-  body > header button svg,
-  body > header details summary svg {
-    height: 1em;
-    width: 1em;
-    color: var(--color-on-surface);
-  }
-
-  /* Hide icons in main navigation on large screens */
-  body > header nav ul svg {
-    display: none;
-  }
-
-  details:has(nav) {
-    display: none;
-  }
-
-  @media (width <= 680px) {
-    body > header nav ul {
-      display: none;
-    }
-
-    details:has(nav) {
-      display: block;
-    }
+  nav ul li a:hover {
+    background: var(--color-surface-container);
   }
 </style>

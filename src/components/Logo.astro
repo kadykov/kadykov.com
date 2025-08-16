@@ -9,7 +9,7 @@ import { Icon } from "astro-icon/components"
   </span>
 </a>
 
-<style is:global>
+<style>
   header nav > a {
     display: flex;
     gap: 0.25em;
@@ -22,9 +22,9 @@ import { Icon } from "astro-icon/components"
     flex-shrink: 0;
   }
 
-  /* Show logo text on mobile, hide on tablet, show on desktop */
+  /* Hide logo text on small screens to save space */
   header nav > a span {
-    display: block;
+    display: none;
     font-size: 0.875em;
     line-height: 1.2;
     font-weight: 600;
@@ -32,9 +32,9 @@ import { Icon } from "astro-icon/components"
     margin: 0;
   }
 
-  @media (width >= 680px) and (width <= 899px) {
+  @media (width >= 680px) {
     header nav > a span {
-      display: none;
+      display: block;
     }
   }
 </style>
