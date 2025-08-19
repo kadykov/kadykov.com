@@ -18,73 +18,13 @@ import ThemeSwitch from "./ThemeSwitch.astro"
 </header>
 
 <script>
-  /**
-   * Natural Header Hide/Show Behavior
-   *
-   * This implements a smooth, natural-feeling header that hides when scrolling down
-   * and reappears when scrolling up, without using JavaScript animations or thresholds.
-   *
-   * Key Concept: Coordinate System Conversion
-   * - We switch between two CSS positioning systems:
-   *   1. `position: sticky` - Element positioned relative to screen/viewport
-   *   2. `position: relative` - Element positioned relative to page content
-   *
-   * How it works:
-   * 1. Default: Header is `relative` and scrolls naturally with page content
-   * 2. Scrolling down from top: Convert to `relative` positioned at current scroll position
-   * 3. Scrolling up when header is hidden: Position header just above viewport
-   * 4. Header flows into view naturally as user scrolls up (browser handles smoothness)
-   * 5. Header becomes fully visible: Convert back to `sticky` to lock at screen top
-   *
-   * Benefits:
-   * - Perfectly smooth movement (uses browser's native rendering)
-   * - No JavaScript animation lag or easing artifacts
-   * - Header feels "physically attached" to page content
-   * - No threshold tuning needed - completely natural behavior
-   */
+  import { naturalStickyTop } from "natural-sticky"
 
-  let lastScrollY = window.scrollY
-  let headerMode = "relative" // Tracks current positioning mode: 'relative' or 'sticky'
+  // Apply natural sticky behavior to the header
   const header = document.querySelector("header")
-
-  const handleScroll = () => {
-    if (!header) return
-
-    const currentScrollY = window.scrollY
-    const scrollingDown = currentScrollY > lastScrollY
-    const scrollingUp = currentScrollY < lastScrollY
-    const headerHeight = header.offsetHeight
-    const headerRect = header.getBoundingClientRect()
-    const isHeaderVisible = headerRect.bottom > 0 // Any part of header visible on screen
-
-    if (headerMode === "sticky" && scrollingDown) {
-      // Convert from sticky (screen coordinates) to relative (page coordinates)
-      // Place header at current scroll position so it maintains same visual position
-      header.style.position = "relative"
-      header.style.top = `${currentScrollY}px`
-      headerMode = "relative"
-    } else if (
-      headerMode === "relative" &&
-      scrollingUp &&
-      currentScrollY > headerHeight &&
-      !isHeaderVisible
-    ) {
-      // User scrolling up but header is completely hidden
-      // Position header just above current viewport (hidden but ready to flow in)
-      header.style.position = "relative"
-      header.style.top = `${currentScrollY - headerHeight}px`
-    } else if (headerMode === "relative" && headerRect.top >= 0) {
-      // Header has naturally flowed to top of screen
-      // Convert back to sticky to lock it in place
-      header.style.position = "sticky"
-      header.style.top = "0"
-      headerMode = "sticky"
-    }
-
-    lastScrollY = currentScrollY
+  if (header) {
+    naturalStickyTop(header)
   }
-
-  window.addEventListener("scroll", handleScroll, { passive: true })
 </script>
 
 <style>
