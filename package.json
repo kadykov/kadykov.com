@@ -30,7 +30,7 @@
     "astro-icon": "^1.1.0",
     "autoprefixer": "^10.4.20",
     "modern-normalize": "^3.0.1",
-    "natural-sticky": "^1.0.1",
+    "natural-sticky": "^1.1.0",
     "photoswipe": "^5.4.4",
     "photoswipe-dynamic-caption-plugin": "^1.2.7",
     "postcss": "^8.4.47",
