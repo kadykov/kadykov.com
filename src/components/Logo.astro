@@ -8,33 +8,3 @@ import { Icon } from "astro-icon/components"
     Aleksandr<br />KADYKOV
   </span>
 </a>
-
-<style>
-  header nav > a {
-    display: flex;
-    gap: 0.25em;
-    align-items: center;
-  }
-
-  header nav > a svg {
-    height: 2em;
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  /* Hide logo text on small screens to save space */
-  header nav > a span {
-    display: none;
-    font-size: 0.875em;
-    line-height: 1.2;
-    font-weight: 600;
-    color: var(--color-on-surface);
-    margin: 0;
-  }
-
-  @media (width >= 680px) {
-    header nav > a span {
-      display: block;
-    }
-  }
-</style>
