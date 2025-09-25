@@ -509,8 +509,6 @@ body {
 main {
   margin: 0 auto;
   padding: 0;
-
-  /* max-width: 1200px; */
   font-family: var(--font-serif);
   font-weight: 450;
   line-height: 1.75;
@@ -522,6 +520,23 @@ header {
   position: relative;
   top: 0;
   z-index: 1;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  gap: 1rem;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 1rem;
 }
 
 a {
@@ -654,6 +669,7 @@ h3 {
 
 /* h4 and blockquote styles */
 blockquote,
+header ul,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
@@ -837,7 +853,7 @@ ol > li::marker {
   font-size: 1.2em;
 }
 
-ul {
+article ul {
   list-style-type: square;
 }
 
@@ -1007,33 +1023,6 @@ input:disabled {
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* source-sans-3-cyrillic-wght-normal */
-
-/* @font-face {
-  font-family: "Source Sans 3 Variable";
-  font-style: normal;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-normal.woff2)
-    format("woff2-variations");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-} */
-
-/* source-sans-3-latin-ext-wght-normal */
-
-/* @font-face {
-  font-family: "Source Sans 3 Variable";
-  font-style: normal;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-normal.woff2)
-    format("woff2-variations");
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-} */
-
 /* source-sans-3-latin-wght-italic */
 @font-face {
   font-family: "Source Sans 3 Variable";
@@ -1047,33 +1036,6 @@ input:disabled {
     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
     U+2215, U+FEFF, U+FFFD;
 }
-
-/* source-sans-3-cyrillic-wght-italic */
-
-/* @font-face {
-  font-family: "Source Sans 3 Variable";
-  font-style: italic;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-cyrillic-wght-italic.woff2)
-    format("woff2-variations");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-} */
-
-/* source-sans-3-latin-ext-wght-italic */
-
-/* @font-face {
-  font-family: "Source Sans 3 Variable";
-  font-style: italic;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/source-sans-3/files/source-sans-3-latin-ext-wght-italic.woff2)
-    format("woff2-variations");
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-} */
 
 /* bitter-latin-wght-normal */
 @font-face {
@@ -1089,33 +1051,6 @@ input:disabled {
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* bitter-cyrillic-wght-normal */
-
-/* @font-face {
-  font-family: "Bitter Variable";
-  font-style: normal;
-  font-display: block;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-normal.woff2)
-    format("woff2-variations");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-} */
-
-/* bitter-latin-ext-wght-normal */
-
-/* @font-face {
-  font-family: "Bitter Variable";
-  font-style: normal;
-  font-display: block;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-normal.woff2)
-    format("woff2-variations");
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-} */
-
 /* bitter-latin-wght-italic */
 @font-face {
   font-family: "Bitter Variable";
@@ -1130,33 +1065,6 @@ input:disabled {
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* bitter-cyrillic-wght-italic */
-
-/* @font-face {
-  font-family: "Bitter Variable";
-  font-style: italic;
-  font-display: block;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-cyrillic-wght-italic.woff2)
-    format("woff2-variations");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-} */
-
-/* bitter-latin-ext-wght-italic */
-
-/* @font-face {
-  font-family: "Bitter Variable";
-  font-style: italic;
-  font-display: block;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/bitter/files/bitter-latin-ext-wght-italic.woff2)
-    format("woff2-variations");
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-} */
-
 /* inconsolata-latin-wght-normal */
 @font-face {
   font-family: "Inconsolata Variable";
@@ -1170,14 +1078,3 @@ input:disabled {
     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
     U+2215, U+FEFF, U+FFFD;
 }
-
-/* inconsolata-latin-ext-wght-normal */
-
-/* @font-face {
-  font-family: 'Inconsolata Variable';
-  font-style: normal;
-  font-display: block;
-  font-weight: 200 900;
-  src: url(@fontsource-variable/inconsolata/files/inconsolata-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-} */
