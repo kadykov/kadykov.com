@@ -481,40 +481,6 @@
   }
 }
 
-/* Explicit Theme Control - Manual override of system preference */
-[data-theme="dark"] {
-  /* Dark theme OKLCH base values */
-  --surface-l: 0.27;
-  --surface-c: 0.02;
-  --surface-h: 254;
-  --primary-l: 0.68;
-  --primary-c: 0.1;
-  --primary-h: 254;
-  --accent-l: 0.85;
-  --accent-c: 0.15;
-  --accent-h: 44;
-
-  .astro-code,
-  .astro-code span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-  }
-}
-
-/* Explicit Light Theme - Manual override of system preference */
-[data-theme="light"] {
-  /* Light theme OKLCH base values */
-  --surface-l: 0.99;
-  --surface-c: 0.01;
-  --surface-h: 254;
-  --primary-l: 0.55;
-  --primary-c: 0.14;
-  --primary-h: 254;
-  --accent-l: 0.75;
-  --accent-c: 0.18;
-  --accent-h: 44;
-}
-
 @view-transition {
   navigation: auto;
 }
@@ -550,6 +516,14 @@ main {
   line-height: 1.75;
 }
 
+header {
+  background: var(--color-surface-container-low);
+  box-shadow: var(--elevation-2);
+  position: relative;
+  top: 0;
+  z-index: 1;
+}
+
 a {
   color: inherit;
   text-decoration: underline;
@@ -574,6 +548,18 @@ article h3 a,
 article h4 a {
   color: inherit;
   font-weight: inherit;
+}
+
+header nav > a {
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
+}
+
+header nav > a svg {
+  height: 2em;
+  width: auto;
+  flex-shrink: 0;
 }
 
 a:hover {
@@ -897,34 +883,6 @@ tbody tr:hover {
 
 tbody tr:last-child td {
   border-bottom: none;
-}
-
-header nav > a {
-  display: flex;
-  gap: 0.25em;
-  align-items: center;
-}
-
-header nav > a svg {
-  height: 2em;
-  width: auto;
-  flex-shrink: 0;
-}
-
-/* Hide logo text on small screens to save space */
-header nav > a span {
-  display: none;
-  font-size: 0.875em;
-  line-height: 1.2;
-  font-weight: 600;
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-@media (width >= 680px) {
-  header nav > a span {
-    display: block;
-  }
 }
 
 /* Full-width layout for header and footer */

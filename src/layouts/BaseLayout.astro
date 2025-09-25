@@ -18,24 +18,6 @@ import "../styles/base.css"
       src="/umami/script.js"
       data-website-id="8254b650-ea3c-461d-9f3e-0ad467230fa1"></script>
 
-    <script is:inline>
-      // Theme initialization to prevent flash
-      const initTheme = () => {
-        const savedTheme = localStorage.getItem("theme")
-
-        if (savedTheme === "light") {
-          document.documentElement.setAttribute("data-theme", "light")
-        } else if (savedTheme === "dark") {
-          document.documentElement.setAttribute("data-theme", "dark")
-        } else {
-          // Auto mode - let CSS media query handle it
-          document.documentElement.removeAttribute("data-theme")
-        }
-      }
-
-      // Run immediately to prevent flash
-      initTheme()
-    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
