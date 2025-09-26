@@ -526,15 +526,14 @@ header {
   top: 0;
   z-index: 1;
 
-  /* Limit the content width inside the header to 42rem */
-  padding: 0 max(1rem, (100% - 42rem) / 2);
-}
-
-header nav {
+  /* Flexbox layout for header content */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+
+  /* Limit the content width inside the header to 42rem */
+  padding: 0 max(1rem, (100% - 42rem) / 2);
 }
 
 header ul {
@@ -549,23 +548,7 @@ header ul {
 header svg {
   height: 2rem;
   width: auto;
-  flex-shrink: 0;
 }
-
-/* nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 1rem;
-} */
-
-/* header nav {
-  display: flex;
-  gap: 0.25em;
-  align-items: center;
-} */
 
 main {
   margin: 0 auto;
