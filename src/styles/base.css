@@ -540,6 +540,7 @@ header ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 1rem;
   padding: 0;
 }
@@ -554,7 +555,7 @@ header svg {
    * within flex containers.
    */
   display: block;
-  height: 2rem;
+  height: 1.7rem;
   width: auto;
 }
 
