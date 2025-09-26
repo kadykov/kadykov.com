@@ -495,9 +495,23 @@ body {
   width: 100%;
   font-family: var(--font-sans);
 
-  /* This is equivalent to the following CSS:
-  font-size: clamp(16px, calc(16px + (24 - 16) * ((100vw - 400px) / (1920 - 400))), 24px); */
-  font-size: clamp(16px, 0.526vw + 13.89px, 24px);
+  /* Responsive font size calculation:
+   *
+   * Formula: clamp(min, calc(min + (max - min) * ((100vw - min_width) / (max_width - min_width))), max)
+   * Where:
+   *   min = 16px (minimum font size)
+   *   max = 22px (maximum font size)
+   *   min_width = 400px (viewport width where scaling starts)
+   *   max_width = 1920px (viewport width where scaling ends)
+   *
+   * Compact form derivation:
+   *   multiplier = (max - min) / (max_width - min_width) = (22 - 16) / (1920 - 400) = 6 / 1520 ≈ 0.003947
+   *   constant = min + multiplier * (-min_width) = 16 + 0.003947 * (-400) ≈ 16 - 1.579 ≈ 14.421
+   *
+   * This is equivalent to the following CSS:
+   * font-size: clamp(16px, calc(16px + (22 - 16) * ((100vw - 400px) / (1920 - 400))), 22px);
+   */
+  font-size: clamp(16px, 0.395vw + 14.42px, 22px);
   color: var(--color-on-surface);
   background-color: var(--color-surface-container-lowest);
   transition:
