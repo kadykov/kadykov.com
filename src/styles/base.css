@@ -557,6 +557,18 @@ header svg {
   display: block;
   height: 1.7rem;
   width: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+header svg:hover {
+  /*
+   * Unlike other links on the website that use underline-based hover effects,
+   * the logo SVG needs a different hover animation because it contains no text
+   * or labels. The underline hover effect doesn't work on SVG elements, so we
+   * use a subtle scale transform to indicate that the logo is clickable and
+   * serves as a navigation link.
+   */
+  transform: scale(1.05);
 }
 
 main {
