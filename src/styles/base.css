@@ -519,38 +519,57 @@ body {
     color 0.15s ease-in-out;
 }
 
-/* Set serif as the default font and base font size for main content */
-main {
-  margin: 0 auto;
-  padding: 0;
-  font-family: var(--font-serif);
-  font-weight: 450;
-  line-height: 1.75;
-}
-
 header {
   background: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
   position: relative;
   top: 0;
   z-index: 1;
+
+  /* Limit the content width inside the header to 42rem */
+  padding: 0 max(1rem, (100% - 42rem) / 2);
 }
 
 header nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0.5rem;
   gap: 1rem;
 }
 
-nav ul {
+header ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0;
+}
+
+/* Logo size in the header */
+header svg {
+  height: 2rem;
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* nav ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
   margin: 0;
   gap: 1rem;
+} */
+
+/* header nav {
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
+} */
+
+main {
+  margin: 0 auto;
+  padding: 0;
 }
 
 a {
@@ -563,87 +582,6 @@ a {
   transition:
     text-decoration-color 0.2s ease-out,
     text-underline-offset 0.2s ease-out;
-}
-
-/* Regular text links get negative margins to prevent affecting text flow */
-main a {
-  color: var(--color-on-surface-high);
-  font-weight: 500;
-}
-
-article h1 a,
-article h2 a,
-article h3 a,
-article h4 a {
-  color: inherit;
-  font-weight: inherit;
-}
-
-header nav > a {
-  display: flex;
-  gap: 0.25em;
-  align-items: center;
-}
-
-header nav > a svg {
-  height: 2em;
-  width: auto;
-  flex-shrink: 0;
-}
-
-a:hover {
-  text-decoration-color: var(--color-accent);
-  text-underline-offset: 0.3ex;
-}
-
-a:active {
-  background-color: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-/* Button Elements */
-button {
-  font-family: var(--font-sans);
-  letter-spacing: -0.02em;
-  font-size: 1.3rem;
-  font-weight: 420;
-  margin: 0;
-  background: none;
-
-  /* border: none; */
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  appearance: none;
-  line-height: 1;
-}
-
-body > header details summary {
-  text-decoration: none;
-  color: inherit;
-  padding: 0.5em;
-  border-radius: 0.5em;
-  transition:
-    color 0.2s,
-    background 0.2s,
-    border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.08s;
-  font-size: 1.3rem;
-  font-weight: 420;
-}
-
-body > header details summary:hover {
-  color: var(--color-on-surface);
-  background: var(--color-hover);
-
-  /* box-shadow: none; */
-}
-
-body > header details summary:active {
-  color: var(--color-surface);
-  background: var(--color-primary);
-  transform: scale(0.97);
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -719,6 +657,19 @@ article {
   color: inherit;
   background-color: var(--color-surface);
   box-shadow: var(--elevation-1);
+
+  /* Use serif font for article body text for better readability */
+  font-family: var(--font-serif);
+
+  /* Give more flesh to Bitter Variable */
+  font-weight: 450;
+  line-height: 1.75;
+}
+
+/* Accent links in articles with higher contrast */
+article a {
+  color: var(--color-on-surface-high);
+  font-weight: 500;
 }
 
 /*
@@ -928,99 +879,17 @@ body > footer {
   padding: 0 calc(max(1rem, (100% - 1200px) / 2));
 }
 
-/* Semantic Button Styling - Based on Type and Purpose */
+/* Hover and active states */
 
-/* Primary action buttons - submit type */
-button[type="submit"],
-input[type="submit"] {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  border: 2px solid var(--color-primary);
-  box-shadow: var(--elevation-1);
+/* Links */
+a:hover {
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 0.3ex;
 }
 
-button[type="submit"]:hover,
-input[type="submit"]:hover {
-  background-color: var(--color-primary);
-  box-shadow: var(--elevation-2);
-  filter: brightness(1.1);
-}
-
-button[type="submit"]:active,
-input[type="submit"]:active {
-  background-color: var(--color-primary);
-  box-shadow: var(--elevation-1);
-  transform: scale(0.97);
-}
-
-/* Secondary action buttons - regular button type */
-button[type="button"],
-input[type="button"] {
-  background-color: var(--color-surface-container);
-  color: var(--color-on-surface);
-  border: 2px solid var(--color-surface-container);
-  box-shadow: var(--elevation-1);
-}
-
-button[type="button"]:hover,
-input[type="button"]:hover {
-  background-color: var(--color-surface-container-high);
-  border-color: var(--color-surface-container-high);
-  box-shadow: var(--elevation-2);
-}
-
-/* Destructive action buttons - reset type */
-button[type="reset"],
-input[type="reset"] {
-  background-color: var(--color-accent-container);
-  color: var(--color-on-accent-container);
-  border: 2px solid var(--color-accent-container);
-  box-shadow: var(--elevation-1);
-}
-
-button[type="reset"]:hover,
-input[type="reset"]:hover {
+a:active {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
-  border-color: var(--color-accent);
-  box-shadow: var(--elevation-2);
-}
-
-/* Form Elements Semantic Styling */
-input,
-select,
-textarea {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  border: 1px solid var(--color-surface-container-high);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: var(--elevation-1);
-  outline: none;
-}
-
-input:invalid,
-select:invalid,
-textarea:invalid {
-  border-color: var(--color-accent);
-}
-
-/* Disabled state for all buttons */
-button:disabled,
-input:disabled {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface-variant);
-  border-color: var(--color-surface-container-lowest);
-  box-shadow: none;
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
 /* source-sans-3-latin-wght-normal */
