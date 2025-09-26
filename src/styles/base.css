@@ -519,58 +519,6 @@ body {
     color 0.15s ease-in-out;
 }
 
-header {
-  background: var(--color-surface-container-low);
-  box-shadow: var(--elevation-2);
-  position: relative;
-  top: 0;
-  z-index: 1;
-
-  /* Flexbox layout for header content */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-
-  /* Limit the content width inside the header to 42rem */
-  padding: 0 max(1rem, (100% - 42rem) / 2);
-}
-
-header ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding: 0;
-}
-
-/* Logo size in the header */
-header svg {
-  /*
-   * By default, SVGs can be treated as inline elements, which can cause
-   * unexpected extra space below them due to baseline alignment. Setting
-   * display to "block" removes this behavior and ensures the element's
-   * bounds match its visual appearance, fixing vertical alignment issues
-   * within flex containers.
-   */
-  display: block;
-  height: 1.7rem;
-  width: auto;
-  transition: transform 0.2s ease-in-out;
-}
-
-header svg:hover {
-  /*
-   * Unlike other links on the website that use underline-based hover effects,
-   * the logo SVG needs a different hover animation because it contains no text
-   * or labels. The underline hover effect doesn't work on SVG elements, so we
-   * use a subtle scale transform to indicate that the logo is clickable and
-   * serves as a navigation link.
-   */
-  transform: scale(1.05);
-}
-
 main {
   margin: 0 auto;
   padding: 0;
@@ -623,12 +571,16 @@ h3 {
   margin-block: 0.7em;
 }
 
-/* h4 and blockquote styles */
+/* h4 font styles */
 blockquote,
-header ul,
+body > header nav,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
+}
+
+/* h4 spacing */
+h4 {
   margin-block: 0.9em;
   line-height: 1.3;
 }
@@ -881,6 +833,59 @@ body > footer {
   margin-left: -50%;
   margin-right: -50%;
   padding: 0 calc(max(1rem, (100% - 1200px) / 2));
+}
+
+/* Navbar styles */
+body > header {
+  background: var(--color-surface-container-low);
+  box-shadow: var(--elevation-2);
+  position: relative;
+  top: 0;
+  z-index: 1;
+
+  /* Flexbox layout for header content */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  /* Limit the content width inside the header to 42rem */
+  padding: 0 max(1rem, (100% - 42rem) / 2);
+}
+
+body > header ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0;
+}
+
+/* Logo size in the header */
+body > header svg {
+  /*
+   * By default, SVGs can be treated as inline elements, which can cause
+   * unexpected extra space below them due to baseline alignment. Setting
+   * display to "block" removes this behavior and ensures the element's
+   * bounds match its visual appearance, fixing vertical alignment issues
+   * within flex containers.
+   */
+  display: block;
+  height: 1.7rem;
+  width: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+body > header svg:hover {
+  /*
+   * Unlike other links on the website that use underline-based hover effects,
+   * the logo SVG needs a different hover animation because it contains no text
+   * or labels. The underline hover effect doesn't work on SVG elements, so we
+   * use a subtle scale transform to indicate that the logo is clickable and
+   * serves as a navigation link.
+   */
+  transform: scale(1.05);
 }
 
 /* Hover and active states */
