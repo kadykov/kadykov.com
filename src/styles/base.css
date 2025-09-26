@@ -546,6 +546,14 @@ header ul {
 
 /* Logo size in the header */
 header svg {
+  /*
+   * By default, SVGs can be treated as inline elements, which can cause
+   * unexpected extra space below them due to baseline alignment. Setting
+   * display to "block" removes this behavior and ensures the element's
+   * bounds match its visual appearance, fixing vertical alignment issues
+   * within flex containers.
+   */
+  display: block;
   height: 2rem;
   width: auto;
 }
