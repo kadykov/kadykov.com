@@ -513,7 +513,7 @@ body {
    */
   font-size: clamp(16px, 0.395vw + 14.42px, 22px);
   color: var(--color-on-surface);
-  background-color: var(--color-surface-container-lowest);
+  background-color: var(--color-surface-container);
   transition:
     background-color 0.15s ease-in-out,
     color 0.15s ease-in-out;
@@ -822,19 +822,6 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Full-width layout for header and footer */
-
-/* body > header, */
-body > footer {
-  width: 100%;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50%;
-  margin-right: -50%;
-  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
-}
-
 /* Navbar styles */
 body > header {
   background: var(--color-surface-container-low);
@@ -886,6 +873,35 @@ body > header svg:hover {
    * serves as a navigation link.
    */
   transform: scale(1.05);
+}
+
+/* Page footer styles */
+
+body > footer {
+  /* Theme-aware muted background */
+  background-color: var(--color-surface-container-highest);
+  color: var(--color-on-surface-variant);
+
+  /* Inner shadow on top using Material Design elevation */
+  box-shadow: inset 0 4px 6px -2px
+    hsl(0deg 0% var(--shadow-lightness) / var(--shadow-alpha-2));
+
+  /* Layout - style footer directly */
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  padding: 2em 0;
+  margin-top: 4em;
+}
+
+body > footer {
+  width: 100%;
+  /* position: relative; */
+  /* left: 50%;
+  right: 50%;
+  margin-left: -50%;
+  margin-right: -50%; */
+  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
 }
 
 /* Hover and active states */
