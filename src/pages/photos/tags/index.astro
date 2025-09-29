@@ -26,13 +26,13 @@ try {
   throw error // Re-throw to fail the build
 }
 
-const pageTitle = "Photo tags"
+const title = "Photo tags"
 const pageDescription = "Browse photos by tags."
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={title} description={pageDescription}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{pageTitle}</h1>
+    <h1 class="text-center">{title}</h1>
 
     {
       uniqueTags.length > 0 ? (

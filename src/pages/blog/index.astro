@@ -3,11 +3,11 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import BlogPost from "../../components/BlogPost.astro"
 
-const pageTitle = "Blog" // Updated page title
+const title = "Blog" // Updated page title
 const allPosts = await getCollection("blog")
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout title={title}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Blog Posts</h1>
     <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
