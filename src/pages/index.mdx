@@ -1,56 +1,40 @@
 ---
-title: "Welcome!"
+title: "Welcome to kadykov.com"
+description: "Personal website of Aleksandr Kadykov - Research Engineer, photographer, and web developer"
 ---
 
-import BaseLayout from "../layouts/BaseLayout.astro"
+import HeroLayout from "../layouts/HeroLayout.astro"
 import { Picture } from "astro:assets"
 
-<BaseLayout pageTitle={frontmatter.title}>
-  <h1 class="mx-auto text-center mt-10">
-    {frontmatter.title}
-  </h1>
-
-  <div class="mx-auto lg:flex lg:flex-row-reverse lg:justify-between lg:items-center w-11/12 sm:w-5/6 max-w-screen-md">
+<HeroLayout 
+  title={frontmatter.title} 
+  description={frontmatter.description}
+>
+  <div slot="hero-content">
     <Picture
-      class="mx-auto lg:mx-0 rounded-full drop-shadow-lg my-5 lg:flex-shrink-0"
       src="https://share.kadykov.com/2023/11/28/DSC_1244.jpg"
       alt="Aleksandr Kadykov's self portrait."
       formats={["avif", "webp"]}
       fallbackFormat="jpg"
       inferSize={true}
       densities={[1.0, 1.25, 1.5, 2, 3, 4, 5]}
-      width="250"
-      height="250"
+      width="200"
+      height="200"
       loading="eager"
     />
-    <div class="prose mx-auto lg:mx-0 lg:mr-5 lg:min-w-0 lg:flex-1">
-      ## Error 501. Not implemented
-
-      But wait!
-      It only means
-      that for now
-      there is not much
-      content available on this website.
-
-      By the way,
-      I'm Aleksandr,
-      and this is my personal project
-      where I'm learning web technologies
-      and sharing my photography and thoughts.
-      Currently,
-      I'm exploring new opportunities
-      as a Research Engineer.
-      If you're interested
-      in learning more
-      about my background and experience,
-      you can check my CV
-      in [web](cv)
-      or [PDF](https://github.com/kadykov/typstCV/releases/latest/download/kadykov-cv-en.pdf)
-      formats.
-
-      Feel free to explore my [photos](/photos/1)!
-      You can browse them by [tag](/photos/tags) or by [date](/photos/dates).
-    </div>
-
   </div>
-</BaseLayout>
+
+  <article>
+    <h2>Error 501. Not implemented</h2>
+
+    <p>But wait! It only means that for now there is not much content available on this website.</p>
+
+    <p>By the way, I'm Aleksandr, and this is my personal project where I'm learning web technologies and sharing my photography and thoughts. Currently, I'm exploring new opportunities as a Research Engineer.</p>
+
+    <p>If you're interested in learning more about my background and experience, you can check my CV in <a href="cv">web</a> or <a href="https://github.com/kadykov/typstCV/releases/latest/download/kadykov-cv-en.pdf">PDF</a> formats.</p>
+
+    <p>Feel free to explore my <a href="/photos/1">photos</a>! You can browse them by <a href="/photos/tags">tag</a> or by <a href="/photos/dates">date</a>.</p>
+
+  </article>
+
+</HeroLayout>

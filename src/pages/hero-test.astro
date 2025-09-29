@@ -1,0 +1,44 @@
+---
+import HeroLayout from "../layouts/HeroLayout.astro"
+---
+
+<HeroLayout
+  title="Hero Layout Test"
+  description="Testing our new semantic hero layout with flexible content support"
+  pageTitle="Hero Test | kadykov.com"
+>
+  <div slot="hero-content">
+    <button>Call to Action</button>
+    <p>This is additional hero content that wasn't possible with hgroup!</p>
+  </div>
+
+  <article>
+    <h2>Main Content</h2>
+    <p>
+      This content appears below the hero section, demonstrating that our hero
+      layout properly integrates with the rest of the page structure.
+    </p>
+
+    <h3>Key Improvements</h3>
+    <ul>
+      <li>
+        ✅ Semantic <code>&lt;header&gt;</code> element instead of <code
+          >&lt;hgroup&gt;</code>
+      </li>
+      <li>✅ Flexible content support via slots</li>
+      <li>✅ Simplified full-width background (no viewport width tricks)</li>
+      <li>✅ Natural sticky integration for shadow removal</li>
+      <li>✅ CSS custom property for header height</li>
+    </ul>
+
+    <h3>Technical Details</h3>
+    <p>
+      The hero section now uses <code>main &gt; header</code> selector, which is:
+    </p>
+    <ul>
+      <li>More semantic than <code>hgroup</code></li>
+      <li>Completely classless - no need for additional classes</li>
+      <li>Better integrated with navigation state management</li>
+    </ul>
+  </article>
+</HeroLayout>

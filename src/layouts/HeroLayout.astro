@@ -12,48 +12,74 @@ const finalPageTitle = pageTitle || `${title} | kadykov.com`
 ---
 
 <BaseLayout title={finalPageTitle} description={description}>
-  <hgroup>
+  <header>
     <h1>{title}</h1>
     <p>{description}</p>
-  </hgroup>
+    <slot name="hero-content" />
+  </header>
   <slot />
 </BaseLayout>
 
-<style>
-  hgroup {
+<script>
+  // Handle navigation shadow removal when hero is present
+  const navigationHeader = document.querySelector(
+    "body > header"
+  ) as HTMLElement
+
+  if (navigationHeader) {
+    // Set initial state - no shadow when hero layout is used
+    navigationHeader.style.boxShadow = "none"
+
+    // Listen for natural-sticky state changes
+    navigationHeader.addEventListener("natural-sticky", (event) => {
+      const customEvent = event as CustomEvent
+      const currentState = customEvent.detail.state // 'home', 'sticky', or 'relative'
+
+      // Directly control box-shadow based on state
+      if (currentState === "home") {
+        navigationHeader.style.boxShadow = "none"
+      } else {
+        navigationHeader.style.boxShadow = "var(--elevation-2)"
+      }
+    })
+  }
+</script>
+
+<style is:global>
+  /* Hero header - semantic and classless */
+  main > header:first-child {
     background-color: var(--color-surface-container-low);
     min-height: 80vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 2rem;
-    margin-top: calc(-1 * var(--header-height, 80px));
-    padding-top: calc(2rem + var(--header-height, 80px));
 
-    /* Full-width background */
-    width: 100vw;
+    /* Add shadow to create seamless extension of navigation */
+    box-shadow: var(--elevation-2);
+
+    /* Ensure shadow appears above subsequent content */
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    max-width: 100vw;
+    z-index: 1;
   }
 
-  hgroup h1 {
+  main > header h1 {
     margin-bottom: 1rem;
     max-width: 30ch;
   }
 
-  hgroup p {
+  main > header p {
     margin: 0;
     max-width: 60ch;
   }
 
-  /* Remove shadow when header is immediately followed by hgroup */
-  header:has(+ main hgroup) {
-    box-shadow: none;
+  /* Style content in hero-content slot */
+  main > header img {
+    border-radius: 50%;
+    margin: 1rem auto;
+    box-shadow: var(--elevation-1);
   }
 </style>
