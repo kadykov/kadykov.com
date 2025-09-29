@@ -3,8 +3,7 @@ import BaseLayout from "./BaseLayout.astro"
 import OptimizedImage from "../components/OptimizedImage.astro"
 
 const { frontmatter } = Astro.props
-const { title, description, pubDate, lastUpdatedDate, image, tags } =
-  frontmatter
+const { title, pubDate, lastUpdatedDate, image, tags } = frontmatter
 
 // Format dates
 const formatDate = (date: Date) => {
@@ -16,7 +15,7 @@ const formatDate = (date: Date) => {
 }
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout frontmatter={frontmatter}>
   <article>
     <header style="margin-bottom: 2rem;">
       <h1 style="margin-bottom: 0.5rem;">{title}</h1>

@@ -26,13 +26,15 @@ try {
   throw error // Re-throw to fail the build
 }
 
-const title = "Photo tags"
-const pageDescription = "Browse photos by tags."
+const frontmatter = {
+  title: "Photo tags",
+  description: "Browse photos by tags.",
+}
 ---
 
-<BaseLayout title={title} description={pageDescription}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{title}</h1>
+    <h1 class="text-center">{frontmatter.title}</h1>
 
     {
       uniqueTags.length > 0 ? (

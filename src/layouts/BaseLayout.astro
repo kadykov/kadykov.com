@@ -3,16 +3,29 @@ import Footer from "../components/Footer.astro"
 import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
 import Header from "../components/Header.astro"
-const {
-  title = "kadykov.com",
-  description = "A photo gallery and blog by Kadykov.",
-} = Astro.props
+
+interface Props {
+  frontmatter?: {
+    title?: string
+    description?: string
+  }
+}
+
+const { frontmatter } = Astro.props
+
+// Handle title with fallbacks: frontmatter > default
+const rawTitle = frontmatter?.title || "kadykov.com"
+// Handle description with fallbacks: frontmatter > default
+const rawDescription =
+  frontmatter?.description ||
+  "Personal website of Aleksandr Kadykov - Research Engineer, photographer, and web developer"
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
-  title === "kadykov.com" || title.endsWith(" | kadykov.com")
-    ? title
-    : `${title} | kadykov.com`
+  rawTitle === "kadykov.com" || rawTitle.endsWith(" | kadykov.com")
+    ? rawTitle
+    : `${rawTitle} | kadykov.com`
+
 import "../styles/base.css"
 ---
 
@@ -43,7 +56,7 @@ import "../styles/base.css"
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{finalTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={rawDescription} />
   </head>
   <body>
     <Header />

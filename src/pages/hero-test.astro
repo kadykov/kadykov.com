@@ -1,11 +1,14 @@
 ---
 import HeroLayout from "../layouts/HeroLayout.astro"
+
+const frontmatter = {
+  title: "Hero Layout Test",
+  description:
+    "Testing our new semantic hero layout with flexible content support",
+}
 ---
 
-<HeroLayout
-  title="Hero Layout Test"
-  description="Testing our new semantic hero layout with flexible content support"
->
+<HeroLayout frontmatter={frontmatter}>
   <div slot="hero-content">
     <button>Call to Action</button>
     <p>This is additional hero content that wasn't possible with hgroup!</p>

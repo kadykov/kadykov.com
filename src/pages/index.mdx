@@ -7,8 +7,7 @@ import HeroLayout from "../layouts/HeroLayout.astro"
 import { Picture } from "astro:assets"
 
 <HeroLayout 
-  title={frontmatter.title} 
-  description={frontmatter.description}
+  frontmatter={frontmatter}
 >
   <div slot="hero-content">
     <Picture

@@ -81,11 +81,13 @@ const { page, tagDisplayName, fullPhotoDataset } = Astro.props // fullPhotoDatas
 // and 'page' (the number) would be Astro.params.page
 
 // Use tagDisplayName for display, as it preserves original casing
-const title = `Photos tagged: "${tagDisplayName}"`
-const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`
+const frontmatter = {
+  title: `Photos tagged: "${tagDisplayName}"`,
+  description: `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`,
+}
 ---
 
-<BaseLayout title={title} description={pageDescription}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Photos tagged: {tagDisplayName}</h1>
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />

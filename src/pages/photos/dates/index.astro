@@ -83,13 +83,15 @@ try {
   throw error // Fail fast
 }
 
-const title = "Photo dates"
-const pageDescription = "Browse photos by date taken."
+const frontmatter = {
+  title: "Photo dates",
+  description: "Browse photos by date taken.",
+}
 ---
 
-<BaseLayout title={title} description={pageDescription}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{title}</h1>
+    <h1 class="text-center">{frontmatter.title}</h1>
 
     {
       Object.keys(groupedDates).length > 0 ? (

@@ -104,11 +104,13 @@ export async function getStaticPaths({
 // Props interface is now Props defined above
 const { page, dateDisplay, fullPhotoDataset } = Astro.props // Added fullPhotoDataset
 
-const title = `Photos from ${dateDisplay}`
-const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`
+const frontmatter = {
+  title: `Photos from ${dateDisplay}`,
+  description: `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`,
+}
 ---
 
-<BaseLayout title={title} description={pageDescription}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Photos from {dateDisplay}</h1>
 

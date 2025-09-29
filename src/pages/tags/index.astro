@@ -3,10 +3,14 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 const allPosts = await getCollection("blog")
 const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())]
-const title = "Tag Index"
+
+const frontmatter = {
+  title: "Tag Index",
+  description: "Browse all blog post tags",
+}
 ---
 
-<BaseLayout title={title}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="tags">
     {
       tags.map((tag) => (

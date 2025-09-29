@@ -25,12 +25,16 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params
 const { posts } = Astro.props
-const title = `Tagged: ${tag}`
+
+const frontmatter = {
+  title: `Tagged: ${tag}`,
+  description: `Blog posts tagged with ${tag}`,
+}
 ---
 
-<BaseLayout title={title}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{title}</h1>
+    <h1 class="text-center">{frontmatter.title}</h1>
     {
       posts && posts.length > 0 ? (
         <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

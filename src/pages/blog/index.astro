@@ -3,11 +3,15 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import BlogPost from "../../components/BlogPost.astro"
 
-const title = "Blog" // Updated page title
 const allPosts = await getCollection("blog")
+
+const frontmatter = {
+  title: "Blog",
+  description: "Blog posts about web development, photography, and research",
+}
 ---
 
-<BaseLayout title={title}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Blog Posts</h1>
     <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

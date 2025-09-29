@@ -2,23 +2,29 @@
 import HeroLayout from "./HeroLayout.astro"
 
 interface Props {
-  title?: string
-  description?: string
-  frontmatter?: {
+  frontmatter: {
     title: string
     description: string
   }
 }
 
-const { title, description, frontmatter } = Astro.props
+const { frontmatter } = Astro.props
 
-// Handle both direct props and frontmatter
-const finalTitle = title || frontmatter?.title || "Untitled"
-const finalDescription =
-  description || frontmatter?.description || "No description"
+// HeroArticleLayout requires explicit title and description - fail the build if missing
+if (!frontmatter?.title) {
+  throw new Error(
+    "HeroArticleLayout requires a title in frontmatter. If you don't have meaningful title content, consider using ArticleLayout instead."
+  )
+}
+
+if (!frontmatter?.description) {
+  throw new Error(
+    "HeroArticleLayout requires a description in frontmatter. If you don't have meaningful description content, consider using ArticleLayout instead."
+  )
+}
 ---
 
-<HeroLayout title={finalTitle} description={finalDescription}>
+<HeroLayout frontmatter={frontmatter}>
   <article>
     <slot />
   </article>

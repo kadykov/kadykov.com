@@ -71,13 +71,15 @@ if (!page) {
 }
 
 // Reverted optional chaining to let errors surface if page is undefined.
-const title = `All Photos`
-const pageDescription = `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`
+const frontmatter = {
+  title: "All Photos",
+  description: `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`,
+}
 ---
 
-<BaseLayout title={title} description={pageDescription}>
+<BaseLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{title}</h1>
+    <h1 class="text-center">{frontmatter.title}</h1>
 
     <div class="flex flex-wrap justify-center gap-4 mb-8">
       <a href="/photos/tags" class="btn text-button">Browse by tag</a>

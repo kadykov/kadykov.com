@@ -2,17 +2,35 @@
 import BaseLayout from "./BaseLayout.astro"
 
 interface Props {
-  title: string
-  description: string
+  frontmatter: {
+    title: string
+    description: string
+  }
 }
 
-const { title, description } = Astro.props
+const { frontmatter } = Astro.props
+
+// HeroLayout requires explicit title and description - fail the build if missing
+if (!frontmatter?.title) {
+  throw new Error(
+    "HeroLayout requires a title in frontmatter. If you don't have meaningful title content, consider using a different layout."
+  )
+}
+
+if (!frontmatter?.description) {
+  throw new Error(
+    "HeroLayout requires a description in frontmatter. If you don't have meaningful description content, consider using a different layout."
+  )
+}
+
+const displayTitle = frontmatter.title
+const displayDescription = frontmatter.description
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout frontmatter={frontmatter}>
   <header>
-    <h1>{title}</h1>
-    <p>{description}</p>
+    <h1>{displayTitle}</h1>
+    <p>{displayDescription}</p>
     <slot name="hero-content" />
   </header>
   <slot />
@@ -47,14 +65,12 @@ const { title, description } = Astro.props
   /* Hero header - semantic and classless */
   main > header:first-child {
     background-color: var(--color-surface-container-low);
-    min-height: 80vh;
-    width: 100%;
+    min-height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 2rem;
 
     /* Add shadow to create seamless extension of navigation */
     box-shadow: var(--elevation-2);
@@ -62,16 +78,21 @@ const { title, description } = Astro.props
     /* Ensure shadow appears above subsequent content */
     position: relative;
     z-index: 1;
+
+    /* Limit the content width inside the hero to 42rem */
+    padding: 0 max(1rem, (100% - 42rem) / 2);
   }
 
   main > header h1 {
-    margin-bottom: 1rem;
-    max-width: 30ch;
+    /* font-family: var(--font-serif);
+    font-size: 5rem;
+    font-weight: 100; */
   }
 
   main > header p {
-    margin: 0;
-    max-width: 60ch;
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 380;
   }
 
   /* Style content in hero-content slot */
