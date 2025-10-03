@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/ArticleLayout.astro"
+layout: "../layouts/HeroArticleLayout.astro"
 title: Example Markdown Document with Extended Content
 description: This document serves as a test case for typography, layout, and Markdown rendering in a web environment. It includes various elements like headings, paragraphs, lists, code blocks, and tables to evaluate how well the system handles longer content and complex structures.
 ---
