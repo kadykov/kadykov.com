@@ -5,20 +5,19 @@ import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-norma
 import Header from "../components/Header.astro"
 
 interface Props {
-  frontmatter?: {
-    title?: string
-    description?: string
+  frontmatter: {
+    title: string
+    description: string
+    [key: string]: any
   }
 }
 
 const { frontmatter } = Astro.props
 
 // Handle title with fallbacks: frontmatter > default
-const rawTitle = frontmatter?.title || "kadykov.com"
+const rawTitle = frontmatter.title
 // Handle description with fallbacks: frontmatter > default
-const rawDescription =
-  frontmatter?.description ||
-  "Personal website of Aleksandr Kadykov - Research Engineer, photographer, and web developer"
+const rawDescription = frontmatter.description
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =

@@ -5,33 +5,16 @@ interface Props {
   frontmatter: {
     title: string
     description: string
+    [key: string]: any
   }
 }
 
 const { frontmatter } = Astro.props
-
-// HeroLayout requires explicit title and description - fail the build if missing
-if (!frontmatter?.title) {
-  throw new Error(
-    "HeroLayout requires a title in frontmatter. If you don't have meaningful title content, consider using a different layout."
-  )
-}
-
-if (!frontmatter?.description) {
-  throw new Error(
-    "HeroLayout requires a description in frontmatter. If you don't have meaningful description content, consider using a different layout."
-  )
-}
-
-const displayTitle = frontmatter.title
-const displayDescription = frontmatter.description
 ---
 
 <BaseLayout frontmatter={frontmatter}>
   <header>
-    <h1>{displayTitle}</h1>
-    <p>{displayDescription}</p>
-    <slot name="hero-content" />
+    <slot name="hero" />
   </header>
   <slot />
 </BaseLayout>
