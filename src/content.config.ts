@@ -5,6 +5,7 @@ const postsCollection = defineCollection({
   type: "content", // For Markdown/MDX/Markdoc files in src/content/
   schema: z.object({
     title: z.string(),
+    subtitle: z.string().optional(),
     pubDate: z.date(),
     lastUpdatedDate: z.date().optional(),
     description: z.string(),
