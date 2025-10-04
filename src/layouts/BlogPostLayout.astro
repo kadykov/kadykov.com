@@ -53,7 +53,7 @@ const formatDate = (date: Date) => {
       Published: {formatDate(pubDate)}
     </time>
     {
-      lastUpdatedDate && (
+      lastUpdatedDate && lastUpdatedDate.getTime() !== pubDate.getTime() && (
         <>
           {" • "}
           <time datetime={lastUpdatedDate.toISOString()}>
