@@ -1,16 +1,11 @@
 ---
+layout: ../layouts/BaseLayout.astro
 title: "Page Not Found"
+# description: "The page you are looking for does not exist."
 ---
 
-import BaseLayout from "../layouts/BaseLayout.astro"
+# {frontmatter.title}
 
-<BaseLayout frontmatter={frontmatter}>
-  <div class="prose mx-auto my-10 w-11/12 sm:w-5/6">
-    # {frontmatter.title}
-
-    Don't worry, you can always return to [home](/). Drop me a
-    [message](mailto:web@kadykov.com) if the page you are looking for is
-    important for you.
-
-  </div>
-</BaseLayout>
+Don't worry, you can always return to [home](/). Drop me a
+[message](mailto:web@kadykov.com) if the page you are looking for is
+important for you.
