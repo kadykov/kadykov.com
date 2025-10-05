@@ -875,6 +875,40 @@ body > header svg:hover {
   transform: scale(1.05);
 }
 
+/* Hero header */
+main > header:first-child {
+  background-color: var(--color-surface-container-low);
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  /* Add shadow to create seamless extension of navigation */
+  box-shadow: var(--elevation-2);
+
+  /* Ensure shadow appears above subsequent content */
+  position: relative;
+  z-index: 1;
+
+  /* Limit the content width inside the hero to 42rem */
+  padding: 3rem max(1rem, (100% - 42rem) / 2);
+}
+
+main > header:first-child p {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 370;
+  line-height: 1.3;
+}
+
+main > header:first-child img {
+  border-radius: 50%;
+  margin: 1rem auto;
+  box-shadow: var(--elevation-1);
+}
+
 /* Page footer styles */
 
 body > footer {
@@ -891,17 +925,7 @@ body > footer {
   flex-direction: column;
   gap: 2em;
   padding: 2em 0;
-  margin-top: 4em;
-}
-
-body > footer {
-  width: 100%;
-  /* position: relative; */
-  /* left: 50%;
-  right: 50%;
-  margin-left: -50%;
-  margin-right: -50%; */
-  padding: 0 calc(max(1rem, (100% - 1200px) / 2));
+  margin-top: 3em;
 }
 
 /* Hover and active states */
