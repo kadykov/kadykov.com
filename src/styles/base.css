@@ -675,6 +675,13 @@ article h4 {
   border-left-style: dotted;
 }
 
+/* Metadata footer right after the article */
+article + footer {
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  margin: 3rem max(1rem, (100% - 42rem) / 2);
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -907,6 +914,17 @@ main > header:first-child img {
   border-radius: 50%;
   margin: 1rem auto;
   box-shadow: var(--elevation-1);
+}
+
+/* Tags navigation */
+main > header:first-child nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 /* Page footer styles */
