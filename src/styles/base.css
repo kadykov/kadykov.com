@@ -833,7 +833,7 @@ header {
   /* In combination with z-index, ensures the shadow appears above other content */
   position: relative;
 
-  /* Flexbox layout for header content */
+  /* Flexbox layout with centered content */
   display: flex;
   align-items: center;
   text-align: center;
