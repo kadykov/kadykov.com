@@ -950,6 +950,11 @@ a:active {
   color: var(--color-on-accent);
 }
 
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
 /* source-sans-3-latin-wght-normal */
 @font-face {
   font-family: "Source Sans 3 Variable";
