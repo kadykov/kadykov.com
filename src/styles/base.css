@@ -829,6 +829,8 @@ tbody tr:last-child td {
 header {
   background: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
+
+  /* In combination with z-index, ensures the shadow appears above other content */
   position: relative;
 
   /* Flexbox layout for header content */
@@ -842,17 +844,26 @@ header {
 
 /* Navbar styles */
 body > header {
+  /* Fixed position at the top of the document */
   top: 0;
+
+  /* Ensures the shadow appears above other content */
   z-index: 2;
+
+  /* Spread out logo and nav items */
   justify-content: space-between;
 }
 
 /* Hero header */
 main > header {
-  min-height: 70vh;
+  /* Centered content with vertical stacking */
   flex-direction: column;
-  padding-block: 3rem;
   justify-content: center;
+
+  /* Generous vertical padding for spacious hero section */
+  padding-block: 3rem;
+
+  /* Ensure the shadow appears above other content */
   z-index: 1;
 }
 
