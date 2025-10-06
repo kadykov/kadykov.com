@@ -900,6 +900,13 @@ main > header:first-child {
   padding: 3rem max(1rem, (100% - 42rem) / 2);
 }
 
+/* Subtitle styles in hero header */
+header p {
+  font-family: var(--font-serif);
+  color: var(--color-on-surface-variant);
+  font-style: italic;
+}
+
 main > header:first-child img {
   border-radius: 50%;
   margin: 1rem auto;
