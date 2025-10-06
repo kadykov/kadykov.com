@@ -826,19 +826,22 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Navbar styles */
-body > header {
+header {
   background: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
   position: relative;
-  top: 0;
-  z-index: 2;
 
   /* Flexbox layout for header content */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+/* Navbar styles */
+body > header {
+  top: 0;
+  z-index: 2;
 
   /* Limit the content width inside the header to 42rem */
   padding: 0 max(1rem, (100% - 42rem) / 2);
@@ -881,19 +884,10 @@ body > header svg:hover {
 
 /* Hero header */
 main > header:first-child {
-  background-color: var(--color-surface-container-low);
   min-height: 70vh;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  /* Add shadow to create seamless extension of navigation */
-  box-shadow: var(--elevation-2);
 
   /* Ensure shadow appears above subsequent content */
-  position: relative;
   z-index: 1;
 
   /* Limit the content width inside the hero to 42rem */
