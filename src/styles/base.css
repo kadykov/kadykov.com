@@ -835,16 +835,24 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  text-align: center;
   gap: 1rem;
+
+  /* Limit the content width inside the header to 42rem */
+  padding-inline: max(1rem, (100% - 42rem) / 2);
+}
+
+/* Subtitle styles in hero header */
+header p {
+  font-family: var(--font-serif);
+  color: var(--color-on-surface-variant);
+  font-style: italic;
 }
 
 /* Navbar styles */
 body > header {
   top: 0;
   z-index: 2;
-
-  /* Limit the content width inside the header to 42rem */
-  padding: 0 max(1rem, (100% - 42rem) / 2);
 }
 
 body > header ul {
@@ -889,16 +897,7 @@ main > header:first-child {
 
   /* Ensure shadow appears above subsequent content */
   z-index: 1;
-
-  /* Limit the content width inside the hero to 42rem */
-  padding: 3rem max(1rem, (100% - 42rem) / 2);
-}
-
-/* Subtitle styles in hero header */
-header p {
-  font-family: var(--font-serif);
-  color: var(--color-on-surface-variant);
-  font-style: italic;
+  padding-block: 3rem;
 }
 
 main > header:first-child img {
