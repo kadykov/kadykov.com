@@ -834,12 +834,26 @@ header {
   /* Flexbox layout for header content */
   display: flex;
   align-items: center;
-  justify-content: space-between;
   text-align: center;
-  gap: 1rem;
 
   /* Limit the content width inside the header to 42rem */
   padding-inline: max(1rem, (100% - 42rem) / 2);
+}
+
+/* Navbar styles */
+body > header {
+  top: 0;
+  z-index: 2;
+  justify-content: space-between;
+}
+
+/* Hero header */
+main > header {
+  min-height: 70vh;
+  flex-direction: column;
+  padding-block: 3rem;
+  justify-content: center;
+  z-index: 1;
 }
 
 /* Subtitle styles in hero header */
@@ -849,19 +863,24 @@ header p {
   font-style: italic;
 }
 
-/* Navbar styles */
-body > header {
-  top: 0;
-  z-index: 2;
-}
-
-body > header ul {
+/* All navigation inside headers are horizontal */
+header nav ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 1rem;
-  padding: 0;
+  margin-inline: 1rem;
+  padding-inline: 0;
+}
+
+/* Navigation bar */
+body > header nav ul {
+  justify-content: flex-end;
+}
+
+/* Hero section */
+main > header nav ul {
+  justify-content: center;
 }
 
 /* Logo size in the header */
@@ -890,31 +909,10 @@ body > header svg:hover {
   transform: scale(1.05);
 }
 
-/* Hero header */
-main > header:first-child {
-  min-height: 70vh;
-  flex-direction: column;
-
-  /* Ensure shadow appears above subsequent content */
-  z-index: 1;
-  padding-block: 3rem;
-}
-
-main > header:first-child img {
+main > header img {
   border-radius: 50%;
   margin: 1rem auto;
   box-shadow: var(--elevation-1);
-}
-
-/* Tags navigation */
-main > header:first-child nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
 }
 
 /* Page footer styles */
