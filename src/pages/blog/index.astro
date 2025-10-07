@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-import BlogPost from "../../components/BlogPost.astro"
+import Hero from "../../components/Hero.astro"
 
 const allPosts = await getCollection("blog")
 
@@ -9,13 +9,54 @@ const frontmatter = {
   title: "Blog",
   description: "Blog posts about web development, photography, and research",
 }
+
+// Options for date formatting
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}
 ---
 
 <BaseLayout frontmatter={frontmatter}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">Blog Posts</h1>
-    <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {allPosts.map((post) => <BlogPost post={post} />)}
-    </ul>
-  </div>
+  <Hero>
+    <h1>Blog Posts</h1>
+    <p>Only a few posts for now, but more content is on the way!</p>
+  </Hero>
+
+  <nav>
+    {
+      allPosts.map((post) => {
+        const { title, description, pubDate, tags } = post.data
+        const postUrl = `/blog/${post.slug}`
+
+        return (
+          <article>
+            <header>
+              <h2>
+                <a href={postUrl}>{title}</a>
+              </h2>
+              {pubDate && (
+                <time datetime={pubDate.toISOString()}>
+                  {pubDate.toLocaleDateString(undefined, dateOptions)}
+                </time>
+              )}
+            </header>
+            {description && <p>{description}</p>}
+            {tags && tags.length > 0 && (
+              <nav>
+                <ul>
+                  {tags.map((tag: string) => (
+                    <li>
+                      <a href={`/tags/${tag}`}>#{tag}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
+          </article>
+        )
+      })
+    }
+  </nav>
 </BaseLayout>

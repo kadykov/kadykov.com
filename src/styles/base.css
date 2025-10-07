@@ -625,6 +625,14 @@ article a {
   font-weight: 500;
 }
 
+h1 a,
+h2 a,
+h3 a,
+h4 a {
+  color: inherit;
+  font-weight: inherit;
+}
+
 /*
  * Heading Visual Hierarchy with Sheet Border Bars
  * 
@@ -634,10 +642,10 @@ article a {
  * Key insight: Same logic as article padding - (100% - 30rem) determines if we're
  * on wide screens (positive value) or narrow screens (negative value).
  */
-article h1,
-article h2,
-article h3,
-article h4 {
+article > h1,
+article > h2,
+article > h3,
+article > h4 {
   border-left-color: var(--color-primary);
   border-left-width: 0.1em;
 
@@ -659,16 +667,16 @@ article h4 {
 }
 
 /* Bar style represents different heading levels */
-article h1,
-article h2 {
+article > h1,
+article > h2 {
   border-left-style: solid;
 }
 
-article h3 {
+article > h3 {
   border-left-style: dashed;
 }
 
-article h4 {
+article > h4 {
   border-left-style: dotted;
 }
 
@@ -826,7 +834,8 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-header {
+body > header,
+main > header {
   background: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
 
@@ -852,6 +861,9 @@ body > header {
 
   /* Spread out logo and nav items */
   justify-content: space-between;
+
+  /* Gap between logo and nav */
+  gap: 1rem;
 }
 
 /* Hero header */
@@ -875,12 +887,11 @@ header p {
 }
 
 /* All navigation inside headers are horizontal */
-header nav ul {
+nav > ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-inline: 1rem;
+  gap: 1em;
   padding-inline: 0;
 }
 
@@ -924,6 +935,21 @@ main > header img {
   border-radius: 50%;
   margin: 1rem auto;
   box-shadow: var(--elevation-1);
+}
+
+/* Blog posts navigation - vertical stack */
+main > nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 2rem 0;
+}
+
+/* Date in article header */
+time {
+  color: var(--color-on-surface-variant);
+  font-size: 0.9em;
+  font-style: italic;
 }
 
 /* Page footer styles */
