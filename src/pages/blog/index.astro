@@ -27,11 +27,17 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   <nav>
     {
       allPosts.map((post) => {
-        const { title, description, pubDate, lastUpdatedDate, tags } = post.data
+        const { title, description, pubDate, lastUpdatedDate, tags, image } =
+          post.data
         const postUrl = `/blog/${post.slug}`
 
         return (
           <article>
+            {image && (
+              <a href={postUrl}>
+                <img src={image.url} alt={image.alt} />
+              </a>
+            )}
             <header>
               <h2>
                 <a href={postUrl}>{title}</a>
