@@ -24,48 +24,58 @@ const dateOptions: Intl.DateTimeFormatOptions = {
     <p>Only a few posts for now, but more content is on the way!</p>
   </Hero>
 
-  <nav>
-    {
-      allPosts.map((post) => {
-        const { title, description, pubDate, lastUpdatedDate, tags } = post.data
-        const postUrl = `/blog/${post.slug}`
+  <article>
+    <ul>
+      {
+        allPosts.map((post, index) => {
+          const { title, description, pubDate, lastUpdatedDate, tags } =
+            post.data
+          const postUrl = `/blog/${post.slug}`
 
-        return (
-          <article>
-            <header>
-              <h2>
-                <a href={postUrl}>{title}</a>
-              </h2>
-              {lastUpdatedDate &&
-              lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
-                <time datetime={lastUpdatedDate.toISOString()}>
-                  Updated on{" "}
-                  {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
-                </time>
-              ) : (
-                pubDate && (
-                  <time datetime={pubDate.toISOString()}>
-                    Published on{" "}
-                    {pubDate.toLocaleDateString(undefined, dateOptions)}
-                  </time>
-                )
-              )}
-            </header>
-            {description && <p>{description}</p>}
-            {tags && tags.length > 0 && (
-              <nav>
-                <ul>
-                  {tags.map((tag: string) => (
-                    <li>
-                      <a href={`/tags/${tag}`}>#{tag}</a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            )}
-          </article>
-        )
-      })
-    }
-  </nav>
+          return (
+            <>
+              <li>
+                <header>
+                  <h2>
+                    <a href={postUrl}>{title}</a>
+                  </h2>
+                  {lastUpdatedDate &&
+                  lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
+                    <time datetime={lastUpdatedDate.toISOString()}>
+                      Updated on{" "}
+                      {lastUpdatedDate.toLocaleDateString(
+                        undefined,
+                        dateOptions
+                      )}
+                    </time>
+                  ) : (
+                    pubDate && (
+                      <time datetime={pubDate.toISOString()}>
+                        Published on{" "}
+                        {pubDate.toLocaleDateString(undefined, dateOptions)}
+                      </time>
+                    )
+                  )}
+                </header>
+                {description && <p>{description}</p>}
+                {tags && tags.length > 0 && (
+                  <footer>
+                    <nav>
+                      <ul>
+                        {tags.map((tag: string) => (
+                          <li>
+                            <a href={`/tags/${tag}`}>#{tag}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </nav>
+                  </footer>
+                )}
+              </li>
+            </>
+          )
+        })
+      }
+    </ul>
+  </article>
 </BaseLayout>
