@@ -582,7 +582,7 @@ h4 {
   line-height: 1.3;
 }
 
-article {
+main > article {
   /*
    * Paper-like article container with coordinated width and padding:
    * 
@@ -620,7 +620,7 @@ article {
 }
 
 /* Accent links in articles with higher contrast */
-article a {
+main > article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -667,21 +667,21 @@ article > h4 {
 }
 
 /* Bar style represents different heading levels */
-article > h1,
-article > h2 {
+main > article > h1,
+main > article > h2 {
   border-left-style: solid;
 }
 
-article > h3 {
+main > article > h3 {
   border-left-style: dashed;
 }
 
-article > h4 {
+main > article > h4 {
   border-left-style: dotted;
 }
 
 /* Metadata footer right after the article */
-article + footer {
+main > article + footer {
   color: var(--color-on-surface-variant);
   text-align: center;
   margin: 3rem max(1rem, (100% - 42rem) / 2);
