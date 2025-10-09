@@ -38,25 +38,9 @@ const dateOptions: Intl.DateTimeFormatOptions = {
                 <img src={image.url} alt={image.alt} />
               </a>
             )}
-            <header>
-              <h2>
-                <a href={postUrl}>{title}</a>
-              </h2>
-              {lastUpdatedDate &&
-              lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
-                <time datetime={lastUpdatedDate.toISOString()}>
-                  Updated on{" "}
-                  {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
-                </time>
-              ) : (
-                pubDate && (
-                  <time datetime={pubDate.toISOString()}>
-                    Published on{" "}
-                    {pubDate.toLocaleDateString(undefined, dateOptions)}
-                  </time>
-                )
-              )}
-            </header>
+            <h2>
+              <a href={postUrl}>{title}</a>
+            </h2>
             {description && <p>{description}</p>}
             {tags && tags.length > 0 && (
               <nav>
@@ -69,6 +53,21 @@ const dateOptions: Intl.DateTimeFormatOptions = {
                 </ul>
               </nav>
             )}
+            {(lastUpdatedDate || pubDate) &&
+              (lastUpdatedDate &&
+              lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
+                <time datetime={lastUpdatedDate.toISOString()}>
+                  Updated on{" "}
+                  {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
+                </time>
+              ) : (
+                pubDate && (
+                  <time datetime={pubDate.toISOString()}>
+                    Published on{" "}
+                    {pubDate.toLocaleDateString(undefined, dateOptions)}
+                  </time>
+                )
+              ))}
           </article>
         )
       })

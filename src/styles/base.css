@@ -512,6 +512,7 @@ body {
    * font-size: clamp(16px, calc(16px + (22 - 16) * ((100vw - 400px) / (1920 - 400))), 22px);
    */
   font-size: clamp(16px, 0.395vw + 14.42px, 22px);
+  line-height: 1.75;
   color: var(--color-on-surface);
   background-color: var(--color-surface-container);
   transition:
@@ -565,6 +566,7 @@ h2 {
 
 /* h3 styles */
 header p,
+nav > article h2,
 h3 {
   font-size: 1.8rem;
   line-height: 1.2;
@@ -616,21 +618,12 @@ main > article {
 
   /* Give more flesh to Bitter Variable */
   font-weight: 450;
-  line-height: 1.75;
 }
 
 /* Accent links in articles with higher contrast */
 main > article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
-}
-
-h1 a,
-h2 a,
-h3 a,
-h4 a {
-  color: inherit;
-  font-weight: inherit;
 }
 
 /*
@@ -642,10 +635,10 @@ h4 a {
  * Key insight: Same logic as article padding - (100% - 30rem) determines if we're
  * on wide screens (positive value) or narrow screens (negative value).
  */
-article > h1,
-article > h2,
-article > h3,
-article > h4 {
+main > article > h1,
+main > article > h2,
+main > article > h3,
+main > article > h4 {
   border-left-color: var(--color-primary);
   border-left-width: 0.1em;
 
@@ -963,9 +956,8 @@ main > nav {
   columns: 16rem auto;
 
   /* Gap between columns and between cards */
-  column-gap: 1rem;
-
-  padding: 1rem;
+  column-gap: 1.5rem;
+  padding: 1.5rem;
 
   /*
    * Centering strategy for variable post counts:
@@ -976,7 +968,10 @@ main > nav {
    * Result: With 1-2 posts, columns appear centered. With many posts,
    * container grows naturally up to max-width while staying centered.
    */
-  width: fit-content;
+
+  /* Breaks multi-column layout in Firefox */
+
+  /* width: fit-content; */
   max-width: 60rem;
   margin: 0 auto;
 }
@@ -990,149 +985,33 @@ main > nav > article {
    * - Surface background for contrast against page background
    * - Elevation shadow for depth
    * - Rounded corners for softer appearance
-   * - Full height to fill grid cell
+   * - Default padding that applies to all children except images
+   * 
+   * Design pattern: "Full-bleed image with constrained content"
+   * - Container has padding for all content
+   * - Images use negative margin to escape and fill edges
+   * - Single source of truth for card spacing
    */
-  display: flex;
-  flex-direction: column;
   background-color: var(--color-surface);
-  border-radius: 0.5rem;
-  box-shadow: var(--elevation-1);
-  overflow: hidden; /* Ensures images respect border-radius */
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-2);
   transition: box-shadow 0.2s ease-in-out;
+
+  /* Default padding for card content - single source of truth */
+  padding: 1.5rem;
 
   /* Prevent cards from breaking across columns */
   break-inside: avoid;
 
   /* Space between cards in the same column */
-  margin-bottom: 1rem;
-
-  /* Remove default article styles for cards */
-  padding: 0;
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 0;
-  max-width: none;
-  font-family: var(--font-sans);
-  font-weight: normal;
-  line-height: normal;
+  margin: 0 0 1.5rem;
+  font-family: var(--font-serif);
+  font-weight: 450;
 }
 
 /* Elevate cards on hover for interactivity feedback */
 main > nav > article:hover {
   box-shadow: var(--elevation-3);
-}
-
-/* Preview image in blog post cards */
-main > nav > article img {
-  /*
-   * Image styling
-   * 
-   * Images take full width of the card and maintain aspect ratio.
-   * No fixed height - allows natural image proportions.
-   * Box shadow removed to avoid double shadow with card.
-   */
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0;
-  border-radius: 0; /* Override default img border-radius */
-  box-shadow: none; /* Card has shadow, not individual image */
-}
-
-/* Card header - contains title and date */
-main > nav > article > header {
-  /*
-   * Header contains the post title and date
-   * Padding provides breathing room without breaking out of card
-   */
-  padding: 1.5rem 1.5rem 0;
-
-  /* Remove default header styles */
-  background: none;
-  box-shadow: none;
-  position: static;
-  display: block;
-  text-align: left;
-  align-items: start;
-}
-
-/* Card title styling */
-main > nav > article > header > h2 {
-  /*
-   * Title styling
-   * 
-   * Smaller than main article titles since these are previews.
-   * Remove margin to control spacing with padding instead.
-   */
-  font-size: 1.5rem;
-  line-height: 1.2;
-  margin: 0 0 0.5rem 0;
-
-  /* Remove border from card titles */
-  border: none;
-  padding: 0;
-}
-
-/* Card date/time styling */
-main > nav > article > header > time {
-  display: block;
-  margin-top: 0.5rem;
-}
-
-/* Card description */
-main > nav > article > p {
-  /*
-   * Description/excerpt styling
-   * 
-   * Muted color for secondary content.
-   * Padding on sides and bottom for consistent spacing.
-   */
-  color: var(--color-on-surface-variant);
-  padding: 0 1.5rem;
-  margin: 0.75rem 0;
-  line-height: 1.5;
-}
-
-/* Card tags navigation */
-main > nav > article > nav {
-  /*
-   * Tags section at bottom of card
-   * 
-   * Auto margin-top pushes tags to bottom of card when cards have flex layout.
-   */
-  padding: 0 1.5rem 1.5rem;
-  margin-top: auto;
-}
-
-/* Tags list in cards */
-main > nav > article > nav > ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* Individual tag styling */
-main > nav > article > nav > ul > li {
-  font-size: 0.9rem;
-}
-
-/* Tag links */
-main > nav > article > nav > ul > li > a {
-  color: var(--color-on-primary-container);
-  text-decoration: none;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  background-color: var(--color-primary-container);
-  transition: background-color 0.15s ease-in-out;
-}
-
-main > nav > article > nav > ul > li > a:hover {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  text-decoration: none;
 }
 
 /* Date in article header */
