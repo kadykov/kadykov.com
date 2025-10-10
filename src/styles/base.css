@@ -968,6 +968,8 @@ main > ul {
   padding: 1.5rem;
   /* max-width: 80rem; */
   margin: 0 auto;
+  /* Center items vertically within their grid areas */
+  align-items: center;
 }
 
 /* Photo preview list items with aspect ratio spans */
