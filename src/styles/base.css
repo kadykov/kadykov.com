@@ -974,14 +974,6 @@ main > ul {
 main > ul > li {
   margin: 0;
   position: relative;
-  overflow: hidden;
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
-  transition: box-shadow 0.2s ease-in-out;
-}
-
-main > ul > li:hover {
-  box-shadow: var(--elevation-3);
 }
 
 /* Aspect ratio classes for masonry layout */
@@ -1003,25 +995,28 @@ main > ul > li.photo-vertical {
   grid-column: span 2;
 }
 
-/* Ensure figures and images fill their containers */
+/* Let all containers shrink to content size */
 main > ul > li > a,
-main > ul > li > figure {
+main > ul > li > figure,
+main > ul > li picture {
   display: block;
-  width: 100%;
-  height: 100%;
   margin: 0;
 }
 
-main > ul > li > a > figure,
-main > ul > li > figure {
-  margin: 0;
-}
-
+/* Apply border, shadow, and rounded corners to the actual image */
 main > ul > li img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
+  border: 0.5rem solid var(--color-surface);
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-2);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+main > ul > li:hover img {
+  box-shadow: var(--elevation-3);
 }
 
 /* Date in article header */
