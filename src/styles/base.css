@@ -1015,13 +1015,30 @@ main > ul > li > a > figure {
   flex: 1;
   position: relative;
   margin: 0;
-  padding: 0;
+
+  /* Polaroid-style card: white background with shadow and rounded corners */
+  background-color: var(--color-surface);
+  border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
 
-  /* Transition only for shadow, scale is on figure */
+  /* Base padding around image (will be overridden for caption sides) */
+  padding: 0.5rem;
+
+  /* Smooth transitions for hover effects */
   transition:
     box-shadow 0.2s ease-in-out,
     scale 0.2s ease-in-out;
+}
+
+/* Increase bottom padding for landscape and square to accommodate caption */
+main > ul > li.photo-horizontal > a > figure,
+main > ul > li.photo-square > a > figure {
+  padding-bottom: 2rem;
+}
+
+/* Increase left padding for portrait to accommodate caption */
+main > ul > li.photo-vertical > a > figure {
+  padding-left: 2rem;
 }
 
 /* Picture element fills figure */
@@ -1030,24 +1047,23 @@ main > ul > li picture {
   flex: 1;
 }
 
-/* Apply border, shadow, and rounded corners to the actual image */
+/* Image fills available space with no extra styling */
 main > ul > li img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border: 0.5rem solid var(--color-surface);
-  border-radius: 0.2rem;
+  border-radius: 0;
 }
 
 /* Caption base styles - always visible, single line with ellipsis */
 main > ul > li figcaption {
   position: absolute;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: normal;
 
   /* Prevent text selection on captions to avoid interfering with click */
   user-select: none;
@@ -1056,33 +1072,25 @@ main > ul > li figcaption {
 /* Bottom captions for landscape and square photos */
 main > ul > li.photo-horizontal figcaption,
 main > ul > li.photo-square figcaption {
-  bottom: 0;
-}
-
-/* Increase bottom border for landscape and square to accommodate caption */
-main > ul > li.photo-horizontal img,
-main > ul > li.photo-square img {
-  border-bottom-width: 2rem;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem; /* This constrains the width for ellipsis to work */
+  text-align: left;
 }
 
 /* Left-side rotated captions for portrait photos */
 main > ul > li.photo-vertical figcaption {
-  width: 2rem;
+  top: 0.5rem;
+  bottom: 0.5rem; /* This constrains the height (becomes width in vertical mode) */
+  left: 0.5rem;
+  width: 1rem;
 
   /* Rotate text 90 degrees: vertical-rl makes text flow from top to bottom */
   writing-mode: vertical-rl;
   text-orientation: mixed;
 
-  /* Remove flexbox centering to let text start from top */
-
-  /* Text will overflow at bottom if too long (less noticeable) */
-  padding-top: 0.5rem;
+  /* Text starts from top and overflows at bottom if too long */
   overflow: hidden;
-}
-
-/* Increase left border for portrait to accommodate caption */
-main > ul > li.photo-vertical img {
-  border-left-width: 2rem; /* Changed from right to left */
 }
 
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
