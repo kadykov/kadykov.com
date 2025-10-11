@@ -976,7 +976,9 @@ main > ul {
 /* Photo preview list items with aspect ratio spans */
 main > ul > li {
   margin: 0;
-  position: relative;
+
+  /* Make list items stretch to fill their grid area */
+  display: flex;
 }
 
 /* Aspect ratio classes for masonry layout */
@@ -999,12 +1001,30 @@ main > ul > li.photo-vertical {
   grid-column: span 2;
 }
 
-/* Let all containers shrink to content size */
-main > ul > li > a,
-main > ul > li > figure,
-main > ul > li picture {
-  display: block;
+/* Make all containers fill available space in the chain */
+main > ul > li > a {
+  display: flex;
+  flex: 1;
   margin: 0;
+  padding: 0;
+}
+
+/* Figure container fills anchor and positions caption relative to image */
+main > ul > li > a > figure {
+  display: flex;
+  flex: 1;
+  position: relative;
+  margin: 0;
+  padding: 0;
+
+  /* Apply transitions for hover effects on the entire card */
+  transition: scale 0.2s ease-in-out;
+}
+
+/* Picture element fills figure */
+main > ul > li picture {
+  display: flex;
+  flex: 1;
 }
 
 /* Apply border, shadow, and rounded corners to the actual image */
@@ -1016,14 +1036,73 @@ main > ul > li img {
   border: 0.5rem solid var(--color-surface);
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
-  transition:
-    box-shadow 0.2s ease-in-out,
-    scale 0.2s ease-in-out;
+
+  /* Transition only for shadow, scale is on figure */
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Caption base styles - always visible, single line with ellipsis */
+main > ul > li figcaption {
+  position: absolute;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Prevent text selection on captions to avoid interfering with click */
+  user-select: none;
+}
+
+/* Bottom captions for landscape and square photos */
+main > ul > li.photo-horizontal figcaption,
+main > ul > li.photo-square figcaption {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  border-bottom-left-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
+}
+
+/* Increase bottom border for landscape and square to accommodate caption */
+main > ul > li.photo-horizontal img,
+main > ul > li.photo-square img {
+  border-bottom-width: 2rem;
+}
+
+/* Right-side rotated captions for portrait photos */
+main > ul > li.photo-vertical figcaption {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 2rem;
+
+  /* Rotate text 90 degrees clockwise */
+  writing-mode: sideways-lr;
+  text-orientation: mixed;
+
+  /* Center text vertically within the rotated space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-top-right-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
+}
+
+/* Increase right border for portrait to accommodate caption */
+main > ul > li.photo-vertical img {
+  border-right-width: 2rem;
+}
+
+/* Hover effect: scale entire figure (image + caption together) and increase shadow */
+main > ul > li:hover figure {
+  scale: 1.02;
 }
 
 main > ul > li:hover img {
   box-shadow: var(--elevation-3);
-  scale: 1.02;
 }
 
 /* Date in article header */

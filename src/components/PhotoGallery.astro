@@ -198,13 +198,15 @@ function getLightboxWidths(photoWidth: number): number[] {
           ""
 
         // Calculate aspect ratio class for masonry layout
+        // Expanded ranges to account for caption space making cards more square-ish
         const ratio = photo.width / photo.height
         let aspectClass = "photo-square" // Default
-        if (ratio >= 1.3) {
+        if (ratio >= 1.2) {
           aspectClass = "photo-horizontal" // Landscape
-        } else if (ratio < 0.77) {
+        } else if (ratio < 0.85) {
           aspectClass = "photo-vertical" // Portrait
         }
+        // Square range is now 0.85-1.2 (wider than before: was 0.77-1.3)
 
         // displayWidth for OptimizedImage: Based on grid layout
         // Grid columns are minmax(15rem, 1fr) = ~240px min
@@ -236,16 +238,19 @@ function getLightboxWidths(photoWidth: number): number[] {
               target="_blank"
               aria-label={`View image ${altText}`}
             >
-              <OptimizedImage
-                src={photoSrc}
-                alt={altText}
-                width={photo.width}
-                height={photo.height}
-                displayWidth={displayWidth}
-                sizesAttr={sizesAttr}
-                loading="lazy"
-                decoding="async"
-              />
+              <figure>
+                <OptimizedImage
+                  src={photoSrc}
+                  alt={altText}
+                  width={photo.width}
+                  height={photo.height}
+                  displayWidth={displayWidth}
+                  sizesAttr={sizesAttr}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{photo.title || photo.filename}</figcaption>
+              </figure>
             </a>
           </li>
         )
