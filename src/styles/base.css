@@ -1016,9 +1016,12 @@ main > ul > li > a > figure {
   position: relative;
   margin: 0;
   padding: 0;
+  box-shadow: var(--elevation-2);
 
-  /* Apply transitions for hover effects on the entire card */
-  transition: scale 0.2s ease-in-out;
+  /* Transition only for shadow, scale is on figure */
+  transition:
+    box-shadow 0.2s ease-in-out,
+    scale 0.2s ease-in-out;
 }
 
 /* Picture element fills figure */
@@ -1035,10 +1038,6 @@ main > ul > li img {
   object-fit: contain;
   border: 0.5rem solid var(--color-surface);
   border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
-
-  /* Transition only for shadow, scale is on figure */
-  transition: box-shadow 0.2s ease-in-out;
 }
 
 /* Caption base styles - always visible, single line with ellipsis */
@@ -1058,12 +1057,6 @@ main > ul > li figcaption {
 main > ul > li.photo-horizontal figcaption,
 main > ul > li.photo-square figcaption {
   bottom: 0;
-  left: 0;
-  right: 0;
-  /* Remove centering - let text start from left */
-  text-align: left;
-  border-bottom-left-radius: 0.2rem;
-  border-bottom-right-radius: 0.2rem;
 }
 
 /* Increase bottom border for landscape and square to accommodate caption */
@@ -1074,9 +1067,6 @@ main > ul > li.photo-square img {
 
 /* Left-side rotated captions for portrait photos */
 main > ul > li.photo-vertical figcaption {
-  top: 0;
-  bottom: 0;
-  left: 0; /* Changed from right to left */
   width: 2rem;
 
   /* Rotate text 90 degrees: vertical-rl makes text flow from top to bottom */
@@ -1084,12 +1074,10 @@ main > ul > li.photo-vertical figcaption {
   text-orientation: mixed;
 
   /* Remove flexbox centering to let text start from top */
+
   /* Text will overflow at bottom if too long (less noticeable) */
   padding-top: 0.5rem;
   overflow: hidden;
-
-  border-top-left-radius: 0.2rem; /* Changed from right to left */
-  border-bottom-left-radius: 0.2rem; /* Changed from right to left */
 }
 
 /* Increase left border for portrait to accommodate caption */
@@ -1100,9 +1088,6 @@ main > ul > li.photo-vertical img {
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
 main > ul > li:hover figure {
   scale: 1.02;
-}
-
-main > ul > li:hover img {
   box-shadow: var(--elevation-3);
 }
 
