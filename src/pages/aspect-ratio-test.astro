@@ -1,5 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+import {
+  classifyPhoto,
+  getClassificationRanges,
+} from "../utils/photoClassification"
 
 // Generate test photos with various aspect ratios
 // Using placeholder service that doesn't require actual image generation
@@ -12,12 +16,13 @@ interface TestPhoto {
 const testPhotos: TestPhoto[] = []
 
 // Generate a range of aspect ratios from 0.4 (very portrait) to 2.0 (very landscape)
-// with more density around the boundary values (0.85 and 1.2)
+// with more density around the boundary values
 const aspectRatios = [
   2.0,
   1.8,
   1.6,
   1.4,
+  1.35,
   1.3,
   1.25,
   1.2, // Landscape range
@@ -47,17 +52,12 @@ aspectRatios.forEach((ratio) => {
   })
 })
 
-// Classification logic (from PhotoGallery.astro)
-function getAspectClass(width: number, height: number): string {
-  const ratio = width / height
-  if (ratio >= 1.2) return "photo-horizontal"
-  if (ratio < 0.85) return "photo-vertical"
-  return "photo-square"
-}
+// Get classification ranges for display in the table
+const classificationRanges = getClassificationRanges()
 
 const frontmatter = {
-  title: "Aspect Ratio Test - Photo Gallery Classification",
-  description: "Test page for photo gallery aspect ratio classification",
+  title: "Aspect Ratio Classification Test",
+  description: "Test page for photo gallery two-step classification system",
 }
 ---
 
@@ -67,22 +67,76 @@ const frontmatter = {
   </Fragment>
 
   <main>
-    <h1>Photo Gallery Aspect Ratio Classification Test</h1>
-    <p style="margin-bottom: 2rem;">
-      Current ranges: <strong>Landscape</strong> ≥ 1.2 | <strong>Square</strong
-      >{" "}
-      0.85–1.2 | <strong>Portrait</strong> &lt; 0.85
-    </p>
+    <h1>Photo Gallery Classification Test</h1>
 
-    {/* Use exact same markup structure as PhotoGallery.astro */}
+    <section
+      style="margin-bottom: 2rem; padding: 1rem; background: var(--color-surface-container); border-radius: 0.5rem;"
+    >
+      <h2 style="margin-top: 0;">Two-Step Classification System</h2>
+
+      <p>
+        <strong>Step 1:</strong> Decide caption placement (bottom vs side)<br />
+        <strong>Step 2:</strong> Decide grid span based on resulting card aspect
+        ratio
+      </p>
+
+      <h3>Classification Logic</h3>
+      <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--color-outline);">
+            <th style="text-align: left; padding: 0.5rem;">Range</th>
+            <th style="text-align: left; padding: 0.5rem;">Caption</th>
+            <th style="text-align: left; padding: 0.5rem;">Effect</th>
+            <th style="text-align: left; padding: 0.5rem;">Grid</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            classificationRanges.map((row, index) => (
+              <tr
+                style={
+                  index < classificationRanges.length - 1
+                    ? "border-bottom: 1px solid var(--color-outline-variant);"
+                    : ""
+                }
+              >
+                <td style="padding: 0.5rem;">
+                  <strong>{row.range}</strong>
+                </td>
+                <td style="padding: 0.5rem;">
+                  {row.caption === "Side" || row.caption === "Bottom" ? (
+                    row.caption
+                  ) : (
+                    <em>{row.caption}</em>
+                  )}
+                </td>
+                <td style="padding: 0.5rem;">{row.effect}</td>
+                <td style="padding: 0.5rem;">{row.grid}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+
+      <p style="margin-bottom: 0;">
+        <strong>Key insight:</strong> We strategically place captions to push boundary
+        aspect ratios toward their intended grid layout, creating more coherent packing.
+        <br /><strong>New refinement:</strong> The "almost portrait" range (0.70-0.85)
+        is split - values closer to square get side captions to keep them square,
+        while values closer to portrait get bottom captions to make them more portrait.
+      </p>
+    </section>
+
     <ul>
       {
         testPhotos.map((photo) => {
-          const aspectClass = getAspectClass(photo.width, photo.height)
-          const placeholderUrl = `https://placehold.co/${photo.width}x${photo.height}/6366f1/white?text=${photo.aspectRatio.toFixed(2)}`
+          const classification = classifyPhoto(photo.width, photo.height)
+          const placeholderUrl = `https://placehold.co/${photo.width}x${photo.height}/f59e0b/white?text=${photo.aspectRatio.toFixed(2)}`
 
           return (
-            <li class={aspectClass}>
+            <li
+              class={`${classification.captionClass} ${classification.gridClass}`}
+            >
               <a class="gallery-item" href="#" target="_blank">
                 <figure>
                   <picture>
@@ -96,8 +150,8 @@ const frontmatter = {
                     />
                   </picture>
                   <figcaption>
-                    Ratio: {photo.aspectRatio.toFixed(2)} (
-                    {aspectClass.replace("photo-", "")})
+                    {photo.aspectRatio.toFixed(2)} |{" "}
+                    {classification.gridClass.replace("grid-", "")}
                   </figcaption>
                 </figure>
               </a>
