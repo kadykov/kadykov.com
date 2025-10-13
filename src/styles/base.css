@@ -879,25 +879,6 @@ header p {
   font-style: italic;
 }
 
-/* All navigation inside headers are horizontal */
-nav > ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  padding-inline: 0;
-}
-
-/* Navigation bar */
-body > header nav ul {
-  justify-content: flex-end;
-}
-
-/* Hero section */
-main > header nav ul {
-  justify-content: center;
-}
-
 /* Logo size in the header */
 body > header svg {
   /*
@@ -1072,6 +1053,25 @@ main > ul > li:hover figure {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
+}
+
+/* All navigation inside headers are horizontal */
+header nav > ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  padding-inline: 0;
+}
+
+/* Navigation bar */
+body > header nav ul {
+  justify-content: flex-end;
+}
+
+/* Hero section */
+main > header nav ul {
+  justify-content: center;
 }
 
 /* Date in article header */
