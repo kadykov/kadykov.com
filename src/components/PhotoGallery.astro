@@ -3,7 +3,7 @@ import OptimizedImage from "./OptimizedImage.astro"
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import { getImage } from "astro:assets"
 import { widthSet as globalWidthSet } from "../utils/widthSet" // Import global widthSet
-import { classifyPhoto } from "../utils/photoClassification" // Import classification utility
+import { classifyPhoto, getImageDimensions } from "../utils/photoClassification" // Import classification utilities
 
 interface Props {
   photos: PhotoManifestItem[] // Photos for the current paginated view (thumbnails)
@@ -222,15 +222,9 @@ function getRandomRotation(maxDegrees: number = 1): number {
         const captionClass = classification.captionClass // 'caption-bottom' or 'caption-side'
         const gridClass = classification.gridClass // 'grid-landscape', 'grid-square', or 'grid-portrait'
 
-        // displayWidth for OptimizedImage: Based on grid layout
-        // Grid columns are minmax(15rem, 1fr) = ~240px min
-        // With gap of 1rem and typical 3-4 columns, estimate ~300px max display width
-        const displayWidth = 300
-        // sizesAttr: Approximate column width based on viewport
-        // At narrow: 100vw / 2 columns ≈ 50vw
-        // At wide: (80rem max-width - gaps) / 4 columns ≈ 18rem = 288px
-        const sizesAttr =
-          "(min-width: 1024px) 288px, (min-width: 640px) 33vw, 50vw"
+        // Calculate optimal image dimensions based on grid layout and caption placement
+        // This accounts for: grid columns, gaps, padding, and responsive rem scaling (16px-22px)
+        const { displayWidth, sizesAttr } = getImageDimensions(classification)
 
         // Generate a random rotation for this card (build-time, not runtime)
         const cardRotation = getRandomRotation(1) // Random rotation mostly between -1deg and +1deg

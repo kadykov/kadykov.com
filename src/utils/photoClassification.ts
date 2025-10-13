@@ -166,3 +166,103 @@ export function getClassificationRanges() {
     },
   ]
 }
+
+/**
+ * Grid layout constants from base.css
+ * These define the physical dimensions of the grid system
+ */
+const GRID_CONSTANTS = {
+  COLUMN_WIDTH_REM: 5, // Each grid column width
+  GAP_REM: 1.5, // Gap between columns
+  PADDING_NORMAL: 0.5, // Normal padding on each side
+  PADDING_SIDE_CAPTION: 2, // Padding on the side where caption is placed
+  // Rem to viewport conversion: 1rem = clamp(16px, 0.395vw + 14.42px, 22px)
+  REM_TO_VW: 0.395,
+  REM_TO_PX_BASE: 14.42,
+  REM_MIN_PX: 16, // Minimum rem value in pixels (at narrow viewports)
+  REM_MAX_PX: 22, // Maximum rem value in pixels (at wide viewports)
+} as const
+
+/**
+ * Calculates optimal image dimensions for the grid layout
+ * considering caption placement and grid span.
+ *
+ * The calculation accounts for:
+ * - Grid columns and gaps
+ * - Caption placement (side vs bottom affects padding)
+ * - Responsive rem scaling (16px to 22px based on viewport)
+ *
+ * @param classification - The photo classification (from classifyPhoto)
+ * @returns Object with displayWidth and sizesAttr for OptimizedImage
+ *
+ * @example
+ * const classification = classifyPhoto(1600, 1200);
+ * const { displayWidth, sizesAttr } = getImageDimensions(classification);
+ * // displayWidth: 313 (at 1rem = 22px)
+ * // sizesAttr: "clamp(228px, calc(19.16vw + 205.98px), 313px)"
+ */
+export function getImageDimensions(classification: PhotoClassification): {
+  displayWidth: number
+  sizesAttr: string
+} {
+  const {
+    COLUMN_WIDTH_REM,
+    GAP_REM,
+    PADDING_NORMAL,
+    PADDING_SIDE_CAPTION,
+    REM_TO_VW,
+    REM_TO_PX_BASE,
+    REM_MIN_PX,
+    REM_MAX_PX,
+  } = GRID_CONSTANTS
+
+  // Determine grid span and padding based on classification
+  let columns: number
+  let paddingLeft: number
+  let paddingRight: number
+
+  if (classification.gridClass === "grid-landscape") {
+    // Landscape: 3 columns, caption at bottom (normal padding on both sides)
+    columns = 3
+    paddingLeft = PADDING_NORMAL
+    paddingRight = PADDING_NORMAL
+  } else {
+    // Square and Portrait: 2 columns
+    columns = 2
+
+    if (classification.captionClass === "caption-side") {
+      // Caption on the side: extra padding on left, normal on right
+      paddingLeft = PADDING_SIDE_CAPTION
+      paddingRight = PADDING_NORMAL
+    } else {
+      // Caption on bottom: normal padding on both sides
+      paddingLeft = PADDING_NORMAL
+      paddingRight = PADDING_NORMAL
+    }
+  }
+
+  // Calculate total card width in rem
+  // Formula: columns × column_width + (columns - 1) × gap
+  const cardWidthRem = columns * COLUMN_WIDTH_REM + (columns - 1) * GAP_REM
+
+  // Calculate image width in rem (card width minus padding)
+  const imageWidthRem = cardWidthRem - paddingLeft - paddingRight
+
+  // Convert rem to viewport-relative calc() expression
+  // 1rem = 0.395vw + 14.42px (in the scaling range)
+  const vwComponent = imageWidthRem * REM_TO_VW
+  const pxComponent = imageWidthRem * REM_TO_PX_BASE
+
+  // Calculate display width in pixels (at maximum rem value)
+  const displayWidth = Math.round(imageWidthRem * REM_MAX_PX)
+
+  // Calculate min/max bounds for clamp()
+  const minWidth = Math.round(imageWidthRem * REM_MIN_PX)
+  const maxWidth = displayWidth
+
+  // Generate sizes attribute with proper clamping
+  // This tells the browser the actual rendered size at different viewports
+  const sizesAttr = `clamp(${minWidth}px, calc(${vwComponent.toFixed(2)}vw + ${pxComponent.toFixed(2)}px), ${maxWidth}px)`
+
+  return { displayWidth, sizesAttr }
+}
