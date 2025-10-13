@@ -181,6 +181,9 @@ const GRID_CONSTANTS = {
   REM_TO_PX_BASE: 14.42,
   REM_MIN_PX: 16, // Minimum rem value in pixels (at narrow viewports)
   REM_MAX_PX: 22, // Maximum rem value in pixels (at wide viewports)
+  // Viewport breakpoints where rem scaling starts/stops
+  MIN_VIEWPORT_PX: 400, // Viewport width where rem is at minimum (16px)
+  MAX_VIEWPORT_PX: 1920, // Viewport width where rem is at maximum (22px)
 } as const
 
 /**
@@ -199,7 +202,7 @@ const GRID_CONSTANTS = {
  * const classification = classifyPhoto(1600, 1200);
  * const { displayWidth, sizesAttr } = getImageDimensions(classification);
  * // displayWidth: 313 (at 1rem = 22px)
- * // sizesAttr: "clamp(228px, calc(19.16vw + 205.98px), 313px)"
+ * // sizesAttr: "(max-width: 400px) 228px, (max-width: 1920px) calc(19.16vw + 205.98px), 313px"
  */
 export function getImageDimensions(classification: PhotoClassification): {
   displayWidth: number
@@ -214,6 +217,8 @@ export function getImageDimensions(classification: PhotoClassification): {
     REM_TO_PX_BASE,
     REM_MIN_PX,
     REM_MAX_PX,
+    MIN_VIEWPORT_PX,
+    MAX_VIEWPORT_PX,
   } = GRID_CONSTANTS
 
   // Determine grid span and padding based on classification
@@ -256,13 +261,21 @@ export function getImageDimensions(classification: PhotoClassification): {
   // Calculate display width in pixels (at maximum rem value)
   const displayWidth = Math.round(imageWidthRem * REM_MAX_PX)
 
-  // Calculate min/max bounds for clamp()
+  // Calculate min/max bounds for responsive sizing
   const minWidth = Math.round(imageWidthRem * REM_MIN_PX)
   const maxWidth = displayWidth
 
-  // Generate sizes attribute with proper clamping
-  // This tells the browser the actual rendered size at different viewports
-  const sizesAttr = `clamp(${minWidth}px, calc(${vwComponent.toFixed(2)}vw + ${pxComponent.toFixed(2)}px), ${maxWidth}px)`
+  // Generate sizes attribute using media queries (valid HTML syntax)
+  // Note: clamp() is not valid in sizes attribute, so we use media queries instead
+  // This tells the browser the actual rendered size at different viewports:
+  // - At narrow viewports (≤400px): use minimum width
+  // - At medium viewports (400px-1920px): scale using calc()
+  // - At wide viewports (≥1920px): use maximum width (fallback)
+  const sizesAttr = [
+    `(max-width: ${MIN_VIEWPORT_PX}px) ${minWidth}px`,
+    `(max-width: ${MAX_VIEWPORT_PX}px) calc(${vwComponent.toFixed(2)}vw + ${pxComponent.toFixed(2)}px)`,
+    `${maxWidth}px`,
+  ].join(", ")
 
   return { displayWidth, sizesAttr }
 }
