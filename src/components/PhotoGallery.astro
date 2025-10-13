@@ -139,6 +139,25 @@ function getLightboxWidths(photoWidth: number): number[] {
 
   return [...new Set(widths)].sort((a, b) => a - b)
 }
+
+// Helper function to generate a random rotation angle for Polaroid-style scatter effect
+// Uses normal (Gaussian) distribution for more natural-looking scatter:
+// - Most cards will be nearly straight (close to 0°)
+// - Fewer cards will have extreme rotations
+// Returns a value between -maxDegrees and +maxDegrees, with 68% within ±(maxDegrees/2)
+function getRandomRotation(maxDegrees: number = 1): number {
+  // Box-Muller transform to generate normally distributed random values
+  const u1 = Math.random()
+  const u2 = Math.random()
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+
+  // z0 is now normally distributed with mean=0, stddev=1
+  // Scale so that 2 standard deviations ≈ maxDegrees (95% of values within range)
+  const rotation = z0 * (maxDegrees / 2)
+
+  // Clamp to ensure we never exceed maxDegrees (handles extreme outliers)
+  return Math.max(-maxDegrees, Math.min(maxDegrees, rotation))
+}
 ---
 
 {
@@ -213,6 +232,9 @@ function getLightboxWidths(photoWidth: number): number[] {
         const sizesAttr =
           "(min-width: 1024px) 288px, (min-width: 640px) 33vw, 50vw"
 
+        // Generate a random rotation for this card (build-time, not runtime)
+        const cardRotation = getRandomRotation(1) // Random rotation mostly between -1deg and +1deg
+
         return (
           <li class={`${captionClass} ${gridClass}`}>
             <a
@@ -233,7 +255,7 @@ function getLightboxWidths(photoWidth: number): number[] {
               target="_blank"
               aria-label={`View image ${altText}`}
             >
-              <figure>
+              <figure style={`rotate: ${cardRotation}deg;`}>
                 <OptimizedImage
                   src={photoSrc}
                   alt={altText}

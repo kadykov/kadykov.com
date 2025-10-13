@@ -1028,7 +1028,8 @@ main > ul > li > a > figure {
   /* Smooth transitions for hover effects */
   transition:
     box-shadow 0.2s ease-in-out,
-    scale 0.2s ease-in-out;
+    scale 0.2s ease-in-out,
+    rotate 0.2s ease-in-out;
 }
 
 /* === Caption Placement Classes === */
@@ -1101,6 +1102,7 @@ main > ul > li.caption-side figcaption {
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
 main > ul > li:hover figure {
   scale: 1.02;
+  rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
 }
 
