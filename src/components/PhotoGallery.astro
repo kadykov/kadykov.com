@@ -227,7 +227,7 @@ function getRandomRotation(maxDegrees: number = 1): number {
         const { displayWidth, sizesAttr } = getImageDimensions(classification)
 
         // Generate a random rotation for this card (build-time, not runtime)
-        const cardRotation = getRandomRotation(1) // Random rotation mostly between -1deg and +1deg
+        const cardRotation = getRandomRotation(1).toFixed(2) // Random rotation mostly between -1deg and +1deg, rounded to 2 decimal places
 
         return (
           <li class={`${captionClass} ${gridClass}`}>
