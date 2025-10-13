@@ -960,22 +960,14 @@ main > ul {
   gap: 1.5rem;
   padding: 1.5rem;
 
-  /* max-width: 80rem; */
-  margin: 0 auto;
+  /* There is no horizontal limit, the masonry grid fills all available space */
 
   /* Center items vertically within their grid areas */
   align-items: center;
 }
 
-/* Photo preview list items with aspect ratio spans */
-main > ul > li {
-  margin: 0;
-
-  /* Make list items stretch to fill their grid area */
-  display: flex;
-}
-
 /* === Grid Layout Classes === */
+
 /* These control how much space the card occupies on the grid */
 
 /* Grid layout: Landscape cards - wider span */
@@ -996,19 +988,8 @@ main > ul > li.grid-portrait {
   grid-column: span 2;
 }
 
-/* Make all containers fill available space in the chain */
-main > ul > li > a {
-  display: flex;
-  flex: 1;
-  margin: 0;
-  padding: 0;
-}
-
 /* Figure container fills anchor and positions caption relative to image */
 main > ul > li > a > figure {
-  display: flex;
-  flex: 1;
-  position: relative;
   margin: 0;
 
   /* Polaroid-style card: white background with shadow and rounded corners */
@@ -1027,22 +1008,17 @@ main > ul > li > a > figure {
 }
 
 /* === Caption Placement Classes === */
+
 /* These control padding to accommodate captions at different positions */
 
 /* Caption placement: Bottom (for landscape and square-ish photos) */
-main > ul > li.caption-bottom > a > figure {
+li.caption-bottom > a > figure {
   padding-bottom: 2rem;
 }
 
 /* Caption placement: Side (for portrait photos) */
-main > ul > li.caption-side > a > figure {
+li.caption-side > a > figure {
   padding-left: 2rem;
-}
-
-/* Picture element fills figure */
-main > ul > li picture {
-  display: flex;
-  flex: 1;
 }
 
 /* Image fills available space with no extra styling */
@@ -1061,13 +1037,11 @@ main > ul > li figcaption {
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
-  line-height: normal;
-
-  /* Prevent text selection on captions to avoid interfering with click */
-  user-select: none;
+  line-height: 1.2;
 }
 
 /* === Caption Positioning Classes === */
+
 /* These control where the caption appears within the figure */
 
 /* Caption positioning: Bottom */
