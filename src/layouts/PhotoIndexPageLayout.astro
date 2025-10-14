@@ -1,0 +1,43 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+import PhotoGallery from "../components/PhotoGallery.astro"
+import PaginationNav from "../components/PaginationNav.astro"
+import type { PhotoManifestItem } from "../utils/photoManifestSchema"
+import type { Page } from "astro"
+
+interface Props {
+  page: Page<PhotoManifestItem>
+  fullPhotoDataset: PhotoManifestItem[]
+  pageTitle: string
+  pageDescription: string
+  backLink?: {
+    href: string
+    text: string
+  }
+}
+
+const { page, fullPhotoDataset, pageTitle, pageDescription, backLink } =
+  Astro.props
+
+const frontmatter = {
+  title: pageTitle,
+  description: pageDescription,
+  pageType: "photo-gallery",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <slot name="heroContent" />
+
+  <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
+
+  {
+    backLink && (
+      <p>
+        <a href={backLink.href}>{backLink.text}</a>
+      </p>
+    )
+  }
+
+  <PaginationNav page={page} />
+</BaseLayout>

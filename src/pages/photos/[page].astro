@@ -1,10 +1,8 @@
 ---
-import PhotoGalleryLayout from "../../layouts/PhotoGalleryLayout.astro"
-import PhotoGallery from "../../components/PhotoGallery.astro"
-import PaginationNav from "../../components/PaginationNav.astro" // Added import
+import PhotoIndexPageLayout from "../../layouts/PhotoIndexPageLayout.astro"
 import Hero from "../../components/Hero.astro"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
-import { fetchPhotoManifest } from "../../utils/photoData" // REMOVED generateSlugFromRelativePath
+import { fetchPhotoManifest } from "../../utils/photoData"
 import type { Page, PaginateFunction } from "astro"
 
 // Define PAGE_SIZE for pagination
@@ -72,15 +70,18 @@ if (!page) {
 }
 
 // Reverted optional chaining to let errors surface if page is undefined.
-const frontmatter = {
-  title: "All Photos",
-  description: `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`,
-}
+const pageTitle = "All Photos"
+const pageDescription = `A collection of all photos. Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
-<PhotoGalleryLayout frontmatter={frontmatter}>
-  <Hero>
-    <h1>{frontmatter.title}</h1>
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
     <nav>
       <ul>
         <li><a href="/photos/tags">Browse by tag</a></li>
@@ -88,8 +89,4 @@ const frontmatter = {
       </ul>
     </nav>
   </Hero>
-
-  <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
-
-  <PaginationNav page={page} />
-</PhotoGalleryLayout>
+</PhotoIndexPageLayout>

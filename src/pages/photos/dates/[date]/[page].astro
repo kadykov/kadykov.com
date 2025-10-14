@@ -1,7 +1,6 @@
 ---
-import PhotoGalleryLayout from "../../../../layouts/PhotoGalleryLayout.astro"
-import PhotoGallery from "../../../../components/PhotoGallery.astro"
-import PaginationNav from "../../../../components/PaginationNav.astro"
+import PhotoIndexPageLayout from "../../../../layouts/PhotoIndexPageLayout.astro"
+import Hero from "../../../../components/Hero.astro"
 import {
   photoManifestSchema,
   type PhotoManifestItem,
@@ -104,29 +103,24 @@ export async function getStaticPaths({
 // Props interface is now Props defined above
 const { page, dateDisplay, fullPhotoDataset } = Astro.props // Added fullPhotoDataset
 
-const frontmatter = {
-  title: `Photos from ${dateDisplay}`,
-  description: `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`,
-}
+const pageTitle = `Photos from ${dateDisplay}`
+const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
-<PhotoGalleryLayout frontmatter={frontmatter}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">Photos from {dateDisplay}</h1>
-
-    {
-      page.data && page.data.length > 0 ? (
-        <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
-      ) : (
-        <p class="text-center">No photos found for this date.</p>
-      )
-    }
-
-    <p class="text-center text-meta my-8">
-      <a href="/photos/dates" class="btn text-button">View all photo dates</a>
-    </p>
-
-    <PaginationNav page={page} />
-    {/* Replaced inline pagination with component */}
-  </div>
-</PhotoGalleryLayout>
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  backLink={{ href: "/photos/dates", text: "View all photo dates" }}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
+    <nav>
+      <ul>
+        <li><a href="/photos/tags">All tags</a></li>
+        <li><a href="/photos/dates">All dates</a></li>
+      </ul>
+    </nav>
+  </Hero>
+</PhotoIndexPageLayout>

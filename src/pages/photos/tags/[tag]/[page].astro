@@ -1,9 +1,8 @@
 ---
-import PhotoGalleryLayout from "../../../../layouts/PhotoGalleryLayout.astro" // Adjusted path
-import PhotoGallery from "../../../../components/PhotoGallery.astro" // Adjusted path
-import PaginationNav from "../../../../components/PaginationNav.astro" // Added import
-import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema" // Adjusted path
-import { fetchPhotoManifest } from "../../../../utils/photoData" // Adjusted path, REMOVED generateSlugFromRelativePath
+import PhotoIndexPageLayout from "../../../../layouts/PhotoIndexPageLayout.astro"
+import Hero from "../../../../components/Hero.astro"
+import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
+import { fetchPhotoManifest } from "../../../../utils/photoData"
 import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
 
 // const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Will be handled by fetchPhotoManifest
@@ -81,20 +80,24 @@ const { page, tagDisplayName, fullPhotoDataset } = Astro.props // fullPhotoDatas
 // and 'page' (the number) would be Astro.params.page
 
 // Use tagDisplayName for display, as it preserves original casing
-const frontmatter = {
-  title: `Photos tagged: "${tagDisplayName}"`,
-  description: `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`,
-}
+const pageTitle = `Photos tagged: "${tagDisplayName}"`
+const pageDescription = `A collection of photos tagged with "${tagDisplayName}". Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
-<PhotoGalleryLayout frontmatter={frontmatter}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">Photos tagged: {tagDisplayName}</h1>
-    <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
-    <p class="text-center text-meta my-8">
-      <a href="/photos/tags" class="btn text-button">View all photo tags</a>
-    </p>
-    <PaginationNav page={page} />
-    {/* Replaced inline pagination with component */}
-  </div>
-</PhotoGalleryLayout>
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  backLink={{ href: "/photos/tags", text: "View all photo tags" }}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
+    <nav>
+      <ul>
+        <li><a href="/photos/tags">All tags</a></li>
+        <li><a href="/photos/dates">All dates</a></li>
+      </ul>
+    </nav>
+  </Hero>
+</PhotoIndexPageLayout>
