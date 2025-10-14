@@ -636,6 +636,7 @@ h3 {
 /* h4 styles */
 blockquote,
 header ul,
+main > nav ul,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
@@ -1120,7 +1121,7 @@ main > ul > li:hover figure {
 }
 
 /* All navigation inside headers are horizontal */
-header nav > ul {
+nav > ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -1128,14 +1129,29 @@ header nav > ul {
   padding-inline: 0;
 }
 
+/* Hero section */
+main > nav ul,
+main > header nav ul {
+  justify-content: center;
+}
+
 /* Navigation bar */
 body > header nav ul {
   justify-content: flex-end;
 }
 
-/* Hero section */
-main > header nav ul {
-  justify-content: center;
+/* Pagination navigation - centered in main */
+main > nav {
+  margin-block: 3rem;
+  text-align: center;
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 0 1rem;
+}
+
+main > nav > ul > li > span[aria-disabled="true"] {
+  color: var(--color-on-surface-low);
+  cursor: not-allowed;
 }
 
 /* Date in article header */

@@ -1,19 +1,17 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
-import type { PhotoManifestItem } from "../../../utils/photoManifestSchema" // No longer need photoManifestSchema here
+import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { fetchPhotoManifest } from "../../../utils/photoData"
 
-// const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // This comment can be removed.
 let uniqueTags: string[] = []
 
 try {
-  const allPhotos: PhotoManifestItem[] = await fetchPhotoManifest() // Explicitly type allPhotos
+  const allPhotos: PhotoManifestItem[] = await fetchPhotoManifest()
 
   const tagSet = new Set<string>()
   allPhotos.forEach((photo) => {
-    // 'photo' will now be PhotoManifestItem
     if (photo.tags && photo.tags.length > 0) {
-      photo.tags.forEach((tag) => tagSet.add(tag.toLowerCase())) // 'tag' will now be string
+      photo.tags.forEach((tag) => tagSet.add(tag.toLowerCase()))
     }
   })
   uniqueTags = Array.from(tagSet).sort((a, b) => a.localeCompare(b))
@@ -33,28 +31,21 @@ const frontmatter = {
 ---
 
 <BaseLayout frontmatter={frontmatter}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{frontmatter.title}</h1>
+  <h1>{frontmatter.title}</h1>
 
-    {
-      uniqueTags.length > 0 ? (
-        <ul class="flex flex-wrap justify-center gap-4">
+  {
+    uniqueTags.length > 0 ? (
+      <nav aria-label="Photo tags">
+        <ul>
           {uniqueTags.map((tag) => (
             <li>
-              <a
-                href={`/photos/tags/${encodeURIComponent(tag)}/1`}
-                class="btn btn-ghost"
-              >
-                {" "}
-                {/* Added /1 for pagination */}
-                {tag}
-              </a>
+              <a href={`/photos/tags/${encodeURIComponent(tag)}/1`}>#{tag}</a>
             </li>
           ))}
         </ul>
-      ) : (
-        <p class="text-center">No photo tags found.</p>
-      )
-    }
-  </div>
+      </nav>
+    ) : (
+      <p>No photo tags found.</p>
+    )
+  }
 </BaseLayout>

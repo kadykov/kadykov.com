@@ -1,34 +1,38 @@
 ---
 // src/components/PaginationNav.astro
-import type { Page } from 'astro';
+import type { Page } from "astro"
 
 interface Props {
-  page: Page<any>; // Accept any type of paginated data
+  page: Page<any> // Accept any type of paginated data
 }
 
-const { page } = Astro.props;
+const { page } = Astro.props
 ---
 
-{page.lastPage > 1 && (
-  <nav class="mt-12 flex justify-center" aria-label="Pagination">
-    <div class="join">
-      {page.url.prev ? (
-        <a href={page.url.prev} class="btn join-item text-button">
-          &laquo; Previous
-        </a>
-      ) : (
-        <span class="btn join-item text-button btn-disabled" aria-disabled="true">&laquo; Previous</span>
-      )}
-      <button class="btn join-item text-button" disabled>
-        Page {page.currentPage} of {page.lastPage}
-      </button>
-      {page.url.next ? (
-        <a href={page.url.next} class="btn join-item text-button">
-          Next &raquo;
-        </a>
-      ) : (
-        <span class="btn join-item text-button btn-disabled" aria-disabled="true">Next &raquo;</span>
-      )}
-    </div>
-  </nav>
-)}
+{
+  page.lastPage > 1 && (
+    <nav aria-label="Pagination">
+      <ul>
+        <li>
+          {page.url.prev ? (
+            <a href={page.url.prev}>&laquo; Previous</a>
+          ) : (
+            <span aria-disabled="true">&laquo; Previous</span>
+          )}
+        </li>
+        <li>
+          <span>
+            Page {page.currentPage} of {page.lastPage}
+          </span>
+        </li>
+        <li>
+          {page.url.next ? (
+            <a href={page.url.next}>Next &raquo;</a>
+          ) : (
+            <span aria-disabled="true">Next &raquo;</span>
+          )}
+        </li>
+      </ul>
+    </nav>
+  )
+}
