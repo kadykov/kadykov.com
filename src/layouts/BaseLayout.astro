@@ -8,6 +8,7 @@ interface Props {
   frontmatter: {
     title: string
     description: string
+    pageType?: string // Optional page type for styling variations (e.g., "photo-gallery")
     [key: string]: any
   }
 }
@@ -18,6 +19,8 @@ const { frontmatter } = Astro.props
 const rawTitle = frontmatter.title
 // Handle description with fallbacks: frontmatter > default
 const rawDescription = frontmatter.description
+// Optional page type for styling variations
+const pageType = frontmatter.pageType
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
@@ -28,7 +31,7 @@ const finalTitle =
 import "../styles/base.css"
 ---
 
-<html lang="en">
+<html lang="en" data-page-type={pageType}>
   <head>
     <script
       is:inline

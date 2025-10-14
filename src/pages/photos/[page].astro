@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro"
+import PhotoGalleryLayout from "../../layouts/PhotoGalleryLayout.astro"
 import PhotoGallery from "../../components/PhotoGallery.astro"
 import PaginationNav from "../../components/PaginationNav.astro" // Added import
 import Hero from "../../components/Hero.astro"
@@ -78,7 +78,7 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<PhotoGalleryLayout frontmatter={frontmatter}>
   <Hero>
     <h1>{frontmatter.title}</h1>
     <nav>
@@ -92,4 +92,4 @@ const frontmatter = {
   <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
 
   <PaginationNav page={page} />
-</BaseLayout>
+</PhotoGalleryLayout>

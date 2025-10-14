@@ -481,6 +481,65 @@
   }
 }
 
+/* Photo Gallery Color Theme Overrides */
+
+/*
+ * Neutral Gray Color Scheme for Photo Gallery Pages
+ * 
+ * Photo galleries require a neutral, desaturated background to avoid
+ * affecting the perceived white balance of displayed photos. Any color
+ * cast in the background can make photos appear warmer or cooler than
+ * they actually are.
+ * 
+ * This uses the same pattern as the theme switcher - an attribute on <html>
+ * that overrides the :root variables with higher specificity.
+ * 
+ * Changes from default theme:
+ * - Light theme: Darker background with reduced contrast
+ * - Both themes: Zero chroma (surface-c = 0) for completely neutral grays
+ * - All surface colors become pure grayscale with no hue bias
+ */
+
+/* Photo Gallery Light Theme Override */
+[data-page-type="photo-gallery"] {
+  /* Darker background: lightness ~0.85 for softer appearance */
+  --surface-l: 0.85;
+
+  /* Zero chroma: complete desaturation for neutral gray */
+  --surface-c: 0;
+
+  /* Hue becomes irrelevant when chroma is 0, but keep for consistency */
+  --surface-h: 0;
+
+  /* Slightly reduce primary contrast for gentler UI */
+  --primary-l: 0.45;
+  --primary-c: 0.12;
+
+  /* Reduce accent prominence */
+  --accent-l: 0.65;
+  --accent-c: 0.15;
+}
+
+/* Photo Gallery Dark Theme Override */
+@media (prefers-color-scheme: dark) {
+  [data-page-type="photo-gallery"] {
+    /* Keep dark theme darkness but ensure zero chroma */
+    --surface-l: 0.27;
+
+    /* Zero chroma: complete desaturation for neutral gray */
+    --surface-c: 0;
+
+    /* Hue becomes irrelevant when chroma is 0 */
+    --surface-h: 0;
+
+    /* Dark theme primary/accent overrides */
+    --primary-l: 0.68;
+    --primary-c: 0.1;
+    --accent-l: 0.85;
+    --accent-c: 0.15;
+  }
+}
+
 @view-transition {
   navigation: auto;
 }
@@ -974,9 +1033,11 @@ main > ul > li > a > figure {
   margin: 0;
 
   /* Polaroid-style card: white background with shadow and rounded corners */
-  background-color: var(--color-surface);
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
+
+  /* Neutral off-white background to avoid color cast on photos */
+  background-color: oklch(95% 0 0deg);
 
   /* Base padding around image (will be overridden for caption sides) */
   padding: 0.5rem;
@@ -1019,6 +1080,9 @@ main > ul > li figcaption {
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.2;
+
+  /* Caption on the off-white background */
+  color: oklch(40% 0 0deg);
 }
 
 /* === Caption Positioning Classes === */

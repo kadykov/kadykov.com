@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../../../layouts/BaseLayout.astro"
+import PhotoGalleryLayout from "../../../../layouts/PhotoGalleryLayout.astro"
 import PhotoGallery from "../../../../components/PhotoGallery.astro"
 import PaginationNav from "../../../../components/PaginationNav.astro"
 import {
@@ -110,7 +110,7 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<PhotoGalleryLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Photos from {dateDisplay}</h1>
 
@@ -129,4 +129,4 @@ const frontmatter = {
     <PaginationNav page={page} />
     {/* Replaced inline pagination with component */}
   </div>
-</BaseLayout>
+</PhotoGalleryLayout>

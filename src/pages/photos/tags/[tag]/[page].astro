@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../../../layouts/BaseLayout.astro" // Adjusted path
+import PhotoGalleryLayout from "../../../../layouts/PhotoGalleryLayout.astro" // Adjusted path
 import PhotoGallery from "../../../../components/PhotoGallery.astro" // Adjusted path
 import PaginationNav from "../../../../components/PaginationNav.astro" // Added import
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema" // Adjusted path
@@ -87,7 +87,7 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<PhotoGalleryLayout frontmatter={frontmatter}>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-center">Photos tagged: {tagDisplayName}</h1>
     <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
@@ -97,4 +97,4 @@ const frontmatter = {
     <PaginationNav page={page} />
     {/* Replaced inline pagination with component */}
   </div>
-</BaseLayout>
+</PhotoGalleryLayout>
