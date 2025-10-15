@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
+import Hero from "../../components/Hero.astro"
 const allPosts = await getCollection("blog")
 const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())]
 
@@ -11,6 +12,11 @@ const frontmatter = {
 ---
 
 <BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>Blog Tags</h1>
+    <p>Explore posts by tags</p>
+  </Hero>
+
   <nav aria-label="Blog tags">
     <ul>
       {

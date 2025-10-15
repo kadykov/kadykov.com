@@ -2,6 +2,7 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { fetchPhotoManifest } from "../../../utils/photoData"
+import Hero from "../../../components/Hero.astro"
 
 let uniqueTags: string[] = []
 
@@ -31,7 +32,10 @@ const frontmatter = {
 ---
 
 <BaseLayout frontmatter={frontmatter}>
-  <h1>{frontmatter.title}</h1>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>Explore photos by tags</p>
+  </Hero>
 
   {
     uniqueTags.length > 0 ? (
