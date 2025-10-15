@@ -1080,6 +1080,19 @@ main > ul figure {
     rotate 0.2s ease-in-out;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  main > ul figure {
+    transition: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  main > ul figure {
+    /* Dark theme off-white background */
+    background-color: oklch(90% 0 0deg);
+  }
+}
+
 /* === Caption Placement Classes === */
 
 /* These control padding to accommodate captions at different positions */
@@ -1107,13 +1120,13 @@ main > ul figcaption {
   position: absolute;
   font-size: 0.8rem;
   font-family: var(--font-mono);
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.2;
 
   /* Caption on the off-white background */
-  color: oklch(40% 0 0deg);
+  color: oklch(45% 0 0deg);
 }
 
 /* === Caption Positioning Classes === */
