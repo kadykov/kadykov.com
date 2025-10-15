@@ -1059,6 +1059,66 @@ main > ul .grid-portrait {
   grid-column: span 2;
 }
 
+/*
+ * Polaroid-Style Photo Cards with Perceptual White Balance Strategy
+ * 
+ * Design Goal: Create photo cards that look like physical Polaroid prints with
+ * white borders that serve both aesthetic and functional purposes.
+ * 
+ * WHY NOT USE GENERATED OKLCH COLORS HERE?
+ * 
+ * Unlike the rest of the site, these cards use fixed off-white colors (90-95%
+ * lightness) that don't change with the theme. This intentional deviation from
+ * the global color system serves multiple purposes:
+ * 
+ * 1. Polaroid Visual Aesthetic
+ *    Physical Polaroid prints have white borders that don't change based on
+ *    ambient lighting. This fixed white border creates an authentic tactile
+ *    feeling and makes photos look like physical objects rather than digital
+ *    elements that adapt to the theme.
+ * 
+ * 2. White Balance Reference Point
+ *    The fixed off-white border provides a consistent white balance reference
+ *    for the viewer's eye. When viewing photos:
+ *    
+ *    a) Under non-ideal ambient lighting (warm/cool room lighting):
+ *       - Both the photo and border will be affected by the same color cast
+ *       - The human visual system will use the "white" border as a reference
+ *       - This recalibrates perception, making the photo colors appear more accurate
+ *    
+ *    b) On displays with incorrect white balance:
+ *       - The entire image + border shifts together
+ *       - The viewer's eye adapts using the border as the "white" anchor
+ *       - This compensates for display calibration issues
+ * 
+ * 3. Perceptual Contrast Boost
+ *    The border uses 90-95% white instead of pure 100% white. Combined with
+ *    the deliberately darker, desaturated background (see data-page-type
+ *    overrides above), this creates a perceptual contrast enhancement:
+ *    
+ *    - The viewer's eye perceives the border as "pure white" in context
+ *    - Any 100% white elements in the photo itself appear even brighter
+ *    - This increases the perceived dynamic range of the photos
+ *    - Black elements appear deeper against the bright border
+ * 
+ * 4. Coordination with Page Background
+ *    Pages with data-page-type="photo-gallery" have:
+ *    - Darker background (surface-l: 0.85 in light mode)
+ *    - Zero chroma (surface-c: 0) to avoid color cast interference
+ *    
+ *    This creates a viewing environment similar to a photo mat or gallery wall
+ *    where the darker surround makes the bright photo borders "pop" visually.
+ * 
+ * Technical Implementation:
+ * - Light theme: 95% lightness border
+ * - Dark theme: 90% lightness border (maintains contrast difference)
+ * - Zero chroma (0) ensures pure neutral gray-white
+ * - Zero hue (0deg) becomes irrelevant with zero chroma
+ * 
+ * Note: These design principles may be expanded into a blog post about the
+ * site's visual design system.
+ */
+
 /* Figure container fills anchor and positions caption relative to image */
 main > ul figure {
   margin: 0;
@@ -1067,7 +1127,7 @@ main > ul figure {
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
 
-  /* Neutral off-white background to avoid color cast on photos */
+  /* Fixed off-white background - NOT theme-adaptive (see explanation above) */
   background-color: oklch(95% 0 0deg);
 
   /* Base padding around image (will be overridden for caption sides) */
@@ -1088,7 +1148,7 @@ main > ul figure {
 
 @media (prefers-color-scheme: dark) {
   main > ul figure {
-    /* Dark theme off-white background */
+    /* Slightly darker off-white for dark theme - still provides white balance reference */
     background-color: oklch(90% 0 0deg);
   }
 }
@@ -1115,6 +1175,21 @@ main > ul img {
   object-fit: contain;
 }
 
+/*
+ * Photo Caption Styling - Fixed Dark Gray on White
+ * 
+ * Like the border background, the caption color is intentionally NOT derived
+ * from the global OKLCH color system. This fixed dark gray (45% lightness)
+ * maintains the Polaroid aesthetic where captions are handwritten or printed
+ * in dark ink on the white border.
+ * 
+ * Design rationale:
+ * - Provides strong, consistent contrast against the 90-95% white border
+ * - Doesn't change with theme, maintaining the "physical object" illusion
+ * - Zero chroma keeps it neutral to avoid competing with photo colors
+ * - 45% lightness is dark enough to be easily readable but not harsh
+ */
+
 /* Caption base styles - always visible, single line with ellipsis */
 main > ul figcaption {
   position: absolute;
@@ -1125,7 +1200,7 @@ main > ul figcaption {
   text-overflow: ellipsis;
   line-height: 1.2;
 
-  /* Caption on the off-white background */
+  /* Fixed dark gray - NOT theme-adaptive (see explanation above) */
   color: oklch(45% 0 0deg);
 }
 
