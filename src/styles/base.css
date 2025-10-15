@@ -1042,25 +1042,25 @@ main > ol > li > article:hover {
 /* These control how much space the card occupies on the grid */
 
 /* Grid layout: Landscape cards - wider span */
-main > ul > li.grid-landscape {
+main > ul .grid-landscape {
   grid-row: span 2;
   grid-column: span 3;
 }
 
 /* Grid layout: Square cards - balanced span */
-main > ul > li.grid-square {
+main > ul .grid-square {
   grid-row: span 2;
   grid-column: span 2;
 }
 
 /* Grid layout: Portrait cards - taller span */
-main > ul > li.grid-portrait {
+main > ul .grid-portrait {
   grid-row: span 3;
   grid-column: span 2;
 }
 
 /* Figure container fills anchor and positions caption relative to image */
-main > ul > li > a > figure {
+main > ul figure {
   margin: 0;
 
   /* Polaroid-style card: white background with shadow and rounded corners */
@@ -1085,17 +1085,17 @@ main > ul > li > a > figure {
 /* These control padding to accommodate captions at different positions */
 
 /* Caption placement: Bottom (for landscape and square-ish photos) */
-li.caption-bottom > a > figure {
+.caption-bottom figure {
   padding-bottom: 2rem;
 }
 
 /* Caption placement: Side (for portrait photos) */
-li.caption-side > a > figure {
+.caption-side figure {
   padding-left: 2rem;
 }
 
 /* Image fills available space with no extra styling */
-main > ul > li img {
+main > ul img {
   display: block;
   width: 100%;
   height: 100%;
@@ -1103,7 +1103,7 @@ main > ul > li img {
 }
 
 /* Caption base styles - always visible, single line with ellipsis */
-main > ul > li figcaption {
+main > ul figcaption {
   position: absolute;
   font-size: 0.8rem;
   font-family: var(--font-mono);
@@ -1121,7 +1121,7 @@ main > ul > li figcaption {
 /* These control where the caption appears within the figure */
 
 /* Caption positioning: Bottom */
-main > ul > li.caption-bottom figcaption {
+main > ul .caption-bottom figcaption {
   bottom: 0.5rem;
   left: 0.5rem;
   right: 0.5rem; /* This constrains the width for ellipsis to work */
@@ -1131,7 +1131,7 @@ main > ul > li.caption-bottom figcaption {
 }
 
 /* Caption positioning: Side (rotated 90 degrees) */
-main > ul > li.caption-side figcaption {
+main > ul .caption-side figcaption {
   top: 0.5rem;
   left: 0.5rem;
   bottom: 0.5rem; /* This constrains the height (becomes width in vertical mode) */
@@ -1144,7 +1144,7 @@ main > ul > li.caption-side figcaption {
 }
 
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
-main > ul > li:hover figure {
+main > ul figure:hover {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
@@ -1159,7 +1159,7 @@ main > nav {
   padding: 0 1rem;
 }
 
-main > nav > ul > li > span[aria-disabled="true"] {
+main > nav span[aria-disabled="true"] {
   color: var(--color-on-surface-low);
   cursor: not-allowed;
 }
