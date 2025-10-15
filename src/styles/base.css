@@ -687,9 +687,17 @@ main > article {
 }
 
 /* Accent links in articles with higher contrast */
-main > article a {
+main article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
+}
+
+article h1 a,
+article h2 a,
+article h3 a,
+article h4 a {
+  color: inherit;
+  font-weight: inherit;
 }
 
 /*
