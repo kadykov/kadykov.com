@@ -50,15 +50,19 @@ const dateOptions: Intl.DateTimeFormatOptions = {
               </h2>
               {description && <p>{description}</p>}
               {tags && tags.length > 0 && (
-                <nav>
-                  <ul>
-                    {tags.map((tag: string) => (
-                      <li>
-                        <a href={`/tags/${tag}`}>#{tag}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
+                <p>
+                  Tags:{" "}
+                  {tags.map((tag: string, index: number) => {
+                    const separator = index < tags.length - 1 ? ", " : "."
+                    return (
+                      // Keep separator on same line to prevent unwanted whitespace in rendered HTML
+                      // prettier-ignore
+                      <>
+                        <a href={`/tags/${tag}`}>#{tag}</a>{separator}
+                      </>
+                    )
+                  })}
+                </p>
               )}
               {(lastUpdatedDate || pubDate) &&
                 (lastUpdatedDate &&

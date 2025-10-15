@@ -603,42 +603,6 @@ ul {
   list-style-type: square;
 }
 
-/* All navigation inside headers are horizontal */
-nav > ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  padding-inline: 0;
-}
-
-/* Photo gallery - CSS Grid masonry with known aspect ratios */
-main > ul {
-  list-style: none;
-  display: grid;
-
-  /* Responsive columns - adjust minmax for desired density */
-  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1.5rem;
-  padding: 1.5rem;
-
-  /* There is no horizontal limit, the masonry grid fills all available space */
-
-  /* Center items vertically within their grid areas */
-  align-items: center;
-}
-
-/* Hero section */
-main > nav ul,
-main > header ul {
-  justify-content: center;
-}
-
-/* Navigation bar */
-body > header ul {
-  justify-content: flex-end;
-}
-
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
 h2,
@@ -678,8 +642,7 @@ h3 {
 
 /* h4 styles */
 blockquote,
-main > nav ul,
-header nav ul,
+nav ul,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
@@ -924,6 +887,42 @@ tbody tr:hover {
 
 tbody tr:last-child td {
   border-bottom: none;
+}
+
+/* All navigation inside headers are horizontal */
+nav > ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  padding-inline: 0;
+}
+
+/* Photo gallery - CSS Grid masonry with known aspect ratios */
+main > ul {
+  list-style: none;
+  display: grid;
+
+  /* Responsive columns - adjust minmax for desired density */
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+
+  /* There is no horizontal limit, the masonry grid fills all available space */
+
+  /* Center items vertically within their grid areas */
+  align-items: center;
+}
+
+/* Hero section */
+main > nav ul,
+main > header ul {
+  justify-content: center;
+}
+
+/* Navigation bar */
+body > header ul {
+  justify-content: flex-end;
 }
 
 body > header,
