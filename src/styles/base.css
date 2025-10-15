@@ -1023,7 +1023,7 @@ main > ol {
 }
 
 /* Blog post cards in vertical layout - text only, no images */
-main > ol > li > article {
+main > ol article {
   background-color: var(--color-surface);
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
@@ -1033,7 +1033,7 @@ main > ol > li > article {
   font-weight: 450;
 }
 
-main > ol > li > article:hover {
+main > ol article:hover {
   box-shadow: var(--elevation-3);
 }
 
