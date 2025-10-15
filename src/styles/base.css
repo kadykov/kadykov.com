@@ -898,7 +898,7 @@ tbody tr:last-child td {
 }
 
 /* All navigation inside headers are horizontal */
-nav > ul {
+nav ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -1162,6 +1162,12 @@ main > nav {
 main > nav > ul > li > span[aria-disabled="true"] {
   color: var(--color-on-surface-low);
   cursor: not-allowed;
+}
+
+/* Hierarchical date navigation with nested ordered lists */
+nav ol {
+  list-style: none;
+  padding-inline: 0;
 }
 
 /* Date in article header */

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
+import Hero from "../../../components/Hero.astro"
 import { photoManifestSchema } from "../../../utils/photoManifestSchema"
 
 const manifestUrl = "https://share.kadykov.com/image_manifest.json"
@@ -90,52 +91,50 @@ const frontmatter = {
 ---
 
 <BaseLayout frontmatter={frontmatter}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-center">{frontmatter.title}</h1>
-
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+  </Hero>
+  <nav>
     {
       Object.keys(groupedDates).length > 0 ? (
-        <div class="text-center">
-          {" "}
-          {/* Add text-center to the main container for grouped dates */}
+        <ol>
           {Object.keys(groupedDates)
             .sort((a, b) => b.localeCompare(a))
             .map((year) => (
-              <section class="mb-8">
-                {" "}
-                {/* Year section will inherit text-center */}
+              <li>
                 <h2>{year}</h2>
-                {Object.keys(groupedDates[year])
-                  .sort((a, b) => monthNames.indexOf(b) - monthNames.indexOf(a))
-                  .map((monthName) => (
-                    <div class="mb-4">
-                      {" "}
-                      {/* Month section will inherit text-center */}
-                      <h3>{monthName}</h3>
-                      <ul class="flex flex-wrap justify-center gap-2">
-                        {" "}
-                        {/* Add justify-center to center the date buttons */}
-                        {groupedDates[year][monthName].map((date: string) => (
-                          <li>
-                            <a
-                              href={`/photos/dates/${date}/1`}
-                              class="btn btn-ghost"
-                            >
-                              {date}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-              </section>
+                <ol>
+                  {Object.keys(groupedDates[year])
+                    .sort(
+                      (a, b) => monthNames.indexOf(b) - monthNames.indexOf(a)
+                    )
+                    .map((monthName) => (
+                      <li>
+                        <h3>{monthName}</h3>
+                        <ul>
+                          {groupedDates[year][monthName]
+                            .sort((a, b) => a.localeCompare(b))
+                            .map((date: string) => {
+                              const day = parseInt(date.split("-")[2], 10)
+                              return (
+                                <li>
+                                  <a href={`/photos/dates/${date}/1`}>{day}</a>
+                                </li>
+                              )
+                            })}
+                        </ul>
+                      </li>
+                    ))}
+                </ol>
+              </li>
             ))}
-        </div>
+        </ol>
       ) : (
-        <p class="text-center">No photo dates found.</p>
+        <p>No photo dates found.</p>
       )
     }
-  </div>
+  </nav>
   <nav>
     <ul>
       <li><a href="/photos/1">All photos</a></li>
