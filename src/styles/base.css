@@ -596,6 +596,49 @@ a {
     text-underline-offset 0.2s ease-out;
 }
 
+/* Unordered lists */
+
+/* Square bullets are more cohesive with the overall design */
+ul {
+  list-style-type: square;
+}
+
+/* All navigation inside headers are horizontal */
+nav > ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  padding-inline: 0;
+}
+
+/* Photo gallery - CSS Grid masonry with known aspect ratios */
+main > ul {
+  list-style: none;
+  display: grid;
+
+  /* Responsive columns - adjust minmax for desired density */
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+
+  /* There is no horizontal limit, the masonry grid fills all available space */
+
+  /* Center items vertically within their grid areas */
+  align-items: center;
+}
+
+/* Hero section */
+main > nav ul,
+main > header ul {
+  justify-content: center;
+}
+
+/* Navigation bar */
+body > header ul {
+  justify-content: flex-end;
+}
+
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
 h2,
@@ -635,8 +678,8 @@ h3 {
 
 /* h4 styles */
 blockquote,
-header ul,
 main > nav ul,
+header nav ul,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
@@ -839,10 +882,6 @@ ol > li::marker {
   font-size: 1.2em;
 }
 
-article ul {
-  list-style-type: square;
-}
-
 /* Table Elements - Material Design inspired styling */
 table {
   width: 100%;
@@ -991,22 +1030,6 @@ main > ol > li > article:hover {
   box-shadow: var(--elevation-3);
 }
 
-/* Photo gallery - CSS Grid masonry with known aspect ratios */
-main > ul {
-  list-style: none;
-  display: grid;
-
-  /* Responsive columns - adjust minmax for desired density */
-  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1.5rem;
-  padding: 1.5rem;
-
-  /* There is no horizontal limit, the masonry grid fills all available space */
-
-  /* Center items vertically within their grid areas */
-  align-items: center;
-}
-
 /* === Grid Layout Classes === */
 
 /* These control how much space the card occupies on the grid */
@@ -1118,26 +1141,6 @@ main > ul > li:hover figure {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
-}
-
-/* All navigation inside headers are horizontal */
-nav > ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  padding-inline: 0;
-}
-
-/* Hero section */
-main > nav ul,
-main > header nav ul {
-  justify-content: center;
-}
-
-/* Navigation bar */
-body > header nav ul {
-  justify-content: flex-end;
 }
 
 /* Pagination navigation - centered in main */
