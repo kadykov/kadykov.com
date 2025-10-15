@@ -1,7 +1,8 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
 
-export async function GET(context) { // Added context for site
+export async function GET(context) {
+  // Added context for site
   const posts = await getCollection("blog") // Changed "posts" to "blog"
   return rss({
     title: "Aleksandr Kadykov | Blog",

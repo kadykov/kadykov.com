@@ -1,9 +1,12 @@
-import { photoManifestSchema, type PhotoManifestItem } from './photoManifestSchema';
+import {
+  photoManifestSchema,
+  type PhotoManifestItem,
+} from "./photoManifestSchema"
 
-const manifestUrl = 'https://share.kadykov.com/image_manifest.json';
+const manifestUrl = "https://share.kadykov.com/image_manifest.json"
 
-let cachedManifest: PhotoManifestItem[] | null = null;
-let fetchPromise: Promise<PhotoManifestItem[]> | null = null;
+let cachedManifest: PhotoManifestItem[] | null = null
+let fetchPromise: Promise<PhotoManifestItem[]> | null = null
 
 /**
  * Fetches, parses, and validates the photo manifest.
@@ -13,49 +16,55 @@ let fetchPromise: Promise<PhotoManifestItem[]> | null = null;
  */
 export async function fetchPhotoManifest(): Promise<PhotoManifestItem[]> {
   if (cachedManifest) {
-    return cachedManifest;
+    return cachedManifest
   }
 
   if (fetchPromise) {
-    return fetchPromise;
+    return fetchPromise
   }
 
   fetchPromise = (async () => {
     try {
-      console.log('Fetching photo manifest...'); // Log to see how often it's called
-      const response = await fetch(manifestUrl);
+      console.log("Fetching photo manifest...") // Log to see how often it's called
+      const response = await fetch(manifestUrl)
       if (!response.ok) {
-        throw new Error(`Failed to fetch manifest from ${manifestUrl}: ${response.statusText} (status ${response.status})`);
+        throw new Error(
+          `Failed to fetch manifest from ${manifestUrl}: ${response.statusText} (status ${response.status})`
+        )
       }
-      const jsonData = await response.json();
-      const parsed = photoManifestSchema.safeParse(jsonData);
+      const jsonData = await response.json()
+      const parsed = photoManifestSchema.safeParse(jsonData)
 
       if (!parsed.success) {
-        console.error('Failed to parse photo manifest:', parsed.error.flatten());
-        throw new Error('Failed to parse photo manifest: ' + parsed.error.toString());
+        console.error("Failed to parse photo manifest:", parsed.error.flatten())
+        throw new Error(
+          "Failed to parse photo manifest: " + parsed.error.toString()
+        )
       }
 
-      cachedManifest = parsed.data;
-      return cachedManifest;
+      cachedManifest = parsed.data
+      return cachedManifest
     } catch (error) {
       // Ensure fetchPromise is cleared on error so subsequent calls can retry
-      fetchPromise = null;
+      fetchPromise = null
       // Re-throw the error to be handled by the caller
       if (error instanceof Error) {
-        console.error(`Error in fetchPhotoManifest: ${error.message}`);
-        throw error;
+        console.error(`Error in fetchPhotoManifest: ${error.message}`)
+        throw error
       } else {
-        console.error('An unknown error occurred in fetchPhotoManifest');
-        throw new Error('An unknown error occurred while fetching photo manifest.');
+        console.error("An unknown error occurred in fetchPhotoManifest")
+        throw new Error(
+          "An unknown error occurred while fetching photo manifest."
+        )
       }
     } finally {
       // Clear the promise lock once resolved or rejected, unless it resolved to cache.
       // If it cached, future calls hit the cache. If it failed, fetchPromise is already null.
       // This simple caching assumes the manifest doesn't change *during a single build*.
     }
-  })();
+  })()
 
-  return fetchPromise;
+  return fetchPromise
 }
 
 /**
@@ -65,19 +74,28 @@ export async function fetchPhotoManifest(): Promise<PhotoManifestItem[]> {
  * @returns The generated slug string.
  */
 export function generateSlugFromRelativePath(relativePath: string): string {
-  const parts = relativePath.split('/');
-  if (parts.length === 4) { // Expected: YYYY/MM/DD/filename.ext
-    const year = parts[0];
-    const month = parts[1];
-    const day = parts[2];
-    const filenameWithExt = parts[3];
+  const parts = relativePath.split("/")
+  if (parts.length === 4) {
+    // Expected: YYYY/MM/DD/filename.ext
+    const year = parts[0]
+    const month = parts[1]
+    const day = parts[2]
+    const filenameWithExt = parts[3]
     // Remove extension: "filename.jpg" -> "filename"
-    const filenameWithoutExt = filenameWithExt.substring(0, filenameWithExt.lastIndexOf('.')) || filenameWithExt;
-    return `${year}-${month}-${day}-${filenameWithoutExt}`;
+    const filenameWithoutExt =
+      filenameWithExt.substring(0, filenameWithExt.lastIndexOf(".")) ||
+      filenameWithExt
+    return `${year}-${month}-${day}-${filenameWithoutExt}`
   }
   // Fallback for unexpected format. This should ideally not be reached if schema validation is robust.
   // Creates a slug by replacing slashes and dots with hyphens.
-  console.warn(`Unexpected relativePath format for slug generation: "${relativePath}". Using fallback slug.`);
-  const filenameWithoutExt = relativePath.substring(relativePath.lastIndexOf('/') + 1, relativePath.lastIndexOf('.')) || relativePath.substring(relativePath.lastIndexOf('/') + 1);
-  return filenameWithoutExt.replace(/[\/\.]/g, '-');
+  console.warn(
+    `Unexpected relativePath format for slug generation: "${relativePath}". Using fallback slug.`
+  )
+  const filenameWithoutExt =
+    relativePath.substring(
+      relativePath.lastIndexOf("/") + 1,
+      relativePath.lastIndexOf(".")
+    ) || relativePath.substring(relativePath.lastIndexOf("/") + 1)
+  return filenameWithoutExt.replace(/[\/\.]/g, "-")
 }

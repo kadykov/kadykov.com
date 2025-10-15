@@ -7,7 +7,6 @@ This document outlines the strategic plan for refactoring and enhancing kadykov.
 This phase focuses on finishing the core migration and establishing a solid, consistent styling foundation.
 
 - **Task 1.1: Finalize the Color System.**
-
   - [x] Decide on a primary color palette (e.g., 4-5 base colors).
   - [x] Define CSS variables for these base colors in `src/styles/base.css`.
   - [x] Derive other colors (e.g., muted, hover, component-specific) from the base colors, potentially using CSS `calc()` or `hsl()` functions to ensure consistency.
@@ -15,12 +14,10 @@ This phase focuses on finishing the core migration and establishing a solid, con
   - [x] Apply the new color system consistently across `light` and `dark` themes.
 
 - **Task 1.2: Refactor the Hero Layout.**
-
   - [ ] Modify `src/layouts/HeroLayout.astro` and `src/layouts/HeroArticleLayout.astro`.
   - [ ] Replace the `<hgroup>` element with a more flexible structure, such as a `<header>` within the `<main>` content, to allow for additional elements like tags or dates.
 
 - **Task 1.3: Redesign Core Pages with Semantic CSS.**
-
   - [ ] Redesign the photo gallery pages (`src/pages/photos/[page].astro`, `src/pages/photos/tags/[tag]/[page].astro`, etc.) to use the new semantic CSS, removing Tailwind dependencies.
   - [ ] Ensure the PhotoSwipe lightbox remains fully functional and is styled consistently with the new theme.
 
@@ -33,13 +30,11 @@ This phase focuses on finishing the core migration and establishing a solid, con
 With the foundation in place, this phase focuses on creating more advanced, reusable components and improving key pages.
 
 - **Task 2.1: Develop an Advanced Hero Component.**
-
   - [ ] Create a new, reusable Hero component (e.g., `src/components/AdvancedHero.astro`).
   - [ ] This component should support a two-column layout (image on one side, text on the other) on wider screens, stacking to a single column on mobile.
   - [ ] Integrate this new hero into the Home ([`src/pages/index.mdx`](src/pages/index.mdx)), About ([`src/pages/about.mdx`](src/pages/about.mdx)), and Contact pages.
 
 - **Task 2.2: Refactor and Enhance the CV Page.**
-
   - [ ] Rewrite the content of `src/pages/cv.md` to be more web-native and detailed than the PDF version.
   - [ ] Consider using MDX or a dedicated Astro component to structure the CV with more interactive elements (e.g., timelines, expandable sections).
 
@@ -52,12 +47,10 @@ With the foundation in place, this phase focuses on creating more advanced, reus
 This phase focuses on establishing a workflow for creating and publishing content.
 
 - **Task 3.1: Define a Content Drafting Workflow.**
-
   - [ ] Adopt a "feature branch" strategy for new blog posts. Create a new branch for each article, write and revise it there, and merge to `main` only when it's ready for publication.
   - [ ] Add a `draft: true` property to the blog collection schema in `src/content/config.ts`. Filter out draft posts during the build process so they don't appear on the live site.
 
 - **Task 3.2: Implement Curated Photo Galleries.**
-
   - [ ] Create the first curated gallery using an MDX file (e.g., `src/pages/galleries/my-first-gallery.mdx`).
   - [ ] In the MDX file, use inline styles or a `<style>` tag to override CSS color variables to give the gallery a unique theme.
   - [ ] Use the existing `PhotoGallery.astro` component, passing a filtered list of photos.

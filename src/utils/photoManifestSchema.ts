@@ -1,7 +1,12 @@
-import { z } from 'astro/zod';
+import { z } from "astro/zod"
 
 export const photoManifestItemSchema = z.object({
-  relativePath: z.string().regex(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/, "Invalid relativePath format"),
+  relativePath: z
+    .string()
+    .regex(
+      /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
+      "Invalid relativePath format"
+    ),
   filename: z.string(),
   year: z.number().int().min(1900).max(2100).nullable(),
   month: z.number().int().min(1).max(12).nullable(),
@@ -10,16 +15,24 @@ export const photoManifestItemSchema = z.object({
   height: z.number().int().min(1),
   dateTaken: z.preprocess(
     (val) => (val === "" ? null : val), // Step 1: Convert empty string to null
-    z.string({ // Ensure it's a string if not null
-        invalid_type_error: "dateTaken must be a string or null (or an empty string which is converted to null).",
+    z
+      .string({
+        // Ensure it's a string if not null
+        invalid_type_error:
+          "dateTaken must be a string or null (or an empty string which is converted to null).",
       })
-      .refine((str) => { // Step 2: If it's a string, validate with new Date()
-        // This refine is only called if 'str' is a string.
-        const date = new globalThis.Date(str);
-        return !isNaN(date.getTime());
-      }, {
-        message: "dateTaken string is not a valid parsable date by new Date() or results in NaN.",
-      })
+      .refine(
+        (str) => {
+          // Step 2: If it's a string, validate with new Date()
+          // This refine is only called if 'str' is a string.
+          const date = new globalThis.Date(str)
+          return !isNaN(date.getTime())
+        },
+        {
+          message:
+            "dateTaken string is not a valid parsable date by new Date() or results in NaN.",
+        }
+      )
       .nullable() // Step 3: Allow null (from preprocess or original data)
   ),
   title: z.string().nullable(),
@@ -37,9 +50,9 @@ export const photoManifestItemSchema = z.object({
   creator: z.string().nullable(),
   copyright: z.string().nullable(),
   slug: z.string(), // Slug is now a required string
-});
+})
 
-export const photoManifestSchema = z.array(photoManifestItemSchema);
+export const photoManifestSchema = z.array(photoManifestItemSchema)
 
-export type PhotoManifestItem = z.infer<typeof photoManifestItemSchema>;
-export type PhotoManifest = z.infer<typeof photoManifestSchema>;
+export type PhotoManifestItem = z.infer<typeof photoManifestItemSchema>
+export type PhotoManifest = z.infer<typeof photoManifestSchema>
