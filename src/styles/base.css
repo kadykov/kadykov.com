@@ -758,10 +758,10 @@ article h4 a {
  * Key insight: Same logic as article padding - (100% - 30rem) determines if we're
  * on wide screens (positive value) or narrow screens (negative value).
  */
-main > article > h1,
-main > article > h2,
-main > article > h3,
-main > article > h4 {
+article > h1,
+article > h2,
+article > h3,
+article > h4 {
   border-left-color: var(--color-primary);
   border-left-width: 0.1em;
 
@@ -771,7 +771,7 @@ main > article > h4 {
    * - Wide screens: Extra space allows generous bar extension
    * - Narrow screens: Minimal padding prevents overflow
    */
-  padding: 0.2em 0 0.2em max(0.1em, 100% - 30rem + 0.2em);
+  padding: 0.2em 0 0.2em clamp(0.1em, 100% - 30rem + 0.2em, 0.2em);
 
   /*
    * Responsive left margin:
@@ -779,20 +779,20 @@ main > article > h4 {
    * - Wide screens: Can pull further left due to generous padding
    * - Narrow screens: Limited leftward pull to prevent overflow
    */
-  margin-left: min(30rem - 100% - 0.4em, -0.2em);
+  margin-left: clamp(-0.2em, 30rem - 100% - 0.4em, -0.1em);
 }
 
 /* Bar style represents different heading levels */
-main > article > h1,
-main > article > h2 {
+article > h1,
+article > h2 {
   border-left-style: solid;
 }
 
-main > article > h3 {
+article > h3 {
   border-left-style: dashed;
 }
 
-main > article > h4 {
+article > h4 {
   border-left-style: dotted;
 }
 
@@ -889,7 +889,7 @@ article hr {
   border-color: var(--color-primary);
   height: 0.55rem;
   background-color: inherit;
-  margin: 1.4rem -0.5rem 2rem auto;
+  margin-inline: auto -0.5rem;
   padding: 0;
 }
 
