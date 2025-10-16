@@ -442,6 +442,19 @@
   --breakpoint-lg: 1200px;
   --breakpoint-xl: 1500px;
   --breakpoint-2xl: 1800px;
+
+  /* Adaptive Spacing - Scales from mobile to desktop */
+
+  /*
+   * Responsive spacing that adapts to container width, similar to article padding.
+   * Used for gaps, padding, and margins in card layouts where fixed spacing
+   * would consume too much horizontal space on mobile screens.
+   * 
+   * - Mobile (narrow): 1rem (tight spacing)
+   * - Desktop (wide): 3rem (generous spacing)
+   * - Smooth transition based on container width
+   */
+  --spacing-adaptive: clamp(1rem, 6vw - 1rem, 3rem);
 }
 
 /* Theme Variants - Only Base OKLCH Values Need Changes */
@@ -914,7 +927,7 @@ main > ul {
   /* Responsive columns - adjust minmax for desired density */
   grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: var(--spacing-adaptive);
 
   /* There is no horizontal limit, the masonry grid fills all available space */
 
@@ -1016,10 +1029,10 @@ main > ol {
   list-style: none;
   max-width: 42rem;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: var(--spacing-adaptive);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-adaptive);
 }
 
 /* Blog post cards in vertical layout - text only, no images */
@@ -1028,7 +1041,7 @@ main > ol article {
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
   transition: box-shadow 0.2s ease-in-out;
-  padding: 1.5rem;
+  padding: var(--spacing-adaptive);
   font-family: var(--font-serif);
   font-weight: 450;
 }
@@ -1321,7 +1334,7 @@ main > form {
   /* Centered with comfortable max-width */
   max-width: 32rem;
   margin: 0 auto;
-  padding: 2rem clamp(1rem, 5vw, 3rem);
+  padding: var(--spacing-adaptive);
   background-color: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
   border-radius: 0.2rem;
@@ -1329,7 +1342,7 @@ main > form {
   /* Vertical stack of form elements */
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--spacing-adaptive);
 }
 
 /* Form Labels - Container for icon + input */
