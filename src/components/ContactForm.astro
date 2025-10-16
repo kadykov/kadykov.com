@@ -36,13 +36,12 @@ import { Icon } from "astro-icon/components"
 </form>
 
 <style>
-  /* Hide the second label (honeypot field) using positional selector */
+  /* Hide the second label (honeypot field) using positional selector.
+  Place it in the top right corner where it will be hidden by the navbar
+  and the hero section */
   form > label:nth-of-type(2) {
     position: absolute;
-    clip-path: inset(50%);
-    overflow: hidden;
-    white-space: nowrap;
-    width: 1px;
-    height: 1px;
+    top: 0;
+    right: 0;
   }
 </style>

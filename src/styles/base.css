@@ -1319,9 +1319,6 @@ main > form {
   box-shadow: var(--elevation-2);
   border-radius: 0.5rem;
 
-  /* Prevent overflow to ensure honeypot fields stay hidden */
-  overflow: hidden;
-
   /* Vertical stack of form elements */
   display: flex;
   flex-direction: column;
