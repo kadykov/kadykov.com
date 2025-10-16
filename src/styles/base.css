@@ -1232,7 +1232,8 @@ main > ul .caption-side figcaption {
 }
 
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
-main > ul figure:hover {
+main > ul figure:hover,
+main > ul a:focus-visible figure {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
@@ -1295,6 +1296,12 @@ a:hover {
 a:active {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
+}
+
+a:focus-visible,
+main > ul a:focus-visible figure {
+  outline: 0.2rem solid var(--color-accent);
+  outline-offset: 0.2rem;
 }
 
 ::selection {
