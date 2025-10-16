@@ -616,6 +616,36 @@ ul {
   list-style-type: square;
 }
 
+/* Buttons */
+button {
+  color: var(--color-on-primary);
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--elevation-2);
+
+  /* Flex layout for icon + text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+
+  /* Smooth transitions */
+  transition:
+    background-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    transform 0.1s ease-in-out;
+}
+
+/* Button icon */
+button > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
 h2,
@@ -653,12 +683,18 @@ h3 {
   margin-block: 0.7em;
 }
 
-/* h4 styles */
+/* h4 fonts */
 blockquote,
-nav ul,
+header li,
+main nav li,
+button,
 h4 {
   font-size: 1.3rem;
   font-weight: 420;
+}
+
+/* h4 spacing */
+h4 {
   margin-block: 0.9em;
   line-height: 1.3;
 }
@@ -1322,6 +1358,20 @@ main > ul a:focus-visible figure {
   color: var(--color-on-accent);
 }
 
+/* Button hover state */
+button:hover {
+  background-color: oklch(
+    calc(var(--primary-l) * 1.1) var(--primary-c) var(--primary-h)
+  );
+  box-shadow: var(--elevation-3);
+}
+
+/* Button active state */
+button:active {
+  transform: scale(0.98);
+  box-shadow: var(--elevation-1);
+}
+
 /* Contact Form Styles */
 
 /*
@@ -1342,15 +1392,16 @@ main > form {
   /* Vertical stack of form elements */
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-adaptive);
+  gap: 1rem;
+
+  /* Use larger font size for inputs */
+  font-size: 1.2rem;
+  font-weight: 450;
 }
 
 /* Form Labels - Container for icon + input */
 main > form > label {
-  /* Use serif font for input text to match article body */
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 450;
 
   /* Surface container for input fields */
   background-color: var(--color-surface);
@@ -1410,10 +1461,8 @@ main > form > label > input::placeholder {
 }
 
 /* Textarea - Message field */
-main > form > textarea {
+textarea {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 450;
   color: var(--color-on-surface);
   background-color: var(--color-surface);
   border: 0.1rem solid var(--color-surface-container-high);
@@ -1430,56 +1479,9 @@ main > form > textarea {
 }
 
 /* Textarea placeholder */
-main > form > textarea::placeholder {
+textarea::placeholder {
   color: var(--color-on-surface-variant);
   opacity: 0.7;
-}
-
-/* Submit Button */
-main > form > button[type="submit"] {
-  font-family: var(--font-sans);
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--color-on-primary);
-  background-color: var(--color-primary);
-  border: none;
-  border-radius: 0.2rem;
-  padding: 0.875rem 1.5rem;
-  cursor: pointer;
-  box-shadow: var(--elevation-2);
-
-  /* Flex layout for icon + text */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-
-  /* Smooth transitions */
-  transition:
-    background-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out,
-    transform 0.1s ease-in-out;
-}
-
-/* Submit button icon */
-main > form > button[type="submit"] > svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  flex-shrink: 0;
-}
-
-/* Submit button hover state */
-main > form > button[type="submit"]:hover {
-  background-color: oklch(
-    calc(var(--primary-l) * 1.1) var(--primary-c) var(--primary-h)
-  );
-  box-shadow: var(--elevation-3);
-}
-
-/* Submit button active state */
-main > form > button[type="submit"]:active {
-  transform: scale(0.98);
-  box-shadow: var(--elevation-1);
 }
 
 /* source-sans-3-latin-wght-normal */
