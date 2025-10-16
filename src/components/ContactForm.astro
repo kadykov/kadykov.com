@@ -2,64 +2,47 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<form
-  name="contact"
-  method="POST"
-  data-netlify="true"
-  netlify-honeypot="title"
-  class="flex flex-col gap-4"
->
-  <label
-    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl"
-  >
-    <Icon
-      name="ri:account-circle-line"
-      class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
-    <input type="text" name="name" class="grow" placeholder="Name" required />
+<form name="contact" method="POST" data-netlify="true" netlify-honeypot="title">
+  <label>
+    <Icon name="ri:account-circle-line" />
+    <input type="text" name="name" placeholder="Name" required />
   </label>
 
-  <label
-    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl absolute -left-full -top-full"
-  >
-    <Icon
-      name="ri:account-circle-line"
-      class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
+  <label>
+    <Icon name="ri:account-circle-line" />
     <input
       type="text"
       name="title"
-      class="grow"
       placeholder="Title"
       tabindex="-1"
       autocomplete="nope"
     />
   </label>
 
-  <label
-    class="input sm:input-lg input-bordered flex items-center gap-2 font-serif text-lg sm:text-xl"
-  >
-    <Icon name="ri:mail-line" class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
-    <input
-      type="email"
-      name="email"
-      class="grow"
-      placeholder="email@example.com"
-      required
-    />
+  <label>
+    <Icon name="ri:mail-line" />
+    <input type="email" name="email" placeholder="email@example.com" required />
   </label>
 
   <textarea
     name="message"
-    class="textarea sm:textarea-lg textarea-bordered h-32 sm:h-40 font-serif text-lg sm:text-xl"
     placeholder="Hey Aleksandr, I'd like to chat about..."
     required></textarea>
 
-  <button type="submit" class="btn sm:btn-lg btn-primary text-lg sm:text-xl">
-    <Icon
-      name="ri:send-plane-line"
-      class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
+  <button type="submit">
+    <Icon name="ri:send-plane-line" />
     Send Message
   </button>
 </form>
+
+<style>
+  /* Hide the second label (honeypot field) using positional selector */
+  form > label:nth-of-type(2) {
+    position: absolute;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
+  }
+</style>

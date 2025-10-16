@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Hero from "../components/Hero.astro"
+import ContactForm from "../components/ContactForm.astro"
+
+const frontmatter = {
+  title: "Contact me",
+  description:
+    "Get in touch with Aleksandr Kadykov. Feel free to reach out with questions or feedback.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>
+      Drop me a <a href="mailto:web@kadykov.com">message</a> or use the form below.
+    </p>
+  </Hero>
+
+  <ContactForm />
+</BaseLayout>
