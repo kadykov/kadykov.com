@@ -575,8 +575,8 @@ body {
   color: var(--color-on-surface);
   background-color: var(--color-surface-container);
   transition:
-    background-color 0.15s ease-in-out,
-    color 0.15s ease-in-out;
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 main {
@@ -881,7 +881,7 @@ td {
   padding: 0.5rem 1rem;
   font-size: 0.9em;
   border-bottom: 0.07rem solid var(--color-surface-container);
-  transition: background-color 0.15s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
 }
 
 /* Alternating row colors for better readability */
