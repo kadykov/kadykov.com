@@ -1320,11 +1320,11 @@ main > ul a:focus-visible figure {
 main > form {
   /* Centered with comfortable max-width */
   max-width: 32rem;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: 2rem clamp(1rem, 5vw, 3rem);
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
 
   /* Vertical stack of form elements */
   display: flex;
@@ -1340,9 +1340,9 @@ main > form > label {
   font-weight: 450;
 
   /* Surface container for input fields */
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface);
   border: 0.1rem solid var(--color-surface-container-high);
-  border-radius: 0.3rem;
+  border-radius: 0.2rem;
   padding: 0.75rem 1rem;
 
   /* Flex layout for icon + input */
@@ -1357,22 +1357,17 @@ main > form > label {
 }
 
 /* Focus state for labels when input is focused */
-main > form > label:focus-within {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 0.2rem
-    oklch(var(--primary-l) var(--primary-c) var(--primary-h) / 20%);
-}
-
-/* Valid state - show success indicator only after user interaction */
-main > form > label:has(input:user-valid) {
-  border-color: oklch(0.6 0.15 145);
-  box-shadow: 0 0 0 0.2rem oklch(0.6 0.15 145 / 20%);
+main > form > label:focus-within,
+main > form > textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.2rem var(--color-accent-container);
 }
 
 /* Invalid state - show error indicator only after user interaction */
-main > form > label:has(input:user-invalid) {
-  border-color: oklch(0.55 0.22 25);
-  box-shadow: 0 0 0 0.2rem oklch(0.55 0.22 25 / 20%);
+main > form > label:has(input:user-invalid),
+main > form > textarea:user-invalid {
+  background-color: var(--color-accent-container);
+  color: var(--color-on-accent-container);
 }
 
 /* Icons in form labels */
@@ -1380,7 +1375,7 @@ main > form > label > svg {
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
-  color: var(--color-on-surface-variant);
+  color: var(--color-primary);
 }
 
 /* Input fields inside labels */
@@ -1407,9 +1402,9 @@ main > form > textarea {
   font-size: 1.2rem;
   font-weight: 450;
   color: var(--color-on-surface);
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface);
   border: 0.1rem solid var(--color-surface-container-high);
-  border-radius: 0.3rem;
+  border-radius: 0.2rem;
   padding: 0.75rem 1rem;
   min-height: 10rem;
   resize: vertical;
@@ -1419,25 +1414,6 @@ main > form > textarea {
   transition:
     border-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-}
-
-/* Textarea focus state */
-main > form > textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 0.2rem
-    oklch(var(--primary-l) var(--primary-c) var(--primary-h) / 20%);
-}
-
-/* Textarea valid state - only after user interaction */
-main > form > textarea:user-valid {
-  border-color: oklch(0.6 0.15 145);
-  box-shadow: 0 0 0 0.2rem oklch(0.6 0.15 145 / 20%);
-}
-
-/* Textarea invalid state - only after user interaction */
-main > form > textarea:user-invalid {
-  border-color: oklch(0.55 0.22 25);
-  box-shadow: 0 0 0 0.2rem oklch(0.55 0.22 25 / 20%);
 }
 
 /* Textarea placeholder */
@@ -1454,7 +1430,7 @@ main > form > button[type="submit"] {
   color: var(--color-on-primary);
   background-color: var(--color-primary);
   border: none;
-  border-radius: 0.3rem;
+  border-radius: 0.2rem;
   padding: 0.875rem 1.5rem;
   cursor: pointer;
   box-shadow: var(--elevation-2);
