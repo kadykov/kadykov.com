@@ -17,7 +17,18 @@ const postsCollection = defineCollection({
   }),
 })
 
+// Collection for static pages (About, Privacy Policy, etc.)
+const pagesCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    description: z.string(),
+  }),
+})
+
 // Export a single `collections` object to register your collection(s)
 export const collections = {
   blog: postsCollection,
+  pages: pagesCollection,
 }

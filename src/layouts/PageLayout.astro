@@ -1,0 +1,25 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+import Hero from "../components/Hero.astro"
+
+interface Props {
+  frontmatter: {
+    title: string
+    subtitle?: string
+    description: string
+    [key: string]: any
+  }
+}
+
+const { frontmatter } = Astro.props
+const { title, subtitle } = frontmatter
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{title}</h1>
+    {subtitle && <p>{subtitle}</p>}
+  </Hero>
+
+  <slot />
+</BaseLayout>
