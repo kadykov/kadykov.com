@@ -626,12 +626,6 @@ button {
   cursor: pointer;
   box-shadow: var(--elevation-2);
 
-  /* Flex layout for icon + text */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-
   /* Smooth transitions */
   transition:
     background-color 0.2s ease-in-out,
@@ -639,8 +633,19 @@ button {
     transform 0.1s ease-in-out;
 }
 
-/* Button icon */
-button > svg {
+/* Horizontal container for icon + text */
+button,
+label {
+  /* Flex layout for icon + text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+/* Icon inside horizontal container */
+button svg,
+label svg {
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
@@ -1396,23 +1401,27 @@ main > form {
 
   /* Use larger font size for inputs */
   font-size: 1.2rem;
-  font-weight: 450;
 }
 
-/* Form Labels - Container for icon + input */
-main > form > label {
+/* Common styles for input and textarea */
+input,
+textarea {
+  outline: none;
+}
+
+/* Common styles for label and textarea */
+label,
+textarea {
   font-family: var(--font-serif);
 
   /* Surface container for input fields */
   background-color: var(--color-surface);
+  color: var(--color-on-surface);
+
+  /* Spacing and border */
   border: 0.1rem solid var(--color-surface-container-high);
   border-radius: 0.2rem;
   padding: 0.75rem 1rem;
-
-  /* Flex layout for icon + input */
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 
   /* Smooth transitions for focus states */
   transition:
@@ -1420,68 +1429,41 @@ main > form > label {
     box-shadow 0.2s ease-in-out;
 }
 
+/* Input fields inside labels */
+input {
+  flex: 1;
+  border: none;
+  background: transparent;
+}
+
+/* Textarea - Message field */
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+/* Icons in form labels */
+label svg {
+  color: var(--color-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-on-surface-low);
+}
+
 /* Focus state for labels when input is focused */
-main > form > label:focus-within,
-main > form > textarea:focus {
+label:focus-within,
+textarea:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 0.2rem var(--color-accent-container);
 }
 
 /* Invalid state - show error indicator only after user interaction */
-main > form > label:has(input:user-invalid),
-main > form > textarea:user-invalid {
+label:has(input:user-invalid),
+textarea:user-invalid {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
-}
-
-/* Icons in form labels */
-main > form > label > svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  flex-shrink: 0;
-  color: var(--color-primary);
-}
-
-/* Input fields inside labels */
-main > form > label > input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: var(--color-on-surface);
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  outline: none;
-}
-
-/* Input placeholder text */
-main > form > label > input::placeholder {
-  color: var(--color-on-surface-variant);
-  opacity: 0.7;
-}
-
-/* Textarea - Message field */
-textarea {
-  font-family: var(--font-serif);
-  color: var(--color-on-surface);
-  background-color: var(--color-surface);
-  border: 0.1rem solid var(--color-surface-container-high);
-  border-radius: 0.2rem;
-  padding: 0.75rem 1rem;
-  min-height: 10rem;
-  resize: vertical;
-  outline: none;
-
-  /* Smooth transitions for focus states */
-  transition:
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-}
-
-/* Textarea placeholder */
-textarea::placeholder {
-  color: var(--color-on-surface-variant);
-  opacity: 0.7;
 }
 
 /* source-sans-3-latin-wght-normal */
