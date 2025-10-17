@@ -779,7 +779,7 @@ article > h4 {
    * - Wide screens: Can pull further left due to generous padding
    * - Narrow screens: Limited leftward pull to prevent overflow
    */
-  margin-left: clamp(-0.2em, 30rem - 100% - 0.4em, -0.1em);
+  margin-left: clamp(-0.4em, 30rem - 100% - 0.4em, -0.2em);
 }
 
 /* Bar style represents different heading levels */
