@@ -1405,8 +1405,11 @@ body > footer {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2em;
-  padding: 2em 0;
+  padding: 3em var(--spacing-adaptive);
   margin-top: 3em;
+
+  /* Limit the content width inside the header to 42rem */
+  padding-inline: max(1rem, (100% - 42rem) / 2);
 }
 
 /* Footer logo and paragraphs span full width */
@@ -1419,9 +1422,8 @@ body > footer > p {
 body > footer > svg {
   display: block;
   margin: 0 auto;
-  height: 3em;
-  width: 3em;
-  color: var(--color-on-surface);
+  height: 2em;
+  width: 2em;
 }
 
 /* Footer paragraphs - centered text, full width */
@@ -1438,23 +1440,19 @@ body > footer > nav {
   text-align: center;
 
   /* Allow navs to grow and shrink, with minimum width */
-  flex: 1 1 150px;
-  min-width: 150px;
+  flex: 1 1 8rem;
+  min-width: 8rem;
 }
 
 /* Navigation headings */
 body > footer > nav h3 {
-  color: var(--color-on-surface);
-  margin-block: 0 0.5em;
+  margin: 0;
 }
 
 /* Navigation lists - vertical stack */
 body > footer > nav ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 0;
 }
 
 /* Hover and active states */
