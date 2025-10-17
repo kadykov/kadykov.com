@@ -651,6 +651,52 @@ label svg {
   flex-shrink: 0;
 }
 
+/* Contact Form Styles */
+
+/* Common styles for input and textarea */
+input,
+textarea {
+  outline: none;
+}
+
+/* Common styles for label and textarea */
+label,
+textarea {
+  font-family: var(--font-serif);
+
+  /* Surface container for input fields */
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+
+  /* Spacing and border */
+  border: 0.1rem solid var(--color-surface-container-high);
+  border-radius: 0.2rem;
+  padding: 0.75rem 1rem;
+
+  /* Smooth transitions for focus states */
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+}
+
+/* Input fields inside labels */
+input {
+  flex: 1;
+  border: none;
+  background: transparent;
+}
+
+/* Textarea - Message field */
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+/* Icons in form labels */
+label svg {
+  color: var(--color-primary);
+}
+
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
 h1,
 h2,
@@ -1320,6 +1366,30 @@ time {
   font-style: italic;
 }
 
+/*
+ * Form as Direct Child of Main - Contact Form Pattern
+ * 
+ * Design: Forms that appear as direct children of main are styled as
+ * clean interactive cards with generous spacing and clear hierarchy.
+ */
+main > form {
+  /* Centered with comfortable max-width */
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: var(--spacing-adaptive);
+  background-color: var(--color-surface-container-low);
+  box-shadow: var(--elevation-2);
+  border-radius: 0.2rem;
+
+  /* Vertical stack of form elements */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  /* Use larger font size for inputs */
+  font-size: 1.2rem;
+}
+
 /* Page footer styles */
 
 body > footer {
@@ -1377,76 +1447,7 @@ button:active {
   box-shadow: var(--elevation-1);
 }
 
-/* Contact Form Styles */
-
-/*
- * Form as Direct Child of Main - Contact Form Pattern
- * 
- * Design: Forms that appear as direct children of main are styled as
- * clean interactive cards with generous spacing and clear hierarchy.
- */
-main > form {
-  /* Centered with comfortable max-width */
-  max-width: 32rem;
-  margin: 0 auto;
-  padding: var(--spacing-adaptive);
-  background-color: var(--color-surface-container-low);
-  box-shadow: var(--elevation-2);
-  border-radius: 0.2rem;
-
-  /* Vertical stack of form elements */
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  /* Use larger font size for inputs */
-  font-size: 1.2rem;
-}
-
-/* Common styles for input and textarea */
-input,
-textarea {
-  outline: none;
-}
-
-/* Common styles for label and textarea */
-label,
-textarea {
-  font-family: var(--font-serif);
-
-  /* Surface container for input fields */
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
-
-  /* Spacing and border */
-  border: 0.1rem solid var(--color-surface-container-high);
-  border-radius: 0.2rem;
-  padding: 0.75rem 1rem;
-
-  /* Smooth transitions for focus states */
-  transition:
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-}
-
-/* Input fields inside labels */
-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-}
-
-/* Textarea - Message field */
-textarea {
-  min-height: 10rem;
-  resize: vertical;
-}
-
-/* Icons in form labels */
-label svg {
-  color: var(--color-primary);
-}
-
+/* Form input placeholder text */
 input::placeholder,
 textarea::placeholder {
   color: var(--color-on-surface-low);
