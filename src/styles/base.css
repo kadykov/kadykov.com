@@ -725,8 +725,7 @@ h2 {
 }
 
 /* h3 styles */
-header p,
-nav > article h2,
+main > header p,
 h3 {
   font-size: 1.8rem;
   line-height: 1.2;
@@ -809,10 +808,10 @@ article h4 a {
  * Key insight: Same logic as article padding - (100% - 30rem) determines if we're
  * on wide screens (positive value) or narrow screens (negative value).
  */
-article > h1,
-article > h2,
-article > h3,
-article > h4 {
+article h1,
+article h2,
+article h3,
+article h4 {
   border-left-color: var(--color-primary);
   border-left-width: 0.1em;
 
@@ -834,16 +833,16 @@ article > h4 {
 }
 
 /* Bar style represents different heading levels */
-article > h1,
-article > h2 {
+article h1,
+article h2 {
   border-left-style: solid;
 }
 
-article > h3 {
+article h3 {
   border-left-style: dashed;
 }
 
-article > h4 {
+article h4 {
   border-left-style: dotted;
 }
 
@@ -1079,7 +1078,7 @@ main > header {
 }
 
 /* Subtitle styles in hero header */
-header p {
+main > header p {
   font-family: var(--font-serif);
   color: var(--color-on-surface-variant);
   font-style: italic;
