@@ -1400,12 +1400,61 @@ body > footer {
   box-shadow: inset 0 4px 6px -2px
     hsl(0deg 0% var(--shadow-lightness) / var(--shadow-alpha-2));
 
-  /* Layout - style footer directly */
+  /* Layout - flex with wrapping to allow nav elements to sit side-by-side */
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2em;
   padding: 2em 0;
   margin-top: 3em;
+}
+
+/* Footer logo and paragraphs span full width */
+body > footer > svg,
+body > footer > p {
+  flex-basis: 100%;
+}
+
+/* Logo styling - centered at top of footer */
+body > footer > svg {
+  display: block;
+  margin: 0 auto;
+  height: 3em;
+  width: 3em;
+  color: var(--color-on-surface);
+}
+
+/* Footer paragraphs - centered text, full width */
+body > footer > p {
+  text-align: center;
+}
+
+/* Navigation blocks - horizontal layout with wrapping */
+body > footer > nav {
+  /* Each nav is a vertical stack */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  /* Allow navs to grow and shrink, with minimum width */
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+/* Navigation headings */
+body > footer > nav h3 {
+  color: var(--color-on-surface);
+  margin-block: 0 0.5em;
+}
+
+/* Navigation lists - vertical stack */
+body > footer > nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
 /* Hover and active states */

@@ -6,109 +6,75 @@ const lastUpdated = new Date().toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 })
+const commitHash = "main" // TODO: Get actual latest commit hash
 ---
 
 <footer>
-  <section>
-    <Icon name="logo" />
-    <p>
-      &copy; 2024&ndash;{year} Aleksandr Kadykov.
-      <a
-        href="https://creativecommons.org/licenses/by/4.0/"
-        rel="license noopener"
-        target="_blank"
-      >
-        CC BY 4.0
-      </a>
-    </p>
-  </section>
+  <Icon name="logo" />
 
-  <nav aria-label="Footer navigation">
-    <section>
-      <p>Pages</p>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
-        <li><a href="/cv/">CV</a></li>
-      </ul>
-    </section>
+  <p>Sharing encouraged! 2024&ndash;{year} Aleksandr Kadykov.</p>
+  <p>
+    <a
+      href="https://creativecommons.org/licenses/by/4.0/"
+      rel="license noopener"
+      target="_blank"
+    >
+      CC BY 4.0
+    </a>
+    &mdash; only few rights reserved.
+  </p>
 
-    <section>
-      <p>Content</p>
-      <ul>
-        <li><a href="/photos/1/">Photos</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/rss.xml">RSS Feed</a></li>
-      </ul>
-    </section>
-
-    <section>
-      <p>Connect</p>
-      <ul>
-        <li>
-          <a href="mailto:web@kadykov.com">Email</a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/in/aleksandr-kadykov/">LinkedIn</a>
-        </li>
-        <li>
-          <a href="https://github.com/kadykov">GitHub</a>
-        </li>
-        <li>
-          <a href="https://gitlab.com/kadykov">GitLab</a>
-        </li>
-      </ul>
-    </section>
+  <nav aria-label="Main pages">
+    <h3>Pages</h3>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      <li><a href="/cv/">CV</a></li>
+      <li><a href="/privacy-policy/">Privacy Policy</a></li>
+    </ul>
   </nav>
 
-  <hr />
+  <nav aria-label="Photo galleries">
+    <h3>Photos</h3>
+    <ul>
+      <li><a href="/photos/1/">All Photos</a></li>
+      <li><a href="/photos/tags/">By Tags</a></li>
+      <li><a href="/photos/dates/">By Dates</a></li>
+    </ul>
+  </nav>
 
-  <section>
-    <a href="/privacy-policy/">Privacy Policy</a>
-    <p><small>Last updated: {lastUpdated}</small></p>
-  </section>
+  <nav aria-label="Blog">
+    <h3>Blog</h3>
+    <ul>
+      <li><a href="/blog/">All Posts</a></li>
+      <li><a href="/tags/">By Tags</a></li>
+    </ul>
+  </nav>
+
+  <nav aria-label="Photo platforms">
+    <h3>Platforms</h3>
+    <ul>
+      <li>
+        <a
+          href="https://www.flickr.com/photos/kadykov/"
+          rel="noopener"
+          target="_blank">Flickr</a>
+      </li>
+      <li>
+        <a href="https://unsplash.com/@kadykov" rel="noopener" target="_blank"
+          >Unsplash</a>
+      </li>
+    </ul>
+  </nav>
+
+  <p>
+    <small>
+      Last updated: <a
+        href={`https://github.com/kadykov/kadykov.com/commit/${commitHash}`}
+        rel="noopener"
+        target="_blank">{lastUpdated}</a
+      >
+    </small>
+  </p>
 </footer>
-
-<style is:global>
-  /* General section styling - center all direct child sections */
-  body > footer > section {
-    text-align: center;
-  }
-
-  /* Brand section styling */
-  body > footer > section svg {
-    height: 3em;
-    width: 3em;
-    color: var(--color-on-surface);
-  }
-
-  body > footer nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 2em;
-  }
-
-  body > footer nav section p {
-    color: var(--color-on-surface);
-    font-size: 1.125rem;
-    font-weight: 550;
-  }
-
-  body > footer nav section ul {
-    list-style: none;
-    padding: 0;
-
-    /* margin: -0.5em; */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-  }
-
-  /* Horizontal rule styling */
-  body > footer hr {
-    border-top: 1px solid;
-    margin: 1em 0;
-  }
-</style>
