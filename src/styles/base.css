@@ -250,16 +250,17 @@
       var(--primary-h)
   );
 
-  /* Container Strategy: Perceptual Midpoint for Balanced Contrast */
+  /* Container Strategy: Surface-Weighted Mixing for Practical Integration */
 
   /* 
-   * Primary container lightness uses the average of primary and surface lightness.
-   * This creates a perceptually balanced intermediate color that provides:
-   * - Sufficient contrast against both primary and surface
-   * - Visual hierarchy without being too prominent
-   * - Consistent behavior across different base color combinations
+   * Primary container lightness uses weighted mixing (80% surface, 20% primary).
+   * This heavily favors surface lightness to create containers that:
+   * - Stay close to surface lightness for seamless layout integration
+   * - Work well alongside surface-container hierarchy colors
+   * - Provide subtle color accent without dramatic lightness shifts
+   * - Remain practical in both light and dark themes
    */
-  --primary-container-l: calc((var(--primary-l) + var(--surface-l)) / 2);
+  --primary-container-l: calc(var(--surface-l) * 0.8 + var(--primary-l) * 0.2);
   --color-primary-container: oklch(
     var(--primary-container-l)
       calc(
@@ -327,10 +328,10 @@
   );
 
   /* 
-   * Accent container uses the same midpoint strategy as primary container
-   * for consistent visual behavior across color roles.
+   * Accent container uses the same weighted mixing strategy as primary container
+   * (80% surface, 20% accent) for consistent visual behavior across color roles.
    */
-  --accent-container-l: calc((var(--accent-l) + var(--surface-l)) / 2);
+  --accent-container-l: calc(var(--surface-l) * 0.8 + var(--accent-l) * 0.2);
   --color-accent-container: oklch(
     var(--accent-container-l)
       calc(
