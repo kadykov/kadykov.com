@@ -856,10 +856,12 @@ article h4 {
 }
 
 /* Metadata footer right after the article */
-main > article + footer {
+main > footer {
   color: var(--color-on-surface-variant);
   text-align: center;
-  margin: 3rem max(1rem, (100% - 42rem) / 2);
+  margin: 3rem auto;
+  max-width: 42rem;
+  padding: 0 1rem;
 }
 
 article img {
@@ -1107,17 +1109,6 @@ body > header svg {
   height: 1.7rem;
   width: auto;
   transition: transform 0.2s ease-in-out;
-}
-
-body > header svg:hover {
-  /*
-   * Unlike other links on the website that use underline-based hover effects,
-   * the logo SVG needs a different hover animation because it contains no text
-   * or labels. The underline hover effect doesn't work on SVG elements, so we
-   * use a subtle scale transform to indicate that the logo is clickable and
-   * serves as a navigation link.
-   */
-  transform: scale(1.05);
 }
 
 /* Blog post index - vertical stack with ordered list */
@@ -1416,33 +1407,31 @@ body > footer {
   justify-content: center;
   gap: 2em;
   padding: 3em var(--spacing-adaptive);
-  margin-top: 3em;
 
   /* Limit the content width inside the header to 42rem */
   padding-inline: max(1rem, (100% - 42rem) / 2);
 }
 
 /* Footer logo and paragraphs span full width */
-body > footer > svg,
-body > footer > p {
+body > footer svg,
+body > footer p {
   flex-basis: 100%;
 }
 
 /* Logo styling - centered at top of footer */
-body > footer > svg {
-  display: block;
+body > footer svg {
   margin: 0 auto;
   height: 2em;
   width: 2em;
 }
 
 /* Footer paragraphs - centered text, full width */
-body > footer > p {
+body > footer p {
   text-align: center;
 }
 
 /* Navigation blocks - horizontal layout with wrapping */
-body > footer > nav {
+body > footer nav {
   /* Each nav is a vertical stack */
   display: flex;
   flex-direction: column;
@@ -1455,12 +1444,12 @@ body > footer > nav {
 }
 
 /* Navigation headings */
-body > footer > nav h3 {
+body > footer nav h3 {
   margin: 0;
 }
 
 /* Navigation lists - vertical stack */
-body > footer > nav ul {
+body > footer nav ul {
   flex-direction: column;
   gap: 0;
 }
@@ -1487,6 +1476,17 @@ main > ul a:focus-visible figure {
 ::selection {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
+}
+
+body > header svg:hover {
+  /*
+   * Unlike other links on the website that use underline-based hover effects,
+   * the logo SVG needs a different hover animation because it contains no text
+   * or labels. The underline hover effect doesn't work on SVG elements, so we
+   * use a subtle scale transform to indicate that the logo is clickable and
+   * serves as a navigation link.
+   */
+  transform: scale(1.05);
 }
 
 /* Button hover state */
