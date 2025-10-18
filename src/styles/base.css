@@ -657,6 +657,7 @@ label svg {
 input,
 textarea {
   outline: none;
+  min-width: 10em;
 }
 
 /* Common styles for label and textarea */
