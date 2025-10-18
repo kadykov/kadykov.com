@@ -24,49 +24,15 @@
    */
 
   /* Active palette - keep others commented for future testing */
-
-  /* https://coolors.co/palette/ff6700-ebebeb-c0c0c0-3a6ea5-004e98 */
   --surface-l: 0.99;
-  --surface-c: 0;
-  --surface-h: 0;
-  --primary-l: 0.44;
-  --primary-c: 0.14;
-  --primary-h: 254;
-  --accent-l: 0.7;
-  --accent-c: 0.2;
-  --accent-h: 44;
-
-  /* Alternative palettes for testing - keep commented until final selection */
-
-  /* Warm red-blue palette */
-
-  /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
-
-  /* --surface-l: 0.99;
-  --surface-c: 0.01;
-  --surface-h: 138;
-
+  --surface-c: 0.005;
+  --surface-h: 80;
   --primary-l: 0.55;
-  --primary-c: 0.1;
-  --primary-h: 238;
-
-  --accent-l: 0.55;
-  --accent-c: 0.21;
-  --accent-h: 22; */
-
-  /* Cool blue-yellow palette */
-
-  /* --surface-l: 0.99;
---surface-c: 0.01;
---surface-h: 111;
-
---primary-l: 0.55;
---primary-c: 0.1;
---primary-h: 230;
-
---accent-l: 0.82;
---accent-c: 0.14;
---accent-h: 89; */
+  --primary-c: 0.12;
+  --primary-h: 254;
+  --accent-l: 0.72;
+  --accent-c: 0.18;
+  --accent-h: 44;
 
   /* Calculated Surface Colors using OKLCH */
 
@@ -253,14 +219,16 @@
   /* Container Strategy: Surface-Weighted Mixing for Practical Integration */
 
   /* 
-   * Primary container lightness uses weighted mixing (80% surface, 20% primary).
+   * Primary container lightness uses weighted mixing (85% surface, 15% primary).
    * This heavily favors surface lightness to create containers that:
    * - Stay close to surface lightness for seamless layout integration
    * - Work well alongside surface-container hierarchy colors
    * - Provide subtle color accent without dramatic lightness shifts
    * - Remain practical in both light and dark themes
    */
-  --primary-container-l: calc(var(--surface-l) * 0.8 + var(--primary-l) * 0.2);
+  --primary-container-l: calc(
+    var(--surface-l) * 0.85 + var(--primary-l) * 0.15
+  );
   --color-primary-container: oklch(
     var(--primary-container-l)
       calc(
@@ -328,10 +296,10 @@
   );
 
   /* 
-   * Accent container uses the same weighted mixing strategy as primary container
-   * (80% surface, 20% accent) for consistent visual behavior across color roles.
+   * Accent container uses the different weighted mixing strategy as primary container
+   * (75% surface, 25% accent) for more prominent color presence.
    */
-  --accent-container-l: calc(var(--surface-l) * 0.8 + var(--accent-l) * 0.2);
+  --accent-container-l: calc(var(--surface-l) * 0.75 + var(--accent-l) * 0.25);
   --color-accent-container: oklch(
     var(--accent-container-l)
       calc(
@@ -522,12 +490,11 @@
   /* Zero chroma: complete desaturation for neutral gray */
   --surface-c: 0;
 
-  /* Hue becomes irrelevant when chroma is 0, but keep for consistency */
-  --surface-h: 0;
-
   /* Slightly reduce primary contrast for gentler UI */
   --primary-l: 0.45;
-  --primary-c: 0.12;
+
+  /* Zero chroma: complete desaturation for neutral gray */
+  --primary-c: 0;
 
   /* Reduce accent prominence */
   --accent-l: 0.65;
@@ -543,12 +510,13 @@
     /* Zero chroma: complete desaturation for neutral gray */
     --surface-c: 0;
 
-    /* Hue becomes irrelevant when chroma is 0 */
-    --surface-h: 0;
-
-    /* Dark theme primary/accent overrides */
+    /* Slightly reduce primary contrast for gentler UI */
     --primary-l: 0.68;
-    --primary-c: 0.1;
+
+    /* Zero chroma: complete desaturation for neutral gray */
+    --primary-c: 0;
+
+    /* Reduce accent prominence */
     --accent-l: 0.85;
     --accent-c: 0.15;
   }
@@ -1047,7 +1015,8 @@ body > header ul {
 
 body > header,
 main > header {
-  background: var(--color-surface-container-low);
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
   box-shadow: var(--elevation-2);
 
   /* In combination with z-index, ensures the shadow appears above other content */
@@ -1093,7 +1062,6 @@ main > header {
 /* Subtitle styles in hero header */
 main > header p {
   font-family: var(--font-serif);
-  color: var(--color-on-surface-variant);
   font-style: italic;
 }
 
