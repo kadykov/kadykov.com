@@ -936,6 +936,7 @@ kbd {
 /* Horizontal Rule - Material Design divider styling */
 article hr {
   width: 70%;
+  border-style: solid; /* Required for the WebKit browsers */
   border-width: 0 0.5rem 0.15rem 0;
   border-color: var(--color-primary);
   height: 0.55rem;
