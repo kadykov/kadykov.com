@@ -1374,8 +1374,9 @@ body > footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2em;
-  padding: 3em var(--spacing-adaptive);
+  gap: 2rem;
+  padding: 3rem var(--spacing-adaptive);
+  margin-top: 3rem;
 
   /* Limit the content width inside the header to 42rem */
   padding-inline: max(1rem, (100% - 42rem) / 2);
