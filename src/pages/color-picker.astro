@@ -292,6 +292,24 @@ import "../styles/base.css"
         cursor: pointer;
       }
 
+      .btn-primary-gradient {
+        background: var(--bg-primary);
+        color: var(--color-on-primary);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .btn-accent-gradient {
+        background: var(--bg-accent);
+        color: var(--color-on-accent);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
       .code-output {
         background: var(--color-surface-container-lowest);
         padding: 1rem;
@@ -542,9 +560,21 @@ import "../styles/base.css"
             </div>
             <div
               class="color-swatch"
+              style="background: var(--bg-primary); color: var(--color-on-primary);"
+            >
+              Primary Gradient<br />var(--bg-primary)
+            </div>
+            <div
+              class="color-swatch"
               style="background: var(--color-primary-container); color: var(--color-on-primary-container);"
             >
               Primary Container<br />var(--color-primary-container)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--bg-primary-container); color: var(--color-on-primary-container);"
+            >
+              Primary Container Gradient<br />var(--bg-primary-container)
             </div>
             <div
               class="color-swatch"
@@ -554,9 +584,21 @@ import "../styles/base.css"
             </div>
             <div
               class="color-swatch"
+              style="background: var(--bg-accent); color: var(--color-on-accent);"
+            >
+              Accent Gradient<br />var(--bg-accent)
+            </div>
+            <div
+              class="color-swatch"
               style="background: var(--color-accent-container); color: var(--color-on-accent-container);"
             >
               Accent Container<br />var(--color-accent-container)
+            </div>
+            <div
+              class="color-swatch"
+              style="background: var(--bg-accent-container); color: var(--color-on-accent-container);"
+            >
+              Accent Container Gradient<br />var(--bg-accent-container)
             </div>
           </div>
         </div>
@@ -566,11 +608,19 @@ import "../styles/base.css"
           <h2>Component Examples</h2>
           <div class="component-examples">
             <div class="example-card">
-              <h3>Buttons</h3>
+              <h3>Buttons - Solid Colors</h3>
               <div class="example-buttons">
                 <button class="btn-primary">Primary</button>
                 <button class="btn-secondary">Secondary</button>
                 <button class="btn-accent">Accent</button>
+              </div>
+            </div>
+
+            <div class="example-card">
+              <h3>Buttons - Gradient Backgrounds</h3>
+              <div class="example-buttons">
+                <button class="btn-primary-gradient">Primary Gradient</button>
+                <button class="btn-accent-gradient">Accent Gradient</button>
               </div>
             </div>
 
@@ -608,7 +658,15 @@ import "../styles/base.css"
               style="background: var(--color-primary-container); color: var(--color-on-primary-container);"
             >
               <h3>Primary Container</h3>
-              <p>This card uses primary container colors.</p>
+              <p>This card uses solid primary container color.</p>
+            </div>
+
+            <div
+              class="example-card"
+              style="background: var(--bg-primary-container); color: var(--color-on-primary-container);"
+            >
+              <h3>Primary Container Gradient</h3>
+              <p>This card uses primary container gradient background.</p>
             </div>
 
             <div
@@ -616,7 +674,15 @@ import "../styles/base.css"
               style="background: var(--color-accent-container); color: var(--color-on-accent-container);"
             >
               <h3>Accent Container</h3>
-              <p>This card uses accent container colors.</p>
+              <p>This card uses solid accent container color.</p>
+            </div>
+
+            <div
+              class="example-card"
+              style="background: var(--bg-accent-container); color: var(--color-on-accent-container);"
+            >
+              <h3>Accent Container Gradient</h3>
+              <p>This card uses accent container gradient background.</p>
             </div>
           </div>
         </div>

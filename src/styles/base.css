@@ -198,6 +198,18 @@
   /* Base primary color using defined OKLCH values */
   --color-primary: oklch(var(--primary-l) var(--primary-c) var(--primary-h));
 
+  /* Gradient background for primary color */
+  /*
+   * Three-point gradient for base primary color.
+   * Uses smaller hue shifts (±10°) than container due to higher chroma.
+   */
+  --bg-primary: linear-gradient(
+    135deg,
+    oklch(var(--primary-l) var(--primary-c) calc(var(--primary-h) - 10)),
+    var(--color-primary),
+    oklch(var(--primary-l) var(--primary-c) calc(var(--primary-h) + 10))
+  );
+
   /* Text on primary: High contrast with gamut-safe chroma */
   --on-primary-l: clamp(
     0,
@@ -229,16 +241,18 @@
   --primary-container-l: calc(
     var(--surface-l) * 0.85 + var(--primary-l) * 0.15
   );
-  --color-primary-container: oklch(
-    var(--primary-container-l)
-      calc(
-        var(--primary-c) *
-          min(
-            var(--primary-container-l) / var(--primary-l),
-            (1 - var(--primary-container-l)) / (1 - var(--primary-l))
-          )
+
+  /* Primary container chroma: proportionally scaled to prevent gamut clipping */
+  --primary-container-c: calc(
+    var(--primary-c) *
+      min(
+        var(--primary-container-l) / var(--primary-l),
+        (1 - var(--primary-container-l)) / (1 - var(--primary-l))
       )
-      var(--primary-h)
+  );
+
+  --color-primary-container: oklch(
+    var(--primary-container-l) var(--primary-container-c) var(--primary-h)
   );
 
   /* Text on primary container: High contrast with directional stepping */
@@ -260,6 +274,37 @@
       var(--primary-h)
   );
 
+  /* Gradient background for primary container */
+  /*
+   * Three-Point Hue-Based Gradient for Low-Chroma Container Colors
+   * 
+   * Uses a three-color gradient with the exact container color in the middle:
+   * - Start: Hue shifted -20° from container base
+   * - Middle: Exact container color (maintains color accuracy at center)
+   * - End: Hue shifted +20° from container base
+   * 
+   * This creates smoother transitions and ensures the "true" container color
+   * is visible in the center of the gradient, making it more versatile for
+   * overlapping elements (like navbar + hero blending).
+   * 
+   * Safe because:
+   * - Container has lower chroma than base primary (85% surface mixing)
+   * - Hue shifts at low chroma stay well within P3/sRGB gamut
+   * - Maintains all contrast requirements for overlaid text
+   */
+  --bg-primary-container: linear-gradient(
+    135deg,
+    oklch(
+      var(--primary-container-l) var(--primary-container-c)
+        calc(var(--primary-h) - 20)
+    ),
+    var(--color-primary-container),
+    oklch(
+      var(--primary-container-l) var(--primary-container-c)
+        calc(var(--primary-h) + 20)
+    )
+  );
+
   /* Calculated Accent Colors */
 
   /*
@@ -276,6 +321,18 @@
 
   /* Base accent color using defined OKLCH values */
   --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+
+  /* Gradient background for accent color */
+  /*
+   * Three-point gradient for base accent color.
+   * Uses smaller hue shifts (±10°) than container due to higher chroma.
+   */
+  --bg-accent: linear-gradient(
+    135deg,
+    oklch(var(--accent-l) var(--accent-c) calc(var(--accent-h) - 10)),
+    var(--color-accent),
+    oklch(var(--accent-l) var(--accent-c) calc(var(--accent-h) + 10))
+  );
 
   /* Text on accent: High contrast with gamut-safe chroma */
   --on-accent-l: clamp(
@@ -300,16 +357,18 @@
    * (75% surface, 25% accent) for more prominent color presence.
    */
   --accent-container-l: calc(var(--surface-l) * 0.75 + var(--accent-l) * 0.25);
-  --color-accent-container: oklch(
-    var(--accent-container-l)
-      calc(
-        var(--accent-c) *
-          min(
-            var(--accent-container-l) / var(--accent-l),
-            (1 - var(--accent-container-l)) / (1 - var(--accent-l))
-          )
+
+  /* Accent container chroma: proportionally scaled to prevent gamut clipping */
+  --accent-container-c: calc(
+    var(--accent-c) *
+      min(
+        var(--accent-container-l) / var(--accent-l),
+        (1 - var(--accent-container-l)) / (1 - var(--accent-l))
       )
-      var(--accent-h)
+  );
+
+  --color-accent-container: oklch(
+    var(--accent-container-l) var(--accent-container-c) var(--accent-h)
   );
 
   /* Text on accent container: High contrast with directional stepping */
@@ -329,6 +388,27 @@
           )
       )
       var(--accent-h)
+  );
+
+  /* Gradient background for accent container */
+  /*
+   * Three-point gradient matching primary container strategy.
+   * 
+   * The middle color stop ensures the "true" accent container color is
+   * present in the gradient center, improving color accuracy and making
+   * the gradient more versatile for different use cases.
+   */
+  --bg-accent-container: linear-gradient(
+    135deg,
+    oklch(
+      var(--accent-container-l) var(--accent-container-c)
+        calc(var(--accent-h) - 15)
+    ),
+    var(--color-accent-container),
+    oklch(
+      var(--accent-container-l) var(--accent-container-c)
+        calc(var(--accent-h) + 15)
+    )
   );
 
   /* Calculated Shadow Properties using OKLCH */
@@ -577,7 +657,7 @@ ul {
 /* Buttons */
 button {
   color: var(--color-on-primary);
-  background-color: var(--color-primary);
+  background: var(--bg-primary);
   border: none;
   border-radius: 0.2rem;
   padding: 0.875rem 1.5rem;
@@ -586,7 +666,6 @@ button {
 
   /* Smooth transitions */
   transition:
-    background-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out,
     transform 0.1s ease-in-out;
 }
@@ -996,7 +1075,7 @@ body > header ul {
 
 body > header,
 main > header {
-  background: var(--color-primary-container);
+  background: var(--bg-primary-container);
   color: var(--color-on-primary-container);
   box-shadow: var(--elevation-2);
 
@@ -1442,9 +1521,8 @@ body > header svg:hover {
 
 /* Button hover state */
 button:hover {
-  background-color: oklch(
-    calc(var(--primary-l) * 1.1) var(--primary-c) var(--primary-h)
-  );
+  background: var(--bg-accent);
+  color: var(--color-on-accent);
   box-shadow: var(--elevation-3);
 }
 
