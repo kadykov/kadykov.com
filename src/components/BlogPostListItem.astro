@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from "astro:content"
+
+interface Props {
+  post: CollectionEntry<"blog">
+}
+
+const { post } = Astro.props
+const { title, description, pubDate, lastUpdatedDate, tags } = post.data
+const postUrl = `/blog/${post.slug}`
+
+// Options for date formatting
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}
+---
+
+<li>
+  <article>
+    <h2>
+      <a href={postUrl}>{title}</a>
+    </h2>
+    {description && <p>{description}</p>}
+    {
+      tags && tags.length > 0 && (
+        <p>
+          Tags:{" "}
+          {tags.map((tag: string, index: number) => {
+            const separator = index < tags.length - 1 ? ", " : "."
+            return (
+              // Keep separator on same line to prevent unwanted whitespace in rendered HTML
+              // prettier-ignore
+              <>
+                <a href={`/blog/tags/${tag}`}>#{tag}</a>{separator}
+              </>
+            )
+          })}
+        </p>
+      )
+    }
+    {
+      (lastUpdatedDate || pubDate) &&
+        (lastUpdatedDate && lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
+          <time datetime={lastUpdatedDate.toISOString()}>
+            Updated on{" "}
+            {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
+          </time>
+        ) : (
+          pubDate && (
+            <time datetime={pubDate.toISOString()}>
+              Published on {pubDate.toLocaleDateString(undefined, dateOptions)}
+            </time>
+          )
+        ))
+    }
+    <hr />
+  </article>
+</li>

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Hero from "../../components/Hero.astro"
+import BlogPostListItem from "../../components/BlogPostListItem.astro"
 
 const allPosts = (await getCollection("blog")).sort((a, b) => {
   const dateA = a.data.pubDate?.getTime() ?? 0
@@ -13,13 +14,6 @@ const frontmatter = {
   title: "Blog",
   description: "Blog posts about web development, photography, and research",
 }
-
-// Options for date formatting
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-}
 ---
 
 <BaseLayout frontmatter={frontmatter}>
@@ -29,60 +23,13 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   </Hero>
 
   <ol>
-    {
-      allPosts.map((post) => {
-        const { title, description, pubDate, lastUpdatedDate, tags } = post.data
-        const postUrl = `/blog/${post.slug}`
-
-        return (
-          <li>
-            <article>
-              <h2>
-                <a href={postUrl}>{title}</a>
-              </h2>
-              {description && <p>{description}</p>}
-              {tags && tags.length > 0 && (
-                <p>
-                  Tags:{" "}
-                  {tags.map((tag: string, index: number) => {
-                    const separator = index < tags.length - 1 ? ", " : "."
-                    return (
-                      // Keep separator on same line to prevent unwanted whitespace in rendered HTML
-                      // prettier-ignore
-                      <>
-                        <a href={`/tags/${tag}`}>#{tag}</a>{separator}
-                      </>
-                    )
-                  })}
-                </p>
-              )}
-              {(lastUpdatedDate || pubDate) &&
-                (lastUpdatedDate &&
-                lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
-                  <time datetime={lastUpdatedDate.toISOString()}>
-                    Updated on{" "}
-                    {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
-                  </time>
-                ) : (
-                  pubDate && (
-                    <time datetime={pubDate.toISOString()}>
-                      Published on{" "}
-                      {pubDate.toLocaleDateString(undefined, dateOptions)}
-                    </time>
-                  )
-                ))}
-              <hr />
-            </article>
-          </li>
-        )
-      })
-    }
+    {allPosts.map((post) => <BlogPostListItem post={post} />)}
   </ol>
 
   <nav>
     <ul>
       <li>
-        <a href="/tags">Browse all tags</a>
+        <a href="/blog/tags">Browse all tags</a>
       </li>
       <li>
         <a href="/blog/rss.xml" target="_blank" rel="noopener noreferrer">
