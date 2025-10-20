@@ -22,14 +22,6 @@ This is a sample paragraph meant to test the visual rendering of body text. It c
 
 Here's a second paragraph to ensure spacing between paragraphs is visually clear and aesthetically pleasing. A good typographic system handles vertical rhythm with grace, making transitions from headings to body text natural and unobtrusive. Typography is as much about space as it is about letters.
 
-## Testing Optimized Images with Markdoc
-
-Now we can include images that will be automatically optimized!
-
-And here's how it works with remote images:
-
-![Remote Image](https://share.kadykov.com/2024/12/26/DSC_2884.jpg)
-
 This sentence includes **bold**, _italic_, and **_bold italic_** text. It also contains `inline code` to see how monospaced fonts appear inline.
 
 > This is a blockquote designed to test how your system renders quoted text.  
@@ -39,11 +31,11 @@ This sentence includes **bold**, _italic_, and **_bold italic_** text. It also c
 
 ## Unordered List
 
-- This item describes a full idea or observation. The goal here is to simulate a bullet point that might be found in technical documentation, meeting notes, or a blog post outline. It contains more than one sentence, allowing for evaluation of text wrapping, line spacing, and padding within the list item.
+- This item describes a full idea or observation. The goal here is to simulate a bullet point that might be found in technical documentation, meeting notes, or a blog post outline. It contains more than one sentence, allowing for evaluation of text wrapping, line spacing, and padding within the list item. See [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style) for CSS list styling.
 
-- Another example of a longer list item. Imagine this is a design note or a comment during a code review. You might mention how a component behaves under certain conditions, discuss alternatives, and propose changes—all within a single bullet.
+- Another example of a longer list item. Imagine this is a design note or a comment during a code review. You might mention how a component behaves under certain conditions, discuss alternatives, and propose changes—all within a single bullet. Resources like [CSS-Tricks](https://css-tricks.com/) can be helpful.
 
-- Finally, a third item to test how multiple long items stack visually. This ensures that readers don't lose their place and that the layout remains clean and scannable, even when content in each item is substantial.
+- Finally, a third item to test how multiple long items stack visually. This ensures that readers don't lose their place and that the layout remains clean and scannable, even when content in each item is substantial. For accessibility guidelines, visit [WCAG documentation](https://www.w3.org/WAI/WCAG21/quickref/).
 
 ---
 
@@ -54,3 +46,67 @@ This sentence includes **bold**, _italic_, and **_bold italic_** text. It also c
 2. Second, use this item to test how your font handles line breaks and whether multi-line content within a numbered list maintains correct vertical spacing. This is especially important in documentation or tutorials where instructions are long.
 
 3. Lastly, this final item can include a note about accessibility: ensure the font choice, color contrast, and spacing are friendly for readers with various visual needs. Good typography is inclusive.
+
+---
+
+## Code Block
+
+```python
+def describe_typography():
+    """
+    This function simulates how comments in code blocks are rendered.
+    Comments might be long, and should wrap correctly if your CSS supports it.
+    """
+    print("Code blocks should be legible and distinguishable from body text.")
+    # Long comments should wrap properly within the code block
+
+describe_typography()
+```
+
+---
+
+## Table
+
+| Feature     | Description                                                                |
+| ----------- | -------------------------------------------------------------------------- |
+| Readability | How easy is it to read large chunks of text, especially when skimming?     |
+| Hierarchy   | Are heading levels clearly distinct through size, weight, or spacing?      |
+| Alignment   | Do elements like tables, lists, and code blocks align neatly with margins? |
+
+---
+
+<!-- ## Task List
+
+- [x] Draft sample Markdown with longer paragraphs and extended list items that resemble real writing.
+- [x] Ensure spacing and readability hold up across multiple Markdown element types.
+- [ ] Review in light and dark themes to evaluate contrast and emphasis.
+- [ ] Test link appearance in [various contexts](https://example.com/context) and states. -->
+
+## Links Testing Section
+
+Here are different types of links to test their appearance:
+
+- Regular inline link: [Visit Astro documentation](https://astro.build/)
+- Link with title attribute: [GitHub](https://github.com "GitHub Homepage")
+- Reference-style link: [Typography guide][typography-ref]
+- Autolink: <https://kadykov.com>
+- Email link: <contact@kadykov.com>
+
+### Links in Different Contexts
+
+In a sentence, [this link](https://example.com/sentence) should blend well with the surrounding text. When you have a [longer link text that spans multiple words](https://example.com/long-link), it should still be readable and not break the flow.
+
+> Blockquotes can also contain [links](https://example.com/blockquote) that should maintain proper styling and contrast.
+
+**Bold text with [embedded link](https://example.com/bold)** and _italic text with [embedded link](https://example.com/italic)_.
+
+[typography-ref]: https://practicaltypography.com/
+[rhythm-link]: https://24ways.org/2006/compose-to-a-vertical-rhythm/
+
+## Line Width Test
+
+<!-- 0000000000000000000000000000000000000000000000000000000000 -->
+
+## Image Test
+
+![Sample Image](https://share.kadykov.com/2024/12/26/DSC_2884.jpg "Caption for the sample image")

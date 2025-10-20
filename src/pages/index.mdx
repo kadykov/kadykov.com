@@ -3,13 +3,16 @@ title: "Welcome to kadykov.com"
 description: "Personal website of Aleksandr Kadykov - Research Engineer, photographer, and web developer"
 ---
 
-import HeroLayout from "../layouts/HeroLayout.astro"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Hero from "../components/Hero.astro"
 import { Picture } from "astro:assets"
 
-<HeroLayout 
+<BaseLayout
   frontmatter={frontmatter}
 >
-  <div slot="hero-content">
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
     <Picture
       src="https://share.kadykov.com/2023/11/28/DSC_1244.jpg"
       alt="Aleksandr Kadykov's self portrait."
@@ -21,7 +24,7 @@ import { Picture } from "astro:assets"
       height="200"
       loading="eager"
     />
-  </div>
+  </Hero>
 
   <article>
     <h2>Error 501. Not implemented</h2>
@@ -36,4 +39,4 @@ import { Picture } from "astro:assets"
 
   </article>
 
-</HeroLayout>
+</BaseLayout>
