@@ -24,7 +24,8 @@
    */
 
   /* Active palette - keep others commented for future testing */
-  --surface-l: 0.99;
+
+  /* --surface-l: 0.99;
   --surface-c: 0.005;
   --surface-h: 80;
   --primary-l: 0.55;
@@ -32,7 +33,18 @@
   --primary-h: 254;
   --accent-l: 0.72;
   --accent-c: 0.18;
-  --accent-h: 44;
+  --accent-h: 44; */
+
+  /* Theme Colors */
+  --surface-l: 0.99;
+  --surface-c: 0.006;
+  --surface-h: 84;
+  --primary-l: 0.56;
+  --primary-c: 0.105;
+  --primary-h: 240;
+  --accent-l: 0.82;
+  --accent-c: 0.158;
+  --accent-h: 84;
 
   /* Calculated Surface Colors using OKLCH */
 
@@ -199,6 +211,7 @@
   --color-primary: oklch(var(--primary-l) var(--primary-c) var(--primary-h));
 
   /* Gradient background for primary color */
+
   /*
    * Three-point gradient for base primary color.
    * Uses smaller hue shifts (±10°) than container due to higher chroma.
@@ -250,7 +263,6 @@
         (1 - var(--primary-container-l)) / (1 - var(--primary-l))
       )
   );
-
   --color-primary-container: oklch(
     var(--primary-container-l) var(--primary-container-c) var(--primary-h)
   );
@@ -275,6 +287,7 @@
   );
 
   /* Gradient background for primary container */
+
   /*
    * Three-Point Hue-Based Gradient for Low-Chroma Container Colors
    * 
@@ -323,6 +336,7 @@
   --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
 
   /* Gradient background for accent color */
+
   /*
    * Three-point gradient for base accent color.
    * Uses smaller hue shifts (±10°) than container due to higher chroma.
@@ -366,7 +380,6 @@
         (1 - var(--accent-container-l)) / (1 - var(--accent-l))
       )
   );
-
   --color-accent-container: oklch(
     var(--accent-container-l) var(--accent-container-c) var(--accent-h)
   );
@@ -391,6 +404,7 @@
   );
 
   /* Gradient background for accent container */
+
   /*
    * Three-point gradient matching primary container strategy.
    * 
@@ -506,7 +520,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark theme base colors - all others automatically calculated */
-    --surface-l: 0.27;
+
+    /* --surface-l: 0.27;
     --surface-c: 0.02;
     --surface-h: 254;
     --primary-l: 0.68;
@@ -514,7 +529,18 @@
     --primary-h: 254;
     --accent-l: 0.85;
     --accent-c: 0.15;
-    --accent-h: 44;
+    --accent-h: 44; */
+
+    /* Theme Colors */
+    --surface-l: 0.23;
+    --surface-c: 0.012;
+    --surface-h: 84;
+    --primary-l: 0.43;
+    --primary-c: 0.048;
+    --primary-h: 240;
+    --accent-l: 0.69;
+    --accent-c: 0.133;
+    --accent-h: 84;
   }
 
   .astro-code,
@@ -559,27 +585,17 @@
 
   /* Reduce accent prominence */
   --accent-l: 0.65;
-  --accent-c: 0.15;
+  --accent-c: 0.12;
 }
 
 /* Photo Gallery Dark Theme Override */
 @media (prefers-color-scheme: dark) {
   [data-page-type="photo-gallery"] {
-    /* Keep dark theme darkness but ensure zero chroma */
-    --surface-l: 0.27;
+    /* Keep dark theme darkness */
+    --surface-l: 0.23;
 
-    /* Zero chroma: complete desaturation for neutral gray */
-    --surface-c: 0;
-
-    /* Slightly reduce primary contrast for gentler UI */
-    --primary-l: 0.68;
-
-    /* Zero chroma: complete desaturation for neutral gray */
-    --primary-c: 0;
-
-    /* Reduce accent prominence */
-    --accent-l: 0.85;
-    --accent-c: 0.15;
+    /* Reduce accent chroma even more */
+    --accent-c: 0.08;
   }
 }
 
@@ -722,6 +738,7 @@ input {
   flex: 1;
   border: none;
   background: transparent;
+  color: inherit;
 }
 
 /* Textarea - Message field */
