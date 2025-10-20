@@ -1,6 +1,112 @@
 @import url("modern-normalize/modern-normalize.css");
 
 /*
+ * Modern CSS Design System with Advanced Features
+ * 
+ * BROWSER COMPATIBILITY REQUIREMENTS:
+ * ====================================
+ * This stylesheet uses cutting-edge CSS features with two levels of support:
+ * 
+ * TIER 1 - MINIMUM USABLE (Basic Functionality)
+ * ----------------------------------------------
+ * Site is usable with complete color system and layout, but missing some
+ * interactive enhancements and polish.
+ * 
+ * The ONLY meaningful barrier for modern browsers is OKLCH color space support:
+ * 
+ * - Safari: 15.4+ (March 2022)
+ * - Chrome/Edge: 111+ (March 2023)
+ * - Firefox: 113+ (May 2023)
+ * 
+ * Missing features at Tier 1:
+ * - Form validation only shows on parent labels when :has() is unsupported
+ * - Validation errors may appear before user interaction if :user-invalid unsupported
+ * - View transitions are instant instead of animated (Chrome-only feature)
+ * 
+ * TIER 2 - FULL EXPERIENCE (All Features)
+ * ----------------------------------------
+ * Complete experience with all interactive enhancements and optimal UX:
+ * 
+ * - Chrome/Edge: 119+ (October 2023)
+ * - Firefox: 121+ (December 2023)
+ * - Safari: 16.5+ (May 2023)
+ * 
+ * Note: View transitions (@view-transition) are Chrome-only and experimental.
+ * Other browsers gracefully degrade to instant transitions.
+ * 
+ * CRITICAL FEATURE (Required for Tier 1):
+ * ========================================
+ * 
+ * OKLCH Color Space (oklch() function)
+ * ------------------------------------
+ * The entire design system is built on OKLCH color space for perceptually
+ * uniform color manipulation. This is the ONLY feature that represents a
+ * meaningful compatibility barrier for modern browsers.
+ * 
+ * - Safari: 15.4+ (March 2022)
+ * - Chrome/Edge: 111+ (March 2023)
+ * - Firefox: 113+ (May 2023)
+ * 
+ * WITHOUT OKLCH: All color declarations become invalid, causing the entire
+ * color system to collapse to black/white browser defaults.
+ * 
+ * Other CSS Features Used:
+ * ------------------------
+ * The stylesheet also uses modern CSS features like clamp(), min(), calc(),
+ * CSS Grid, Flexbox, CSS custom properties, and mathematical step functions
+ * (using large multipliers instead of infinity keyword). However, these are
+ * universally supported across all browsers that support OKLCH, making them
+ * non-issues for compatibility. Even older browsers (2015-2020 era) support
+ * these features, but lack OKLCH support.
+ * 
+ * ENHANCEMENT FEATURES (Tier 2 improvements):
+ * ============================================
+ * Without these, the site remains fully usable with minor UX degradation:
+ * 
+ * 1. Parent Selector (:has() pseudo-class)
+ *    - Form validation styling for parent labels based on child input state
+ *    - WITHOUT: Validation styling only appears on input/textarea, not label
+ *    - Safari 15.4+, Chrome 105+, Firefox 121+
+ * 
+ * 2. User Interaction Pseudo-classes (:user-invalid)
+ *    - Shows validation errors only after user interaction
+ *    - WITHOUT: Validation errors appear immediately on page load (annoying but functional)
+ *    - Safari 16.5+, Chrome 119+, Firefox 88+
+ * 
+ * 3. Focus Visibility (:focus-visible)
+ *    - Smart focus rings only for keyboard navigation
+ *    - WITHOUT: Focus rings appear on mouse clicks too (more visual noise)
+ *    - Safari 15.4+, Chrome 86+, Firefox 85+
+ * 
+ * 4. View Transitions API (@view-transition)
+ *    - Smooth page navigation animations (experimental)
+ *    - WITHOUT: Page transitions are instant instead of animated
+ *    - Chrome 111+ only (gracefully degrades in other browsers)
+ * 
+ * 5. User Preference Media Queries
+ *    - prefers-color-scheme (automatic dark mode)
+ *    - prefers-reduced-motion (accessibility for motion sensitivity)
+ *    - WITHOUT: No automatic dark mode, animations play for all users
+ *    - Safari 12.1+/10.1+, Chrome 76+/74+, Firefox 67+/63+
+ * 
+ * 6. Variable Fonts (wght axis, woff2-variations)
+ *    - Dynamic font weight adjustment for fine typography control
+ *    - WITHOUT: Falls back to system fonts (arial, georgia, monospace)
+ *    - Safari 11+, Chrome 62+, Firefox 62+
+ * 
+ * DESIGN PHILOSOPHY:
+ * ==================
+ * This stylesheet implements a mathematical color system where only base OKLCH
+ * values need to be defined. All surface variations, text colors, shadows, and
+ * interactive states are automatically derived using perceptually uniform
+ * calculations. This ensures consistent contrast ratios and visual hierarchy
+ * across light and dark themes.
+ * 
+ * No fallbacks are provided for older browsers. Sites using this stylesheet
+ * should detect browser capabilities and show an upgrade notice if needed.
+ */
+
+/*
  * OKLCH-Based Calculated Color System
  * 
  * This system uses OKLCH color space for perceptually accurate contrast calculations
@@ -58,14 +164,17 @@
    * This creates consistent visual hierarchy where containers are always
    * distinguishable from the base surface, regardless of theme.
    * 
-   * The infinity multiplication creates a step function:
+   * The large multiplier (999999) creates a step function:
    * - Returns -1 for light surfaces (step darker)
    * - Returns +1 for dark surfaces (step lighter)
    * - Threshold at 0.57 accounts for perceptual lightness differences
+   * 
+   * Note: Using 999999 instead of infinity improves browser compatibility
+   * while achieving the same mathematical result (values clamp to ±1).
    */
 
   /* Surface color lightness sign: determines stepping direction */
-  --surface-sign: clamp(-1, (0.57 - var(--surface-l)) * infinity, 1);
+  --surface-sign: clamp(-1, (0.57 - var(--surface-l)) * 999999, 1);
 
   /* OKLCH-based surface colors */
   --color-surface: oklch(var(--surface-l) var(--surface-c) var(--surface-h));
@@ -226,7 +335,7 @@
   /* Text on primary: High contrast with gamut-safe chroma */
   --on-primary-l: clamp(
     0,
-    var(--primary-l) + 0.55 * clamp(-1, (0.57 - var(--primary-l)) * infinity, 1),
+    var(--primary-l) + 0.55 * clamp(-1, (0.57 - var(--primary-l)) * 999999, 1),
     1
   );
   --color-on-primary: oklch(
@@ -271,7 +380,7 @@
   --on-primary-container-l: clamp(
     0,
     var(--primary-container-l) + 0.55 *
-      clamp(-1, (0.57 - var(--primary-container-l)) * infinity, 1),
+      clamp(-1, (0.57 - var(--primary-container-l)) * 999999, 1),
     1
   );
   --color-on-primary-container: oklch(
@@ -351,7 +460,7 @@
   /* Text on accent: High contrast with gamut-safe chroma */
   --on-accent-l: clamp(
     0,
-    var(--accent-l) + 0.55 * clamp(-1, (0.57 - var(--accent-l)) * infinity, 1),
+    var(--accent-l) + 0.55 * clamp(-1, (0.57 - var(--accent-l)) * 999999, 1),
     1
   );
   --color-on-accent: oklch(
@@ -388,7 +497,7 @@
   --on-accent-container-l: clamp(
     0,
     var(--accent-container-l) + 0.55 *
-      clamp(-1, (0.57 - var(--accent-container-l)) * infinity, 1),
+      clamp(-1, (0.57 - var(--accent-container-l)) * 999999, 1),
     1
   );
   --color-on-accent-container: oklch(
