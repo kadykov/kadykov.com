@@ -37,14 +37,14 @@
 
   /* Theme Colors */
   --surface-l: 0.99;
-  --surface-c: 0.006;
-  --surface-h: 84;
+  --surface-c: 0.004;
+  --surface-h: 72;
   --primary-l: 0.56;
   --primary-c: 0.105;
   --primary-h: 240;
-  --accent-l: 0.82;
-  --accent-c: 0.158;
-  --accent-h: 84;
+  --accent-l: 0.81;
+  --accent-c: 0.155;
+  --accent-h: 72;
 
   /* Calculated Surface Colors using OKLCH */
 
@@ -532,15 +532,17 @@
     --accent-h: 44; */
 
     /* Theme Colors */
+
+    /* Theme Colors */
     --surface-l: 0.23;
-    --surface-c: 0.012;
-    --surface-h: 84;
+    --surface-c: 0.016;
+    --surface-h: 72;
     --primary-l: 0.43;
     --primary-c: 0.048;
     --primary-h: 240;
-    --accent-l: 0.69;
-    --accent-c: 0.133;
-    --accent-h: 84;
+    --accent-l: 0.58;
+    --accent-c: 0.12;
+    --accent-h: 72;
   }
 
   .astro-code,
@@ -576,15 +578,9 @@
 
   /* Zero chroma: complete desaturation for neutral gray */
   --surface-c: 0;
-
-  /* Slightly reduce primary contrast for gentler UI */
-  --primary-l: 0.45;
-
-  /* Zero chroma: complete desaturation for neutral gray */
   --primary-c: 0;
 
-  /* Reduce accent prominence */
-  --accent-l: 0.65;
+  /* Reduce accent chroma */
   --accent-c: 0.12;
 }
 
@@ -594,7 +590,7 @@
     /* Keep dark theme darkness */
     --surface-l: 0.23;
 
-    /* Reduce accent chroma even more */
+    /* Reduce accent color even more */
     --accent-c: 0.08;
   }
 }
