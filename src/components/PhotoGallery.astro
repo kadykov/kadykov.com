@@ -253,9 +253,9 @@ function getRandomRotation(maxDegrees: number = 1): number {
                 <OptimizedImage
                   src={photoSrc}
                   alt={altText}
-                  width={photo.width}
-                  height={photo.height}
-                  displayWidth={displayWidth}
+                  width={displayWidth}
+                  originalWidth={photo.width}
+                  originalHeight={photo.height}
                   sizesAttr={sizesAttr}
                   loading="lazy"
                   decoding="async"
