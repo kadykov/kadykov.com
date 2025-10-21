@@ -1022,6 +1022,20 @@ article img {
   border-radius: 0.2rem;
 }
 
+/* Article figures - remove default margins for consistent spacing */
+article figure {
+  margin: 0;
+}
+
+/* Article figcaptions - subtle styling for image captions */
+article figcaption {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-sans);
+  font-style: italic;
+}
+
 /* Surface block containers */
 pre,
 blockquote,

@@ -8,15 +8,48 @@ interface Props {
 }
 
 const { src, alt, title } = Astro.props
+
+/*
+ * Article images sizing calculation:
+ *
+ * Articles have max-width of 30rem with dynamic rem scaling.
+ * Base font-size: clamp(16px, 0.395vw + 14.42px, 22px)
+ *
+ * Since the sizes attribute is parsed before CSS, we need to express rem units
+ * in terms of pixels and viewport width:
+ * - Article content width: 30rem
+ * - With dynamic font-size: 30 * clamp(16px, 0.395vw + 14.42px, 22px)
+ * - Simplified: clamp(480px, 11.85vw + 432.6px, 660px)
+ *
+ * For the sizes attribute:
+ * - Below 32rem (512px at 16px/rem): calc(100vw - 2rem) = calc(100vw - 32px)
+ * - Above 512px: clamp(480px, 11.85vw + 432.6px, 660px)
+ *
+ * We don't specify width in pixels because inferSize will determine dimensions from the source.
+ */
+const sizesAttr =
+  "(max-width: 512px) calc(100vw - 32px), clamp(480px, 11.85vw + 432.6px, 660px)"
 ---
 
 {
   title ? (
     <figure>
-      <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
+      <OptimizedImage
+        src={src}
+        alt={alt}
+        sizesAttr={sizesAttr}
+        loading="lazy"
+        decoding="async"
+      />
       <figcaption>{title}</figcaption>
     </figure>
   ) : (
-    <OptimizedImage src={src} alt={alt} loading="lazy" decoding="async" />
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      sizesAttr={sizesAttr}
+      loading="lazy"
+      decoding="async"
+    />
   )
 }
