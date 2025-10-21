@@ -2,7 +2,6 @@
 import OptimizedImage from "./OptimizedImage.astro"
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import { getImage } from "astro:assets"
-import { widthSet as globalWidthSet } from "../utils/widthSet" // Import global widthSet
 import { classifyPhoto, getImageDimensions } from "../utils/photoClassification" // Import classification utilities
 
 interface Props {
@@ -18,20 +17,20 @@ const pswpDataset =
   fullPhotoDataset && fullPhotoDataset.length > 0 ? fullPhotoDataset : photos
 
 // Prepare a simplified dataset for PhotoSwipe to embed as JSON
-// This now includes avifSrcset for each image in the full dataset.
+// Use Astro's layout system to generate consistent srcsets
 const photoSwipeJsonData = await Promise.all(
   pswpDataset.map(async (photo) => {
     const photoSrc = `${imageBaseUrl}${photo.relativePath}`
-    const calculatedLightboxWidths = getLightboxWidths(photo.width) // Ensure getLightboxWidths is defined above or passed
 
+    // Generate AVIF srcset using Astro's full-width layout (for lightbox full-screen viewing)
     let pswpSrcset = ""
     try {
       const avifLightboxImages = await getImage({
         src: photoSrc,
-        widths: calculatedLightboxWidths,
         width: photo.width, // True intrinsic width
         height: photo.height, // True intrinsic height
         format: "avif",
+        layout: "full-width", // Let Astro generate appropriate srcset for full-width display
       })
       pswpSrcset = avifLightboxImages?.srcSet?.attribute || ""
     } catch (e) {
@@ -39,65 +38,53 @@ const photoSwipeJsonData = await Promise.all(
       // pswpSrcset will remain empty, PhotoSwipe will use the main 'src'
     }
 
-    // Generate a medium WebP for the main 'src' (fallback for PhotoSwipe display)
-    // Aim for max dimension (width or height) around 1600px, maintaining aspect ratio.
-    const MAX_DIMENSION = 1600
-    let targetWidth = photo.width
-    let targetHeight = photo.height
-
-    if (photo.width > MAX_DIMENSION || photo.height > MAX_DIMENSION) {
-      if (photo.width / photo.height > 1) {
-        // Landscape or square
-        targetWidth = MAX_DIMENSION
-        targetHeight = Math.round((photo.height / photo.width) * targetWidth)
-      } else {
-        // Portrait
-        targetHeight = MAX_DIMENSION
-        targetWidth = Math.round((photo.width / photo.height) * targetHeight)
-      }
-    }
-    // Ensure dimensions are at least 1px
-    targetWidth = Math.max(1, targetWidth)
-    targetHeight = Math.max(1, targetHeight)
-
+    // Generate a medium-sized WebP for the main 'src' (fallback for PhotoSwipe display)
+    // Exactly 1600px max, maintaining aspect ratio, no 2x variants
+    const MAX_WIDTH = 1600
     let webpSrcForPswp = photoSrc // Default to original if WebP generation fails
     try {
+      // Calculate dimensions maintaining aspect ratio
+      const fallbackWidth = Math.min(MAX_WIDTH, photo.width)
+      const fallbackHeight = Math.round(
+        (photo.height / photo.width) * fallbackWidth
+      )
+
       const webpPswpDisplayImage = await getImage({
         src: photoSrc,
-        width: targetWidth,
-        height: targetHeight,
+        width: fallbackWidth,
+        height: fallbackHeight,
         format: "webp",
+        // No layout property - generates exactly one image at specified dimensions
       })
       if (webpPswpDisplayImage?.src) {
         webpSrcForPswp = webpPswpDisplayImage.src
       }
     } catch (e) {
-      // console.error(`Failed to generate WebP display image for ${photoSrc} (target ${targetWidth}x${targetHeight}):`, e);
+      // console.error(`Failed to generate WebP display image for ${photoSrc}:`, e);
     }
 
-    // Generate a small WebP for 'msrc' (placeholder) - max width 300px
-    const placeholderMaxWidth = 300
-    let msrcPlaceholderWidth = Math.min(placeholderMaxWidth, photo.width)
-    let msrcPlaceholderHeight = Math.round(
-      (photo.height / photo.width) * msrcPlaceholderWidth
-    )
-    // Ensure dimensions are at least 1px
-    msrcPlaceholderWidth = Math.max(1, msrcPlaceholderWidth)
-    msrcPlaceholderHeight = Math.max(1, msrcPlaceholderHeight)
-
+    // Generate a small WebP for 'msrc' (placeholder) - exactly 300px wide, no 2x variant
+    const PLACEHOLDER_MAX_WIDTH = 300
     let msrcUrl = webpSrcForPswp // Default to medium WebP if small one fails
     try {
+      // Calculate dimensions maintaining aspect ratio
+      const placeholderWidth = Math.min(PLACEHOLDER_MAX_WIDTH, photo.width)
+      const placeholderHeight = Math.round(
+        (photo.height / photo.width) * placeholderWidth
+      )
+
       const placeholderImage = await getImage({
         src: photoSrc,
-        width: msrcPlaceholderWidth,
-        height: msrcPlaceholderHeight,
+        width: placeholderWidth,
+        height: placeholderHeight,
         format: "webp",
+        // No layout property - generates exactly one image at specified dimensions
       })
       if (placeholderImage?.src) {
         msrcUrl = placeholderImage.src
       }
     } catch (e) {
-      // console.error(`Failed to generate msrc placeholder for ${photoSrc} (target ${msrcPlaceholderWidth}x${msrcPlaceholderHeight}):`, e);
+      // console.error(`Failed to generate msrc placeholder for ${photoSrc}:`, e);
     }
 
     return {
@@ -115,30 +102,6 @@ const photoSwipeJsonData = await Promise.all(
     }
   })
 )
-
-// Helper function to calculate lightbox widths, implementing user's "replace largest" logic.
-function getLightboxWidths(photoWidth: number): number[] {
-  if (photoWidth <= 0) return [] // Handle invalid photoWidth
-
-  let widths = globalWidthSet.filter((w) => w <= photoWidth)
-
-  if (widths.length > 0) {
-    // If there are global widths <= photoWidth, remove the largest among them.
-    const maxGlobalWidth = Math.max(...widths)
-    widths = widths.filter((w) => w !== maxGlobalWidth)
-  }
-  // Always add the actual photoWidth.
-  widths.push(photoWidth)
-
-  // Handle cases where photoWidth was very small and widths might be just [photoWidth]
-  // or if globalWidthSet was empty.
-  if (widths.length === 0 && photoWidth > 0) {
-    // This condition might be redundant due to push(photoWidth)
-    widths = [photoWidth]
-  }
-
-  return [...new Set(widths)].sort((a, b) => a - b)
-}
 
 // Helper function to generate a random rotation angle for Polaroid-style scatter effect
 // Uses normal (Gaussian) distribution for more natural-looking scatter:
@@ -184,38 +147,21 @@ function getRandomRotation(maxDegrees: number = 1): number {
         const altText = photo.title || photo.description || photo.filename
 
         // Retrieve the pre-generated data for this photo from photoSwipeJsonData
-        // This avoids re-calculating or re-fetching optimized image URLs for the thumbnail's link
+        // All optimized images (AVIF srcset, WebP fallback, placeholder) are pre-generated
         const pswpEntryForThisPhoto = photoSwipeJsonData.find(
           (entry) => entry.slug === photo.slug && entry.downloadUrl === photoSrc
         )
 
-        const calculatedLightboxWidths = getLightboxWidths(photo.width)
-
-        // Pass the true intrinsic dimensions of the photo to getImage for AVIF srcset for the <a> tag.
-        // This is still needed if PhotoSwipe falls back to using data attributes from the <a> tag.
-        const avifLightboxImages = await getImage({
-          src: photoSrc,
-          widths: calculatedLightboxWidths,
-          width: photo.width, // True intrinsic width
-          height: photo.height, // True intrinsic height
-          format: "avif",
-        })
-
-        // For PhotoSwipe:
-        // href: Use the pre-generated medium WebP (src from photoSwipeJsonData) for the link.
-        // data-pswp-src: Original JPEG (downloadUrl from photoSwipeJsonData).
-        // data-pswp-srcset: AVIF srcset (srcset from photoSwipeJsonData).
-        // data-pswp-width/height: Original dimensions.
-
-        const pswpLinkHref = pswpEntryForThisPhoto?.src || photoSrc // Use the 1600px capped WebP, fallback to original
-        const pswpDataSrc = pswpEntryForThisPhoto?.downloadUrl || photoSrc // Original JPEG
+        // For PhotoSwipe data attributes:
+        // href: Medium-sized WebP for the link preview
+        // data-pswp-src: Original JPEG for download
+        // data-pswp-srcset: AVIF srcset for responsive lightbox display
+        // data-pswp-width/height: Original dimensions
+        const pswpLinkHref = pswpEntryForThisPhoto?.src || photoSrc
+        const pswpDataSrc = pswpEntryForThisPhoto?.downloadUrl || photoSrc
         const pswpWidth = photo.width
         const pswpHeight = photo.height
-        // Use the AVIF srcset generated for the <a> tag directly, or from pswpEntryForThisPhoto if preferred (should be same)
-        const pswpSrcset =
-          avifLightboxImages?.srcSet?.attribute ||
-          pswpEntryForThisPhoto?.srcset ||
-          ""
+        const pswpSrcset = pswpEntryForThisPhoto?.srcset || ""
 
         // Use the two-step classification system to determine caption placement and grid span
         const classification = classifyPhoto(photo.width, photo.height)
