@@ -25,8 +25,9 @@ const { src, alt, title } = Astro.props
  * - Below 32rem (512px at 16px/rem): calc(100vw - 2rem) = calc(100vw - 32px)
  * - Above 512px: clamp(480px, 11.85vw + 432.6px, 660px)
  *
- * We don't specify width in pixels because inferSize will determine dimensions from the source.
+ * We specify max width (660px) so Astro doesn't generate unnecessarily large variants.
  */
+const articleMaxWidth = 660 // Maximum width in pixels (30rem at 22px/rem)
 const sizesAttr =
   "(max-width: 512px) calc(100vw - 32px), clamp(480px, 11.85vw + 432.6px, 660px)"
 ---
@@ -37,6 +38,7 @@ const sizesAttr =
       <OptimizedImage
         src={src}
         alt={alt}
+        width={articleMaxWidth}
         sizesAttr={sizesAttr}
         loading="lazy"
         decoding="async"
@@ -47,6 +49,7 @@ const sizesAttr =
     <OptimizedImage
       src={src}
       alt={alt}
+      width={articleMaxWidth}
       sizesAttr={sizesAttr}
       loading="lazy"
       decoding="async"
