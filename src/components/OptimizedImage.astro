@@ -1,11 +1,11 @@
 ---
 // src/components/OptimizedImage.astro
-// Minimal wrapper around Astro's Picture component that:
+// Minimal wrapper around Astro's Image component that:
 // - Sets AVIF format globally
 // - Sets constrained layout globally
 // - Infers remote image dimensions and scales them to target width
 // - Passes through custom sizes attribute from our grid calculations
-import { Picture } from "astro:assets"
+import { Image } from "astro:assets"
 import { inferRemoteSize } from "astro:assets"
 
 interface Props {
@@ -58,22 +58,21 @@ if (originalWidth && originalHeight) {
 }
 
 // Build props conditionally
-const pictureProps: any = {
+const imageProps: any = {
   src,
   alt,
-  formats: ["avif"],
-  fallbackFormat: "webp",
+  format: "avif",
   layout: "constrained",
   loading,
   decoding,
   class: className,
 }
 
-if (finalWidth) pictureProps.width = finalWidth
-if (finalHeight) pictureProps.height = finalHeight
-if (sizesAttr) pictureProps.sizes = sizesAttr
-if (quality) pictureProps.quality = quality
-if (!finalWidth || !finalHeight) pictureProps.inferSize = true
+if (finalWidth) imageProps.width = finalWidth
+if (finalHeight) imageProps.height = finalHeight
+if (sizesAttr) imageProps.sizes = sizesAttr
+if (quality) imageProps.quality = quality
+if (!finalWidth || !finalHeight) imageProps.inferSize = true
 ---
 
-<Picture {...pictureProps} />
+<Image {...imageProps} />
