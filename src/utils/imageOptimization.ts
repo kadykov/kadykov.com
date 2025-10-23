@@ -19,6 +19,7 @@ import { getImage } from "astro:assets"
 export interface OptimizedImageConfig {
   src: string
   maxWidth?: number // Maximum display width (1x DPR) - will generate up to 3x for high-DPI
+  originalWidth?: number // Original image width - used to prevent requesting widths larger than source
   widths?: number[] // DEPRECATED: Use maxWidth instead for automatic DPR-aware filtering
   quality?: number // Image quality (default: Astro's default)
   layout?: "constrained" | "full-width" // Layout type (default: "constrained")
@@ -135,7 +136,14 @@ function filterWidthsForDisplay(
 export async function generateOptimizedImage(
   config: OptimizedImageConfig
 ): Promise<OptimizedImageResult> {
-  const { src, maxWidth, widths, quality, layout = "constrained" } = config
+  const {
+    src,
+    maxWidth,
+    originalWidth,
+    widths,
+    quality,
+    layout = "constrained",
+  } = config
 
   try {
     // Build getImage parameters
@@ -146,20 +154,31 @@ export async function generateOptimizedImage(
       inferSize: true, // Critical: maintains perfect aspect ratio and enables cache sharing
     }
 
-    // Determine which widths to generate
-    if (layout === "full-width") {
-      // Full-width: use full range of standard widths (no DPR filtering)
-      imageParams.widths = STANDARD_WIDTHS
-    } else if (widths) {
+    // Start with the appropriate width set based on layout and parameters
+    let targetWidths: number[]
+
+    if (widths) {
       // Legacy support: if widths explicitly provided, use them as-is
-      imageParams.widths = widths
+      targetWidths = widths
+    } else if (layout === "full-width") {
+      // Full-width: use full range of standard widths (no DPR filtering)
+      targetWidths = STANDARD_WIDTHS
     } else if (maxWidth) {
       // Smart filtering: generate widths suitable for 1x-3x DPR
-      imageParams.widths = filterWidthsForDisplay(maxWidth, STANDARD_WIDTHS)
+      targetWidths = filterWidthsForDisplay(maxWidth, STANDARD_WIDTHS)
     } else {
       // No constraints: use full standard width range
-      imageParams.widths = STANDARD_WIDTHS
+      targetWidths = STANDARD_WIDTHS
     }
+
+    // CRITICAL: Filter out widths larger than the original image
+    // This prevents Astro from generating duplicate full-resolution images
+    // with different cache keys when requested width exceeds original size
+    if (originalWidth) {
+      targetWidths = targetWidths.filter((w) => w <= originalWidth)
+    }
+
+    imageParams.widths = targetWidths
 
     if (quality) {
       imageParams.quality = quality

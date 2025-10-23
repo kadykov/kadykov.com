@@ -38,6 +38,7 @@ const photoSwipeJsonData = await Promise.all(
     const lightboxImage = await generateOptimizedImage({
       src: photoSrc,
       layout: "full-width",
+      originalWidth: photo.width, // Prevent generating widths larger than source
     })
     const pswpSrcset = lightboxImage.srcset
 
@@ -46,6 +47,7 @@ const photoSwipeJsonData = await Promise.all(
     const thumbnailImage = await generateOptimizedImage({
       src: photoSrc,
       maxWidth: displayWidth, // Automatically generates widths for 1x-3x DPR
+      originalWidth: photo.width, // Prevent generating widths larger than source
     })
     const msrcUrl = thumbnailImage.src
     const thumbnailSrcset = thumbnailImage.srcset
