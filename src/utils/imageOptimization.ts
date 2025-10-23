@@ -34,39 +34,29 @@ export interface OptimizedImageResult {
 /**
  * Standard responsive widths for image srcset generation.
  *
- * Based on Astro's DEFAULT_RESOLUTIONS (astro/packages/astro/src/assets/layout.ts)
- * with additional smaller widths for vertical photo thumbnails at 1x DPR.
+ * These widths are chosen to cover common device sizes with ~1.2x increments,
+ * while avoiding excessive numbers of variants.
  *
- * These widths cover:
- * - 200-640: Vertical thumbnails and small images (1x DPR)
- * - 640-1280: Common phone screens (iPhone 6-8, XR/11, Plus models, 720p)
- * - 1668-2560: Tablets and laptops (iPads, 1080p, QXGA, WQXGA)
- * - 3200-6016: High-end displays (QHD+, 4K, 4.5K, 5K, 6K)
- *
- * Smaller images convert faster and are filtered automatically by maxWidth parameter.
+ * They range from small thumbnails (200w) to large 4K displays (3840w).
  */
 const STANDARD_WIDTHS = [
-  200, // Vertical thumbnails with 1x DPR
+  200, //
   240,
-  320,
-  360,
-  400, // Vertical thumbnails with 2x DPR
-  480, // Small images and older phones
-  640, // Older and lower-end phones
-  750, // iPhone 6-8
-  828, // iPhone XR/11
-  960, // Older horizontal phones
-  1080, // iPhone 6-8 Plus
+  288,
+  350,
+  420,
+  500,
+  600,
+  720, // HD standard
+  900,
+  1080, // Full HD standard
   1280, // 720p
-  1668, // Various iPads
-  1920, // 1080p
-  2048, // QXGA
+  1600,
+  1920, // Full HD
+  2222,
   2560, // WQXGA
   3200, // QHD+
-  3840, // 4K
-  4480, // 4.5K
-  5120, // 5K
-  6016, // 6K
+  3840, // 4K UHD
 ]
 
 /**

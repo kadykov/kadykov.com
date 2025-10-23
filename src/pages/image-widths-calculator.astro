@@ -1,0 +1,672 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+
+const frontmatter = {
+  title: "Image Widths Calculator",
+  description:
+    "Interactive tool for exploring geometric progressions for responsive image widths",
+}
+
+// Current widths from imageOptimization.ts
+const CURRENT_WIDTHS = [
+  200, 240, 288, 350, 420, 500, 600, 720, 900, 1080, 1280, 1600, 1920, 2222,
+  2560, 3200, 3840,
+]
+
+// Common device widths that might be good snap points
+const DEVICE_WIDTHS = [
+  480, // Small images and older phones
+  600,
+  640, // Older and lower-end phones
+  720, // HD standard
+  750, // iPhone 6-8
+  768, // iPad
+  800, // Small tablets
+  828, // iPhone XR/11
+  900,
+  960, // Older horizontal phones
+  1080, // iPhone 6-8 Plus
+  1280, // 720p
+  1440, // 1440p
+  1600, // 1600p
+  1668, // Various iPads
+  1920, // 1080p
+  2048, // QXGA
+  2560, // WQXGA
+  3200, // QHD+
+  3840, // 4K
+  4480, // 4.5K
+  5120, // 5K
+  6016, // 6K
+]
+---
+
+<BaseLayout {frontmatter}>
+  <main class="container">
+    <h1>Responsive Image Widths Calculator</h1>
+
+    <section class="info">
+      <h2>About Geometric Progressions for Image Widths</h2>
+      <div class="info-grid">
+        <div>
+          <h3>Best Practices</h3>
+          <ul>
+            <li>
+              <strong>Ratio range:</strong> Most recommendations suggest 1.2-1.5x
+              between sizes
+            </li>
+            <li>
+              <strong>Google's recommendation:</strong> ~1.25x for modern formats
+              (WebP/AVIF)
+            </li>
+            <li>
+              <strong>Balance:</strong> Too many sizes = more processing/storage;
+              too few = bandwidth waste
+            </li>
+            <li>
+              <strong>File size growth:</strong> Grows with area (width²), so a 1.33x
+              width multiplier ≈ 1.77x file size
+            </li>
+            <li>
+              <strong>DPR coverage:</strong> Should cover 1x, 2x, and 3x device pixel
+              ratios
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Geometric Progression Advantages</h3>
+          <ul>
+            <li>
+              <strong>Consistent scaling:</strong> Proportional bandwidth savings
+              across all screen sizes
+            </li>
+            <li>
+              <strong>Predictable:</strong> Easy to calculate and reason about
+            </li>
+            <li>
+              <strong>Efficient:</strong> Fewer sizes needed vs. linear progression
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Potential Disadvantages</h3>
+          <ul>
+            <li>
+              <strong>Device misalignment:</strong> May miss important device breakpoints
+            </li>
+            <li>
+              <strong>Less intuitive:</strong> Not as obvious as device-specific
+              widths
+            </li>
+            <li>
+              <strong>Over/under generation:</strong> Might create unnecessary sizes
+              in unused ranges
+            </li>
+            <li>
+              <strong>Rounding issues:</strong> Need to decide how to round to integers
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="calculator">
+      <h2>Interactive Calculator</h2>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="startWidth">
+            Start Width (px):
+            <input
+              type="number"
+              id="startWidth"
+              min="100"
+              max="1000"
+              value="200"
+              step="10"
+            />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label for="multiplier">
+            Multiplier:
+            <input
+              type="number"
+              id="multiplier"
+              min="1.1"
+              max="2.0"
+              value="1.25"
+              step="0.01"
+            />
+          </label>
+          <small>Common values: 1.25 (Google), 1.33, 1.414 (√2), 1.5</small>
+        </div>
+
+        <div class="control-group">
+          <label for="endWidth">
+            End Width (px):
+            <input
+              type="number"
+              id="endWidth"
+              min="1000"
+              max="10000"
+              value="3840"
+              step="100"
+            />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label for="snapThreshold">
+            Snap Threshold (%):
+            <input
+              type="number"
+              id="snapThreshold"
+              min="0"
+              max="20"
+              value="5"
+              step="0.5"
+            />
+          </label>
+          <small
+            >If generated value is within this percentage of a device width,
+            snap to it (0 = no snapping)</small
+          >
+        </div>
+
+        <button id="calculate">Generate Widths</button>
+      </div>
+
+      <div class="results">
+        <div class="results-column">
+          <h3>Generated Widths <span id="generatedCount"></span></h3>
+          <div class="legend">
+            <span class="legend-item">
+              <span class="legend-icon">📍</span> Snapped to device width
+            </span>
+            <span id="snappedCount" class="legend-count"></span>
+          </div>
+          <div id="generatedWidths" class="widths-list"></div>
+        </div>
+
+        <div class="results-column">
+          <h3>Current Widths ({CURRENT_WIDTHS.length})</h3>
+          <div class="widths-list current">
+            {
+              CURRENT_WIDTHS.map((width, i) => {
+                const next = CURRENT_WIDTHS[i + 1]
+                const ratio = next ? (next / width).toFixed(3) : ""
+                return (
+                  <div class="width-item">
+                    <span class="width-value">{width}w</span>
+                    {ratio && <span class="ratio">→ ×{ratio}</span>}
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <h3>Statistics</h3>
+        <div id="stats" class="stats-grid"></div>
+      </div>
+
+      <div class="export">
+        <h3>Export</h3>
+        <button id="copyArray">Copy as JavaScript Array</button>
+        <button id="copyTypescript">Copy as TypeScript Const</button>
+        <pre id="export-preview"></pre>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  .info {
+    background: var(--color-surface);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .info h2 {
+    margin-top: 0;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .info h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  .info ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .info li {
+    margin-bottom: 0.5rem;
+  }
+
+  .calculator {
+    background: var(--color-surface);
+    padding: 2rem;
+    border-radius: 8px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  input[type="number"] {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 4px;
+    font-size: 1rem;
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+
+  small {
+    color: var(--color-text-muted, #666);
+    font-size: 0.875rem;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: var(--color-accent-hover, var(--color-accent));
+    filter: brightness(1.1);
+  }
+
+  #calculate {
+    grid-column: 1 / -1;
+  }
+
+  .results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .results-column h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .widths-list {
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 4px;
+    padding: 1rem;
+    background: var(--color-background);
+  }
+
+  .width-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 4px;
+  }
+
+  .width-item:hover {
+    background: var(--color-surface);
+  }
+
+  .width-value {
+    font-weight: 600;
+    font-family: monospace;
+  }
+
+  .ratio {
+    color: var(--color-text-muted, #666);
+    font-size: 0.875rem;
+    font-family: monospace;
+  }
+
+  .width-item.snapped {
+    background: rgb(var(--color-accent-rgb, 59 130 246) / 10%);
+  }
+
+  .width-item.snapped .width-value::after {
+    content: " 📍";
+    font-size: 0.875rem;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--color-background);
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-icon {
+    font-size: 1rem;
+  }
+
+  .legend-count {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--color-background);
+    border-radius: 4px;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #666);
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: monospace;
+  }
+
+  .export {
+    margin-top: 2rem;
+  }
+
+  .export h3 {
+    margin-bottom: 1rem;
+  }
+
+  .export button {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #export-preview {
+    background: var(--color-background);
+    padding: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border, #ccc);
+    overflow: auto;
+    font-size: 0.875rem;
+    max-height: 300px;
+  }
+
+  @media (width <= 768px) {
+    .results {
+      grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script define:vars={{ CURRENT_WIDTHS, DEVICE_WIDTHS }}>
+  let generatedWidths = []
+
+  function generateWidths() {
+    const startWidth = parseInt(document.getElementById("startWidth").value)
+    const multiplier = parseFloat(document.getElementById("multiplier").value)
+    const endWidth = parseInt(document.getElementById("endWidth").value)
+    const snapThreshold = parseInt(
+      document.getElementById("snapThreshold").value
+    )
+
+    // Generate widths backwards from endWidth to ensure we hit the target
+    const widthsReversed = []
+    const snappedIndices = new Set()
+    let current = endWidth
+
+    while (current >= startWidth) {
+      let width = Math.round(current)
+
+      // Snap to device widths if within relative threshold
+      if (snapThreshold > 0) {
+        for (const deviceWidth of DEVICE_WIDTHS) {
+          const relativeError = Math.abs(width - deviceWidth) / deviceWidth
+          const thresholdDecimal = snapThreshold / 100
+          if (relativeError <= thresholdDecimal) {
+            width = deviceWidth
+            break
+          }
+        }
+      }
+
+      // Avoid duplicates
+      if (
+        widthsReversed.length === 0 ||
+        width < widthsReversed[widthsReversed.length - 1]
+      ) {
+        widthsReversed.push(width)
+      }
+
+      current /= multiplier
+    }
+
+    // Reverse to get ascending order and mark snapped indices
+    const widths = widthsReversed.reverse()
+
+    // Re-calculate snapped indices after reversal
+    widths.forEach((width, i) => {
+      if (snapThreshold > 0) {
+        for (const deviceWidth of DEVICE_WIDTHS) {
+          const relativeError = Math.abs(width - deviceWidth) / deviceWidth
+          const thresholdDecimal = snapThreshold / 100
+          if (relativeError <= thresholdDecimal && width === deviceWidth) {
+            snappedIndices.add(i)
+            break
+          }
+        }
+      }
+    })
+
+    generatedWidths = widths
+    displayResults(widths, snappedIndices)
+    calculateStats(widths, snappedIndices)
+    updateExport(widths)
+  }
+
+  function displayResults(widths, snappedIndices) {
+    const container = document.getElementById("generatedWidths")
+    const count = document.getElementById("generatedCount")
+    const snappedCount = document.getElementById("snappedCount")
+
+    count.textContent = `(${widths.length})`
+
+    const numSnapped = snappedIndices.size
+    snappedCount.textContent =
+      numSnapped > 0
+        ? `${numSnapped} snapped (${((numSnapped / widths.length) * 100).toFixed(1)}%)`
+        : "None snapped"
+
+    container.innerHTML = widths
+      .map((width, i) => {
+        const next = widths[i + 1]
+        const ratio = next ? (next / width).toFixed(3) : ""
+        const isSnapped = snappedIndices.has(i)
+
+        return `
+        <div class="width-item ${isSnapped ? "snapped" : ""}">
+          <span class="width-value">${width}w</span>
+          ${ratio ? `<span class="ratio">→ ×${ratio}</span>` : ""}
+        </div>
+      `
+      })
+      .join("")
+  }
+
+  function calculateStats(widths, snappedIndices) {
+    const container = document.getElementById("stats")
+
+    // Calculate ratios
+    const ratios = []
+    for (let i = 0; i < widths.length - 1; i++) {
+      ratios.push(widths[i + 1] / widths[i])
+    }
+
+    const avgRatio = ratios.reduce((a, b) => a + b, 0) / ratios.length
+    const minRatio = Math.min(...ratios)
+    const maxRatio = Math.max(...ratios)
+    const stdDev = Math.sqrt(
+      ratios.reduce((sum, r) => sum + Math.pow(r - avgRatio, 2), 0) /
+        ratios.length
+    )
+
+    // File size estimates (assuming file size ∝ width²)
+    const fileSizeRatios = ratios.map((r) => r * r)
+    const avgFileSizeRatio =
+      fileSizeRatios.reduce((a, b) => a + b, 0) / fileSizeRatios.length
+
+    // Coverage analysis
+    const minWidth = widths[0]
+    const maxWidth = widths[widths.length - 1]
+    const numSnapped = snappedIndices.size
+
+    const stats = [
+      { label: "Count", value: widths.length },
+      {
+        label: "Snapped",
+        value: `${numSnapped} (${((numSnapped / widths.length) * 100).toFixed(1)}%)`,
+      },
+      { label: "Range", value: `${minWidth}–${maxWidth}px` },
+      { label: "Avg Ratio", value: avgRatio.toFixed(3) },
+      { label: "Min Ratio", value: minRatio.toFixed(3) },
+      { label: "Max Ratio", value: maxRatio.toFixed(3) },
+      { label: "Std Dev", value: stdDev.toFixed(3) },
+      {
+        label: "Avg File Size Ratio",
+        value: `${avgFileSizeRatio.toFixed(2)}x`,
+      },
+    ]
+
+    container.innerHTML = stats
+      .map(
+        (stat) => `
+        <div class="stat-item">
+          <div class="stat-label">${stat.label}</div>
+          <div class="stat-value">${stat.value}</div>
+        </div>
+      `
+      )
+      .join("")
+  }
+
+  function updateExport(widths) {
+    const preview = document.getElementById("export-preview")
+    preview.textContent = formatAsTypescript(widths)
+  }
+
+  function formatAsArray(widths) {
+    return `[${widths.join(", ")}]`
+  }
+
+  function formatAsTypescript(widths) {
+    // Format with nice line breaks every 10 items
+    const lines = []
+    for (let i = 0; i < widths.length; i += 10) {
+      const chunk = widths.slice(i, i + 10)
+      lines.push(`  ${chunk.join(", ")},`)
+    }
+
+    return `const STANDARD_WIDTHS = [\n${lines.join("\n")}\n]`
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      // Visual feedback
+      const button = event.target
+      const originalText = button.textContent
+      button.textContent = "✓ Copied!"
+      setTimeout(() => {
+        button.textContent = originalText
+      }, 2000)
+    })
+  }
+
+  // Event listeners
+  document.getElementById("calculate").addEventListener("click", generateWidths)
+
+  document
+    .getElementById("copyArray")
+    .addEventListener("click", () =>
+      copyToClipboard(formatAsArray(generatedWidths))
+    )
+
+  document
+    .getElementById("copyTypescript")
+    .addEventListener("click", () =>
+      copyToClipboard(formatAsTypescript(generatedWidths))
+    )
+
+  // Generate initial results
+  generateWidths()
+</script>
