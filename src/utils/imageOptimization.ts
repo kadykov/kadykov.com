@@ -14,7 +14,7 @@
  * identical cached images that can be reused.
  */
 
-import { getImage } from "astro:assets"
+import { getImage, inferRemoteSize } from "astro:assets"
 
 export interface OptimizedImageConfig {
   src: string
@@ -144,6 +144,21 @@ export async function generateOptimizedImage(
   } = config
 
   try {
+    // If originalWidth is not provided, infer it from the image source
+    // This works for both local and remote images without triggering image processing
+    let imageOriginalWidth = originalWidth
+    if (!imageOriginalWidth) {
+      try {
+        const dimensions = await inferRemoteSize(src)
+        imageOriginalWidth = dimensions.width
+      } catch (error) {
+        console.warn(
+          `Failed to infer dimensions for ${src}, proceeding without width filtering:`,
+          error
+        )
+      }
+    }
+
     // Build getImage parameters
     const imageParams: any = {
       src,
@@ -169,8 +184,8 @@ export async function generateOptimizedImage(
     // CRITICAL: Filter out widths larger than the original image
     // This prevents Astro from generating duplicate full-resolution images
     // with different cache keys when requested width exceeds original size
-    if (originalWidth) {
-      targetWidths = targetWidths.filter((w) => w <= originalWidth)
+    if (imageOriginalWidth) {
+      targetWidths = targetWidths.filter((w) => w <= imageOriginalWidth)
     }
 
     imageParams.widths = targetWidths
