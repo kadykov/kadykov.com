@@ -148,16 +148,18 @@ export async function generateOptimizedImage(
 
     // Determine which widths to generate
     if (layout === "full-width") {
-      // Full-width: use Astro's default responsive widths (no filtering)
-      // Don't specify widths - let Astro generate the full range
+      // Full-width: use full range of standard widths (no DPR filtering)
+      imageParams.widths = STANDARD_WIDTHS
     } else if (widths) {
       // Legacy support: if widths explicitly provided, use them as-is
       imageParams.widths = widths
     } else if (maxWidth) {
       // Smart filtering: generate widths suitable for 1x-3x DPR
       imageParams.widths = filterWidthsForDisplay(maxWidth, STANDARD_WIDTHS)
+    } else {
+      // No constraints: use full standard width range
+      imageParams.widths = STANDARD_WIDTHS
     }
-    // else: no width constraints, use Astro's defaults
 
     if (quality) {
       imageParams.quality = quality
