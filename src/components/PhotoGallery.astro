@@ -1,7 +1,7 @@
 ---
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
-import { getImage } from "astro:assets"
-import { classifyPhoto, getImageDimensions } from "../utils/photoClassification" // Import classification utilities
+import { generateOptimizedImage } from "../utils/imageOptimization"
+import { classifyPhoto, getImageDimensions } from "../utils/photoClassification"
 
 interface Props {
   photos: PhotoManifestItem[] // Photos for the current paginated view (thumbnails)
@@ -34,46 +34,31 @@ const photoSwipeJsonData = await Promise.all(
     const metadata = photoMetadata.get(photo.slug)
     const displayWidth = metadata?.dimensions.displayWidth ?? 640 // Fallback if not found
 
-    // Generate AVIF srcset using Astro's full-width layout (for lightbox full-screen viewing)
-    let pswpSrcset = ""
-    try {
-      const avifLightboxImages = await getImage({
-        src: photoSrc,
-        format: "avif",
-        layout: "full-width", // Let Astro generate appropriate srcset for full-width display
-        inferSize: true, // Infer original dimensions to maintain perfect aspect ratio
-      })
-      pswpSrcset = avifLightboxImages?.srcSet?.attribute || ""
-    } catch (e) {
-      // console.error(`Failed to generate AVIF srcset for ${photoSrc}:`, e);
-      // pswpSrcset will remain empty, PhotoSwipe will use the main 'src'
-    }
+    // Generate AVIF srcset using full-width layout (for lightbox full-screen viewing)
+    const lightboxImage = await generateOptimizedImage({
+      src: photoSrc,
+      layout: "full-width",
+    })
+    const pswpSrcset = lightboxImage.srcset
 
-    // Generate AVIF placeholder/thumbnail using constrained layout
-    // This will share cache with the full-width layout at matching widths
-    let msrcUrl = photoSrc // Default to original if placeholder fails
-    let thumbnailSrcset = "" // Srcset for the gallery thumbnail
-    try {
-      const placeholderImage = await getImage({
-        src: photoSrc,
-        format: "avif",
-        layout: "constrained", // Generate responsive srcset
-        inferSize: true, // Maintain perfect aspect ratio - shares cache with full-width!
-        widths: [displayWidth, 750, 828, 1080, 1280], // Limit to reasonable sizes for thumbnails
-      })
-      if (placeholderImage?.src) {
-        msrcUrl = placeholderImage.src // This is the smallest image in the srcset (displayWidth)
-      }
-      thumbnailSrcset = placeholderImage?.srcSet?.attribute || ""
-    } catch (e) {
-      // console.error(`Failed to generate AVIF placeholder for ${photoSrc}:`, e);
-    }
+    // Generate AVIF thumbnail using constrained layout
+    // The utility will automatically filter to appropriate widths for 1x-3x DPR
+    const thumbnailImage = await generateOptimizedImage({
+      src: photoSrc,
+      maxWidth: displayWidth, // Automatically generates widths for 1x-3x DPR
+    })
+    const msrcUrl = thumbnailImage.src
+    const thumbnailSrcset = thumbnailImage.srcset
+    const thumbnailWidth = thumbnailImage.width
+    const thumbnailHeight = thumbnailImage.height
 
     return {
       downloadUrl: photoSrc, // Original JPEG for download
       src: photoSrc, // Original JPEG as fallback (for middle-click and when PhotoSwipe fails)
       msrc: msrcUrl, // Small AVIF placeholder (reuses preview width)
       thumbnailSrcset, // Srcset for responsive gallery thumbnail
+      thumbnailWidth, // Intrinsic width for lazy loading
+      thumbnailHeight, // Intrinsic height for lazy loading
       w: photo.width, // PhotoSwipe expects 'w' (original dimensions)
       h: photo.height, // PhotoSwipe expects 'h' (original dimensions)
       srcset: pswpSrcset, // AVIF srcset for PhotoSwipe
@@ -149,13 +134,14 @@ function getRandomRotation(maxDegrees: number = 1): number {
         // Get pre-generated thumbnail data
         const thumbnailSrc = pswpEntryForThisPhoto?.msrc || photoSrc
         const thumbnailSrcset = pswpEntryForThisPhoto?.thumbnailSrcset || ""
+        const thumbnailWidth = pswpEntryForThisPhoto?.thumbnailWidth
+        const thumbnailHeight = pswpEntryForThisPhoto?.thumbnailHeight
 
         // Retrieve pre-calculated classification and dimensions for this photo
         const metadata = photoMetadata.get(photo.slug)
         const captionClass =
           metadata?.classification.captionClass ?? "caption-bottom"
         const gridClass = metadata?.classification.gridClass ?? "grid-landscape"
-        const displayWidth = metadata?.dimensions.displayWidth ?? 640
         const sizesAttr = metadata?.dimensions.sizesAttr ?? "100vw"
 
         // Generate a random rotation for this card (build-time, not runtime)
@@ -186,6 +172,8 @@ function getRandomRotation(maxDegrees: number = 1): number {
                   src={thumbnailSrc}
                   srcset={thumbnailSrcset}
                   sizes={sizesAttr}
+                  width={thumbnailWidth}
+                  height={thumbnailHeight}
                   alt={altText}
                   loading="lazy"
                   decoding="async"

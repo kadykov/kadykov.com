@@ -1,19 +1,14 @@
 ---
 // src/components/OptimizedImage.astro
-// Minimal wrapper around Astro's Image component that:
-// - Sets AVIF format globally
-// - Sets constrained layout globally
-// - Uses inferSize to maintain perfect aspect ratios and share cache with full-width layouts
-// - Passes through custom sizes attribute from our grid calculations
-import { Image } from "astro:assets"
+// Wrapper component for optimized images using centralized utility.
+// This ensures cache sharing with PhotoGallery and all other image components.
+import { generateOptimizedImage } from "../utils/imageOptimization"
 
 interface Props {
   src: string
   alt: string
-  width?: number // Optional: target display width (used for widths array)
-  height?: number // DEPRECATED: Not used - aspect ratio is inferred automatically
-  originalWidth?: number // DEPRECATED: Not needed with inferSize
-  originalHeight?: number // DEPRECATED: Not needed with inferSize
+  width?: number // Optional: maximum width constraint
+  widths?: number[] // Optional: specific widths for srcset
   sizesAttr?: string // Optional: custom sizes attribute (from getImageDimensions)
   class?: string
   loading?: "lazy" | "eager"
@@ -24,7 +19,8 @@ interface Props {
 const {
   src,
   alt,
-  width: targetWidth,
+  width: maxWidth,
+  widths,
   sizesAttr,
   class: className,
   loading = "lazy",
@@ -32,27 +28,24 @@ const {
   quality,
 } = Astro.props
 
-// Build props for Image component
-// Key insight: Don't specify width/height, use inferSize instead
-// This ensures perfect aspect ratio and cache sharing with full-width layouts
-const imageProps: any = {
+// Use centralized image optimization utility
+// This ensures we generate the same images as PhotoGallery
+const optimized = await generateOptimizedImage({
   src,
-  alt,
-  format: "avif",
-  layout: "constrained",
-  inferSize: true, // Automatically infer dimensions and maintain perfect aspect ratio
-  loading,
-  decoding,
-  class: className,
-}
-
-// If a target width is provided, use it to constrain the srcset
-if (targetWidth) {
-  imageProps.widths = [targetWidth, 750, 828, 1080, 1280]
-}
-
-if (sizesAttr) imageProps.sizes = sizesAttr
-if (quality) imageProps.quality = quality
+  maxWidth,
+  widths,
+  quality,
+})
 ---
 
-<Image {...imageProps} />
+<img
+  src={optimized.src}
+  srcset={optimized.srcset}
+  sizes={sizesAttr}
+  width={optimized.width}
+  height={optimized.height}
+  alt={alt}
+  loading={loading}
+  decoding={decoding}
+  class={className}
+/>
