@@ -213,9 +213,30 @@ export async function generateOptimizedImage(
       displayHeight = Math.round(displayWidth * aspectRatio)
     }
 
+    // Extract the smallest image URL from srcset
+    // Astro's result.src might not be the smallest - it's often a default/middle size
+    let smallestSrc = result.src
+    const srcsetAttr = result.srcSet?.attribute || ""
+
+    if (result.srcSet?.values && result.srcSet.values.length > 0) {
+      // Use Astro's structured srcSet.values array instead of parsing
+      // Each value has: { url: string, descriptor: string } where descriptor is like "640w"
+      const srcsetValues = result.srcSet.values.map((entry: any) => {
+        const widthMatch = entry.descriptor?.match(/^(\d+)w$/)
+        const width = widthMatch ? parseInt(widthMatch[1], 10) : Infinity
+        return { url: entry.url, width }
+      })
+
+      // Find the smallest width
+      const smallest = srcsetValues.reduce((min, curr) =>
+        curr.width < min.width ? curr : min
+      )
+      smallestSrc = smallest.url
+    }
+
     return {
-      src: result.src,
-      srcset: result.srcSet?.attribute || "",
+      src: smallestSrc, // Always return the smallest image from srcset
+      srcset: srcsetAttr,
       width: displayWidth,
       height: displayHeight,
     }
