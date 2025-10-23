@@ -8,7 +8,7 @@
  * - Always use inferSize: true (no explicit width/height)
  * - Always use layout: "constrained" for responsive images
  * - Always use same format (AVIF)
- * - Use widths parameter to control srcset generation
+ * - Use maxWidth to control automatic DPR-aware srcset generation
  *
  * This ensures that PhotoGallery, OptimizedImage, and MarkdocImage all generate
  * identical cached images that can be reused.
@@ -20,7 +20,6 @@ export interface OptimizedImageConfig {
   src: string
   maxWidth?: number // Maximum display width (1x DPR) - will generate up to 3x for high-DPI
   originalWidth?: number // Original image width - used to prevent requesting widths larger than source
-  widths?: number[] // DEPRECATED: Use maxWidth instead for automatic DPR-aware filtering
   quality?: number // Image quality (default: Astro's default)
   layout?: "constrained" | "full-width" // Layout type (default: "constrained")
 }
@@ -140,7 +139,6 @@ export async function generateOptimizedImage(
     src,
     maxWidth,
     originalWidth,
-    widths,
     quality,
     layout = "constrained",
   } = config
@@ -157,10 +155,7 @@ export async function generateOptimizedImage(
     // Start with the appropriate width set based on layout and parameters
     let targetWidths: number[]
 
-    if (widths) {
-      // Legacy support: if widths explicitly provided, use them as-is
-      targetWidths = widths
-    } else if (layout === "full-width") {
+    if (layout === "full-width") {
       // Full-width: use full range of standard widths (no DPR filtering)
       targetWidths = STANDARD_WIDTHS
     } else if (maxWidth) {

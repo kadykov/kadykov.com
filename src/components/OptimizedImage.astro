@@ -8,7 +8,6 @@ interface Props {
   src: string
   alt: string
   width?: number // Optional: maximum width constraint
-  widths?: number[] // Optional: specific widths for srcset
   sizesAttr?: string // Optional: custom sizes attribute (from getImageDimensions)
   class?: string
   loading?: "lazy" | "eager"
@@ -20,7 +19,6 @@ const {
   src,
   alt,
   width: maxWidth,
-  widths,
   sizesAttr,
   class: className,
   loading = "lazy",
@@ -33,7 +31,6 @@ const {
 const optimized = await generateOptimizedImage({
   src,
   maxWidth,
-  widths,
   quality,
 })
 ---
