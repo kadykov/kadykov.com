@@ -3,18 +3,17 @@
 // Minimal wrapper around Astro's Image component that:
 // - Sets AVIF format globally
 // - Sets constrained layout globally
-// - Infers remote image dimensions and scales them to target width
+// - Uses inferSize to maintain perfect aspect ratios and share cache with full-width layouts
 // - Passes through custom sizes attribute from our grid calculations
 import { Image } from "astro:assets"
-import { inferRemoteSize } from "astro:assets"
 
 interface Props {
   src: string
   alt: string
-  width?: number // Optional: target display width
-  height?: number // Optional: target display height
-  originalWidth?: number // Optional: original image width (for aspect ratio calculation when provided)
-  originalHeight?: number // Optional: original image height (for aspect ratio calculation when provided)
+  width?: number // Optional: target display width (used for widths array)
+  height?: number // DEPRECATED: Not used - aspect ratio is inferred automatically
+  originalWidth?: number // DEPRECATED: Not needed with inferSize
+  originalHeight?: number // DEPRECATED: Not needed with inferSize
   sizesAttr?: string // Optional: custom sizes attribute (from getImageDimensions)
   class?: string
   loading?: "lazy" | "eager"
@@ -26,9 +25,6 @@ const {
   src,
   alt,
   width: targetWidth,
-  height: targetHeight,
-  originalWidth,
-  originalHeight,
   sizesAttr,
   class: className,
   loading = "lazy",
@@ -36,43 +32,27 @@ const {
   quality,
 } = Astro.props
 
-// Determine actual dimensions to use
-let finalWidth: number | undefined
-let finalHeight: number | undefined
-
-if (originalWidth && originalHeight) {
-  // If original dimensions are provided, use them to calculate display dimensions
-  finalWidth = targetWidth ?? originalWidth
-  finalHeight =
-    targetHeight ?? Math.round((originalHeight / originalWidth) * finalWidth)
-} else if (targetWidth) {
-  // If only target width is provided, infer original dimensions and scale
-  const inferred = await inferRemoteSize(src)
-  finalWidth = targetWidth
-  finalHeight =
-    targetHeight ?? Math.round((inferred.height / inferred.width) * targetWidth)
-} else {
-  // No dimensions provided, let Astro infer everything
-  finalWidth = undefined
-  finalHeight = undefined
-}
-
-// Build props conditionally
+// Build props for Image component
+// Key insight: Don't specify width/height, use inferSize instead
+// This ensures perfect aspect ratio and cache sharing with full-width layouts
 const imageProps: any = {
   src,
   alt,
   format: "avif",
   layout: "constrained",
+  inferSize: true, // Automatically infer dimensions and maintain perfect aspect ratio
   loading,
   decoding,
   class: className,
 }
 
-if (finalWidth) imageProps.width = finalWidth
-if (finalHeight) imageProps.height = finalHeight
+// If a target width is provided, use it to constrain the srcset
+if (targetWidth) {
+  imageProps.widths = [targetWidth, 750, 828, 1080, 1280]
+}
+
 if (sizesAttr) imageProps.sizes = sizesAttr
 if (quality) imageProps.quality = quality
-if (!finalWidth || !finalHeight) imageProps.inferSize = true
 ---
 
 <Image {...imageProps} />
