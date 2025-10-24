@@ -171,6 +171,17 @@ export async function generateOptimizedImage(
     // with different cache keys when requested width exceeds original size
     if (imageOriginalWidth) {
       targetWidths = targetWidths.filter((w) => w <= imageOriginalWidth)
+
+      // For full-width layout (lightbox), ensure we include the original width
+      // if it's not already in the array. This allows users to view images
+      // at their native resolution.
+      if (
+        layout === "full-width" &&
+        !targetWidths.includes(imageOriginalWidth)
+      ) {
+        targetWidths.push(imageOriginalWidth)
+        targetWidths.sort((a, b) => a - b)
+      }
     }
 
     imageParams.widths = targetWidths
