@@ -37,26 +37,11 @@ export interface OptimizedImageResult {
  * These widths are chosen to cover common device sizes with ~1.2x increments,
  * while avoiding excessive numbers of variants.
  *
- * They range from small thumbnails (200w) to large 4K displays (3840w).
+ * They range from small thumbnails (200w) to large 6K displays (6144w).
  */
 const STANDARD_WIDTHS = [
-  200, //
-  240,
-  288,
-  350,
-  420,
-  500,
-  600,
-  720, // HD standard
-  900,
-  1080, // Full HD standard
-  1280, // 720p
-  1600,
-  1920, // Full HD
-  2222,
-  2560, // WQXGA
-  3200, // QHD+
-  3840, // 4K UHD
+  200, 240, 288, 350, 420, 500, 600, 720, 900, 1080, 1280, 1600, 1920, 2400,
+  2880, 3500, 4096, 5120, 6144,
 ]
 
 /**
@@ -99,7 +84,7 @@ function filterWidthsForDisplay(
     filtered.push(...closestAbove.slice(0, 3 - filtered.length))
   }
 
-  return [...new Set(filtered)].sort((a, b) => a - b)
+  return Array.from(new Set(filtered)).sort((a, b) => a - b)
 }
 
 /**

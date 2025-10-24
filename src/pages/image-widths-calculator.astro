@@ -9,8 +9,8 @@ const frontmatter = {
 
 // Current widths from imageOptimization.ts
 const CURRENT_WIDTHS = [
-  200, 240, 288, 350, 420, 500, 600, 720, 900, 1080, 1280, 1600, 1920, 2222,
-  2560, 3200, 3840,
+  200, 240, 288, 350, 420, 500, 600, 720, 900, 1080, 1280, 1600, 1920, 2400,
+  2880, 3500, 4096, 5120, 6144, 7680, 8192,
 ]
 
 // Common device widths that might be good snap points
@@ -26,18 +26,27 @@ const DEVICE_WIDTHS = [
   900,
   960, // Older horizontal phones
   1080, // iPhone 6-8 Plus
+  1200,
   1280, // 720p
   1440, // 1440p
   1600, // 1600p
   1668, // Various iPads
   1920, // 1080p
   2048, // QXGA
+  2160, // 4K UHD
+  2400, // WUXGA
   2560, // WQXGA
+  2880, // 5K
   3200, // QHD+
   3840, // 4K
+  4096, // DCI 4K
+  4320, // 8K UHD
   4480, // 4.5K
   5120, // 5K
   6016, // 6K
+  6144, // 6K+
+  7680, // 8K
+  8192, // 8K+
 ]
 ---
 
@@ -136,7 +145,7 @@ const DEVICE_WIDTHS = [
               id="multiplier"
               min="1.1"
               max="2.0"
-              value="1.25"
+              value="1.2"
               step="0.01"
             />
           </label>
@@ -151,7 +160,7 @@ const DEVICE_WIDTHS = [
               id="endWidth"
               min="1000"
               max="10000"
-              value="3840"
+              value="8192"
               step="100"
             />
           </label>
