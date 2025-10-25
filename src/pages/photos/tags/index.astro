@@ -1,29 +1,24 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
-import { fetchPhotoManifest } from "../../../utils/photoData"
+import { getCollection } from "astro:content"
 import Hero from "../../../components/Hero.astro"
 
 let uniqueTags: string[] = []
 
-try {
-  const allPhotos: PhotoManifestItem[] = await fetchPhotoManifest()
+// Fetch all photos from the collection (cached by Astro)
+const photoEntries = await getCollection("photos")
+const allPhotos: PhotoManifestItem[] = photoEntries.map(
+  (entry) => entry.data as PhotoManifestItem
+)
 
-  const tagSet = new Set<string>()
-  allPhotos.forEach((photo) => {
-    if (photo.tags && photo.tags.length > 0) {
-      photo.tags.forEach((tag) => tagSet.add(tag.toLowerCase()))
-    }
-  })
-  uniqueTags = Array.from(tagSet).sort((a, b) => a.localeCompare(b))
-} catch (e) {
-  const error = e as Error
-  // fetchPhotoManifest already logs errors. We just need to ensure build fails.
-  console.error(
-    `Failed to load photo manifest for /photos/tags/index.astro: ${error.message}`
-  )
-  throw error // Re-throw to fail the build
-}
+const tagSet = new Set<string>()
+allPhotos.forEach((photo) => {
+  if (photo.tags && photo.tags.length > 0) {
+    photo.tags.forEach((tag) => tagSet.add(tag.toLowerCase()))
+  }
+})
+uniqueTags = Array.from(tagSet).sort((a, b) => a.localeCompare(b))
 
 const frontmatter = {
   title: "Photo tags",

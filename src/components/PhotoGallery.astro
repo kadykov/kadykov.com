@@ -37,6 +37,8 @@ const photoSwipeJsonData = await Promise.all(
     // Generate AVIF srcset using full-width layout (for lightbox full-screen viewing)
     const lightboxImage = await generateOptimizedImage({
       src: photoSrc,
+      width: photo.width, // Pass dimensions to avoid fetching remote image
+      height: photo.height,
       layout: "full-width",
       originalWidth: photo.width, // Prevent generating widths larger than source
     })
@@ -46,6 +48,8 @@ const photoSwipeJsonData = await Promise.all(
     // The utility will automatically filter to appropriate widths for 1x-3x DPR
     const thumbnailImage = await generateOptimizedImage({
       src: photoSrc,
+      width: photo.width, // Pass dimensions to avoid fetching remote image
+      height: photo.height,
       maxWidth: displayWidth, // Automatically generates widths for 1x-3x DPR
       originalWidth: photo.width, // Prevent generating widths larger than source
     })

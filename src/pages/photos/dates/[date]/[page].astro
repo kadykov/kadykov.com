@@ -1,13 +1,9 @@
 ---
 import PhotoIndexPageLayout from "../../../../layouts/PhotoIndexPageLayout.astro"
 import Hero from "../../../../components/Hero.astro"
-import {
-  photoManifestSchema,
-  type PhotoManifestItem,
-} from "../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import type { GetStaticPathsResult, PaginateFunction, Page } from "astro"
-
-// const manifestUrl = 'https://share.kadykov.com/image_manifest.json'; // Moved inside getStaticPaths
 
 interface Props {
   page: Page<PhotoManifestItem> // items will have slugs from manifest
@@ -21,32 +17,12 @@ export async function getStaticPaths({
   paginate: PaginateFunction
 }): Promise<GetStaticPathsResult> {
   const PAGE_SIZE = 24 // Define page size inside getStaticPaths
-  const manifestUrl = "https://share.kadykov.com/image_manifest.json" // Defined inside function
-  let allPhotos: PhotoManifestItem[] = []
-  try {
-    const response = await fetch(manifestUrl)
-    if (!response.ok)
-      throw new Error(`Failed to fetch manifest: ${response.statusText}`)
-    const jsonData = await response.json()
-    const parsed = photoManifestSchema.safeParse(jsonData)
-    if (!parsed.success) {
-      console.error(
-        "Failed to parse photo manifest for [date] page:",
-        parsed.error.flatten()
-      )
-      throw new Error(
-        "Failed to parse photo manifest for [date] page: " +
-          parsed.error.toString()
-      )
-    }
-    allPhotos = parsed.data
-  } catch (e) {
-    const error = e as Error
-    console.error(
-      `Error processing photo manifest for [date] page: ${error.message}`
-    )
-    throw error // Fail fast
-  }
+
+  // Fetch all photos from the collection (cached by Astro)
+  const photoEntries = await getCollection("photos")
+  const allPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
 
   const photosByDate = new Map<string, PhotoManifestItem[]>()
   allPhotos.forEach((photo) => {

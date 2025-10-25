@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
-import { photoManifestSchema } from "../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 
-const manifestUrl = "https://share.kadykov.com/image_manifest.json"
 let uniqueDates: string[] = [] // Stores dates as YYYY-MM-DD strings
 
 // Group dates by year and month
@@ -29,60 +29,42 @@ const monthNames = [
   "December",
 ]
 
-try {
-  const response = await fetch(manifestUrl)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch manifest: ${response.statusText}`)
+// Fetch all photos from the collection (cached by Astro)
+const photoEntries = await getCollection("photos")
+const allPhotos: PhotoManifestItem[] = photoEntries.map(
+  (entry) => entry.data as PhotoManifestItem
+)
+
+const dateSet = new Set<string>()
+allPhotos.forEach((photo) => {
+  let dateStr: string | null = null
+  if (photo.dateTaken) {
+    dateStr = photo.dateTaken.substring(0, 10) // YYYY-MM-DD from ISO string
+  } else if (photo.year && photo.month && photo.day) {
+    // Pad month and day with leading zeros if necessary
+    const monthStr = String(photo.month).padStart(2, "0")
+    const dayStr = String(photo.day).padStart(2, "0")
+    dateStr = `${photo.year}-${monthStr}-${dayStr}`
   }
-  const jsonData = await response.json()
-  const parsed = photoManifestSchema.safeParse(jsonData)
-  if (!parsed.success) {
-    console.error(
-      "Failed to parse photo manifest for dates index page:",
-      parsed.error.flatten()
-    )
-    throw new Error(
-      "Failed to parse photo manifest for dates index page: " +
-        parsed.error.toString()
-    )
+  if (dateStr) {
+    dateSet.add(dateStr)
   }
-  const allPhotos = parsed.data
+})
+uniqueDates = Array.from(dateSet).sort((a, b) => b.localeCompare(a)) // Sort YYYY-MM-DD strings, recent first
 
-  const dateSet = new Set<string>()
-  allPhotos.forEach((photo) => {
-    let dateStr: string | null = null
-    if (photo.dateTaken) {
-      dateStr = photo.dateTaken.substring(0, 10) // YYYY-MM-DD from ISO string
-    } else if (photo.year && photo.month && photo.day) {
-      // Pad month and day with leading zeros if necessary
-      const monthStr = String(photo.month).padStart(2, "0")
-      const dayStr = String(photo.day).padStart(2, "0")
-      dateStr = `${photo.year}-${monthStr}-${dayStr}`
-    }
-    if (dateStr) {
-      dateSet.add(dateStr)
-    }
-  })
-  uniqueDates = Array.from(dateSet).sort((a, b) => b.localeCompare(a)) // Sort YYYY-MM-DD strings, recent first
+uniqueDates.forEach((dateStr) => {
+  const [year, monthNumStr] = dateStr.split("-")
+  const monthIndex = parseInt(monthNumStr, 10) - 1
+  const monthName = monthNames[monthIndex]
 
-  uniqueDates.forEach((dateStr) => {
-    const [year, monthNumStr] = dateStr.split("-")
-    const monthIndex = parseInt(monthNumStr, 10) - 1
-    const monthName = monthNames[monthIndex]
-
-    if (!groupedDates[year]) {
-      groupedDates[year] = {}
-    }
-    if (!groupedDates[year][monthName]) {
-      groupedDates[year][monthName] = []
-    }
-    groupedDates[year][monthName].push(dateStr)
-  })
-} catch (e) {
-  const error = e as Error
-  console.error(`Error processing photo dates: ${error.message}`)
-  throw error // Fail fast
-}
+  if (!groupedDates[year]) {
+    groupedDates[year] = {}
+  }
+  if (!groupedDates[year][monthName]) {
+    groupedDates[year][monthName] = []
+  }
+  groupedDates[year][monthName].push(dateStr)
+})
 
 const frontmatter = {
   title: "Photo dates",

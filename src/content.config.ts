@@ -27,8 +27,85 @@ const pagesCollection = defineCollection({
   }),
 })
 
+// Photos data collection - fetches from remote manifest at build time
+const photosCollection = defineCollection({
+  loader: async () => {
+    const manifestUrl = "https://share.kadykov.com/image_manifest.json"
+    console.log("Fetching photo manifest from:", manifestUrl)
+
+    try {
+      const response = await fetch(manifestUrl)
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch manifest from ${manifestUrl}: ${response.statusText} (status ${response.status})`
+        )
+      }
+
+      const jsonData = await response.json()
+      console.log(`Loaded ${jsonData.length} photos from manifest`)
+
+      // Return entries with id and data
+      // The slug field is used as the unique id for each photo
+      return jsonData.map((photo: any) => ({
+        id: photo.slug,
+        ...photo,
+      }))
+    } catch (error) {
+      console.error("Failed to load photo manifest:", error)
+      throw error
+    }
+  },
+  schema: z.object({
+    relativePath: z
+      .string()
+      .regex(
+        /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
+        "Invalid relativePath format"
+      ),
+    filename: z.string(),
+    year: z.number().int().min(1900).max(2100).nullable(),
+    month: z.number().int().min(1).max(12).nullable(),
+    day: z.number().int().min(1).max(31).nullable(),
+    width: z.number().int().min(1),
+    height: z.number().int().min(1),
+    dateTaken: z.preprocess(
+      (val) => (val === "" ? null : val),
+      z
+        .string({
+          invalid_type_error:
+            "dateTaken must be a string or null (or an empty string which is converted to null).",
+        })
+        .refine(
+          (str) => {
+            const date = new globalThis.Date(str)
+            return !isNaN(date.getTime())
+          },
+          {
+            message:
+              "dateTaken string is not a valid parsable date by new Date() or results in NaN.",
+          }
+        )
+        .nullable()
+    ),
+    title: z.string().nullable(),
+    description: z.string().nullable(),
+    tags: z.array(z.string()).nullable(),
+    cameraModel: z.string().nullable(),
+    lensModel: z.string().nullable(),
+    flash: z.boolean().nullable(),
+    focalLength: z.number().nullable(),
+    apertureValue: z.number().nullable(),
+    isoSpeedRatings: z.number().int().nullable(),
+    exposureTime: z.number().nullable(),
+    creator: z.string().nullable(),
+    copyright: z.string().nullable(),
+    slug: z.string(),
+  }),
+})
+
 // Export a single `collections` object to register your collection(s)
 export const collections = {
   blog: postsCollection,
   pages: pagesCollection,
+  photos: photosCollection,
 }

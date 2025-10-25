@@ -18,6 +18,8 @@ import { getImage, inferRemoteSize } from "astro:assets"
 
 export interface OptimizedImageConfig {
   src: string
+  width?: number // Original image width - if provided, skips inferSize
+  height?: number // Original image height - if provided, skips inferSize
   maxWidth?: number // Maximum display width (1x DPR) - will generate up to 3x for high-DPI
   originalWidth?: number // Original image width - used to prevent requesting widths larger than source
   quality?: number // Image quality (default: Astro's default)
@@ -122,6 +124,8 @@ export async function generateOptimizedImage(
 ): Promise<OptimizedImageResult> {
   const {
     src,
+    width,
+    height,
     maxWidth,
     originalWidth,
     quality,
@@ -129,9 +133,9 @@ export async function generateOptimizedImage(
   } = config
 
   try {
-    // If originalWidth is not provided, infer it from the image source
-    // This works for both local and remote images without triggering image processing
-    let imageOriginalWidth = originalWidth
+    // Determine the original image width for filtering purposes
+    // Priority: width param > originalWidth param > infer from remote
+    let imageOriginalWidth = width || originalWidth
     if (!imageOriginalWidth) {
       try {
         const dimensions = await inferRemoteSize(src)
@@ -149,7 +153,15 @@ export async function generateOptimizedImage(
       src,
       format: "avif",
       layout,
-      inferSize: true, // Critical: maintains perfect aspect ratio and enables cache sharing
+    }
+
+    // If both width and height are provided, use them explicitly to avoid fetching the remote image
+    // Otherwise, use inferSize which will fetch the image to get dimensions
+    if (width && height) {
+      imageParams.width = width
+      imageParams.height = height
+    } else {
+      imageParams.inferSize = true // Falls back to inferring (requires fetching)
     }
 
     // Start with the appropriate width set based on layout and parameters

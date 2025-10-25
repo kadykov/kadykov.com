@@ -2,7 +2,7 @@
 import PhotoIndexPageLayout from "../../layouts/PhotoIndexPageLayout.astro"
 import Hero from "../../components/Hero.astro"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
-import { fetchPhotoManifest } from "../../utils/photoData"
+import { getCollection } from "astro:content"
 import type { Page, PaginateFunction } from "astro"
 
 // Define PAGE_SIZE for pagination
@@ -15,17 +15,11 @@ export async function getStaticPaths({
 }) {
   const PAGE_SIZE = 24 // Defined inside function
 
-  let fetchedPhotos: PhotoManifestItem[] = [] // Now contains slugs from manifest
-  try {
-    fetchedPhotos = await fetchPhotoManifest()
-  } catch (e) {
-    const error = e as Error
-    // fetchPhotoManifest already logs errors. We just need to ensure build fails.
-    console.error(
-      `Failed to load photo manifest for /photos/[page].astro: ${error.message}`
-    )
-    throw error // Re-throw to fail the build
-  }
+  // Fetch all photos from the collection (cached by Astro)
+  const photoEntries = await getCollection("photos")
+  const fetchedPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
 
   // Slugs are now assumed to be in fetchedPhotos from the manifest.
   // No need for: const allPhotosWithSlugs = ...
