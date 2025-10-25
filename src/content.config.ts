@@ -1,4 +1,5 @@
 import { z, defineCollection } from "astro:content"
+import { MANIFEST_URL } from "./config/photoServer"
 
 // Define a `type` and `schema` for each collection
 const postsCollection = defineCollection({
@@ -30,14 +31,13 @@ const pagesCollection = defineCollection({
 // Photos data collection - fetches from remote manifest at build time
 const photosCollection = defineCollection({
   loader: async () => {
-    const manifestUrl = "https://share.kadykov.com/image_manifest.json"
-    console.log("Fetching photo manifest from:", manifestUrl)
+    console.log("Fetching photo manifest from:", MANIFEST_URL)
 
     try {
-      const response = await fetch(manifestUrl)
+      const response = await fetch(MANIFEST_URL)
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch manifest from ${manifestUrl}: ${response.statusText} (status ${response.status})`
+          `Failed to fetch manifest from ${MANIFEST_URL}: ${response.statusText} (status ${response.status})`
         )
       }
 

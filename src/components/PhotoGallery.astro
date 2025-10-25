@@ -2,6 +2,7 @@
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import { generateOptimizedImage } from "../utils/imageOptimization"
 import { classifyPhoto, getImageDimensions } from "../utils/photoClassification"
+import { PHOTO_SERVER_URL } from "../config/photoServer"
 
 interface Props {
   photos: PhotoManifestItem[] // Photos for the current paginated view (thumbnails)
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const { photos, fullPhotoDataset } = Astro.props
-const imageBaseUrl = "https://share.kadykov.com/"
+const imageBaseUrl = `${PHOTO_SERVER_URL}/`
 
 // Determine the dataset to use for PhotoSwipe. Fallback to current page's photos if full dataset isn't provided.
 const pswpDataset =

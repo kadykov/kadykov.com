@@ -6,6 +6,13 @@ import playformCompress from "@playform/compress"
 
 import markdoc from "@astrojs/markdoc"
 
+// Import the photo server domain for dynamic configuration
+const PHOTO_SERVER_DOMAIN =
+  process.env.PHOTO_SERVER_URL?.replace(/^https?:\/\//, "").replace(
+    /\/$/,
+    ""
+  ) || "share.kadykov.com"
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -24,10 +31,13 @@ export default defineConfig({
   ],
   site: "https://www.kadykov.com",
   image: {
-    domains: ["share.kadykov.com"],
+    domains: [PHOTO_SERVER_DOMAIN],
     remotePatterns: [
       {
         protocol: "https",
+      },
+      {
+        protocol: "http",
       },
     ],
   },

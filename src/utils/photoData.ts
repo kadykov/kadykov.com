@@ -2,8 +2,9 @@ import {
   photoManifestSchema,
   type PhotoManifestItem,
 } from "./photoManifestSchema"
+import { MANIFEST_URL } from "../config/photoServer"
 
-const manifestUrl = "https://share.kadykov.com/image_manifest.json"
+const manifestUrl = MANIFEST_URL
 
 let cachedManifest: PhotoManifestItem[] | null = null
 let fetchPromise: Promise<PhotoManifestItem[]> | null = null
