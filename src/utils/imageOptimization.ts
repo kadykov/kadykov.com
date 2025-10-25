@@ -20,7 +20,7 @@ export interface OptimizedImageConfig {
   src: string
   width?: number // Original image width - if provided, skips inferSize
   height?: number // Original image height - if provided, skips inferSize
-  maxWidth?: number // Maximum display width (1x DPR) - will generate up to 3x for high-DPI
+  maxWidth?: number // Maximum display width (1x DPR) - will generate up to 4x for high-DPI
   originalWidth?: number // Original image width - used to prevent requesting widths larger than source
   quality?: number // Image quality (default: Astro's default)
   layout?: "constrained" | "full-width" // Layout type (default: "constrained")
@@ -48,42 +48,34 @@ const STANDARD_WIDTHS = [
 
 /**
  * Filter widths to include only those suitable for a given display width
- * considering device pixel ratio (DPR) from 1x to 3x.
+ * considering device pixel ratio (DPR) from 1x to 4x.
  *
  * This prevents generating unnecessary large images while ensuring
- * high-DPI displays get sharp images.
+ * high-DPI displays get sharp images. Targeting 4x DPR ensures proper
+ * coverage for 3x DPR devices and provides future-proofing.
  *
  * @param displayWidth - The CSS display width (at 1x DPR)
  * @param availableWidths - Array of available image widths
- * @returns Filtered array of widths suitable for 1x-3x DPR
+ * @returns Filtered array of widths suitable for 1x-4x DPR
  *
  * @example
  * filterWidthsForDisplay(198, STANDARD_WIDTHS)
- * // Returns widths between 198 (1x) and 594 (3x): [640]
- * // Note: 640 is closest available width for 2x DPR (396)
+ * // Returns widths between 198 (1x) and 792 (4x): [240, 288, 350, 420, 500, 600, 720]
  */
 function filterWidthsForDisplay(
   displayWidth: number,
   availableWidths: number[]
 ): number[] {
   const minWidth = displayWidth // 1x DPR
-  const maxWidth = displayWidth * 3 // 3x DPR (high-end mobile)
+  const maxWidth = displayWidth * 4 // 4x DPR (ensures 3x coverage + future-proofing)
 
   // Filter widths that fall within the DPR range
   const filtered = availableWidths.filter((w) => w >= minWidth && w <= maxWidth)
 
-  // Always include at least the two closest widths to displayWidth
-  // even if they're slightly outside the range
+  // Safety fallback: ensure we have at least one width if filtering was too restrictive
   if (filtered.length === 0) {
-    // Find the closest width above displayWidth
     const closestAbove = availableWidths.find((w) => w >= minWidth)
     if (closestAbove) filtered.push(closestAbove)
-  }
-
-  // Ensure we have at least 2-3 widths for responsive behavior
-  if (filtered.length < 2) {
-    const closestAbove = availableWidths.filter((w) => w >= minWidth)
-    filtered.push(...closestAbove.slice(0, 3 - filtered.length))
   }
 
   return Array.from(new Set(filtered)).sort((a, b) => a - b)
@@ -99,10 +91,10 @@ function filterWidthsForDisplay(
  * @returns Optimized image data (src, srcset, dimensions)
  *
  * @example
- * // For photo gallery thumbnails (auto-filters to 1x-3x DPR)
+ * // For photo gallery thumbnails (auto-filters to 1x-4x DPR)
  * const thumbnail = await generateOptimizedImage({
  *   src: "https://example.com/photo.jpg",
- *   maxWidth: 198 // Will generate ~198w, ~396w, ~594w from standard set
+ *   maxWidth: 198 // Will generate suitable widths from 198w to ~792w
  * })
  *
  * @example
@@ -153,6 +145,7 @@ export async function generateOptimizedImage(
       src,
       format: "avif",
       layout,
+      quality: 60, // Increase default quality
     }
 
     // If both width and height are provided, use them explicitly to avoid fetching the remote image
@@ -171,7 +164,7 @@ export async function generateOptimizedImage(
       // Full-width: use full range of standard widths (no DPR filtering)
       targetWidths = STANDARD_WIDTHS
     } else if (maxWidth) {
-      // Smart filtering: generate widths suitable for 1x-3x DPR
+      // Smart filtering: generate widths suitable for 1x-4x DPR
       targetWidths = filterWidthsForDisplay(maxWidth, STANDARD_WIDTHS)
     } else {
       // No constraints: use full standard width range
