@@ -23,7 +23,8 @@
         "christian-kohler.path-intellisense",
         "unifiedjs.vscode-mdx",
         "Stripe.markdoc-language-support",
-        "stylelint.vscode-stylelint"
+        "stylelint.vscode-stylelint",
+        "GitHub.vscode-github-actions"
       ]
     }
   },

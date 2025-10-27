@@ -1,6 +1,8 @@
+# Build is handled by GitHub Actions
+# Netlify only hosts the pre-built static files
 [build]
-  command = "npm run build"
   publish = "dist"
+  # Note: No build command - GitHub Actions builds and deploys
 
 [[redirects]]
   from = "/umami/*"
