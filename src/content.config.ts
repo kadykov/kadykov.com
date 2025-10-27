@@ -99,6 +99,7 @@ const photosCollection = defineCollection({
     exposureTime: z.number().nullable(),
     creator: z.string().nullable(),
     copyright: z.string().nullable(),
+    notes: z.string().nullable(),
     slug: z.string(),
   }),
 })

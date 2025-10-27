@@ -49,6 +49,7 @@ export const photoManifestItemSchema = z.object({
   exposureTime: z.number().nullable(),
   creator: z.string().nullable(),
   copyright: z.string().nullable(),
+  notes: z.string().nullable(),
   slug: z.string(), // Slug is now a required string
 })
 
