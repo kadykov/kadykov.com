@@ -94,8 +94,22 @@ const photosCollection = defineCollection({
     lensModel: z.string().nullable(),
     flash: z.boolean().nullable(),
     focalLength: z.number().nullable(),
+    focalLength35mmEquiv: z.number().int().nullable(),
+    focalLengthCategory: z
+      .enum([
+        "ultra-wide",
+        "wide",
+        "normal",
+        "short-telephoto",
+        "telephoto",
+        "super-telephoto",
+      ])
+      .nullable(),
+    cropFactor: z.number().nullable(),
     apertureValue: z.number().nullable(),
-    isoSpeedRatings: z.number().int().nullable(),
+    isoSpeedRatings: z
+      .union([z.number().int(), z.array(z.number().int())])
+      .nullable(),
     exposureTime: z.number().nullable(),
     creator: z.string().nullable(),
     copyright: z.string().nullable(),

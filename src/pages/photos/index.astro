@@ -5,7 +5,7 @@ import Hero from "../../components/Hero.astro"
 const frontmatter = {
   title: "Photo Gallery",
   description:
-    "Browse my photo collection by different views: all photos, dates, or tags.",
+    "Browse my photo collection by different views: all photos, dates, tags, or equipment.",
 }
 ---
 
@@ -28,6 +28,10 @@ const frontmatter = {
       <li>
         <h2><a href="/photos/tags">Browse by Tags</a></h2>
         <p>Find photos by topic, location, or theme</p>
+      </li>
+      <li>
+        <h2><a href="/photos/equipment">Browse by Equipment</a></h2>
+        <p>Explore photos by camera, lens, focal length, or flash usage</p>
       </li>
     </ul>
   </nav>

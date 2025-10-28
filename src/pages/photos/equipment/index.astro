@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import Hero from "../../../components/Hero.astro"
+
+const frontmatter = {
+  title: "Browse by Equipment & Settings",
+  description:
+    "Explore photos by camera, lens, focal length, and flash settings.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+  </Hero>
+
+  <nav aria-label="Equipment gallery views">
+    <ul>
+      <li>
+        <h2><a href="/photos/equipment/cameras">Browse by Camera</a></h2>
+        <p>See photos grouped by camera model</p>
+      </li>
+      <li>
+        <h2><a href="/photos/equipment/lenses">Browse by Lens</a></h2>
+        <p>Explore photos taken with different lenses</p>
+      </li>
+      <li>
+        <h2>
+          <a href="/photos/equipment/focal-length">Browse by Focal Length</a>
+        </h2>
+        <p>
+          View photos by focal length category (ultra-wide, wide, normal,
+          telephoto, etc.)
+        </p>
+      </li>
+      <li>
+        <h2><a href="/photos/equipment/flash/1">Photos with Flash</a></h2>
+        <p>Browse all photos taken with flash</p>
+      </li>
+    </ul>
+  </nav>
+
+  <nav>
+    <ul>
+      <li><a href="/photos">← Back to photo galleries</a></li>
+    </ul>
+  </nav>
+</BaseLayout>

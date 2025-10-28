@@ -26,8 +26,10 @@ interface Props {
 const { photo } = Astro.props
 const imageBaseUrl = `${PHOTO_SERVER_URL}/`
 
-// Format date for display
+// Format date for display and generate date URL
 let displayDate = "Unknown date"
+let dateUrl: string | null = null
+
 if (photo.dateTaken) {
   const date = new Date(photo.dateTaken)
   displayDate = date.toLocaleDateString("en-US", {
@@ -35,6 +37,7 @@ if (photo.dateTaken) {
     month: "long",
     day: "numeric",
   })
+  dateUrl = `/photos/dates/${photo.dateTaken.substring(0, 10)}/1`
 } else if (photo.year && photo.month && photo.day) {
   displayDate = new Date(
     photo.year,
@@ -45,6 +48,22 @@ if (photo.dateTaken) {
     month: "long",
     day: "numeric",
   })
+  const monthStr = String(photo.month).padStart(2, "0")
+  const dayStr = String(photo.day).padStart(2, "0")
+  dateUrl = `/photos/dates/${photo.year}-${monthStr}-${dayStr}/1`
+}
+
+// Format exposure time: use fraction for < 1s, direct seconds for >= 1s
+let exposureDisplay: string | null = null
+if (photo.exposureTime) {
+  if (photo.exposureTime < 1) {
+    // Format as fraction (e.g., 1/60s)
+    const denominator = Math.round(1 / photo.exposureTime)
+    exposureDisplay = `1/${denominator}s`
+  } else {
+    // Format as direct seconds (e.g., 2s)
+    exposureDisplay = `${photo.exposureTime}s`
+  }
 }
 
 // Prepare metadata for the page
@@ -86,13 +105,19 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
       <h2>Details</h2>
       <dl>
         <dt>Date taken</dt>
-        <dd>{displayDate}</dd>
+        <dd>
+          {dateUrl ? <a href={dateUrl}>{displayDate}</a> : displayDate}
+        </dd>
 
         {
           photo.cameraModel && (
             <>
               <dt>Camera</dt>
-              <dd>{photo.cameraModel}</dd>
+              <dd>
+                <a href={`/photos/equipment/cameras/${photo.cameraModel}/1`}>
+                  {photo.cameraModel}
+                </a>
+              </dd>
             </>
           )
         }
@@ -101,7 +126,13 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
           photo.lensModel && (
             <>
               <dt>Lens</dt>
-              <dd>{photo.lensModel}</dd>
+              <dd>
+                <a
+                  href={`/photos/equipment/lenses/${photo.lensModel.replace(/\//g, "-")}/1`}
+                >
+                  {photo.lensModel}
+                </a>
+              </dd>
             </>
           )
         }
@@ -110,7 +141,23 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
           photo.focalLength && (
             <>
               <dt>Focal length</dt>
-              <dd>{photo.focalLength}mm</dd>
+              <dd>
+                {photo.focalLengthCategory ? (
+                  <a
+                    href={`/photos/equipment/focal-length/${photo.focalLengthCategory}/1`}
+                  >
+                    {photo.focalLength}mm
+                    {photo.focalLength35mmEquiv &&
+                      ` (${photo.focalLength35mmEquiv}mm equiv.)`}
+                  </a>
+                ) : (
+                  <>
+                    {photo.focalLength}mm
+                    {photo.focalLength35mmEquiv &&
+                      ` (${photo.focalLength35mmEquiv}mm equiv.)`}
+                  </>
+                )}
+              </dd>
             </>
           )
         }
@@ -125,10 +172,10 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
         }
 
         {
-          photo.exposureTime && (
+          exposureDisplay && (
             <>
               <dt>Exposure</dt>
-              <dd>{photo.exposureTime}s</dd>
+              <dd>{exposureDisplay}</dd>
             </>
           )
         }
@@ -143,10 +190,12 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
         }
 
         {
-          photo.flash !== null && (
+          photo.flash === true && (
             <>
               <dt>Flash</dt>
-              <dd>{photo.flash ? "Yes" : "No"}</dd>
+              <dd>
+                <a href="/photos/equipment/flash/1">Yes</a>
+              </dd>
             </>
           )
         }

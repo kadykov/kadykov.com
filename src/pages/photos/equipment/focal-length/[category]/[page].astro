@@ -1,0 +1,87 @@
+---
+import PhotoIndexPageLayout from "../../../../../layouts/PhotoIndexPageLayout.astro"
+import Hero from "../../../../../components/Hero.astro"
+import type { PhotoManifestItem } from "../../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
+
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}): Promise<GetStaticPathsResult> {
+  const PAGE_SIZE = 24
+
+  // Map of category to display name
+  const categoryNames: Record<string, string> = {
+    "ultra-wide": "Ultra-Wide",
+    wide: "Wide",
+    normal: "Normal",
+    "short-telephoto": "Short Telephoto",
+    telephoto: "Telephoto",
+    "super-telephoto": "Super Telephoto",
+  }
+
+  const photoEntries = await getCollection("photos")
+  const fetchedPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
+
+  const photosByCategory = new Map<string, PhotoManifestItem[]>()
+  fetchedPhotos.forEach((photo) => {
+    if (photo.focalLengthCategory) {
+      if (!photosByCategory.has(photo.focalLengthCategory)) {
+        photosByCategory.set(photo.focalLengthCategory, [])
+      }
+      photosByCategory.get(photo.focalLengthCategory)?.push(photo)
+    }
+  })
+
+  const paths: GetStaticPathsResult = []
+  for (const [category, photosForCategory] of photosByCategory.entries()) {
+    // Sort photos by date, most recent first
+    photosForCategory.sort((a, b) => {
+      if (a.dateTaken && b.dateTaken) {
+        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
+      }
+      if (a.dateTaken) return -1
+      if (b.dateTaken) return 1
+      return 0
+    })
+
+    const paginatedResult = paginate(photosForCategory, {
+      pageSize: PAGE_SIZE,
+      params: { category },
+      props: {
+        categoryDisplayName: categoryNames[category] || category,
+        fullPhotoDataset: photosForCategory,
+      },
+    })
+    paths.push(...paginatedResult)
+  }
+  return paths
+}
+
+interface Props {
+  page: Page<PhotoManifestItem>
+  categoryDisplayName: string
+  fullPhotoDataset: PhotoManifestItem[]
+}
+
+const { page, categoryDisplayName, fullPhotoDataset } = Astro.props
+
+const pageTitle = `${categoryDisplayName} Focal Length Photos`
+const pageDescription = `A collection of photos taken with ${categoryDisplayName.toLowerCase()} focal length. Page ${page.currentPage} of ${page.lastPage}.`
+---
+
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
+    <p>{pageDescription}</p>
+  </Hero>
+</PhotoIndexPageLayout>

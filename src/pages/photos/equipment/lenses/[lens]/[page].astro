@@ -1,0 +1,77 @@
+---
+import PhotoIndexPageLayout from "../../../../../layouts/PhotoIndexPageLayout.astro"
+import Hero from "../../../../../components/Hero.astro"
+import type { PhotoManifestItem } from "../../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
+
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}): Promise<GetStaticPathsResult> {
+  const PAGE_SIZE = 24
+
+  const photoEntries = await getCollection("photos")
+  const fetchedPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
+
+  const photosByLens = new Map<string, PhotoManifestItem[]>()
+  fetchedPhotos.forEach((photo) => {
+    if (photo.lensModel) {
+      if (!photosByLens.has(photo.lensModel)) {
+        photosByLens.set(photo.lensModel, [])
+      }
+      photosByLens.get(photo.lensModel)?.push(photo)
+    }
+  })
+
+  const paths: GetStaticPathsResult = []
+  for (const [lens, photosForLens] of photosByLens.entries()) {
+    // Sort photos by date, most recent first
+    photosForLens.sort((a, b) => {
+      if (a.dateTaken && b.dateTaken) {
+        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
+      }
+      if (a.dateTaken) return -1
+      if (b.dateTaken) return 1
+      return 0
+    })
+
+    const paginatedResult = paginate(photosForLens, {
+      pageSize: PAGE_SIZE,
+      params: { lens: lens.replace(/\//g, "-") }, // Replace / with - for URL-safe slug
+      props: {
+        lensDisplayName: lens, // Keep original name for display
+        fullPhotoDataset: photosForLens,
+      },
+    })
+    paths.push(...paginatedResult)
+  }
+  return paths
+}
+
+interface Props {
+  page: Page<PhotoManifestItem>
+  lensDisplayName: string
+  fullPhotoDataset: PhotoManifestItem[]
+}
+
+const { page, lensDisplayName, fullPhotoDataset } = Astro.props
+
+const pageTitle = `Photos taken with: ${lensDisplayName}`
+const pageDescription = `A collection of photos taken with ${lensDisplayName}. Page ${page.currentPage} of ${page.lastPage}.`
+---
+
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
+    <p>{pageDescription}</p>
+  </Hero>
+</PhotoIndexPageLayout>

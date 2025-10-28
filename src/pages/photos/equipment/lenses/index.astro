@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro"
+import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import Hero from "../../../../components/Hero.astro"
+
+let uniqueLenses: string[] = []
+let lensCounts: Map<string, number> = new Map()
+
+// Fetch all photos from the collection (cached by Astro)
+const photoEntries = await getCollection("photos")
+const allPhotos: PhotoManifestItem[] = photoEntries.map(
+  (entry) => entry.data as PhotoManifestItem
+)
+
+const lensSet = new Set<string>()
+allPhotos.forEach((photo) => {
+  if (photo.lensModel) {
+    lensSet.add(photo.lensModel)
+    lensCounts.set(photo.lensModel, (lensCounts.get(photo.lensModel) || 0) + 1)
+  }
+})
+uniqueLenses = Array.from(lensSet).sort((a, b) => a.localeCompare(b))
+
+const frontmatter = {
+  title: "Browse by Lens",
+  description: "Explore photos grouped by lens model.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+  </Hero>
+
+  {
+    uniqueLenses.length > 0 ? (
+      <nav aria-label="Lens models">
+        <ul>
+          {uniqueLenses.map((lens) => (
+            <li>
+              <a
+                href={`/photos/equipment/lenses/${lens.replace(/\//g, "-")}/1`}
+              >
+                {lens} ({lensCounts.get(lens)} photos)
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ) : (
+      <p>No lens information found.</p>
+    )
+  }
+
+  <nav>
+    <ul>
+      <li><a href="/photos/equipment">← Back to equipment</a></li>
+    </ul>
+  </nav>
+</BaseLayout>

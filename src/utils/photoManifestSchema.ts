@@ -42,10 +42,23 @@ export const photoManifestItemSchema = z.object({
   lensModel: z.string().nullable(),
   flash: z.boolean().nullable(),
   focalLength: z.number().nullable(),
+  focalLength35mmEquiv: z.number().int().nullable(),
+  focalLengthCategory: z
+    .enum([
+      "ultra-wide",
+      "wide",
+      "normal",
+      "short-telephoto",
+      "telephoto",
+      "super-telephoto",
+    ])
+    .nullable(),
+  cropFactor: z.number().nullable(),
   apertureValue: z.number().nullable(),
-  // Assuming isoSpeedRatings from example manifest is a single integer.
-  // If it can truly be an array, this needs adjustment: z.union([z.number().int(), z.array(z.number().int())]).nullable()
-  isoSpeedRatings: z.number().int().nullable(),
+  // isoSpeedRatings can be a single integer, array of integers, or null
+  isoSpeedRatings: z
+    .union([z.number().int(), z.array(z.number().int())])
+    .nullable(),
   exposureTime: z.number().nullable(),
   creator: z.string().nullable(),
   copyright: z.string().nullable(),

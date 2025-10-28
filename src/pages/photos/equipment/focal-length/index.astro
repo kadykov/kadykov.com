@@ -1,0 +1,105 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro"
+import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import Hero from "../../../../components/Hero.astro"
+
+// Map of category to display name and description
+const categoryInfo = {
+  "ultra-wide": {
+    name: "Ultra-Wide",
+    description: "< 24mm (35mm equivalent)",
+  },
+  wide: {
+    name: "Wide",
+    description: "24-34mm (35mm equivalent)",
+  },
+  normal: {
+    name: "Normal",
+    description: "35-69mm (35mm equivalent)",
+  },
+  "short-telephoto": {
+    name: "Short Telephoto",
+    description: "70-134mm (35mm equivalent)",
+  },
+  telephoto: {
+    name: "Telephoto",
+    description: "135-299mm (35mm equivalent)",
+  },
+  "super-telephoto": {
+    name: "Super Telephoto",
+    description: "≥ 300mm (35mm equivalent)",
+  },
+}
+
+let categoryCounts: Map<string, number> = new Map()
+
+// Fetch all photos from the collection (cached by Astro)
+const photoEntries = await getCollection("photos")
+const allPhotos: PhotoManifestItem[] = photoEntries.map(
+  (entry) => entry.data as PhotoManifestItem
+)
+
+allPhotos.forEach((photo) => {
+  if (photo.focalLengthCategory) {
+    categoryCounts.set(
+      photo.focalLengthCategory,
+      (categoryCounts.get(photo.focalLengthCategory) || 0) + 1
+    )
+  }
+})
+
+const frontmatter = {
+  title: "Browse by Focal Length",
+  description: "Explore photos grouped by focal length category.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+  </Hero>
+
+  {
+    categoryCounts.size > 0 ? (
+      <nav aria-label="Focal length categories">
+        <ul>
+          {Object.entries(categoryInfo).map(([key, info]) => {
+            const count = categoryCounts.get(key) || 0
+            if (count === 0) return null
+            return (
+              <li>
+                <a href={`/photos/equipment/focal-length/${key}/1`}>
+                  {info.name}{" "}
+                  <span class="description">({info.description})</span>
+                  <span class="count">— {count} photos</span>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+    ) : (
+      <p>No focal length information found.</p>
+    )
+  }
+
+  <nav>
+    <ul>
+      <li><a href="/photos/equipment">← Back to equipment</a></li>
+    </ul>
+  </nav>
+</BaseLayout>
+
+<style>
+  .description {
+    color: var(--color-text-secondary, #666);
+    font-size: 0.9em;
+  }
+
+  .count {
+    color: var(--color-text-secondary, #666);
+    font-size: 0.9em;
+  }
+</style>

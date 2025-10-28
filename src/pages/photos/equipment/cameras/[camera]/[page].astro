@@ -1,0 +1,77 @@
+---
+import PhotoIndexPageLayout from "../../../../../layouts/PhotoIndexPageLayout.astro"
+import Hero from "../../../../../components/Hero.astro"
+import type { PhotoManifestItem } from "../../../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
+
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}): Promise<GetStaticPathsResult> {
+  const PAGE_SIZE = 24
+
+  const photoEntries = await getCollection("photos")
+  const fetchedPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
+
+  const photosByCamera = new Map<string, PhotoManifestItem[]>()
+  fetchedPhotos.forEach((photo) => {
+    if (photo.cameraModel) {
+      if (!photosByCamera.has(photo.cameraModel)) {
+        photosByCamera.set(photo.cameraModel, [])
+      }
+      photosByCamera.get(photo.cameraModel)?.push(photo)
+    }
+  })
+
+  const paths: GetStaticPathsResult = []
+  for (const [camera, photosForCamera] of photosByCamera.entries()) {
+    // Sort photos by date, most recent first
+    photosForCamera.sort((a, b) => {
+      if (a.dateTaken && b.dateTaken) {
+        return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
+      }
+      if (a.dateTaken) return -1
+      if (b.dateTaken) return 1
+      return 0
+    })
+
+    const paginatedResult = paginate(photosForCamera, {
+      pageSize: PAGE_SIZE,
+      params: { camera }, // Astro handles URL encoding automatically
+      props: {
+        cameraDisplayName: camera,
+        fullPhotoDataset: photosForCamera,
+      },
+    })
+    paths.push(...paginatedResult)
+  }
+  return paths
+}
+
+interface Props {
+  page: Page<PhotoManifestItem>
+  cameraDisplayName: string
+  fullPhotoDataset: PhotoManifestItem[]
+}
+
+const { page, cameraDisplayName, fullPhotoDataset } = Astro.props
+
+const pageTitle = `Photos taken with: ${cameraDisplayName}`
+const pageDescription = `A collection of photos taken with ${cameraDisplayName}. Page ${page.currentPage} of ${page.lastPage}.`
+---
+
+<PhotoIndexPageLayout
+  page={page}
+  fullPhotoDataset={fullPhotoDataset}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+>
+  <Hero slot="heroContent">
+    <h1>{pageTitle}</h1>
+    <p>{pageDescription}</p>
+  </Hero>
+</PhotoIndexPageLayout>
