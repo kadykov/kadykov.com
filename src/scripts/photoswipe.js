@@ -19,12 +19,15 @@ if (dataSourceElement) {
 }
 
 let lightbox = null
+let isClosingViaPopstate = false // Flag to prevent history.back() loop
 
 if (parsedDataSource && parsedDataSource.length > 0) {
   lightbox = new PhotoSwipeLightbox({
     dataSource: parsedDataSource,
     bgOpacity: 1,
     pswpModule: () => import("photoswipe"),
+    // Disable built-in history - we'll manage it manually with real URLs
+    history: false,
   })
 
   new PhotoSwipeDynamicCaption(lightbox, {
@@ -75,7 +78,41 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     },
   })
 
+  // Custom URL history management using real photo page URLs
+  let hasInitiallyOpened = false
+
   lightbox.on("uiRegister", function () {
+    if (lightbox.pswp) {
+      // When lightbox opens or changes slides, update the URL
+      lightbox.pswp.on("change", () => {
+        const currentPhotoData = lightbox.pswp.currSlide?.data
+        if (currentPhotoData?.slug) {
+          const photoPageUrl = `/photo/${currentPhotoData.slug}`
+
+          if (!hasInitiallyOpened) {
+            // First time opening lightbox - push new history entry
+            history.pushState(null, "", photoPageUrl)
+            hasInitiallyOpened = true
+          } else {
+            // Navigating between photos - replace current entry
+            history.replaceState(null, "", photoPageUrl)
+          }
+        }
+      })
+
+      // Reset flag when lightbox closes
+      lightbox.pswp.on("close", () => {
+        hasInitiallyOpened = false
+
+        if (!isClosingViaPopstate) {
+          // User closed via X button, ESC, or click outside
+          history.back()
+        }
+        // Reset the flag
+        isClosingViaPopstate = false
+      })
+    }
+
     if (lightbox.pswp && lightbox.pswp.ui) {
       lightbox.pswp.ui.registerElement({
         name: "download-button",
@@ -108,47 +145,16 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         },
       })
     }
+  })
 
-    if (lightbox.pswp) {
-      lightbox.pswp.on("change", () => {
-        if (
-          typeof lightbox.pswp.currIndex !== "undefined" &&
-          lightbox.pswp.currSlide
-        ) {
-          const currentPhotoData = lightbox.pswp.currSlide.data
-          if (
-            currentPhotoData &&
-            typeof currentPhotoData.slug === "string" &&
-            currentPhotoData.slug.length > 0
-          ) {
-            const newHash = "#" + currentPhotoData.slug
-            if (window.location.hash !== newHash) {
-              history.replaceState(null, "", newHash)
-            }
-          } else {
-            const newUrl = window.location.pathname + window.location.search
-            if (window.location.hash) {
-              history.replaceState(null, "", newUrl)
-            }
-            if (
-              currentPhotoData &&
-              (!currentPhotoData.slug || currentPhotoData.slug.length === 0)
-            ) {
-              console.warn(
-                "PhotoSwipe: currentPhotoData.slug is empty, clearing hash.",
-                currentPhotoData
-              )
-            }
-          }
-        }
-      })
-
-      lightbox.pswp.on("close", () => {
-        const newUrl = window.location.pathname + window.location.search
-        if (window.location.hash) {
-          history.replaceState(null, "", newUrl)
-        }
-      })
+  // Handle browser back button
+  window.addEventListener("popstate", () => {
+    if (lightbox && lightbox.pswp && lightbox.pswp.isOpen) {
+      // User pressed back while lightbox is open
+      // Set flag to prevent close() from calling history.back() again
+      isClosingViaPopstate = true
+      lightbox.pswp.close()
+      // We're already at the gallery URL from the popstate
     }
   })
 
@@ -176,66 +182,5 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 } else {
   console.warn(
     "PhotoSwipe: No parsedDataSource available or it's empty. Lightbox not initialized."
-  )
-}
-
-if (lightbox && parsedDataSource && parsedDataSource.length > 0) {
-  const openPhotoBySlug = (slugToOpen, pswpInstance) => {
-    if (!slugToOpen || !pswpInstance) return
-    const corePswp = pswpInstance.pswp || pswpInstance
-    const photoIndex = parsedDataSource.findIndex((p) => p.slug === slugToOpen)
-    if (photoIndex !== -1) {
-      if (corePswp.goTo) {
-        corePswp.goTo(photoIndex)
-      } else {
-        // console.warn('PhotoSwipe: corePswp.goTo is not a function in openPhotoBySlug');
-      }
-    } else {
-      // console.warn(`PhotoSwipe: Slug "${slugToOpen}" from hash not found in dataSource (openPhotoBySlug).`);
-    }
-  }
-
-  const initialHash = window.location.hash.substring(1)
-  if (initialHash) {
-    const targetElementIndex = parsedDataSource.findIndex(
-      (p) => p.slug === initialHash
-    )
-    if (targetElementIndex !== -1) {
-      setTimeout(() => {
-        if (lightbox && !lightbox.pswp) {
-          lightbox.loadAndOpen(targetElementIndex)
-        } else if (
-          lightbox &&
-          lightbox.pswp &&
-          lightbox.pswp.currIndex !== targetElementIndex
-        ) {
-          lightbox.pswp.goTo(targetElementIndex)
-        }
-      }, 150)
-    }
-  }
-
-  window.addEventListener(
-    "hashchange",
-    () => {
-      const newSlug = window.location.hash.substring(1)
-      if (lightbox.pswp && lightbox.pswp.isOpen) {
-        const currentPswpSlug =
-          lightbox.pswp.currSlide && lightbox.pswp.currSlide.data
-            ? lightbox.pswp.currSlide.data.slug
-            : null
-        if (newSlug && newSlug !== currentPswpSlug) {
-          openPhotoBySlug(newSlug, lightbox.pswp)
-        }
-      } else if (newSlug) {
-        const targetElementIndex = parsedDataSource.findIndex(
-          (p) => p.slug === newSlug
-        )
-        if (targetElementIndex !== -1) {
-          lightbox.loadAndOpen(targetElementIndex)
-        }
-      }
-    },
-    false
   )
 }

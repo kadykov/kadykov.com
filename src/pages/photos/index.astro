@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Hero from "../../components/Hero.astro"
+
+const frontmatter = {
+  title: "Photo Gallery",
+  description:
+    "Browse my photo collection by different views: all photos, dates, or tags.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+  </Hero>
+
+  <nav aria-label="Photo gallery views">
+    <ul>
+      <li>
+        <h2><a href="/photos/all/1">All Photos</a></h2>
+        <p>Browse the complete photo collection</p>
+      </li>
+      <li>
+        <h2><a href="/photos/dates">Browse by Date</a></h2>
+        <p>Explore photos organized by when they were taken</p>
+      </li>
+      <li>
+        <h2><a href="/photos/tags">Browse by Tags</a></h2>
+        <p>Find photos by topic, location, or theme</p>
+      </li>
+    </ul>
+  </nav>
+</BaseLayout>

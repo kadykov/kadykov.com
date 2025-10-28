@@ -1,0 +1,295 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { getCollection } from "astro:content"
+import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
+import OptimizedImage from "../../components/OptimizedImage.astro"
+import { PHOTO_SERVER_URL } from "../../config/photoServer"
+
+export async function getStaticPaths() {
+  // Fetch all photos from the collection
+  const photoEntries = await getCollection("photos")
+  const allPhotos: PhotoManifestItem[] = photoEntries.map(
+    (entry) => entry.data as PhotoManifestItem
+  )
+
+  // Generate a path for each photo
+  return allPhotos.map((photo) => ({
+    params: { slug: photo.slug },
+    props: { photo },
+  }))
+}
+
+interface Props {
+  photo: PhotoManifestItem
+}
+
+const { photo } = Astro.props
+const imageBaseUrl = `${PHOTO_SERVER_URL}/`
+
+// Format date for display
+let displayDate = "Unknown date"
+if (photo.dateTaken) {
+  const date = new Date(photo.dateTaken)
+  displayDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+} else if (photo.year && photo.month && photo.day) {
+  displayDate = new Date(
+    photo.year,
+    photo.month - 1,
+    photo.day
+  ).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
+// Prepare metadata for the page
+const pageTitle = photo.title || `Photo from ${displayDate}`
+const pageDescription =
+  photo.description || `Photograph taken on ${displayDate}`
+
+// Open Graph image URL (use a medium-sized version)
+const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
+---
+
+<BaseLayout
+  frontmatter={{
+    title: pageTitle,
+    description: pageDescription,
+    image: ogImageUrl,
+  }}
+>
+  <article>
+    <header>
+      <h1>{pageTitle}</h1>
+      {photo.description && <p class="description">{photo.description}</p>}
+    </header>
+
+    <figure>
+      <OptimizedImage
+        src={`${imageBaseUrl}${photo.relativePath}`}
+        alt={photo.title || `Photo from ${displayDate}`}
+        width={1200}
+        originalWidth={photo.width}
+        originalHeight={photo.height}
+        sizesAttr="(min-width: 1200px) 1200px, 100vw"
+        loading="eager"
+      />
+      {photo.title && <figcaption>{photo.title}</figcaption>}
+    </figure>
+
+    <section class="metadata">
+      <h2>Details</h2>
+      <dl>
+        <dt>Date taken</dt>
+        <dd>{displayDate}</dd>
+
+        {
+          photo.cameraModel && (
+            <>
+              <dt>Camera</dt>
+              <dd>{photo.cameraModel}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.lensModel && (
+            <>
+              <dt>Lens</dt>
+              <dd>{photo.lensModel}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.focalLength && (
+            <>
+              <dt>Focal length</dt>
+              <dd>{photo.focalLength}mm</dd>
+            </>
+          )
+        }
+
+        {
+          photo.apertureValue && (
+            <>
+              <dt>Aperture</dt>
+              <dd>f/{photo.apertureValue}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.exposureTime && (
+            <>
+              <dt>Exposure</dt>
+              <dd>{photo.exposureTime}s</dd>
+            </>
+          )
+        }
+
+        {
+          photo.isoSpeedRatings && (
+            <>
+              <dt>ISO</dt>
+              <dd>{photo.isoSpeedRatings}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.flash !== null && (
+            <>
+              <dt>Flash</dt>
+              <dd>{photo.flash ? "Yes" : "No"}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.tags && photo.tags.length > 0 && (
+            <>
+              <dt>Tags</dt>
+              <dd>
+                {photo.tags.map((tag, index) => (
+                  <>
+                    <a
+                      href={`/photos/tags/${encodeURIComponent(tag.toLowerCase())}/1`}
+                    >
+                      #{tag}
+                    </a>
+                    {index < (photo.tags?.length ?? 0) - 1 && ", "}
+                  </>
+                ))}
+              </dd>
+            </>
+          )
+        }
+
+        {
+          photo.creator && (
+            <>
+              <dt>Creator</dt>
+              <dd>{photo.creator}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.copyright && (
+            <>
+              <dt>Copyright</dt>
+              <dd>{photo.copyright}</dd>
+            </>
+          )
+        }
+
+        {
+          photo.notes && (
+            <>
+              <dt>Notes</dt>
+              <dd>{photo.notes}</dd>
+            </>
+          )
+        }
+      </dl>
+    </section>
+
+    <nav>
+      <a href="/photos/all/1">← Back to gallery</a>
+      {
+        photo.dateTaken && (
+          <>
+            {" | "}
+            <a href={`/photos/dates/${photo.dateTaken.substring(0, 10)}/1`}>
+              View all photos from this date
+            </a>
+          </>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .description {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary, #666);
+  }
+
+  figure {
+    margin: 2rem 0;
+  }
+
+  figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  figcaption {
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: var(--color-text-secondary, #666);
+  }
+
+  .metadata {
+    margin: 3rem 0;
+  }
+
+  .metadata h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem 1.5rem;
+    max-width: 600px;
+  }
+
+  dt {
+    font-weight: 600;
+    color: var(--color-text-secondary, #666);
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  nav {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border, #e0e0e0);
+  }
+
+  nav a {
+    color: var(--color-link, #06c);
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+</style>

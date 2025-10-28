@@ -7,18 +7,24 @@ import { generateOptimizedImage } from "../utils/imageOptimization"
 interface Props {
   src: string
   alt: string
-  width?: number // Optional: maximum width constraint
+  width?: number // Optional: maximum width constraint OR original image width
+  height?: number // Optional: original image height (required if providing original width to skip remote fetch)
   sizesAttr?: string // Optional: custom sizes attribute (from getImageDimensions)
   class?: string
   loading?: "lazy" | "eager"
   decoding?: "async" | "sync" | "auto"
   quality?: number
+  originalWidth?: number // Optional: explicit original width (if width is maxWidth)
+  originalHeight?: number // Optional: explicit original height (if height is maxHeight)
 }
 
 const {
   src,
   alt,
   width: maxWidth,
+  height: maxHeight,
+  originalWidth,
+  originalHeight,
   sizesAttr,
   class: className,
   loading = "lazy",
@@ -31,6 +37,8 @@ const {
 const optimized = await generateOptimizedImage({
   src,
   maxWidth,
+  width: originalWidth,
+  height: originalHeight,
   quality,
 })
 ---
