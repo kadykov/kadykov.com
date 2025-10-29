@@ -1,6 +1,80 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
+import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
+import { getCollection } from "astro:content"
+
+// Fetch all photos to build equipment lists
+const photoEntries = await getCollection("photos")
+const allPhotos: PhotoManifestItem[] = photoEntries.map(
+  (entry) => entry.data as PhotoManifestItem
+)
+
+// Gather cameras
+const cameraSet = new Set<string>()
+const cameraCounts = new Map<string, number>()
+allPhotos.forEach((photo) => {
+  if (photo.cameraModel) {
+    cameraSet.add(photo.cameraModel)
+    cameraCounts.set(
+      photo.cameraModel,
+      (cameraCounts.get(photo.cameraModel) || 0) + 1
+    )
+  }
+})
+const uniqueCameras = Array.from(cameraSet).sort((a, b) => a.localeCompare(b))
+
+// Gather lenses
+const lensSet = new Set<string>()
+const lensCounts = new Map<string, number>()
+allPhotos.forEach((photo) => {
+  if (photo.lensModel) {
+    lensSet.add(photo.lensModel)
+    lensCounts.set(photo.lensModel, (lensCounts.get(photo.lensModel) || 0) + 1)
+  }
+})
+const uniqueLenses = Array.from(lensSet).sort((a, b) => a.localeCompare(b))
+
+// Gather focal length categories
+const categoryInfo: Record<string, { name: string; description: string }> = {
+  "ultra-wide": {
+    name: "Ultra-Wide",
+    description: "under 24mm",
+  },
+  wide: {
+    name: "Wide",
+    description: "24-34mm",
+  },
+  normal: {
+    name: "Normal",
+    description: "35-69mm",
+  },
+  "short-telephoto": {
+    name: "Short Telephoto",
+    description: "70-134mm",
+  },
+  telephoto: {
+    name: "Telephoto",
+    description: "135-299mm",
+  },
+  "super-telephoto": {
+    name: "Super Telephoto",
+    description: "300mm and above",
+  },
+}
+
+const categoryCounts = new Map<string, number>()
+allPhotos.forEach((photo) => {
+  if (photo.focalLengthCategory) {
+    categoryCounts.set(
+      photo.focalLengthCategory,
+      (categoryCounts.get(photo.focalLengthCategory) || 0) + 1
+    )
+  }
+})
+
+// Count flash photos
+const flashCount = allPhotos.filter((photo) => photo.flash === true).length
 
 const frontmatter = {
   title: "Browse by Equipment & Settings",
@@ -15,35 +89,82 @@ const frontmatter = {
     <p>{frontmatter.description}</p>
   </Hero>
 
-  <nav aria-label="Equipment gallery views">
+  <nav aria-label="Equipment categories">
     <ul>
       <li>
-        <h2><a href="/photos/equipment/cameras">Browse by Camera</a></h2>
-        <p>See photos grouped by camera model</p>
+        <h2>Cameras</h2>
+        {
+          uniqueCameras.length > 0 ? (
+            <ul>
+              {uniqueCameras.map((camera) => (
+                <li>
+                  <a href={`/photos/equipment/cameras/${camera}/1`}>
+                    {camera} ({cameraCounts.get(camera)} photos)
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No camera information found.</p>
+          )
+        }
       </li>
       <li>
-        <h2><a href="/photos/equipment/lenses">Browse by Lens</a></h2>
-        <p>Explore photos taken with different lenses</p>
+        <h2>Lenses</h2>
+        {
+          uniqueLenses.length > 0 ? (
+            <ul>
+              {uniqueLenses.map((lens) => (
+                <li>
+                  <a
+                    href={`/photos/equipment/lenses/${lens.replace(/\//g, "-")}/1`}
+                  >
+                    {lens} ({lensCounts.get(lens)} photos)
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No lens information found.</p>
+          )
+        }
       </li>
       <li>
-        <h2>
-          <a href="/photos/equipment/focal-length">Browse by Focal Length</a>
-        </h2>
-        <p>
-          View photos by focal length category (ultra-wide, wide, normal,
-          telephoto, etc.)
-        </p>
+        <h2>Focal Length</h2>
+        {
+          categoryCounts.size > 0 ? (
+            <ul>
+              {Object.entries(categoryInfo).map(([key, info]) => {
+                const count = categoryCounts.get(key) || 0
+                if (count === 0) return null
+                return (
+                  <li>
+                    <a href={`/photos/equipment/focal-length/${key}/1`}>
+                      {info.name} ({info.description}) — {count} photos
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : (
+            <p>No focal length information found.</p>
+          )
+        }
       </li>
       <li>
-        <h2><a href="/photos/equipment/flash/1">Photos with Flash</a></h2>
-        <p>Browse all photos taken with flash</p>
+        <h2>Flash</h2>
+        {
+          flashCount > 0 ? (
+            <p>
+              <a href="/photos/equipment/flash/1">
+                Photos taken with flash ({flashCount} photos)
+              </a>
+            </p>
+          ) : (
+            <p>No photos taken with flash.</p>
+          )
+        }
       </li>
-    </ul>
-  </nav>
-
-  <nav>
-    <ul>
-      <li><a href="/photos">← Back to photo galleries</a></li>
     </ul>
   </nav>
 </BaseLayout>
