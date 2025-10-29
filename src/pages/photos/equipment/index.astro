@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
+import { slugify } from "../../../utils/slugify"
 
 // Fetch all photos to build equipment lists
 const photoEntries = await getCollection("photos")
@@ -98,7 +99,7 @@ const frontmatter = {
             <ul>
               {uniqueCameras.map((camera) => (
                 <li>
-                  <a href={`/photos/equipment/cameras/${camera}/1`}>
+                  <a href={`/photos/equipment/cameras/${slugify(camera)}/1`}>
                     {camera} ({cameraCounts.get(camera)} photos)
                   </a>
                 </li>
@@ -116,9 +117,7 @@ const frontmatter = {
             <ul>
               {uniqueLenses.map((lens) => (
                 <li>
-                  <a
-                    href={`/photos/equipment/lenses/${lens.replace(/\//g, "-")}/1`}
-                  >
+                  <a href={`/photos/equipment/lenses/${slugify(lens)}/1`}>
                     {lens} ({lensCounts.get(lens)} photos)
                   </a>
                 </li>

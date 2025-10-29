@@ -4,6 +4,7 @@ import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
 import OptimizedImage from "../../components/OptimizedImage.astro"
 import { PHOTO_SERVER_URL } from "../../config/photoServer"
+import { slugify } from "../../utils/slugify"
 
 export async function getStaticPaths() {
   // Fetch all photos from the collection
@@ -114,7 +115,9 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
             <>
               <dt>Camera</dt>
               <dd>
-                <a href={`/photos/equipment/cameras/${photo.cameraModel}/1`}>
+                <a
+                  href={`/photos/equipment/cameras/${slugify(photo.cameraModel)}/1`}
+                >
                   {photo.cameraModel}
                 </a>
               </dd>
@@ -128,7 +131,7 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
               <dt>Lens</dt>
               <dd>
                 <a
-                  href={`/photos/equipment/lenses/${photo.lensModel.replace(/\//g, "-")}/1`}
+                  href={`/photos/equipment/lenses/${slugify(photo.lensModel)}/1`}
                 >
                   {photo.lensModel}
                 </a>

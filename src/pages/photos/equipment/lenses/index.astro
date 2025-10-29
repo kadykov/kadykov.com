@@ -3,6 +3,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
+import { slugify } from "../../../../utils/slugify"
 
 let uniqueLenses: string[] = []
 let lensCounts: Map<string, number> = new Map()
@@ -40,9 +41,7 @@ const frontmatter = {
         <ul>
           {uniqueLenses.map((lens) => (
             <li>
-              <a
-                href={`/photos/equipment/lenses/${lens.replace(/\//g, "-")}/1`}
-              >
+              <a href={`/photos/equipment/lenses/${slugify(lens)}/1`}>
                 {lens} ({lensCounts.get(lens)} photos)
               </a>
             </li>

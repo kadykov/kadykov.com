@@ -3,6 +3,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
+import { slugify } from "../../../../utils/slugify"
 
 let uniqueCameras: string[] = []
 let cameraCounts: Map<string, number> = new Map()
@@ -43,7 +44,7 @@ const frontmatter = {
         <ul>
           {uniqueCameras.map((camera) => (
             <li>
-              <a href={`/photos/equipment/cameras/${camera}/1`}>
+              <a href={`/photos/equipment/cameras/${slugify(camera)}/1`}>
                 {camera} ({cameraCounts.get(camera)} photos)
               </a>
             </li>
