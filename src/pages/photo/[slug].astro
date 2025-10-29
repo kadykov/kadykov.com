@@ -208,12 +208,16 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
             <>
               <dt>Tags</dt>
               <dd>
-                {photo.tags.map((tag, index) => (
-                  <>
-                    <a href={`/photos/tags/${slugify(tag)}/1`}>#{tag}</a>
-                    {index < (photo.tags?.length ?? 0) - 1 && ", "}
-                  </>
-                ))}
+                {photo.tags.map((tag, index) => {
+                  const separator = index < photo.tags!.length - 1 ? ", " : ""
+                  return (
+                    // Keep separator on same line to prevent unwanted whitespace in rendered HTML
+                    // prettier-ignore
+                    <>
+                      <a href={`/photos/tags/${slugify(tag)}/1`}>#{tag}</a>{separator}
+                    </>
+                  )
+                })}
               </dd>
             </>
           )
