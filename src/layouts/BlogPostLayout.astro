@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
 import Hero from "../components/Hero.astro"
+import { slugify } from "../utils/slugify"
 
 interface Props {
   frontmatter: {
@@ -37,7 +38,7 @@ const formatDate = (date: Date) => {
           <ul>
             {tags.map((tag: string) => (
               <li>
-                <a href={`/blog/tags/${tag}`}>#{tag}</a>
+                <a href={`/blog/tags/${slugify(tag)}`}>#{tag}</a>
               </li>
             ))}
           </ul>

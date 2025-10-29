@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 import { getCollection } from "astro:content"
 import Hero from "../../../components/Hero.astro"
 import BlogPostListItem from "../../../components/BlogPostListItem.astro"
+import { slugify } from "../../../utils/slugify"
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("blog")
@@ -18,25 +19,25 @@ export async function getStaticPaths() {
       (post) => post.data.tags && post.data.tags.includes(tag) // Check if post.data.tags exists
     )
     return {
-      params: { tag: tag! }, // Assert tag is not undefined
-      props: { posts: filteredPosts },
+      params: { tag: slugify(tag) }, // Slugify the tag for URL
+      props: { posts: filteredPosts, tagDisplayName: tag }, // Pass original tag for display
     }
   })
 }
 
 const { tag } = Astro.params
-const { posts } = Astro.props
+const { posts, tagDisplayName } = Astro.props
 
 const frontmatter = {
-  title: `Tagged: ${tag}`,
-  description: `Blog posts tagged with ${tag}`,
+  title: `Tagged: ${tagDisplayName}`,
+  description: `Blog posts tagged with ${tagDisplayName}`,
 }
 ---
 
 <BaseLayout frontmatter={frontmatter}>
   <Hero>
     <h1>{frontmatter.title}</h1>
-    <p>Posts tagged with #{tag}</p>
+    <p>Posts tagged with #{tagDisplayName}</p>
   </Hero>
 
   {

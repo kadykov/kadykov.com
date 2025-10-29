@@ -210,11 +210,7 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
               <dd>
                 {photo.tags.map((tag, index) => (
                   <>
-                    <a
-                      href={`/photos/tags/${encodeURIComponent(tag.toLowerCase())}/1`}
-                    >
-                      #{tag}
-                    </a>
+                    <a href={`/photos/tags/${slugify(tag)}/1`}>#{tag}</a>
                     {index < (photo.tags?.length ?? 0) - 1 && ", "}
                   </>
                 ))}

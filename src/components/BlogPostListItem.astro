@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content"
+import { slugify } from "../utils/slugify"
 
 interface Props {
   post: CollectionEntry<"blog">
@@ -33,7 +34,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
               // Keep separator on same line to prevent unwanted whitespace in rendered HTML
               // prettier-ignore
               <>
-                <a href={`/blog/tags/${tag}`}>#{tag}</a>{separator}
+                <a href={`/blog/tags/${slugify(tag)}`}>#{tag}</a>{separator}
               </>
             )
           })}

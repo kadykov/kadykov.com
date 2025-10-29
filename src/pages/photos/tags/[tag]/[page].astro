@@ -4,6 +4,7 @@ import Hero from "../../../../components/Hero.astro"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import type { Page, PaginateFunction, GetStaticPathsResult } from "astro"
+import { slugify } from "../../../../utils/slugify"
 
 export async function getStaticPaths({
   paginate,
@@ -51,7 +52,7 @@ export async function getStaticPaths({
     // Astro's paginate function will handle the `page` param from the filename [page].astro
     const paginatedResult = paginate(photosForTag, {
       pageSize: PAGE_SIZE,
-      params: { tag: encodeURIComponent(tag) }, // Pass the 'tag' param
+      params: { tag: slugify(tag) }, // Use slugify instead of encodeURIComponent
       props: {
         tagDisplayName: tag,
         fullPhotoDataset: photosForTag, // Pass ONLY the photos for THIS tag
