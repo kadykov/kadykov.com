@@ -12,14 +12,14 @@ export async function getStaticPaths({
 }): Promise<GetStaticPathsResult> {
   const PAGE_SIZE = 24
 
-  // Map of category to display name
-  const categoryNames: Record<string, string> = {
-    "ultra-wide": "Ultra-Wide",
-    wide: "Wide",
-    normal: "Normal",
-    "short-telephoto": "Short Telephoto",
-    telephoto: "Telephoto",
-    "super-telephoto": "Super Telephoto",
+  // Map of category to display name and range
+  const categoryInfo: Record<string, { name: string; range: string }> = {
+    "ultra-wide": { name: "Ultra-Wide", range: "< 24mm" },
+    wide: { name: "Wide", range: "24-34mm" },
+    normal: { name: "Normal", range: "35-69mm" },
+    "short-telephoto": { name: "Short Telephoto", range: "70-134mm" },
+    telephoto: { name: "Telephoto", range: "135-299mm" },
+    "super-telephoto": { name: "Super Telephoto", range: "≥ 300mm" },
   }
 
   const photoEntries = await getCollection("photos")
@@ -53,7 +53,8 @@ export async function getStaticPaths({
       pageSize: PAGE_SIZE,
       params: { category },
       props: {
-        categoryDisplayName: categoryNames[category] || category,
+        categoryDisplayName: categoryInfo[category]?.name || category,
+        categoryRange: categoryInfo[category]?.range || "",
         fullPhotoDataset: photosForCategory,
       },
     })
@@ -65,13 +66,15 @@ export async function getStaticPaths({
 interface Props {
   page: Page<PhotoManifestItem>
   categoryDisplayName: string
+  categoryRange: string
   fullPhotoDataset: PhotoManifestItem[]
 }
 
-const { page, categoryDisplayName, fullPhotoDataset } = Astro.props
+const { page, categoryDisplayName, categoryRange, fullPhotoDataset } =
+  Astro.props
 
 const pageTitle = `${categoryDisplayName} Focal Length Photos`
-const pageDescription = `A collection of photos taken with ${categoryDisplayName.toLowerCase()} focal length. Page ${page.currentPage} of ${page.lastPage}.`
+const pageDescription = `Photos taken at ${categoryRange} (35mm equivalent). Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
 <PhotoIndexPageLayout

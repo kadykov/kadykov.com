@@ -3,9 +3,16 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
 import { slugify } from "../../../utils/slugify"
+import {
+  getUniqueValues,
+  countByField,
+  formatCount,
+} from "../../../utils/collectionHelpers"
 
 const allPosts = await getCollection("blog")
-const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())]
+
+const tags = getUniqueValues(allPosts, (post) => post.data.tags)
+const tagCounts = countByField(allPosts, (post) => post.data.tags)
 
 const frontmatter = {
   title: "Tag Index",
@@ -24,7 +31,9 @@ const frontmatter = {
       {
         tags.map((tag) => (
           <li>
-            <a href={`/blog/tags/${slugify(tag)}`}>#{tag}</a>
+            <a href={`/blog/tags/${slugify(tag)}`}>
+              #{tag} {formatCount(tagCounts.get(tag) || 0)}
+            </a>
           </li>
         ))
       }

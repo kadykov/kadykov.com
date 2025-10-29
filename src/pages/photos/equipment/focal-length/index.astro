@@ -3,6 +3,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
+import { countByField, formatCount } from "../../../../utils/collectionHelpers"
 
 // Map of category to display name and description
 const categoryInfo = {
@@ -32,22 +33,16 @@ const categoryInfo = {
   },
 }
 
-let categoryCounts: Map<string, number> = new Map()
-
 // Fetch all photos from the collection (cached by Astro)
 const photoEntries = await getCollection("photos")
 const allPhotos: PhotoManifestItem[] = photoEntries.map(
   (entry) => entry.data as PhotoManifestItem
 )
 
-allPhotos.forEach((photo) => {
-  if (photo.focalLengthCategory) {
-    categoryCounts.set(
-      photo.focalLengthCategory,
-      (categoryCounts.get(photo.focalLengthCategory) || 0) + 1
-    )
-  }
-})
+const categoryCounts = countByField(
+  allPhotos,
+  (photo) => photo.focalLengthCategory
+)
 
 const frontmatter = {
   title: "Browse by Focal Length",
@@ -70,10 +65,11 @@ const frontmatter = {
             if (count === 0) return null
             return (
               <li>
-                <a href={`/photos/equipment/focal-length/${key}/1`}>
-                  {info.name}{" "}
-                  <span class="description">({info.description})</span>
-                  <span class="count">— {count} photos</span>
+                <a
+                  href={`/photos/equipment/focal-length/${key}/1`}
+                  title={info.description}
+                >
+                  {info.name} {formatCount(count)}
                 </a>
               </li>
             )
@@ -91,15 +87,3 @@ const frontmatter = {
     </ul>
   </nav>
 </BaseLayout>
-
-<style>
-  .description {
-    color: var(--color-text-secondary, #666);
-    font-size: 0.9em;
-  }
-
-  .count {
-    color: var(--color-text-secondary, #666);
-    font-size: 0.9em;
-  }
-</style>

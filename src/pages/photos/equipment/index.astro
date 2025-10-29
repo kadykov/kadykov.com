@@ -4,6 +4,11 @@ import Hero from "../../../components/Hero.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import { slugify } from "../../../utils/slugify"
+import {
+  getUniqueValues,
+  countByField,
+  formatCount,
+} from "../../../utils/collectionHelpers"
 
 // Fetch all photos to build equipment lists
 const photoEntries = await getCollection("photos")
@@ -12,29 +17,12 @@ const allPhotos: PhotoManifestItem[] = photoEntries.map(
 )
 
 // Gather cameras
-const cameraSet = new Set<string>()
-const cameraCounts = new Map<string, number>()
-allPhotos.forEach((photo) => {
-  if (photo.cameraModel) {
-    cameraSet.add(photo.cameraModel)
-    cameraCounts.set(
-      photo.cameraModel,
-      (cameraCounts.get(photo.cameraModel) || 0) + 1
-    )
-  }
-})
-const uniqueCameras = Array.from(cameraSet).sort((a, b) => a.localeCompare(b))
+const uniqueCameras = getUniqueValues(allPhotos, (photo) => photo.cameraModel)
+const cameraCounts = countByField(allPhotos, (photo) => photo.cameraModel)
 
 // Gather lenses
-const lensSet = new Set<string>()
-const lensCounts = new Map<string, number>()
-allPhotos.forEach((photo) => {
-  if (photo.lensModel) {
-    lensSet.add(photo.lensModel)
-    lensCounts.set(photo.lensModel, (lensCounts.get(photo.lensModel) || 0) + 1)
-  }
-})
-const uniqueLenses = Array.from(lensSet).sort((a, b) => a.localeCompare(b))
+const uniqueLenses = getUniqueValues(allPhotos, (photo) => photo.lensModel)
+const lensCounts = countByField(allPhotos, (photo) => photo.lensModel)
 
 // Gather focal length categories
 const categoryInfo: Record<string, { name: string; description: string }> = {
@@ -64,15 +52,10 @@ const categoryInfo: Record<string, { name: string; description: string }> = {
   },
 }
 
-const categoryCounts = new Map<string, number>()
-allPhotos.forEach((photo) => {
-  if (photo.focalLengthCategory) {
-    categoryCounts.set(
-      photo.focalLengthCategory,
-      (categoryCounts.get(photo.focalLengthCategory) || 0) + 1
-    )
-  }
-})
+const categoryCounts = countByField(
+  allPhotos,
+  (photo) => photo.focalLengthCategory
+)
 
 // Count flash photos
 const flashCount = allPhotos.filter((photo) => photo.flash === true).length
@@ -100,7 +83,7 @@ const frontmatter = {
               {uniqueCameras.map((camera) => (
                 <li>
                   <a href={`/photos/equipment/cameras/${slugify(camera)}/1`}>
-                    {camera} ({cameraCounts.get(camera)} photos)
+                    {camera} {formatCount(cameraCounts.get(camera) || 0)}
                   </a>
                 </li>
               ))}
@@ -118,7 +101,7 @@ const frontmatter = {
               {uniqueLenses.map((lens) => (
                 <li>
                   <a href={`/photos/equipment/lenses/${slugify(lens)}/1`}>
-                    {lens} ({lensCounts.get(lens)} photos)
+                    {lens} {formatCount(lensCounts.get(lens) || 0)}
                   </a>
                 </li>
               ))}
@@ -138,8 +121,11 @@ const frontmatter = {
                 if (count === 0) return null
                 return (
                   <li>
-                    <a href={`/photos/equipment/focal-length/${key}/1`}>
-                      {info.name} ({info.description}) — {count} photos
+                    <a
+                      href={`/photos/equipment/focal-length/${key}/1`}
+                      title={info.description}
+                    >
+                      {info.name} {formatCount(count)}
                     </a>
                   </li>
                 )
@@ -156,7 +142,7 @@ const frontmatter = {
           flashCount > 0 ? (
             <p>
               <a href="/photos/equipment/flash/1">
-                Photos taken with flash ({flashCount} photos)
+                Photos taken with flash {formatCount(flashCount)}
               </a>
             </p>
           ) : (

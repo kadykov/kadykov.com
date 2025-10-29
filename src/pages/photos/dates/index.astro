@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
 import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
+import { countByField, formatCount } from "../../../utils/collectionHelpers"
 
 let uniqueDates: string[] = [] // Stores dates as YYYY-MM-DD strings
 
@@ -34,6 +35,18 @@ const photoEntries = await getCollection("photos")
 const allPhotos: PhotoManifestItem[] = photoEntries.map(
   (entry) => entry.data as PhotoManifestItem
 )
+
+// Count photos by date
+const dateCounts = countByField(allPhotos, (photo) => {
+  if (photo.dateTaken) {
+    return photo.dateTaken.substring(0, 10) // YYYY-MM-DD from ISO string
+  } else if (photo.year && photo.month && photo.day) {
+    const monthStr = String(photo.month).padStart(2, "0")
+    const dayStr = String(photo.day).padStart(2, "0")
+    return `${photo.year}-${monthStr}-${dayStr}`
+  }
+  return undefined
+})
 
 const dateSet = new Set<string>()
 allPhotos.forEach((photo) => {
@@ -99,9 +112,12 @@ const frontmatter = {
                             .sort((a, b) => a.localeCompare(b))
                             .map((date: string) => {
                               const day = parseInt(date.split("-")[2], 10)
+                              const count = dateCounts.get(date) || 0
                               return (
                                 <li>
-                                  <a href={`/photos/dates/${date}/1`}>{day}</a>
+                                  <a href={`/photos/dates/${date}/1`}>
+                                    {day} {formatCount(count)}
+                                  </a>
                                 </li>
                               )
                             })}

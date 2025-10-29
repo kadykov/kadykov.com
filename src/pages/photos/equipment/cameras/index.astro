@@ -4,9 +4,11 @@ import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
 import { slugify } from "../../../../utils/slugify"
-
-let uniqueCameras: string[] = []
-let cameraCounts: Map<string, number> = new Map()
+import {
+  getUniqueValues,
+  countByField,
+  formatCount,
+} from "../../../../utils/collectionHelpers"
 
 // Fetch all photos from the collection (cached by Astro)
 const photoEntries = await getCollection("photos")
@@ -14,17 +16,8 @@ const allPhotos: PhotoManifestItem[] = photoEntries.map(
   (entry) => entry.data as PhotoManifestItem
 )
 
-const cameraSet = new Set<string>()
-allPhotos.forEach((photo) => {
-  if (photo.cameraModel) {
-    cameraSet.add(photo.cameraModel)
-    cameraCounts.set(
-      photo.cameraModel,
-      (cameraCounts.get(photo.cameraModel) || 0) + 1
-    )
-  }
-})
-uniqueCameras = Array.from(cameraSet).sort((a, b) => a.localeCompare(b))
+const uniqueCameras = getUniqueValues(allPhotos, (photo) => photo.cameraModel)
+const cameraCounts = countByField(allPhotos, (photo) => photo.cameraModel)
 
 const frontmatter = {
   title: "Browse by Camera",
@@ -45,7 +38,7 @@ const frontmatter = {
           {uniqueCameras.map((camera) => (
             <li>
               <a href={`/photos/equipment/cameras/${slugify(camera)}/1`}>
-                {camera} ({cameraCounts.get(camera)} photos)
+                {camera} {formatCount(cameraCounts.get(camera) || 0)}
               </a>
             </li>
           ))}
