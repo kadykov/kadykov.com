@@ -49,6 +49,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       const title = data.title
       const date = data.dateTaken
       const tags = data.tags || []
+      const slug = data.slug
 
       let captionHTML =
         '<div class="text-gray-300 pswp-caption-content-wrapper">'
@@ -71,6 +72,10 @@ if (parsedDataSource && parsedDataSource.length > 0) {
             return `<a href="/photos/tags/${trimmedTag}/1" class="btn btn-xs btn-outline text-gray-300 border-gray-500 hover:bg-gray-700 hover:border-gray-400 hover:text-gray-100 text-meta">${trimmedTag}</a>`
           })
           .join("")
+      }
+      // Add "View full details" link if slug is available
+      if (slug) {
+        metaHTML += `<a href="/photo/${slug}" class="btn btn-xs btn-outline text-gray-300 border-gray-500 hover:bg-gray-700 hover:border-gray-400 hover:text-gray-100 text-meta" title="View full photo details">View details</a>`
       }
       if (metaHTML) {
         captionHTML += `<div class="mt-2 flex flex-wrap gap-2 items-center">${metaHTML}</div>`
