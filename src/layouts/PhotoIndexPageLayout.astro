@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro"
 import PhotoGallery from "../components/PhotoGallery.astro"
 import PaginationNav from "../components/PaginationNav.astro"
+import PhotoNavigation from "../components/PhotoNavigation.astro"
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import type { Page } from "astro"
 
@@ -10,9 +11,11 @@ interface Props {
   fullPhotoDataset: PhotoManifestItem[]
   pageTitle: string
   pageDescription: string
+  currentNav?: "all" | "tags" | "dates" | "equipment"
 }
 
-const { page, fullPhotoDataset, pageTitle, pageDescription } = Astro.props
+const { page, fullPhotoDataset, pageTitle, pageDescription, currentNav } =
+  Astro.props
 
 const frontmatter = {
   title: pageTitle,
@@ -27,12 +30,6 @@ const frontmatter = {
   <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />
 
   <PaginationNav page={page} />
-  <nav>
-    <ul>
-      <li><a href="/photos/all/1">All photos</a></li>
-      <li><a href="/photos/tags">By tag</a></li>
-      <li><a href="/photos/dates">By date</a></li>
-      <li><a href="/photos/equipment">By equipment</a></li>
-    </ul>
-  </nav>
+
+  <PhotoNavigation currentPage={currentNav} />
 </BaseLayout>

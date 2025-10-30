@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Hero from "../../../components/Hero.astro"
+import PhotoNavigation from "../../../components/PhotoNavigation.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import { slugify } from "../../../utils/slugify"
@@ -152,4 +153,6 @@ const frontmatter = {
       </li>
     </ul>
   </nav>
+
+  <PhotoNavigation currentPage="equipment" />
 </BaseLayout>

@@ -1,0 +1,30 @@
+---
+interface Props {
+  currentPage?: "all" | "tags" | "dates" | "equipment"
+}
+
+const { currentPage } = Astro.props
+
+const navItems = [
+  { id: "all", label: "All photos", href: "/photos/all/1" },
+  { id: "tags", label: "By tag", href: "/photos/tags" },
+  { id: "dates", label: "By date", href: "/photos/dates" },
+  { id: "equipment", label: "By equipment", href: "/photos/equipment" },
+]
+---
+
+<nav aria-label="Photo gallery navigation">
+  <ul>
+    {
+      navItems.map((item) => (
+        <li>
+          {item.id === currentPage ? (
+            <span aria-current="page">{item.label}</span>
+          ) : (
+            <a href={item.href}>{item.label}</a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</nav>

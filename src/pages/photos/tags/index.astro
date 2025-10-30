@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../components/Hero.astro"
+import PhotoNavigation from "../../../components/PhotoNavigation.astro"
 import { slugify } from "../../../utils/slugify"
 import {
   getUniqueValues,
@@ -53,10 +54,5 @@ const frontmatter = {
     )
   }
 
-  <nav>
-    <ul>
-      <li><a href="/photos/all/1">All photos</a></li>
-      <li><a href="/photos/dates">Browse by date</a></li>
-    </ul>
-  </nav>
+  <PhotoNavigation currentPage="tags" />
 </BaseLayout>

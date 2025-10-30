@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro"
 import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
 import OptimizedImage from "../../components/OptimizedImage.astro"
+import PhotoNavigation from "../../components/PhotoNavigation.astro"
 import { PHOTO_SERVER_URL } from "../../config/photoServer"
 import { slugify } from "../../utils/slugify"
 import { getPhotoAltText, getPhotoDisplayDate } from "../../utils/photoHelpers"
@@ -241,19 +242,7 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
       </dl>
     </section>
 
-    <nav>
-      <a href="/photos/all/1">← Back to gallery</a>
-      {
-        photo.dateTaken && (
-          <>
-            {" | "}
-            <a href={`/photos/dates/${photo.dateTaken.substring(0, 10)}/1`}>
-              View all photos from this date
-            </a>
-          </>
-        )
-      }
-    </nav>
+    <PhotoNavigation />
   </article>
 </BaseLayout>
 

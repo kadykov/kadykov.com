@@ -3,6 +3,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
+import PhotoNavigation from "../../../../components/PhotoNavigation.astro"
 import { slugify } from "../../../../utils/slugify"
 import {
   getUniqueValues,
@@ -49,9 +50,5 @@ const frontmatter = {
     )
   }
 
-  <nav>
-    <ul>
-      <li><a href="/photos/equipment">← Back to equipment</a></li>
-    </ul>
-  </nav>
+  <PhotoNavigation currentPage="equipment" />
 </BaseLayout>
