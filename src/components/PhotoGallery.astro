@@ -2,6 +2,7 @@
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import { generateOptimizedImage } from "../utils/imageOptimization"
 import { classifyPhoto, getImageDimensions } from "../utils/photoClassification"
+import { getPhotoAltText, getPhotoDisplayDate } from "../utils/photoHelpers"
 import { PHOTO_SERVER_URL } from "../config/photoServer"
 
 interface Props {
@@ -59,6 +60,10 @@ const photoSwipeJsonData = await Promise.all(
     const thumbnailWidth = thumbnailImage.width
     const thumbnailHeight = thumbnailImage.height
 
+    // Generate alt text for lightbox (PhotoSwipe creates its own img elements)
+    const displayDate = getPhotoDisplayDate(photo)
+    const altText = getPhotoAltText(photo, displayDate ?? undefined)
+
     return {
       downloadUrl: photoSrc, // Original JPEG for download
       src: photoSrc, // Original JPEG as fallback (for middle-click and when PhotoSwipe fails)
@@ -69,6 +74,7 @@ const photoSwipeJsonData = await Promise.all(
       w: photo.width, // PhotoSwipe expects 'w' (original dimensions)
       h: photo.height, // PhotoSwipe expects 'h' (original dimensions)
       srcset: pswpSrcset, // AVIF srcset for PhotoSwipe
+      alt: altText, // Alt text for lightbox image
       title: photo.title || "",
       description: photo.description || "",
       dateTaken: photo.dateTaken || "",
@@ -119,7 +125,10 @@ function getRandomRotation(maxDegrees: number = 1): number {
         )
 
         const photoSrc = `${imageBaseUrl}${photo.relativePath}` // Original JPEG/PNG src
-        const altText = photo.title || photo.description || photo.filename
+
+        // Generate alt text for thumbnail
+        const displayDate = getPhotoDisplayDate(photo)
+        const altText = getPhotoAltText(photo, displayDate ?? undefined)
 
         // Retrieve the pre-generated data for this photo from photoSwipeJsonData
         // All optimized images (AVIF srcset, WebP fallback, placeholder) are pre-generated
@@ -172,7 +181,8 @@ function getRandomRotation(maxDegrees: number = 1): number {
                 fullDatasetIndex === -1 ? pageSpecificIndex : fullDatasetIndex
               }
               target="_blank"
-              aria-label={`View image ${altText}`}
+              title={photo.description || undefined}
+              aria-label={altText}
             >
               <figure style={`rotate: ${cardRotation}deg;`}>
                 <img

@@ -4,6 +4,7 @@ import Hero from "../../../../components/Hero.astro"
 import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../../../utils/photoManifestSchema"
 import type { GetStaticPathsResult, PaginateFunction, Page } from "astro"
+import { formatDateString } from "../../../../utils/photoHelpers"
 
 interface Props {
   page: Page<PhotoManifestItem> // items will have slugs from manifest
@@ -79,8 +80,11 @@ export async function getStaticPaths({
 // Props interface is now Props defined above
 const { page, dateDisplay, fullPhotoDataset } = Astro.props // Added fullPhotoDataset
 
-const pageTitle = `Photos from ${dateDisplay}`
-const pageDescription = `A collection of photos taken on ${dateDisplay}. Page ${page.currentPage} of ${page.lastPage}.`
+// Format date to human-readable format
+const formattedDate = formatDateString(dateDisplay)
+
+const pageTitle = `Photos from ${formattedDate}`
+const pageDescription = `A collection of photos taken on ${formattedDate}. Page ${page.currentPage} of ${page.lastPage}.`
 ---
 
 <PhotoIndexPageLayout

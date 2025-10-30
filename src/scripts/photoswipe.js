@@ -30,6 +30,14 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     history: false,
   })
 
+  // Set alt text on dynamically created images
+  lightbox.on("contentLoad", (e) => {
+    const { content } = e
+    if (content.data && content.data.alt && content.element) {
+      content.element.alt = content.data.alt
+    }
+  })
+
   new PhotoSwipeDynamicCaption(lightbox, {
     type: "auto",
     captionContent: (slide) => {
@@ -39,7 +47,6 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       }
 
       const title = data.title
-      const description = data.description
       const date = data.dateTaken
       const tags = data.tags || []
 
@@ -48,9 +55,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       if (title) {
         captionHTML += `<h4">${title}</h4>`
       }
-      if (description) {
-        captionHTML += `<p>${description}</p>`
-      }
+      // Description removed to maximize immersive viewing experience
       let metaHTML = ""
       if (date) {
         const datePart = typeof date === "string" ? date.substring(0, 10) : ""
@@ -71,7 +76,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         captionHTML += `<div class="mt-2 flex flex-wrap gap-2 items-center">${metaHTML}</div>`
       }
       captionHTML += "</div>"
-      if (!title && !description && !date && tags.length === 0) {
+      if (!title && !date && tags.length === 0) {
         return ""
       }
       return captionHTML
