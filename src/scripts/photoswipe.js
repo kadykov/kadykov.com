@@ -47,43 +47,72 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       }
 
       const title = data.title
-      const date = data.dateTaken
+      const dateISO = data.dateTaken
       const tags = data.tags || []
       const slug = data.slug
 
-      let captionHTML =
-        '<div class="text-gray-300 pswp-caption-content-wrapper">'
-      if (title) {
-        captionHTML += `<h4">${title}</h4>`
-      }
-      // Description removed to maximize immersive viewing experience
-      let metaHTML = ""
-      if (date) {
-        const datePart = typeof date === "string" ? date.substring(0, 10) : ""
-        if (datePart) {
-          metaHTML += `<a href="/photos/dates/${datePart}/1" class="btn btn-xs btn-outline text-gray-300 border-gray-500 hover:bg-gray-700 hover:border-gray-400 hover:text-gray-100 text-meta">${datePart}</a>`
-        }
-      }
-      if (tags.length > 0) {
-        metaHTML += tags
-          .map((tag) => {
-            const trimmedTag = typeof tag === "string" ? tag.trim() : ""
-            if (!trimmedTag) return ""
-            return `<a href="/photos/tags/${trimmedTag}/1" class="btn btn-xs btn-outline text-gray-300 border-gray-500 hover:bg-gray-700 hover:border-gray-400 hover:text-gray-100 text-meta">${trimmedTag}</a>`
-          })
-          .join("")
-      }
-      // Add "View full details" link if slug is available
-      if (slug) {
-        metaHTML += `<a href="/photo/${slug}" class="btn btn-xs btn-outline text-gray-300 border-gray-500 hover:bg-gray-700 hover:border-gray-400 hover:text-gray-100 text-meta" title="View full photo details">View details</a>`
-      }
-      if (metaHTML) {
-        captionHTML += `<div class="mt-2 flex flex-wrap gap-2 items-center">${metaHTML}</div>`
-      }
-      captionHTML += "</div>"
-      if (!title && !date && tags.length === 0) {
+      // Return empty if no content to display
+      if (!title && !dateISO && tags.length === 0) {
         return ""
       }
+
+      // Format date to human-readable format (e.g., "January 15, 2024")
+      let dateFormatted = null
+      if (dateISO && typeof dateISO === "string") {
+        const datePart = dateISO.substring(0, 10) // Extract YYYY-MM-DD
+        const dateObj = new Date(datePart)
+        dateFormatted = dateObj.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
+
+      // Build caption HTML using semantic elements
+      let captionHTML = "<figure><figcaption>"
+
+      // Title as heading
+      if (title) {
+        captionHTML += `<h4>${title}</h4>`
+      }
+
+      // Metadata paragraph: Tags → Time → View details
+      const hasMetadata = tags.length > 0 || dateFormatted || slug
+      if (hasMetadata) {
+        captionHTML += "<p>"
+
+        // Tags with hash prefix, comma-separated
+        if (tags.length > 0) {
+          const tagLinks = tags
+            .map((tag) => {
+              const trimmedTag = typeof tag === "string" ? tag.trim() : ""
+              if (!trimmedTag) return ""
+              return `<a href="/photos/tags/${trimmedTag}/1">#${trimmedTag}</a>`
+            })
+            .filter((link) => link !== "")
+            .join(", ")
+          captionHTML += tagLinks
+        }
+
+        // Time (date) in the middle
+        if (dateFormatted) {
+          const dateURL = dateISO
+            ? `/photos/dates/${dateISO.substring(0, 10)}/1`
+            : ""
+          const separator = tags.length > 0 ? " · " : ""
+          captionHTML += `${separator}<time datetime="${dateISO}"><a href="${dateURL}">${dateFormatted}</a></time>`
+        }
+
+        // View details link at the end
+        if (slug) {
+          const separator = tags.length > 0 || dateFormatted ? " · " : ""
+          captionHTML += `${separator}<a href="/photo/${slug}">View details</a>`
+        }
+
+        captionHTML += "</p>"
+      }
+
+      captionHTML += "</figcaption></figure>"
       return captionHTML
     },
   })
