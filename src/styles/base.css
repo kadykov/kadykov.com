@@ -1527,9 +1527,12 @@ nav ol {
 
 /* Date in article header */
 time {
+  font-style: italic;
+}
+
+article time {
   color: var(--color-on-surface-variant);
   font-size: 0.9em;
-  font-style: italic;
 }
 
 /*
@@ -1771,51 +1774,16 @@ textarea:user-invalid {
 
 /* Caption container - semantic figcaption element */
 .pswp__dynamic-caption figcaption {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  line-height: 1.5;
-
   /* Reduced brightness - less distracting on black background */
-  color: oklch(65% 0 0deg);
-}
-
-/* Title as h4 heading */
-.pswp__dynamic-caption h4 {
-  margin: 0 0 0.5rem;
-  font-weight: 500;
-  font-size: 1.1rem;
-  line-height: 1.3;
-  font-family: var(--font-sans);
-  color: oklch(70% 0 0deg);
+  color: oklch(75% 0 0deg);
 }
 
 /* Metadata paragraph - tags, time, and details link */
 .pswp__dynamic-caption p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: oklch(60% 0 0deg);
-}
-
-/* Date styling - italic for visual distinction */
-.pswp__dynamic-caption time {
-  font-style: italic;
-  color: oklch(60% 0 0deg);
+  font-family: var(--font-serif);
 }
 
 /* Links in caption - subtle styling */
 .pswp__dynamic-caption a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s ease-out;
-}
-
-.pswp__dynamic-caption a:hover {
-  color: oklch(75% 0 0deg);
-  text-decoration: underline;
-}
-
-/* Time element links - match parent time color */
-.pswp__dynamic-caption time a {
   color: inherit;
 }
