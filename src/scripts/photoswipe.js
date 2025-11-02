@@ -238,20 +238,20 @@ if (parsedDataSource && parsedDataSource.length > 0) {
   }
 
   // Custom URL history management using real photo page URLs
-  let hasInitiallyOpened = false
+  let originUrl = null // Store the URL before opening lightbox
 
   lightbox.on("uiRegister", function () {
     if (lightbox.pswp) {
-      // When lightbox opens or changes slides, update the URL
+      // When lightbox opens, save the current URL and update to photo URL
       lightbox.pswp.on("change", () => {
         const currentPhotoData = lightbox.pswp.currSlide?.data
         if (currentPhotoData?.slug) {
           const photoPageUrl = `/photo/${currentPhotoData.slug}`
 
-          if (!hasInitiallyOpened) {
-            // First time opening lightbox - push new history entry
+          // If opening for the first time, save origin and push new state
+          if (originUrl === null) {
+            originUrl = window.location.pathname + window.location.search
             history.pushState(null, "", photoPageUrl)
-            hasInitiallyOpened = true
           } else {
             // Navigating between photos - replace current entry
             history.replaceState(null, "", photoPageUrl)
@@ -259,15 +259,16 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         }
       })
 
-      // Reset flag when lightbox closes
+      // Restore origin URL when lightbox closes
       lightbox.pswp.on("close", () => {
-        hasInitiallyOpened = false
-
-        if (!isClosingViaPopstate) {
+        if (!isClosingViaPopstate && originUrl !== null) {
           // User closed via X button, ESC, or click outside
+          // Restore the original URL by going back
           history.back()
         }
-        // Reset the flag
+
+        // Reset state
+        originUrl = null
         isClosingViaPopstate = false
       })
     }
@@ -295,6 +296,8 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 
       const clickedIndex = parseInt(clickedLink.dataset.pswpIndex, 10)
       if (!isNaN(clickedIndex)) {
+        // Reset flag before opening to ensure clean state
+        isClosingViaPopstate = false
         lightbox.loadAndOpen(clickedIndex)
       } else {
         console.warn(
