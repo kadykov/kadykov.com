@@ -95,6 +95,18 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
     <section class="metadata">
       <h2>Details</h2>
       <dl>
+        <dt>Download</dt>
+        <dd>
+          <a
+            href={`${imageBaseUrl}${photo.relativePath}`}
+            download
+            target="_blank"
+            rel="noopener"
+          >
+            Download original image
+          </a>
+        </dd>
+
         <dt>Date taken</dt>
         <dd>
           {dateUrl ? <a href={dateUrl}>{displayDate}</a> : displayDate}

@@ -149,39 +149,6 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         isClosingViaPopstate = false
       })
     }
-
-    if (lightbox.pswp && lightbox.pswp.ui) {
-      lightbox.pswp.ui.registerElement({
-        name: "download-button",
-        order: 8,
-        isButton: true,
-        tagName: "a",
-        html: {
-          isCustomSVG: true,
-          inner:
-            '<path d="M20.5 14.3 17.1 18V10h-2.2v7.9l-3.4-3.6L10 16l6 6.1 6-6.1ZM23 23H9v2h14Z" id="pswp__icn-download"/>',
-          outlineID: "pswp__icn-download",
-        },
-        onInit: (el, pswp) => {
-          el.setAttribute("download", "")
-          el.setAttribute("target", "_blank")
-          el.setAttribute("rel", "noopener")
-          el.setAttribute("title", "Download image")
-
-          const updateDownloadLink = () => {
-            if (pswp.currSlide && pswp.currSlide.data) {
-              if (pswp.currSlide.data.downloadUrl) {
-                el.href = pswp.currSlide.data.downloadUrl
-              } else if (pswp.currSlide.data.src) {
-                el.href = pswp.currSlide.data.src
-              }
-            }
-          }
-          pswp.on("change", updateDownloadLink)
-          updateDownloadLink()
-        },
-      })
-    }
   })
 
   // Handle browser back button

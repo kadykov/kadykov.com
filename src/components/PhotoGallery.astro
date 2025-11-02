@@ -65,7 +65,6 @@ const photoSwipeJsonData = await Promise.all(
     const altText = getPhotoAltText(photo, displayDate ?? undefined)
 
     return {
-      downloadUrl: photoSrc, // Original JPEG for download
       src: photoSrc, // Original JPEG as fallback (for middle-click and when PhotoSwipe fails)
       msrc: msrcUrl, // Small AVIF placeholder (reuses preview width)
       thumbnailSrcset, // Srcset for responsive gallery thumbnail
@@ -133,16 +132,16 @@ function getRandomRotation(maxDegrees: number = 1): number {
         // Retrieve the pre-generated data for this photo from photoSwipeJsonData
         // All optimized images (AVIF srcset, WebP fallback, placeholder) are pre-generated
         const pswpEntryForThisPhoto = photoSwipeJsonData.find(
-          (entry) => entry.slug === photo.slug && entry.downloadUrl === photoSrc
+          (entry) => entry.slug === photo.slug && entry.src === photoSrc
         )
 
         // For PhotoSwipe data attributes:
         // href: Link to individual photo page (/photo/[slug])
-        // data-pswp-src: Original JPEG for download
+        // data-pswp-src: Original JPEG as fallback
         // data-pswp-srcset: AVIF srcset for responsive lightbox display
         // data-pswp-width/height: Original dimensions
         const pswpLinkHref = `/photo/${photo.slug}` // Link to individual photo page
-        const pswpDataSrc = pswpEntryForThisPhoto?.downloadUrl || photoSrc
+        const pswpDataSrc = pswpEntryForThisPhoto?.src || photoSrc
         const pswpWidth = photo.width
         const pswpHeight = photo.height
         const pswpSrcset = pswpEntryForThisPhoto?.srcset || ""
