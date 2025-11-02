@@ -3,6 +3,58 @@ import "photoswipe/style.css"
 import PhotoSwipeDynamicCaption from "photoswipe-dynamic-caption-plugin"
 import "photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.css"
 
+// Fullscreen API helper
+// Supports unprefixed and webkit-prefixed versions
+function getFullscreenAPI() {
+  let api
+  let enterFS
+  let exitFS
+  let elementFS
+  let changeEvent
+  let errorEvent
+
+  if (document.documentElement.requestFullscreen) {
+    enterFS = "requestFullscreen"
+    exitFS = "exitFullscreen"
+    elementFS = "fullscreenElement"
+    changeEvent = "fullscreenchange"
+    errorEvent = "fullscreenerror"
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    enterFS = "webkitRequestFullscreen"
+    exitFS = "webkitExitFullscreen"
+    elementFS = "webkitFullscreenElement"
+    changeEvent = "webkitfullscreenchange"
+    errorEvent = "webkitfullscreenerror"
+  }
+
+  if (enterFS) {
+    api = {
+      request: function (el) {
+        if (enterFS === "webkitRequestFullscreen") {
+          el[enterFS](Element.ALLOW_KEYBOARD_INPUT)
+        } else {
+          el[enterFS]()
+        }
+      },
+
+      exit: function () {
+        return document[exitFS]()
+      },
+
+      isFullscreen: function () {
+        return document[elementFS]
+      },
+
+      change: changeEvent,
+      error: errorEvent,
+    }
+  }
+
+  return api
+}
+
+const fullscreenAPI = getFullscreenAPI()
+
 let parsedDataSource = null
 const dataSourceElement = document.getElementById("photoswipe-data")
 
@@ -114,6 +166,76 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       return captionHTML
     },
   })
+
+  // Register fullscreen button
+  if (fullscreenAPI) {
+    lightbox.on("uiRegister", function () {
+      lightbox.pswp.ui.registerElement({
+        name: "fullscreen",
+        order: 9,
+        isButton: true,
+        // From https://github.com/dimsemenov/PhotoSwipe/issues/1759
+        html: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
+          <use class="pswp__icn-shadow" xlink:href="#pswp__icn-fullscreen-exit"/>
+          <use class="pswp__icn-shadow" xlink:href="#pswp__icn-fullscreen-request"/>
+          <path d="M8 8v6.047h2.834v-3.213h3.213V8h-3.213zm9.953 0v2.834h3.213v3.213H24V8h-2.834zM8 17.953V24h6.047v-2.834h-3.213v-3.213zm13.166 0v3.213h-3.213V24H24v-6.047z" id="pswp__icn-fullscreen-request"/>
+          <path d="M11.213 8v3.213H8v2.834h6.047V8zm6.74 0v6.047H24v-2.834h-3.213V8zM8 17.953v2.834h3.213V24h2.834v-6.047h-2.834zm9.953 0V24h2.834v-3.213H24v-2.834h-3.213z" id="pswp__icn-fullscreen-exit" style="display:none"/>
+        </svg>`,
+        title: "Toggle fullscreen",
+        onClick: (event, el, pswp) => {
+          if (fullscreenAPI.isFullscreen()) {
+            fullscreenAPI.exit()
+          } else {
+            fullscreenAPI.request(pswp.element)
+          }
+        },
+      })
+    })
+
+    // Handle fullscreen state changes
+    lightbox.on("uiRegister", function () {
+      const pswp = lightbox.pswp
+
+      document.addEventListener(fullscreenAPI.change, () => {
+        const isFullscreen = fullscreenAPI.isFullscreen()
+        const fullscreenButton = pswp.element.querySelector(
+          ".pswp__button--fullscreen"
+        )
+
+        if (fullscreenButton) {
+          // Toggle icon visibility
+          const requestIcon = fullscreenButton.querySelector(
+            "#pswp__icn-fullscreen-request"
+          )
+          const exitIcon = fullscreenButton.querySelector(
+            "#pswp__icn-fullscreen-exit"
+          )
+
+          if (isFullscreen) {
+            if (requestIcon) requestIcon.style.display = "none"
+            if (exitIcon) exitIcon.style.display = "block"
+            fullscreenButton.classList.add("pswp__button--fs-active")
+          } else {
+            if (requestIcon) requestIcon.style.display = "block"
+            if (exitIcon) exitIcon.style.display = "none"
+            fullscreenButton.classList.remove("pswp__button--fs-active")
+          }
+        }
+      })
+
+      // Handle F key for fullscreen toggle
+      pswp.on("keydown", (e) => {
+        if (e.originalEvent.key === "f" || e.originalEvent.key === "F") {
+          e.preventDefault()
+          if (fullscreenAPI.isFullscreen()) {
+            fullscreenAPI.exit()
+          } else {
+            fullscreenAPI.request(pswp.element)
+          }
+        }
+      })
+    })
+  }
 
   // Custom URL history management using real photo page URLs
   let hasInitiallyOpened = false
