@@ -1773,7 +1773,10 @@ textarea:user-invalid {
  */
 
 /* Caption container - semantic figcaption element */
-.pswp__dynamic-caption figcaption {
+.pswp__dynamic-caption h4,
+.pswp__dynamic-caption p {
+  margin: 0;
+
   /* Reduced brightness - less distracting on black background */
   color: oklch(75% 0 0deg);
 }

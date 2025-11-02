@@ -69,7 +69,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       }
 
       // Build caption HTML using semantic elements
-      let captionHTML = "<figure><figcaption>"
+      let captionHTML = ""
 
       // Title as heading
       if (title) {
@@ -111,8 +111,6 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 
         captionHTML += "</p>"
       }
-
-      captionHTML += "</figcaption></figure>"
       return captionHTML
     },
   })
