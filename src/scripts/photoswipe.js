@@ -167,6 +167,84 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     },
   })
 
+  // Register share button
+  // Note: Web Share API requires HTTPS (or localhost for development)
+  // If testing on HTTP, the share button will fall back to clipboard copy
+  lightbox.on("uiRegister", function () {
+    lightbox.pswp.ui.registerElement({
+      name: "share",
+      order: 8,
+      isButton: true,
+      html: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
+        <use class="pswp__icn-shadow" xlink:href="#pswp__icn-share"/>
+        <use class="pswp__icn-shadow" xlink:href="#pswp__icn-share-check"/>
+        <path id="pswp__icn-share" d="M22 26c-1 0-3.3-.7-2.9-3.7l-7-4.1C10.3 19.8 7 18.9 7 16a3 3 0 0 1 5.05-2.2l7-4.1C18.7 8.4 19.6 6 22 6c1.7 0 3 1.3 3 3 0 2.9-3.3 3.8-5.05 2.2l-7 4.1c.1.35.1 1 0 1.4l7 4.1A3 3 0 1 1 22 26"/>
+        <path id="pswp__icn-share-check" style="display:none;" d="m14 24-7-8 2-2 5 6L25 8l2 2Z"/>
+      </svg>`,
+      title: "Share photo",
+      onClick: async (event, el, pswp) => {
+        const currentPhotoData = pswp.currSlide?.data
+        if (!currentPhotoData?.slug) {
+          return
+        }
+
+        const photoUrl = `${window.location.origin}/photo/${currentPhotoData.slug}`
+        const photoTitle = currentPhotoData.title || "Photo"
+
+        const shareData = {
+          title: photoTitle,
+          url: photoUrl,
+        }
+
+        const shareIcon = el.querySelector("#pswp__icn-share")
+        const checkIcon = el.querySelector("#pswp__icn-share-check")
+
+        const showCheckmark = () => {
+          if (shareIcon && checkIcon) {
+            shareIcon.style.display = "none"
+            checkIcon.style.display = "block"
+
+            setTimeout(() => {
+              shareIcon.style.display = "block"
+              checkIcon.style.display = "none"
+            }, 2000)
+          }
+        }
+
+        // Try Web Share API first (requires HTTPS, works on mobile)
+        // Use canShare() if available to check if sharing is actually possible
+        const canTryWebShare =
+          navigator.share &&
+          (!navigator.canShare || navigator.canShare(shareData))
+
+        if (canTryWebShare) {
+          try {
+            await navigator.share(shareData)
+            // Successfully shared via native dialog
+            // Don't show checkmark as the native UI provides its own feedback
+            return
+          } catch (err) {
+            // Web Share failed (user cancelled, not supported, or error)
+            // Fall through to clipboard fallback
+            if (err.name === "AbortError") {
+              // User cancelled - this is normal, don't do anything
+              return
+            }
+          }
+        }
+
+        // Fallback: Copy to clipboard
+        try {
+          await navigator.clipboard.writeText(photoUrl)
+          showCheckmark()
+        } catch (err) {
+          // Both methods failed - show URL in alert dialog for manual copy
+          alert(`Share this photo:\n\n${photoUrl}`)
+        }
+      },
+    })
+  })
+
   // Register fullscreen button
   if (fullscreenAPI) {
     lightbox.on("uiRegister", function () {
