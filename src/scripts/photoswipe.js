@@ -175,6 +175,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       name: "share",
       order: 8,
       isButton: true,
+      // Icons are based on Material Symbols, but heavily simplified/optimized
       html: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
         <use class="pswp__icn-shadow" xlink:href="#pswp__icn-share"/>
         <use class="pswp__icn-shadow" xlink:href="#pswp__icn-share-check"/>
@@ -252,12 +253,12 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         name: "fullscreen",
         order: 9,
         isButton: true,
-        // From https://github.com/dimsemenov/PhotoSwipe/issues/1759
+        // Icons are based on Material Symbols, but heavily simplified/optimized
         html: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
           <use class="pswp__icn-shadow" xlink:href="#pswp__icn-fullscreen-exit"/>
           <use class="pswp__icn-shadow" xlink:href="#pswp__icn-fullscreen-request"/>
-          <path d="M8 8v6.047h2.834v-3.213h3.213V8h-3.213zm9.953 0v2.834h3.213v3.213H24V8h-2.834zM8 17.953V24h6.047v-2.834h-3.213v-3.213zm13.166 0v3.213h-3.213V24H24v-6.047z" id="pswp__icn-fullscreen-request"/>
-          <path d="M11.213 8v3.213H8v2.834h6.047V8zm6.74 0v6.047H24v-2.834h-3.213V8zM8 17.953v2.834h3.213V24h2.834v-6.047h-2.834zm9.953 0V24h2.834v-3.213H24v-2.834h-3.213z" id="pswp__icn-fullscreen-exit" style="display:none"/>
+          <path id="pswp__icn-fullscreen-request" d="M7 25v-5h2v3h3v2zm13 0v-2h3v-3h2v5zM7 12V7h5v2H9v3zm16 0V9h-3V7h5v5z"/>
+          <path id="pswp__icn-fullscreen-exit" style="display:none" d="M10 25v-3H7v-2h5v5zm10 0v-5h5v2h-3v3zM7 12v-2h3V7h2v5Zm13 0V7h2v3h3v2Z"/>
         </svg>`,
         title: "Toggle fullscreen",
         onClick: (event, el, pswp) => {
