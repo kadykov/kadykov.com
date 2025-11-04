@@ -183,7 +183,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         <path id="pswp__icn-share-check" style="display:none;" d="m14 24-7-8 2-2 5 6L25 8l2 2Z"/>
       </svg>`,
       title: "Share photo",
-      onClick: async (event, el, pswp) => {
+      onClick: async (_event, el, pswp) => {
         const currentPhotoData = pswp.currSlide?.data
         if (!currentPhotoData?.slug) {
           return
@@ -261,7 +261,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           <path id="pswp__icn-fullscreen-exit" style="display:none" d="M10 25v-3H7v-2h5v5zm10 0v-5h5v2h-3v3zM7 12v-2h3V7h2v5Zm13 0V7h2v3h3v2Z"/>
         </svg>`,
         title: "Toggle fullscreen",
-        onClick: (event, el, pswp) => {
+        onClick: (_event, _el, pswp) => {
           if (fullscreenAPI.isFullscreen()) {
             fullscreenAPI.exit()
           } else {
