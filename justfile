@@ -20,6 +20,14 @@ preview:
 bp:
     just build && just preview
 
+# Validate HTML files in dist folder
+validate:
+    npm run validate:html
+
+# Build and validate HTML
+build-validate:
+    just build && just validate
+
 # Format code with Prettier
 fmt:
     npm run format

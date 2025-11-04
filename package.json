@@ -13,6 +13,7 @@
     "lint:css": "stylelint \"src/**/*.{css,html,astro}\"",
     "lint:css:fix": "stylelint \"src/**/*.{css,html,astro}\" --fix",
     "lint:all": "npm run lint && npm run lint:css",
+    "validate:html": "java -jar ./node_modules/vnu-jar/build/dist/vnu.jar --skip-non-html dist/",
     "prepare": "husky"
   },
   "dependencies": {
@@ -47,6 +48,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "stylelint": "^16.25.0",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-standard": "^39.0.1"
+    "stylelint-config-standard": "^39.0.1",
+    "vnu-jar": "^25.11.4"
   }
 }

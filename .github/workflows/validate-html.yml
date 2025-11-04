@@ -1,0 +1,55 @@
+name: Validate HTML
+
+on:
+  workflow_run:
+    workflows: ["Build and Deploy to Netlify"]
+    types: [completed]
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # For workflow_run trigger: download artifacts from the deploy workflow
+      - name: Download build artifacts (from deploy workflow)
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      # For pull_request trigger: build independently with cache
+      - name: Cache Astro build artifacts (for PRs)
+        if: github.event_name == 'pull_request'
+        uses: actions/cache@v4
+        with:
+          path: |
+            cache/image-optimization
+            node_modules/.astro
+            .astro
+          key: ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**/*.{ts,astro,js,jsx,tsx}') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-astro-
+
+      - name: Build website (for PRs)
+        if: github.event_name == 'pull_request'
+        run: npm run build
+
+      - name: Validate HTML
+        run: npm run validate:html
