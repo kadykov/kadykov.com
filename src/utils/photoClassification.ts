@@ -174,7 +174,7 @@ export function getClassificationRanges() {
 const GRID_CONSTANTS = {
   COLUMN_WIDTH_REM: 5, // Each grid column width
   GAP_REM: 1.5, // Gap between columns
-  PADDING_NORMAL: 0.5, // Normal padding on each side
+  PADDING_NORMAL: 0.6, // Normal padding on each side (0.5rem figure padding + 0.1rem border)
   PADDING_SIDE_CAPTION: 2, // Padding on the side where caption is placed
   // Rem to viewport conversion: 1rem = clamp(16px, 0.395vw + 14.42px, 22px)
   REM_TO_VW: 0.395,

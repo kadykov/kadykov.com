@@ -136,11 +136,11 @@ function getRandomRotation(maxDegrees: number = 1): number {
         )
 
         // For PhotoSwipe data attributes:
-        // href: Link to individual photo page (/photo/[slug])
+        // href: Link to individual photo page (/photo/[slug]#photo)
         // data-pswp-src: Original JPEG as fallback
         // data-pswp-srcset: AVIF srcset for responsive lightbox display
         // data-pswp-width/height: Original dimensions
-        const pswpLinkHref = `/photo/${photo.slug}` // Link to individual photo page
+        const pswpLinkHref = `/photo/${photo.slug}#photo` // Link to photo with anchor scroll
         const pswpDataSrc = pswpEntryForThisPhoto?.src || photoSrc
         const pswpWidth = photo.width
         const pswpHeight = photo.height
