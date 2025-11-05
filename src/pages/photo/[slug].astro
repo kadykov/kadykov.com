@@ -7,6 +7,7 @@ import PhotoNavigation from "../../components/PhotoNavigation.astro"
 import { PHOTO_SERVER_URL } from "../../config/photoServer"
 import { slugify } from "../../utils/slugify"
 import { getPhotoAltText, getPhotoDisplayDate } from "../../utils/photoHelpers"
+import { Icon } from "astro-icon/components"
 
 export async function getStaticPaths() {
   // Fetch all photos from the collection
@@ -15,18 +16,50 @@ export async function getStaticPaths() {
     (entry) => entry.data as PhotoManifestItem
   )
 
-  // Generate a path for each photo
-  return allPhotos.map((photo) => ({
-    params: { slug: photo.slug },
-    props: { photo },
-  }))
+  // Generate a path for each photo with prev/next navigation
+  return allPhotos.map((photo, index) => {
+    const totalPhotos = allPhotos.length
+    const prevIndex = (index - 1 + totalPhotos) % totalPhotos
+    const nextIndex = (index + 1) % totalPhotos
+
+    return {
+      params: { slug: photo.slug },
+      props: {
+        photo,
+        prevPhotoSlug: allPhotos[prevIndex].slug,
+        nextPhotoSlug: allPhotos[nextIndex].slug,
+      },
+    }
+  })
 }
 
 interface Props {
   photo: PhotoManifestItem
+  prevPhotoSlug: string
+  nextPhotoSlug: string
 }
 
-const { photo } = Astro.props
+const { photo, prevPhotoSlug, nextPhotoSlug } = Astro.props
+
+// Calculate aspect ratio for determining viewport constraints
+const aspectRatio = photo.width / photo.height
+
+// Generate sizes attribute using aspect-ratio media query
+// When viewport aspect ratio >= photo aspect ratio: photo is height-constrained
+//   -> width = 85vh * aspectRatio
+// When viewport aspect ratio < photo aspect ratio: photo is width-constrained
+//   -> width = 100vw (minus padding, but we approximate with 100vw)
+//
+// Express aspect ratio as integer ratio for media query (e.g., 3/2, 16/9)
+// Use 1000x precision for accuracy while keeping numbers reasonable
+const ratioNumerator = Math.round(aspectRatio * 1000)
+const ratioDenominator = 1000
+const sizesAttr = `(min-aspect-ratio: ${ratioNumerator}/${ratioDenominator}) calc(85vh * ${aspectRatio.toFixed(4)}), 100vw`
+
+// For maxWidth: use typical large display width (1920px) or original, whichever is smaller
+// This generates appropriate srcset widths without creating unnecessarily large images
+const maxDisplayWidth = Math.min(photo.width, 1920)
+
 const imageBaseUrl = `${PHOTO_SERVER_URL}/`
 
 // Generate display date and alt text using helpers
@@ -71,28 +104,23 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
     title: pageTitle,
     description: pageDescription,
     image: ogImageUrl,
+    pageType: "photo-gallery",
   }}
 >
-  <article>
-    <header>
-      <h1>{pageTitle}</h1>
-      {photo.description && <p class="description">{photo.description}</p>}
-    </header>
+  <figure id="photo">
+    <OptimizedImage
+      src={`${imageBaseUrl}${photo.relativePath}`}
+      alt={altText}
+      width={maxDisplayWidth}
+      originalWidth={photo.width}
+      originalHeight={photo.height}
+      sizesAttr={sizesAttr}
+      loading="eager"
+    />
+    <figcaption>
+      {photo.title && <h1>{photo.title}</h1>}
+      {photo.description && <p>{photo.description}</p>}
 
-    <figure>
-      <OptimizedImage
-        src={`${imageBaseUrl}${photo.relativePath}`}
-        alt={altText}
-        width={1200}
-        originalWidth={photo.width}
-        originalHeight={photo.height}
-        sizesAttr="(min-width: 1200px) 1200px, 100vw"
-        loading="eager"
-      />
-      {photo.title && <figcaption>{photo.title}</figcaption>}
-    </figure>
-
-    <section class="metadata">
       <h2>Details</h2>
       <dl>
         <dt>Download</dt>
@@ -252,86 +280,25 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
           )
         }
       </dl>
-    </section>
+    </figcaption>
+  </figure>
 
-    <PhotoNavigation />
-  </article>
+  <nav aria-label="Photo navigation">
+    <a
+      href={`/photo/${prevPhotoSlug}#photo`}
+      rel="prev"
+      aria-label="Previous photo"
+    >
+      <Icon name="ri:arrow-left-s-line" />
+    </a>
+    <a
+      href={`/photo/${nextPhotoSlug}#photo`}
+      rel="next"
+      aria-label="Next photo"
+    >
+      <Icon name="ri:arrow-right-s-line" />
+    </a>
+  </nav>
+
+  <PhotoNavigation />
 </BaseLayout>
-
-<style>
-  article {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  header {
-    margin-bottom: 2rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .description {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary, #666);
-  }
-
-  figure {
-    margin: 2rem 0;
-  }
-
-  figure img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  figcaption {
-    margin-top: 0.5rem;
-    font-style: italic;
-    color: var(--color-text-secondary, #666);
-  }
-
-  .metadata {
-    margin: 3rem 0;
-  }
-
-  .metadata h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.75rem 1.5rem;
-    max-width: 600px;
-  }
-
-  dt {
-    font-weight: 600;
-    color: var(--color-text-secondary, #666);
-  }
-
-  dd {
-    margin: 0;
-  }
-
-  nav {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border, #e0e0e0);
-  }
-
-  nav a {
-    color: var(--color-link, #06c);
-    text-decoration: none;
-  }
-
-  nav a:hover {
-    text-decoration: underline;
-  }
-</style>

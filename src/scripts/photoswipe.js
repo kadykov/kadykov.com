@@ -158,7 +158,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         // View details link at the end
         if (slug) {
           const separator = tags.length > 0 || dateFormatted ? " · " : ""
-          captionHTML += `${separator}<a href="/photo/${slug}">View details</a>`
+          captionHTML += `${separator}<a href="/photo/${slug}#photo" target="_blank" rel="noopener">View details</a>`
         }
 
         captionHTML += "</p>"

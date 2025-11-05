@@ -1182,6 +1182,103 @@ nav ul {
   padding-inline: 0;
 }
 
+/* Single photo page - Polaroid-style figure as direct child of main */
+main > figure {
+  /* Center the figure horizontally and add vertical spacing */
+  margin: 0 auto;
+  /* width: fit-content; */
+
+  max-width: 42rem;
+
+  /* Use regular surface container colors instead of forced off-white */
+  background-color: var(--color-surface);
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-1);
+
+  /* Padding around the figure content */
+  /* padding: var(--spacing-adaptive); */
+}
+
+/* Image sizing: fit within viewport while maintaining aspect ratio */
+main > figure img {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 0.2rem;
+
+  /* Inner border: thin light gray for separation from off-white border */
+  padding: 0.1rem;
+  background-color: oklch(92% 0 0deg);
+
+  /* Outer border: variable thickness off-white border (Polaroid aesthetic) */
+  border: var(--spacing-adaptive) solid oklch(95% 0 0deg);
+
+  /* Constrain to 42rem */
+  max-height: calc(42rem - 2 * var(--spacing-adaptive));
+  max-width: min(100%, 42rem - 2 * var(--spacing-adaptive));
+  /* object-fit: contain; */
+  box-shadow: var(--elevation-3);
+}
+
+@media (prefers-color-scheme: dark) {
+  main > figure img {
+    /* Darken inner border for better contrast in dark theme */
+    background-color: oklch(87% 0 0deg);
+
+    /* Slightly darker off-white outer border for dark theme */
+    border-color: oklch(90% 0 0deg);
+  }
+}
+
+/* Figcaption contains title, description, and metadata */
+main > figure figcaption {
+  /* Spacing above the figcaption */
+  padding: 1.5rem 0.5rem 0;
+
+  /* Use regular theme colors for text */
+  color: var(--color-on-surface);
+}
+
+/* Title in figcaption */
+main > figure figcaption h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+  color: var(--color-on-surface-high);
+}
+
+/* Description paragraph */
+main > figure figcaption > p {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Details heading */
+main > figure figcaption h2 {
+  font-size: 1.125rem;
+  margin: 0 0 0.75rem;
+  color: var(--color-on-surface-high);
+}
+
+/* Metadata definition list */
+main > figure figcaption dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+main > figure figcaption dt {
+  font-weight: 600;
+  color: var(--color-on-surface-medium);
+}
+
+main > figure figcaption dd {
+  margin: 0;
+  color: var(--color-on-surface);
+}
+
 /* Photo gallery - CSS Grid masonry with known aspect ratios */
 main > ul {
   list-style: none;
@@ -1416,6 +1513,11 @@ main > ul figure {
     /* Slightly darker off-white for dark theme - still provides white balance reference */
     background-color: oklch(90% 0 0deg);
   }
+
+  main > ul figure img {
+    /* Darken border slightly in dark mode for better contrast */
+    border-color: oklch(87% 0 0deg);
+  }
 }
 
 /* === Caption Placement Classes === */
@@ -1438,6 +1540,10 @@ main > ul img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 0.2rem;
+
+  /* Border around image to separate from white border */
+  border: 0.1rem solid oklch(92% 0 0deg);
 }
 
 /*
@@ -1475,9 +1581,10 @@ main > ul figcaption {
 
 /* Caption positioning: Bottom */
 main > ul .caption-bottom figcaption {
-  bottom: 0.5rem;
-  left: 0.5rem;
-  right: 0.5rem; /* This constrains the width for ellipsis to work */
+  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
+  bottom: 0.6rem;
+  left: 0.6rem;
+  right: 0.6rem; /* This constrains the width for ellipsis to work */
 
   /* Trim text that overflows horizontally, but allow vertical overflow */
   overflow-x: clip;
@@ -1485,9 +1592,10 @@ main > ul .caption-bottom figcaption {
 
 /* Caption positioning: Side (rotated 90 degrees) */
 main > ul .caption-side figcaption {
-  top: 0.5rem;
-  left: 0.5rem;
-  bottom: 0.5rem; /* This constrains the height (becomes width in vertical mode) */
+  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
+  top: 0.6rem;
+  left: 0.6rem;
+  bottom: 0.6rem; /* This constrains the height (becomes width in vertical mode) */
 
   /* Trim text that overflows vertically, but allow horizontal overflow */
   overflow-y: clip;
@@ -1502,6 +1610,56 @@ main > ul a:focus-visible figure {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
+}
+
+/* Photo page navigation - floating prev/next links on single photo pages */
+main > figure + nav {
+  position: sticky;
+  bottom: 0;
+  translate: 0 -50%;
+  left: 0;
+  right: 0;
+  pointer-events: none; /* Allow clicks to pass through the container */
+  display: flex;
+  justify-content: space-between;
+
+  /* padding-inline: clamp(0.5rem, 2vw, 2rem); */
+  z-index: 1;
+}
+
+main > figure + nav a {
+  pointer-events: auto; /* Re-enable clicks on the links */
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+  padding: 0.75rem;
+  border-radius: 50%;
+  box-shadow: var(--elevation-3);
+  text-decoration: none;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    box-shadow 0.2s ease,
+    scale 0.2s ease,
+    background 0.2s ease;
+}
+
+main > figure + nav a svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+main > figure + nav a:hover {
+  background: var(--color-surface-container-highest);
+  box-shadow: var(--elevation-5);
+  scale: 1.05;
+}
+
+main > figure + nav a:active {
+  scale: 0.98;
+  box-shadow: var(--elevation-2);
 }
 
 /* Pagination navigation - centered in main */
