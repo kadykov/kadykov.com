@@ -1,0 +1,31 @@
+---
+// src/components/FloatingNav.astro
+// Reusable floating navigation component with prev/next buttons
+import { Icon } from "astro-icon/components"
+
+interface Props {
+  prevUrl?: string | null
+  nextUrl?: string | null
+  prevLabel: string
+  nextLabel: string
+}
+
+const { prevUrl, nextUrl, prevLabel, nextLabel } = Astro.props
+---
+
+<nav aria-label="Page navigation">
+  {
+    prevUrl && (
+      <a href={prevUrl} rel="prev" aria-label={prevLabel}>
+        <Icon name="ri:arrow-left-s-line" />
+      </a>
+    )
+  }
+  {
+    nextUrl && (
+      <a href={nextUrl} rel="next" aria-label={nextLabel}>
+        <Icon name="ri:arrow-right-s-line" />
+      </a>
+    )
+  }
+</nav>

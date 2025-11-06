@@ -4,11 +4,11 @@ import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
 import OptimizedImage from "../../components/OptimizedImage.astro"
 import PhotoNavigation from "../../components/PhotoNavigation.astro"
+import FloatingNav from "../../components/FloatingNav.astro"
 import Hero from "../../components/Hero.astro"
 import { PHOTO_SERVER_URL } from "../../config/photoServer"
 import { slugify } from "../../utils/slugify"
 import { getPhotoAltText, getPhotoDisplayDate } from "../../utils/photoHelpers"
-import { Icon } from "astro-icon/components"
 
 export async function getStaticPaths() {
   // Fetch all photos from the collection
@@ -290,22 +290,12 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
     </figcaption>
   </figure>
 
-  <nav aria-label="Photo navigation">
-    <a
-      href={`/photo/${prevPhotoSlug}#photo`}
-      rel="prev"
-      aria-label="Previous photo"
-    >
-      <Icon name="ri:arrow-left-s-line" />
-    </a>
-    <a
-      href={`/photo/${nextPhotoSlug}#photo`}
-      rel="next"
-      aria-label="Next photo"
-    >
-      <Icon name="ri:arrow-right-s-line" />
-    </a>
-  </nav>
+  <FloatingNav
+    prevUrl={`/photo/${prevPhotoSlug}#photo`}
+    nextUrl={`/photo/${nextPhotoSlug}#photo`}
+    prevLabel="Previous photo"
+    nextLabel="Next photo"
+  />
 
   <PhotoNavigation />
 </BaseLayout>

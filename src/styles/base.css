@@ -937,7 +937,10 @@ main > article {
   color: inherit;
   background-color: var(--color-surface);
   box-shadow: var(--elevation-1);
+}
 
+main > figure,
+main > article {
   /* Use serif font for article body text for better readability */
   font-family: var(--font-serif);
 
@@ -946,7 +949,8 @@ main > article {
 }
 
 /* Accent links in articles with higher contrast */
-main article a {
+main > figure a,
+article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -1180,63 +1184,6 @@ nav ul {
   flex-wrap: wrap;
   gap: 1em;
   padding-inline: 0;
-}
-
-/* Single photo page - Polaroid-style figure as direct child of main */
-main > figure {
-  /* Center the figure horizontally and add vertical spacing */
-  margin: 0 auto;
-  /* width: fit-content; */
-
-  max-width: 42rem;
-
-  /* Use regular surface container colors instead of forced off-white */
-  background-color: var(--color-surface);
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-1);
-
-  /* Padding around the figure content */
-  /* padding: var(--spacing-adaptive); */
-}
-
-/* Image sizing: fit within viewport while maintaining aspect ratio */
-main > figure img {
-  display: block;
-  width: auto;
-  height: auto;
-  margin: 0 auto;
-  border-radius: 0.2rem;
-
-  /* Inner border: thin light gray for separation from off-white border */
-  padding: 0.1rem;
-  background-color: oklch(92% 0 0deg);
-
-  /* Outer border: variable thickness off-white border (Polaroid aesthetic) */
-  border: var(--spacing-adaptive) solid oklch(95% 0 0deg);
-
-  /* Constrain to 42rem */
-  max-height: calc(42rem - 2 * var(--spacing-adaptive));
-  max-width: min(100%, 42rem - 2 * var(--spacing-adaptive));
-  /* object-fit: contain; */
-  box-shadow: var(--elevation-3);
-}
-
-/* Figcaption contains title, description, and metadata */
-main > figure figcaption {
-  padding: var(--spacing-adaptive);
-  color: var(--color-on-surface-low);
-}
-
-/* Description paragraph */
-main > figure figcaption > p {
-  font-family: var(--font-serif);
-}
-
-/* Metadata definition list */
-main > figure figcaption dl {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.5rem 1rem;
 }
 
 /* Photo gallery - CSS Grid masonry with known aspect ratios */
@@ -1474,7 +1421,7 @@ main > ul figure {
     background-color: oklch(90% 0 0deg);
   }
 
-  main > ul figure img {
+  main > ul img {
     /* Darken border slightly in dark mode for better contrast */
     border-color: oklch(87% 0 0deg);
   }
@@ -1548,7 +1495,7 @@ main > ul figcaption {
 /* These control where the caption appears within the figure */
 
 /* Caption positioning: Bottom */
-main > ul .caption-bottom figcaption {
+.caption-bottom figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
   bottom: 0.6rem;
   left: 0.6rem;
@@ -1559,7 +1506,7 @@ main > ul .caption-bottom figcaption {
 }
 
 /* Caption positioning: Side (rotated 90 degrees) */
-main > ul .caption-side figcaption {
+.caption-side figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
   top: 0.6rem;
   left: 0.6rem;
@@ -1580,54 +1527,64 @@ main > ul a:focus-visible figure {
   box-shadow: var(--elevation-3);
 }
 
-/* Photo page navigation - floating prev/next links on single photo pages */
-main > figure + nav {
-  position: sticky;
-  bottom: 0;
-  translate: 0 -50%;
-  left: 0;
-  right: 0;
-  pointer-events: none; /* Allow clicks to pass through the container */
-  display: flex;
-  justify-content: space-between;
+/* Single photo page - Polaroid-style figure as direct child of main */
+main > figure {
+  /* Center the figure horizontally and add vertical spacing */
+  margin: 0 auto;
 
-  /* padding-inline: clamp(0.5rem, 2vw, 2rem); */
-  z-index: 1;
+  /* width: fit-content; */
+
+  max-width: 42rem;
+
+  /* Use regular surface container colors instead of forced off-white */
+  background-color: var(--color-surface);
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-1);
+
+  /* Padding around the figure content */
+
+  /* padding: var(--spacing-adaptive); */
 }
 
-main > figure + nav a {
-  pointer-events: auto; /* Re-enable clicks on the links */
-  background: var(--color-surface-container-high);
-  color: var(--color-on-surface);
-  padding: 0.75rem;
-  border-radius: 50%;
+/* Image sizing: fit within viewport while maintaining aspect ratio */
+main > figure img {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 0.2rem;
+
+  /* Inner border: thin light gray for separation from off-white border */
+  padding: 0.1rem;
+  background-color: oklch(92% 0 0deg);
+
+  /* Outer border: variable thickness off-white border (Polaroid aesthetic) */
+  border: var(--spacing-adaptive) solid oklch(95% 0 0deg);
+
+  /* Constrain to 42rem */
+  max-height: calc(42rem - 2 * var(--spacing-adaptive));
+  max-width: min(100%, 42rem - 2 * var(--spacing-adaptive));
+
+  /* object-fit: contain; */
   box-shadow: var(--elevation-3);
-  text-decoration: none;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    box-shadow 0.2s ease,
-    scale 0.2s ease,
-    background 0.2s ease;
 }
 
-main > figure + nav a svg {
-  width: 1.5rem;
-  height: 1.5rem;
+/* Figcaption contains title, description, and metadata */
+main > figure figcaption {
+  padding: var(--spacing-adaptive);
+  color: var(--color-on-surface-low);
 }
 
-main > figure + nav a:hover {
-  background: var(--color-surface-container-highest);
-  box-shadow: var(--elevation-5);
-  scale: 1.05;
+/* Description paragraph */
+main > figure figcaption > p {
+  font-family: var(--font-serif);
 }
 
-main > figure + nav a:active {
-  scale: 0.98;
-  box-shadow: var(--elevation-2);
+/* Metadata definition list */
+main > figure figcaption dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
 }
 
 /* Pagination navigation - centered in main */
@@ -1639,10 +1596,78 @@ main > nav {
   padding: 0 1rem;
 }
 
-main > nav span[aria-disabled="true"],
-main > nav span[aria-current="page"] {
+nav span[aria-current="page"] {
   color: var(--color-on-surface-low);
   cursor: not-allowed;
+  text-decoration: underline;
+}
+
+/*
+ * Floating Navigation Links - Semantic Pagination
+ * 
+ * Styles floating prev/next navigation buttons that use rel="prev" and rel="next"
+ * attributes. Each link is independently positioned, so they appear correctly
+ * even when only one is present (e.g., first or last page).
+ * 
+ * Design approach:
+ * - Links are individually positioned (not container-based)
+ * - Previous link always appears on the left
+ * - Next link always appears on the right
+ * - No awkward positioning when only one link is present
+ */
+
+a[rel="prev"],
+a[rel="next"] {
+  /* Floating button positioning */
+  position: fixed;
+  bottom: 1rem;
+  z-index: 1;
+
+  /* Button appearance */
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: 50%;
+  box-shadow: var(--elevation-3);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    box-shadow 0.2s ease-in-out,
+    scale 0.2s ease-in-out,
+    background 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+/* Position previous link on the left */
+a[rel="prev"] {
+  left: 1rem;
+}
+
+/* Position next link on the right */
+a[rel="next"] {
+  right: 1rem;
+}
+
+a[rel="prev"] svg,
+a[rel="next"] svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+a[rel="prev"]:hover,
+a[rel="next"]:hover {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  box-shadow: var(--elevation-5);
+  scale: 1.05;
+}
+
+a[rel="prev"]:active,
+a[rel="next"]:active {
+  scale: 0.98;
+  box-shadow: var(--elevation-2);
 }
 
 /* Hierarchical date navigation with nested ordered lists */

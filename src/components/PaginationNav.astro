@@ -1,42 +1,45 @@
 ---
 // src/components/PaginationNav.astro
 import type { Page } from "astro"
+import FloatingNav from "./FloatingNav.astro"
 
 interface Props {
   page: Page<any> // Accept any type of paginated data
 }
 
 const { page } = Astro.props
+
+// Extract base URL by removing the current page number from the end
+// e.g., "/photos/all/3" -> "/photos/all/"
+const currentUrl = page.url.current
+const baseUrl = currentUrl.replace(/\/\d+\/?$/, "/")
+
+// Generate array of page numbers for navigation
+const pageNumbers = Array.from({ length: page.lastPage }, (_, i) => i + 1)
 ---
 
 {
   page.lastPage > 1 && (
-    <nav aria-label="Pagination">
-      <ul>
-        <li>
-          {page.url.prev ? (
-            <a href={page.url.prev} rel="prev">
-              &laquo; Previous
-            </a>
-          ) : (
-            <span aria-disabled="true">&laquo; Previous</span>
-          )}
-        </li>
-        <li>
-          <span>
-            Page {page.currentPage} of {page.lastPage}
-          </span>
-        </li>
-        <li>
-          {page.url.next ? (
-            <a href={page.url.next} rel="next">
-              Next &raquo;
-            </a>
-          ) : (
-            <span aria-disabled="true">Next &raquo;</span>
-          )}
-        </li>
-      </ul>
-    </nav>
+    <>
+      <FloatingNav
+        prevUrl={page.url.prev}
+        nextUrl={page.url.next}
+        prevLabel="Previous page"
+        nextLabel="Next page"
+      />
+      <nav aria-label="Pagination">
+        <ul>
+          {pageNumbers.map((pageNum) => (
+            <li>
+              {pageNum === page.currentPage ? (
+                <span aria-current="page">{pageNum}</span>
+              ) : (
+                <a href={`${baseUrl}${pageNum}`}>{pageNum}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   )
 }
