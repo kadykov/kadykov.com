@@ -15,7 +15,9 @@ const { page } = Astro.props
       <ul>
         <li>
           {page.url.prev ? (
-            <a href={page.url.prev}>&laquo; Previous</a>
+            <a href={page.url.prev} rel="prev">
+              &laquo; Previous
+            </a>
           ) : (
             <span aria-disabled="true">&laquo; Previous</span>
           )}
@@ -27,7 +29,9 @@ const { page } = Astro.props
         </li>
         <li>
           {page.url.next ? (
-            <a href={page.url.next}>Next &raquo;</a>
+            <a href={page.url.next} rel="next">
+              Next &raquo;
+            </a>
           ) : (
             <span aria-disabled="true">Next &raquo;</span>
           )}
