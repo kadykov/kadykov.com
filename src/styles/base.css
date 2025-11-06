@@ -1221,44 +1221,15 @@ main > figure img {
   box-shadow: var(--elevation-3);
 }
 
-@media (prefers-color-scheme: dark) {
-  main > figure img {
-    /* Darken inner border for better contrast in dark theme */
-    background-color: oklch(87% 0 0deg);
-
-    /* Slightly darker off-white outer border for dark theme */
-    border-color: oklch(90% 0 0deg);
-  }
-}
-
 /* Figcaption contains title, description, and metadata */
 main > figure figcaption {
-  /* Spacing above the figcaption */
-  padding: 1.5rem 0.5rem 0;
-
-  /* Use regular theme colors for text */
-  color: var(--color-on-surface);
-}
-
-/* Title in figcaption */
-main > figure figcaption h1 {
-  font-size: 1.5rem;
-  margin: 0 0 0.5rem;
-  color: var(--color-on-surface-high);
+  padding: var(--spacing-adaptive);
+  color: var(--color-on-surface-low);
 }
 
 /* Description paragraph */
 main > figure figcaption > p {
-  margin: 0 0 1.5rem;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-/* Details heading */
-main > figure figcaption h2 {
-  font-size: 1.125rem;
-  margin: 0 0 0.75rem;
-  color: var(--color-on-surface-high);
+  font-family: var(--font-serif);
 }
 
 /* Metadata definition list */
@@ -1266,17 +1237,6 @@ main > figure figcaption dl {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
-  font-size: 0.875rem;
-}
-
-main > figure figcaption dt {
-  font-weight: 600;
-  color: var(--color-on-surface-medium);
-}
-
-main > figure figcaption dd {
-  margin: 0;
-  color: var(--color-on-surface);
 }
 
 /* Photo gallery - CSS Grid masonry with known aspect ratios */
@@ -1517,6 +1477,14 @@ main > ul figure {
   main > ul figure img {
     /* Darken border slightly in dark mode for better contrast */
     border-color: oklch(87% 0 0deg);
+  }
+
+  main > figure img {
+    /* Darken inner border for better contrast in dark theme */
+    background-color: oklch(87% 0 0deg);
+
+    /* Slightly darker off-white outer border for dark theme */
+    border-color: oklch(90% 0 0deg);
   }
 }
 

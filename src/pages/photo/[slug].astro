@@ -4,6 +4,7 @@ import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../utils/photoManifestSchema"
 import OptimizedImage from "../../components/OptimizedImage.astro"
 import PhotoNavigation from "../../components/PhotoNavigation.astro"
+import Hero from "../../components/Hero.astro"
 import { PHOTO_SERVER_URL } from "../../config/photoServer"
 import { slugify } from "../../utils/slugify"
 import { getPhotoAltText, getPhotoDisplayDate } from "../../utils/photoHelpers"
@@ -107,6 +108,10 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
     pageType: "photo-gallery",
   }}
 >
+  <Hero>
+    <h1>{pageTitle}</h1>
+  </Hero>
+
   <figure id="photo">
     <OptimizedImage
       src={`${imageBaseUrl}${photo.relativePath}`}
@@ -118,10 +123,10 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
       loading="eager"
     />
     <figcaption>
-      {photo.title && <h1>{photo.title}</h1>}
+      {photo.title && <h2>{photo.title}</h2>}
       {photo.description && <p>{photo.description}</p>}
 
-      <h2>Details</h2>
+      {(photo.title && <h3>Details</h3>) || <h2>Details</h2>}
       <dl>
         <dt>Download</dt>
         <dd>
@@ -181,12 +186,14 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
                   >
                     {photo.focalLength}mm
                     {photo.focalLength35mmEquiv &&
+                      photo.focalLength35mmEquiv !== photo.focalLength &&
                       ` (${photo.focalLength35mmEquiv}mm equiv.)`}
                   </a>
                 ) : (
                   <>
                     {photo.focalLength}mm
                     {photo.focalLength35mmEquiv &&
+                      photo.focalLength35mmEquiv !== photo.focalLength &&
                       ` (${photo.focalLength35mmEquiv}mm equiv.)`}
                   </>
                 )}
