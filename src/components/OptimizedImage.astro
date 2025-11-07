@@ -2,29 +2,97 @@
 // src/components/OptimizedImage.astro
 // Wrapper component for optimized images using centralized utility.
 // This ensures cache sharing with PhotoGallery and all other image components.
+//
+// USAGE EXAMPLES:
+//
+// 1. Simple usage (fetches remote dimensions automatically):
+//    <OptimizedImage
+//      src="https://example.com/photo.jpg"
+//      alt="A beautiful sunset"
+//      displayWidth={660}
+//    />
+//
+// 2. Performance-optimized (avoids remote fetch):
+//    <OptimizedImage
+//      src="https://example.com/photo.jpg"
+//      alt="A beautiful sunset"
+//      displayWidth={660}
+//      sourceWidth={3000}
+//      sourceHeight={2000}
+//    />
+//
+// 3. Responsive with sizes attribute:
+//    <OptimizedImage
+//      src="https://example.com/photo.jpg"
+//      alt="A beautiful sunset"
+//      displayWidth={660}
+//      sizesAttr="(max-width: 768px) 100vw, 660px"
+//      sourceWidth={3000}
+//      sourceHeight={2000}
+//    />
+//
+// 4. Gallery thumbnail (calculated display width):
+//    const classification = classifyPhoto(photo.width, photo.height);
+//    const { displayWidth, sizesAttr } = getImageDimensions(classification);
+//    <OptimizedImage
+//      src={photoUrl}
+//      alt="Gallery photo"
+//      displayWidth={displayWidth}
+//      sizesAttr={sizesAttr}
+//      sourceWidth={photo.width}
+//      sourceHeight={photo.height}
+//    />
+//
 import { generateOptimizedImage } from "../utils/imageOptimization"
 
 interface Props {
+  /** The image source URL (local or remote) */
   src: string
+  /** Alt text for accessibility */
   alt: string
-  width?: number // Optional: maximum width constraint OR original image width
-  height?: number // Optional: original image height (required if providing original width to skip remote fetch)
-  sizesAttr?: string // Optional: custom sizes attribute (from getImageDimensions)
+
+  /**
+   * DISPLAY WIDTH: The CSS display width in pixels (at 1x DPR).
+   * This determines:
+   * 1. The width attribute on the <img> tag (for aspect ratio calculation)
+   * 2. Which srcset widths are generated (1x to 4x DPR)
+   *
+   * Example: displayWidth={313} generates images for 313px-1252px (1x-4x DPR)
+   */
+  displayWidth?: number
+
+  /**
+   * ORIGINAL DIMENSIONS: Source image dimensions for performance optimization.
+   * When provided, skips remote image fetching to determine aspect ratio.
+   * Both must be provided together to be effective.
+   */
+  sourceWidth?: number
+  sourceHeight?: number
+
+  /**
+   * SIZES ATTRIBUTE: Tells the browser the actual rendered size at different viewports.
+   * Use getImageDimensions() from photoClassification.ts for responsive calculations.
+   *
+   * Example: "(max-width: 400px) 228px, (max-width: 1920px) calc(19.16vw + 205.98px), 313px"
+   */
+  sizesAttr?: string
+
+  /** CSS class name */
   class?: string
+  /** Loading strategy (default: "lazy") */
   loading?: "lazy" | "eager"
+  /** Decoding strategy (default: "async") */
   decoding?: "async" | "sync" | "auto"
+  /** Image quality (default: 60) */
   quality?: number
-  originalWidth?: number // Optional: explicit original width (if width is maxWidth)
-  originalHeight?: number // Optional: explicit original height (if height is maxHeight)
 }
 
 const {
   src,
   alt,
-  width: maxWidth,
-  height: maxHeight,
-  originalWidth,
-  originalHeight,
+  displayWidth,
+  sourceWidth,
+  sourceHeight,
   sizesAttr,
   class: className,
   loading = "lazy",
@@ -36,9 +104,10 @@ const {
 // This ensures we generate the same images as PhotoGallery
 const optimized = await generateOptimizedImage({
   src,
-  maxWidth,
-  width: originalWidth,
-  height: originalHeight,
+  maxWidth: displayWidth,
+  width: sourceWidth,
+  height: sourceHeight,
+  originalWidth: sourceWidth,
   quality,
 })
 ---

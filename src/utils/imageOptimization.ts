@@ -5,32 +5,80 @@
  * Uses Astro's getImage() with inferSize to maintain perfect aspect ratios.
  *
  * Key principles:
- * - Always use inferSize: true (no explicit width/height)
- * - Always use layout: "constrained" for responsive images
+ * - Always use inferSize: true (no explicit width/height) when source dimensions not provided
+ * - Always use layout: "constrained" for responsive images (default)
  * - Always use same format (AVIF)
- * - Use maxWidth to control automatic DPR-aware srcset generation
+ * - Use maxWidth to control automatic DPR-aware srcset generation (1x to 4x)
  *
  * This ensures that PhotoGallery, OptimizedImage, and MarkdocImage all generate
  * identical cached images that can be reused.
+ *
+ * IMPORTANT: Understanding width/height in HTML images
+ * ======================================================
+ * The width and height attributes on <img> elements should be the CSS DISPLAY
+ * dimensions (at 1x DPR), NOT the original image dimensions. This:
+ *
+ * 1. Prevents Cumulative Layout Shift (CLS) by reserving space
+ * 2. Establishes the aspect ratio for responsive layouts
+ * 3. Works correctly with srcset for high-DPI displays
+ *
+ * Example:
+ *   <img src="photo-313w.avif"
+ *        srcset="photo-313w.avif 313w, photo-626w.avif 626w, photo-1252w.avif 1252w"
+ *        width="313"    <!-- CSS display width (1x DPR) -->
+ *        height="235"   <!-- CSS display height (maintains aspect ratio) -->
+ *        sizes="313px"
+ *   />
+ *
+ * The browser will:
+ * - Reserve 313×235px of space (preventing layout shift)
+ * - Display the image at 313×235 CSS pixels
+ * - Select photo-626w.avif on 2x DPR displays (Retina)
+ * - Select photo-939w.avif on 3x DPR displays
  */
 
 import { getImage, inferRemoteSize } from "astro:assets"
 
 export interface OptimizedImageConfig {
   src: string
-  width?: number // Original image width - if provided, skips inferSize
-  height?: number // Original image height - if provided, skips inferSize
-  maxWidth?: number // Maximum display width (1x DPR) - will generate up to 4x for high-DPI
-  originalWidth?: number // Original image width - used to prevent requesting widths larger than source
-  quality?: number // Image quality (default: Astro's default)
-  layout?: "constrained" | "full-width" // Layout type (default: "constrained")
+
+  /**
+   * SOURCE DIMENSIONS: Original image dimensions for performance optimization.
+   * When provided together, skips remote image fetching to determine aspect ratio.
+   * These are NOT used for HTML width/height attributes (see maxWidth instead).
+   */
+  width?: number
+  height?: number
+
+  /**
+   * DISPLAY WIDTH: Maximum CSS display width in pixels (at 1x DPR).
+   * This determines:
+   * 1. The srcset widths generated (1x to 4x DPR automatically)
+   * 2. The width/height returned for HTML attributes
+   *
+   * Example: maxWidth: 313 generates [313w, 350w, 420w, 500w, 600w, 720w, 900w, 1080w, 1252w]
+   * (filtered to 1x-4x range: 313px-1252px)
+   */
+  maxWidth?: number
+
+  /**
+   * ORIGINAL WIDTH: Alternative name for width (for clarity in some contexts).
+   * Prevents requesting srcset widths larger than the source image.
+   */
+  originalWidth?: number
+
+  /** Image quality (default: 60 for AVIF) */
+  quality?: number
+
+  /** Layout type (default: "constrained" for responsive, "full-width" for lightbox) */
+  layout?: "constrained" | "full-width"
 }
 
 export interface OptimizedImageResult {
   src: string // Primary src (smallest image in srcset)
   srcset: string // Complete srcset attribute value
-  width?: number // Intrinsic width of the src image
-  height?: number // Intrinsic height of the src image
+  width?: number // CSS display width for HTML width attribute
+  height?: number // CSS display height for HTML height attribute
 }
 
 /**
@@ -88,27 +136,33 @@ function filterWidthsForDisplay(
  * All components should use this function to ensure cache sharing.
  *
  * @param config - Image optimization configuration
- * @returns Optimized image data (src, srcset, dimensions)
+ * @returns Optimized image data with CSS display dimensions for HTML attributes
  *
  * @example
- * // For photo gallery thumbnails (auto-filters to 1x-4x DPR)
+ * // Photo gallery thumbnails (smart DPR filtering: 1x-4x)
  * const thumbnail = await generateOptimizedImage({
  *   src: "https://example.com/photo.jpg",
- *   maxWidth: 198 // Will generate suitable widths from 198w to ~792w
+ *   width: 3000,        // Source dimensions (avoids remote fetch)
+ *   height: 2000,
+ *   maxWidth: 313       // CSS display width → generates 313w to 1252w (4x DPR)
  * })
+ * // Returns: { src: "photo-313w.avif", srcset: "...", width: 313, height: 235 }
+ * // Use width/height for HTML attributes ✅
  *
  * @example
- * // For article images
+ * // Article images (medium display size)
  * const articleImage = await generateOptimizedImage({
  *   src: "https://example.com/photo.jpg",
- *   maxWidth: 660
+ *   maxWidth: 660      // CSS display width
  * })
  *
  * @example
- * // For lightbox (full-width, no filtering)
+ * // Lightbox (full-width, no DPR filtering)
  * const lightbox = await generateOptimizedImage({
  *   src: "https://example.com/photo.jpg",
- *   layout: "full-width"
+ *   width: 3000,
+ *   height: 2000,
+ *   layout: "full-width"  // Generates full range of widths
  * })
  */
 export async function generateOptimizedImage(

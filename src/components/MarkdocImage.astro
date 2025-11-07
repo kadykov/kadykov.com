@@ -25,9 +25,10 @@ const { src, alt, title } = Astro.props
  * - Below 32rem (512px at 16px/rem): calc(100vw - 2rem) = calc(100vw - 32px)
  * - Above 512px: clamp(480px, 11.85vw + 432.6px, 660px)
  *
- * We specify max width (660px) so Astro doesn't generate unnecessarily large variants.
+ * The displayWidth parameter (660px) is the CSS display width at 1x DPR.
+ * This will generate srcset widths from 660w up to 2640w (for 4x DPR displays).
  */
-const articleMaxWidth = 660 // Maximum width in pixels (30rem at 22px/rem)
+const articleMaxWidth = 660 // CSS display width in pixels (30rem at 22px/rem)
 const sizesAttr =
   "(max-width: 512px) calc(100vw - 32px), clamp(480px, 11.85vw + 432.6px, 660px)"
 ---
@@ -38,7 +39,7 @@ const sizesAttr =
       <OptimizedImage
         src={src}
         alt={alt}
-        width={articleMaxWidth}
+        displayWidth={articleMaxWidth}
         sizesAttr={sizesAttr}
         loading="lazy"
         decoding="async"
@@ -49,7 +50,7 @@ const sizesAttr =
     <OptimizedImage
       src={src}
       alt={alt}
-      width={articleMaxWidth}
+      displayWidth={articleMaxWidth}
       sizesAttr={sizesAttr}
       loading="lazy"
       decoding="async"
