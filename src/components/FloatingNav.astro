@@ -16,16 +16,57 @@ const { prevUrl, nextUrl, prevLabel, nextLabel } = Astro.props
 <nav aria-label="Page navigation">
   {
     prevUrl && (
-      <a href={prevUrl} rel="prev" aria-label={prevLabel}>
+      <a href={prevUrl} rel="prev" aria-label={prevLabel} title={prevLabel}>
         <Icon name="ri:arrow-left-s-line" />
       </a>
     )
   }
   {
     nextUrl && (
-      <a href={nextUrl} rel="next" aria-label={nextLabel}>
+      <a href={nextUrl} rel="next" aria-label={nextLabel} title={nextLabel}>
         <Icon name="ri:arrow-right-s-line" />
       </a>
     )
   }
 </nav>
+
+<script is:inline define:vars={{ prevUrl, nextUrl }}>
+  function isTyping(target) {
+    if (!target) return false
+    const tagName = target.tagName.toLowerCase()
+    return (
+      tagName === "input" ||
+      tagName === "textarea" ||
+      tagName === "select" ||
+      target.isContentEditable
+    )
+  }
+
+  function handleKeydown(e) {
+    // Ignore if typing or using modifier keys
+    if (
+      isTyping(e.target) ||
+      e.ctrlKey ||
+      e.metaKey ||
+      e.altKey ||
+      e.shiftKey
+    ) {
+      return
+    }
+
+    if (e.key === "ArrowLeft" && prevUrl) {
+      e.preventDefault()
+      window.location.href = prevUrl
+    } else if (e.key === "ArrowRight" && nextUrl) {
+      e.preventDefault()
+      window.location.href = nextUrl
+    }
+  }
+
+  document.addEventListener("keydown", handleKeydown)
+
+  // Cleanup when navigating away (good practice)
+  window.addEventListener("beforeunload", () => {
+    document.removeEventListener("keydown", handleKeydown)
+  })
+</script>
