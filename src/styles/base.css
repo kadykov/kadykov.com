@@ -1529,28 +1529,13 @@ main > ul a:focus-visible figure {
 
 /* Single photo page - Polaroid-style figure as direct child of main */
 main > figure {
-  /* Center the figure horizontally and add vertical spacing */
-  margin: 0 auto;
-
-  /* width: fit-content; */
-
-  max-width: 42rem;
-
-  /* Use regular surface container colors instead of forced off-white */
-  background-color: var(--color-surface);
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-1);
-
-  /* Padding around the figure content */
-
-  /* padding: var(--spacing-adaptive); */
+  margin: 0;
+  width: 100%;
 }
 
 /* Image sizing: fit within viewport while maintaining aspect ratio */
 main > figure img {
   display: block;
-  width: auto;
-  height: auto;
   margin: 0 auto;
   border-radius: 0.2rem;
 
@@ -1558,20 +1543,41 @@ main > figure img {
   padding: 0.1rem;
   background-color: oklch(92% 0 0deg);
 
-  /* Outer border: variable thickness off-white border (Polaroid aesthetic) */
-  border: var(--spacing-adaptive) solid oklch(95% 0 0deg);
+  /* Outer border: percentage-based for easy sizes calculation (Polaroid aesthetic)
+   * Horizontal borders: 5vw each side
+   * Vertical borders: 5vh each side
+   * This creates asymmetric but proportional borders that scale with viewport
+   */
+  border-width: 5vh 5vw;
+  border-style: solid;
+  border-color: oklch(95% 0 0deg);
 
-  /* Constrain to 42rem */
-  max-height: calc(42rem - 2 * var(--spacing-adaptive));
-  max-width: min(100%, 42rem - 2 * var(--spacing-adaptive));
-
-  /* object-fit: contain; */
+  /* 
+   * Maintain aspect ratio while constraining to viewport dimensions
+   * 
+   * The image has intrinsic dimensions from width/height attributes.
+   * With width: auto and height: auto, it tries to render at intrinsic size,
+   * but max-width and max-height constrain it to fit within the viewport.
+   * 
+   * Using 100% instead of 100vw avoids scrollbar width issues.
+   * Border and padding are included in dimensions via box-sizing: border-box.
+   * 
+   * The browser automatically scales down maintaining aspect ratio when
+   * either constraint is exceeded.
+   */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   box-shadow: var(--elevation-3);
 }
 
 /* Figcaption contains title, description, and metadata */
 main > figure figcaption {
-  padding: var(--spacing-adaptive);
+  max-width: 42rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0 1rem;
   color: var(--color-on-surface-low);
 }
 
@@ -1585,6 +1591,10 @@ main > figure figcaption dl {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
+}
+
+main > figure figcaption dt {
+  text-align: right;
 }
 
 /* Pagination navigation - centered in main */

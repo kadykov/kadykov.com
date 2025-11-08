@@ -167,6 +167,8 @@ export function getClassificationRanges() {
   ]
 }
 
+import { REM_SCALING, remToViewport, remToPixels } from "./responsiveConstants"
+
 /**
  * Grid layout constants from base.css
  * These define the physical dimensions of the grid system
@@ -176,14 +178,6 @@ const GRID_CONSTANTS = {
   GAP_REM: 1.5, // Gap between columns
   PADDING_NORMAL: 0.6, // Normal padding on each side (0.5rem figure padding + 0.1rem border)
   PADDING_SIDE_CAPTION: 2, // Padding on the side where caption is placed
-  // Rem to viewport conversion: 1rem = clamp(16px, 0.395vw + 14.42px, 22px)
-  REM_TO_VW: 0.395,
-  REM_TO_PX_BASE: 14.42,
-  REM_MIN_PX: 16, // Minimum rem value in pixels (at narrow viewports)
-  REM_MAX_PX: 22, // Maximum rem value in pixels (at wide viewports)
-  // Viewport breakpoints where rem scaling starts/stops
-  MIN_VIEWPORT_PX: 400, // Viewport width where rem is at minimum (16px)
-  MAX_VIEWPORT_PX: 1920, // Viewport width where rem is at maximum (22px)
 } as const
 
 /**
@@ -208,18 +202,8 @@ export function getImageDimensions(classification: PhotoClassification): {
   displayWidth: number
   sizesAttr: string
 } {
-  const {
-    COLUMN_WIDTH_REM,
-    GAP_REM,
-    PADDING_NORMAL,
-    PADDING_SIDE_CAPTION,
-    REM_TO_VW,
-    REM_TO_PX_BASE,
-    REM_MIN_PX,
-    REM_MAX_PX,
-    MIN_VIEWPORT_PX,
-    MAX_VIEWPORT_PX,
-  } = GRID_CONSTANTS
+  const { COLUMN_WIDTH_REM, GAP_REM, PADDING_NORMAL, PADDING_SIDE_CAPTION } =
+    GRID_CONSTANTS
 
   // Determine grid span and padding based on classification
   let columns: number
@@ -254,16 +238,10 @@ export function getImageDimensions(classification: PhotoClassification): {
   const imageWidthRem = cardWidthRem - paddingLeft - paddingRight
 
   // Convert rem to viewport-relative calc() expression
-  // 1rem = 0.395vw + 14.42px (in the scaling range)
-  const vwComponent = imageWidthRem * REM_TO_VW
-  const pxComponent = imageWidthRem * REM_TO_PX_BASE
+  const { vwComponent, pxComponent } = remToViewport(imageWidthRem)
 
   // Calculate display width in pixels (at maximum rem value)
-  const displayWidth = Math.round(imageWidthRem * REM_MAX_PX)
-
-  // Calculate min/max bounds for responsive sizing
-  const minWidth = Math.round(imageWidthRem * REM_MIN_PX)
-  const maxWidth = displayWidth
+  const { minPx: minWidth, maxPx: displayWidth } = remToPixels(imageWidthRem)
 
   // Generate sizes attribute using media queries (valid HTML syntax)
   // Note: clamp() is not valid in sizes attribute, so we use media queries instead
@@ -272,10 +250,10 @@ export function getImageDimensions(classification: PhotoClassification): {
   // - At medium viewports (400px-1920px): scale using calc()
   // - At wide viewports (≥1920px): use maximum width (fallback)
   const sizesAttr = [
-    `(max-width: ${MIN_VIEWPORT_PX}px) ${minWidth}px`,
-    `(max-width: ${MAX_VIEWPORT_PX}px) calc(${vwComponent.toFixed(2)}vw + ${pxComponent.toFixed(2)}px)`,
-    `${maxWidth}px`,
+    `(max-width: ${REM_SCALING.MIN_VIEWPORT_PX}px) ${Math.round(minWidth)}px`,
+    `(max-width: ${REM_SCALING.MAX_VIEWPORT_PX}px) calc(${vwComponent.toFixed(2)}vw + ${pxComponent.toFixed(2)}px)`,
+    `${Math.round(displayWidth)}px`,
   ].join(", ")
 
-  return { displayWidth, sizesAttr }
+  return { displayWidth: Math.round(displayWidth), sizesAttr }
 }

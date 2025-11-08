@@ -263,19 +263,17 @@ export async function generateOptimizedImage(
       const aspectRatio = originalHeight / originalWidth
 
       // Use maxWidth if provided (CSS display size)
-      // Otherwise fall back to smallest srcset width
+      // Otherwise default to original image dimensions (full resolution)
       if (maxWidth) {
         displayWidth = maxWidth
-      } else if (imageParams.widths && imageParams.widths.length > 0) {
-        displayWidth = Math.min(...imageParams.widths)
+        // Calculate height maintaining aspect ratio
+        displayHeight = Math.round(displayWidth * aspectRatio)
       } else {
-        // If no widths specified, Astro generates default responsive widths
-        // The smallest is typically 640w
-        displayWidth = 640
+        // When maxWidth is not provided, use original dimensions
+        // This allows the browser to reserve the correct space for the full-resolution image
+        displayWidth = originalWidth
+        displayHeight = originalHeight
       }
-
-      // Calculate height maintaining aspect ratio
-      displayHeight = Math.round(displayWidth * aspectRatio)
     }
 
     // Extract the smallest image URL from srcset

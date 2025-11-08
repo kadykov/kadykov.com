@@ -42,24 +42,30 @@ interface Props {
 
 const { photo, prevPhotoSlug, nextPhotoSlug } = Astro.props
 
-// Calculate aspect ratio for determining viewport constraints
-const aspectRatio = photo.width / photo.height
+// Get image dimensions from photo metadata
+const { width, height } = photo
 
-// Generate sizes attribute using aspect-ratio media query
-// When viewport aspect ratio >= photo aspect ratio: photo is height-constrained
-//   -> width = 85vh * aspectRatio
-// When viewport aspect ratio < photo aspect ratio: photo is width-constrained
-//   -> width = 100vw (minus padding, but we approximate with 100vw)
-//
-// Express aspect ratio as integer ratio for media query (e.g., 3/2, 16/9)
-// Use 1000x precision for accuracy while keeping numbers reasonable
-const ratioNumerator = Math.round(aspectRatio * 1000)
-const ratioDenominator = 1000
-const sizesAttr = `(min-aspect-ratio: ${ratioNumerator}/${ratioDenominator}) calc(85vh * ${aspectRatio.toFixed(4)}), 100vw`
+// Border width: 5vw on each side horizontally, 5vh on each side vertically
+// Total: 10vw horizontal, 10vh vertical (omit negligible 0.1rem padding)
+const horizontalBorder = 10 // vw
+const verticalBorder = 10 // vh
 
-// For maxWidth: use typical large display width (1920px) or original, whichever is smaller
-// This generates appropriate srcset widths without creating unnecessarily large images
-const maxDisplayWidth = Math.min(photo.width, 1920)
+// Calculate dimensions accounting for borders
+const aspectRatio = width / height
+const heightConstrainedWidth = (aspectRatio * (100 - verticalBorder)).toFixed(2) // vh * ratio = vw equivalent
+const widthConstrainedWidth = 100 - horizontalBorder // vw
+
+// Generate sizes attribute with aspect-ratio media queries
+// For viewports wider than the image: height is the constraint
+// For viewports narrower than the image: width is the constraint
+const sizes = `(min-aspect-ratio: ${width}/${height}) ${heightConstrainedWidth}vh, ${widthConstrainedWidth}vw`
+
+// Don't provide displayWidth to OptimizedImage - this lets it generate
+// all standard srcset widths up to the original photo resolution.
+// The browser will select the appropriate asset based on:
+// 1. The sizes attribute (accounting for borders/padding)
+// 2. The viewport dimensions (both width and height due to CSS constraints)
+// 3. The device pixel ratio (DPR)
 
 const imageBaseUrl = `${PHOTO_SERVER_URL}/`
 
@@ -116,10 +122,9 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
     <OptimizedImage
       src={`${imageBaseUrl}${photo.relativePath}`}
       alt={altText}
-      width={maxDisplayWidth}
-      originalWidth={photo.width}
-      originalHeight={photo.height}
-      sizesAttr={sizesAttr}
+      sourceWidth={photo.width}
+      sourceHeight={photo.height}
+      sizesAttr={sizes}
       loading="eager"
     />
     <figcaption>
