@@ -1,5 +1,11 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro"
+import {
+  REM_SCALING,
+  remToViewport,
+  remToPixels,
+  formatCalc,
+} from "../utils/responsiveConstants"
 
 interface Props {
   src: string
@@ -15,22 +21,42 @@ const { src, alt, title } = Astro.props
  * Articles have max-width of 30rem with dynamic rem scaling.
  * Base font-size: clamp(16px, 0.395vw + 14.42px, 22px)
  *
- * Since the sizes attribute is parsed before CSS, we need to express rem units
- * in terms of pixels and viewport width:
- * - Article content width: 30rem
- * - With dynamic font-size: 30 * clamp(16px, 0.395vw + 14.42px, 22px)
- * - Simplified: clamp(480px, 11.85vw + 432.6px, 660px)
+ * At narrow viewports (≤32rem), images span full width minus 1rem padding on each side:
+ * - Width = 100vw - 2rem
+ * - Breakpoint: 32rem = 32 * 16px = 512px (at minimum font size)
  *
- * For the sizes attribute:
- * - Below 32rem (512px at 16px/rem): calc(100vw - 2rem) = calc(100vw - 32px)
- * - Above 512px: clamp(480px, 11.85vw + 432.6px, 660px)
+ * At wider viewports, images are constrained to article max-width:
+ * - Width = 30rem (converted to viewport-relative units)
  *
- * The displayWidth parameter (660px) is the CSS display width at 1x DPR.
- * This will generate srcset widths from 660w up to 2640w (for 4x DPR displays).
+ * The sizes attribute uses media queries (not clamp) to tell the browser
+ * the rendered size at different viewports.
  */
-const articleMaxWidth = 660 // CSS display width in pixels (30rem at 22px/rem)
-const sizesAttr =
-  "(max-width: 512px) calc(100vw - 32px), clamp(480px, 11.85vw + 432.6px, 660px)"
+const ARTICLE_MAX_WIDTH_REM = 30
+const NARROW_VIEWPORT_PADDING_REM = 2 // 1rem on each side
+
+// Calculate display width at maximum rem value (22px/rem)
+const { maxPx: articleMaxWidth } = remToPixels(ARTICLE_MAX_WIDTH_REM)
+
+// Generate sizes attribute using responsive constants
+// For narrow viewports: use viewport-relative calculation with padding
+// For wide viewports: use article max-width
+const { vwComponent, pxComponent } = remToViewport(ARTICLE_MAX_WIDTH_REM)
+const { vwComponent: paddingVw, pxComponent: paddingPx } = remToViewport(
+  NARROW_VIEWPORT_PADDING_REM
+)
+
+// Calculate narrow viewport size: 100vw - 2rem
+const narrowVw = 100 - paddingVw
+const narrowPx = -paddingPx
+
+// Breakpoint: 32rem (512px at 16px/rem) - where article reaches max-width
+const breakpointPx = 32 * REM_SCALING.MIN_PX
+
+const sizesAttr = [
+  `(max-width: ${breakpointPx}px) ${formatCalc(narrowVw, narrowPx)}`,
+  `(max-width: ${REM_SCALING.MAX_VIEWPORT_PX}px) ${formatCalc(vwComponent, pxComponent)}`,
+  `${Math.round(articleMaxWidth)}px`,
+].join(", ")
 ---
 
 {
@@ -39,7 +65,7 @@ const sizesAttr =
       <OptimizedImage
         src={src}
         alt={alt}
-        displayWidth={articleMaxWidth}
+        displayWidth={Math.round(articleMaxWidth)}
         sizesAttr={sizesAttr}
         loading="lazy"
         decoding="async"
@@ -50,7 +76,7 @@ const sizesAttr =
     <OptimizedImage
       src={src}
       alt={alt}
-      displayWidth={articleMaxWidth}
+      displayWidth={Math.round(articleMaxWidth)}
       sizesAttr={sizesAttr}
       loading="lazy"
       decoding="async"

@@ -75,6 +75,29 @@ export function remToPixels(remValue: number): {
 }
 
 /**
+ * Formats a calc() expression with proper sign handling
+ *
+ * @param vwComponent - Viewport width coefficient (e.g., 11.85 for 11.85vw)
+ * @param pxComponent - Pixel component (can be negative)
+ * @param decimals - Number of decimal places (default: 2)
+ * @returns Formatted calc() string (e.g., "calc(11.85vw + 432.60px)" or "calc(99.21vw - 28.84px)")
+ *
+ * @example
+ * formatCalc(11.85, 432.6) // "calc(11.85vw + 432.60px)"
+ * formatCalc(99.21, -28.84) // "calc(99.21vw - 28.84px)"
+ */
+export function formatCalc(
+  vwComponent: number,
+  pxComponent: number,
+  decimals: number = 2
+): string {
+  const vw = vwComponent.toFixed(decimals)
+  const px = Math.abs(pxComponent).toFixed(decimals)
+  const operator = pxComponent >= 0 ? "+" : "-"
+  return `calc(${vw}vw ${operator} ${px}px)`
+}
+
+/**
  * Calculates spacing-adaptive value in viewport-relative units
  * spacing-adaptive = clamp(1rem, 6vw - 1rem, 3rem)
  *
