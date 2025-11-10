@@ -736,7 +736,6 @@ body {
   font-size: clamp(16px, 0.395vw + 14.42px, 22px);
   line-height: 1.75;
   color: var(--color-on-surface);
-
   background-image:
     /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><rect x="0" y="0" width="3" height="17" fill="gray" fill-opacity="0.03"/><rect x="3" y="17" width="5" height="19" fill="gray" fill-opacity="0.03"/></svg>'), */
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><path fill="gray" fill-opacity=".03" d="M0 0h3v17H0zm3 17h5v19H3z"/></svg>'),
