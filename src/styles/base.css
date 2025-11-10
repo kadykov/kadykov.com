@@ -608,6 +608,25 @@
    * - Smooth transition based on container width
    */
   --spacing-adaptive: clamp(1rem, 6vw - 1rem, 3rem);
+
+  /* Fibonacci Pattern Background - Reusable Variables */
+
+  /*
+   * SVG-based texture pattern using Fibonacci-inspired square tilings.
+   * These patterns create subtle, organic texture reminiscent of paper grain.
+   * 
+   * Can be applied to any element and controlled via:
+   * - background-image: var(--bg-pattern)
+   * - background-size: var(--bg-pattern-size)
+   * - background-repeat: repeat
+   * - mask-image: for opacity control and gradient fading
+   */
+  --bg-pattern:
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="gray" fill-opacity=".02" d="M0 0h3v5H0zm4 0h1v5H4zM3 5h1v1H3zm2 0h8v1H5zM0 6h3v2H0zm4 0h1v2H4zM3 8h1v13H3zm2 0h8v13H5z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="gray" fill-opacity=".02" d="M0 0h5v8H0zm6 0h2v8H6zM5 8h1v2H5zm3 0h13v2H8zm-8 2h5v3H0zm6 0h2v3H6zm-1 3h1v21H5zm3 0h13v21H8z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="gray" fill-opacity=".02" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="gray" fill-opacity=".02" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
+  --bg-pattern-size: 13rem 21rem, 21rem 34rem, 34rem 55rem, 55rem 89rem;
 }
 
 /* Theme Variants - Only Base OKLCH Values Need Changes */
@@ -760,17 +779,8 @@ body {
    * 13, 21, 34, 55, 89 (each number is the sum of previous two).
    * 
    */
-  background-image:
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="gray" fill-opacity=".03" d="M0 0h3v5H0zm4 0h1v5H4zM3 5h1v1H3zm2 0h8v1H5zM0 6h3v2H0zm4 0h1v2H4zM3 8h1v13H3zm2 0h8v13H5z"/></svg>'), */
-
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="gray" fill-opacity=".03" d="M0 0h5v8H0zm6 0h2v8H6zM5 8h1v2H5zm3 0h13v2H8zm-8 2h5v3H0zm6 0h2v3H6zm-1 3h1v21H5zm3 0h13v21H8z"/></svg>'),
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="gray" fill-opacity=".03" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'),
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="gray" fill-opacity=".03" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
-  background-size:
-    /* 13rem 21rem, */
-    21rem 34rem,
-    34rem 55rem,
-    55rem 89rem;
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
   background-repeat: repeat;
   background-color: var(--color-surface-container);
   transition:
@@ -1293,6 +1303,12 @@ main > header {
 
   /* Ensure the shadow appears above other content */
   z-index: 1;
+
+  /* Keep the original gradient background */
+  background: var(--bg-primary-container);
+
+  /* Required for pseudo-element positioning */
+  position: relative;
 }
 
 /* Subtitle styles in hero header */
@@ -1777,6 +1793,21 @@ body > footer {
 
   /* Limit the content width inside the header to 42rem */
   padding-inline: max(1rem, (100% - 42rem) / 2);
+
+  /*
+   * Fibonacci Pattern Background for Footer
+   * 
+   * The footer is an ideal candidate for the full-opacity pattern because:
+   * - It's visually separated from other content
+   * - No gradient blending needed with adjacent elements
+   * - The muted background color works well with the subtle texture
+   * 
+   * Unlike the hero section, we apply the pattern at full opacity without
+   * any gradient mask, creating consistent texture across the entire footer.
+   */
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
+  background-repeat: repeat;
 }
 
 /* Footer logo and paragraphs span full width */
