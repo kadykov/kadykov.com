@@ -1542,7 +1542,7 @@ main > ul img {
 /* Caption base styles - always visible, single line with ellipsis */
 main > ul figcaption {
   position: absolute;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-family: var(--font-mono);
   font-weight: 600;
   white-space: nowrap;
@@ -1550,7 +1550,7 @@ main > ul figcaption {
   line-height: 1.2;
 
   /* Fixed dark gray - NOT theme-adaptive (see explanation above) */
-  color: oklch(45% 0 0deg);
+  color: oklch(50% 0 0deg);
 }
 
 /* === Caption Positioning Classes === */
@@ -1560,7 +1560,7 @@ main > ul figcaption {
 /* Caption positioning: Bottom */
 .caption-bottom figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
-  bottom: 0.6rem;
+  bottom: 0.5rem;
   left: 0.6rem;
   right: 0.6rem; /* This constrains the width for ellipsis to work */
 
@@ -1572,7 +1572,7 @@ main > ul figcaption {
 .caption-side figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
   top: 0.6rem;
-  left: 0.6rem;
+  left: 0.5rem;
   bottom: 0.6rem; /* This constrains the height (becomes width in vertical mode) */
 
   /* Trim text that overflows vertically, but allow horizontal overflow */
