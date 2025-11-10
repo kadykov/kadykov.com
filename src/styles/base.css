@@ -624,15 +624,15 @@
   --bg-pattern:
     /* To make the patterns more interesting, we can alternate between direct and inverted versions */
 
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="gray" fill-opacity=".03" d="M0 0h3v5H0zm4 0h1v5H4zM3 5h1v1H3zm2 0h8v1H5zM0 6h3v2H0zm4 0h1v2H4zM3 8h1v13H3zm2 0h8v13H5z"/></svg>'), */
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="gray" fill-opacity=".03" d="M3 0h1v5H3zm2 0h8v5H5zM0 5h3v1H0zm4 0h1v1H4zM3 6h1v2H3zm2 0h8v2H5zM0 8h3v13H0zm4 0h1v13H4z"/></svg>'), */
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="rgba(119,119,119,.03)" d="M0 0h3v5H0zm4 0h1v5H4zM3 5h1v1H3zm2 0h8v1H5zM0 6h3v2H0zm4 0h1v2H4zM3 8h1v13H3zm2 0h8v13H5z"/></svg>'), */
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="rgba(119,119,119,.03)" d="M3 0h1v5H3zm2 0h8v5H5zM0 5h3v1H0zm4 0h1v1H4zM3 6h1v2H3zm2 0h8v2H5zM0 8h3v13H0zm4 0h1v13H4z"/></svg>'), */
 
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="gray" fill-opacity=".03" d="M0 0h5v8H0zm6 0h2v8H6zM5 8h1v2H5zm3 0h13v2H8zm-8 2h5v3H0zm6 0h2v3H6zm-1 3h1v21H5zm3 0h13v21H8z"/></svg>'),
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="gray" fill-opacity=".03" d="M5 0h1v8H5zm3 0h13v8H8zM0 8h5v2H0zm6 0h2v2H6zm-1 2h1v3H5zm3 0h13v3H8zm-8 3h5v21H0zm6 0h2v21H6z"/></svg>'), */
-      /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="gray" fill-opacity=".03" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'), */
-      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="gray" fill-opacity=".03" d="M8 0h2v13H8zm5 0h21v13H13zM0 13h8v3H0zm10 0h3v3h-3zm-2 3h2v5H8zm5 0h21v5H13zM0 21h8v34H0zm10 0h3v34h-3z"/></svg>'),
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="gray" fill-opacity=".03" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
-  /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="gray" fill-opacity=".03" d="M13 0h3v25h-3zm8 0h34v25H21zM0 25h13v5H0zm16 0h5v5h-5zm-3 5h3v8h-3zm8 0h34v8H21zM0 38h13v55H0zm16 0h5v55h-5z"/></svg>'); */
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="rgba(119,119,119,.03)" d="M0 0h5v8H0zm6 0h2v8H6zM5 8h1v2H5zm3 0h13v2H8zm-8 2h5v3H0zm6 0h2v3H6zm-1 3h1v21H5zm3 0h13v21H8z"/></svg>'),
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="rgba(119,119,119,.03)" d="M5 0h1v8H5zm3 0h13v8H8zM0 8h5v2H0zm6 0h2v2H6zm-1 2h1v3H5zm3 0h13v3H8zm-8 3h5v21H0zm6 0h2v21H6z"/></svg>'), */
+      /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="rgba(119,119,119,.03)" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'), */
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="rgba(119,119,119,.03)" d="M8 0h2v13H8zm5 0h21v13H13zM0 13h8v3H0zm10 0h3v3h-3zm-2 3h2v5H8zm5 0h21v5H13zM0 21h8v34H0zm10 0h3v34h-3z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="rgba(119,119,119,.03)" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
+  /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="rgba(119,119,119,.03)" d="M13 0h3v25h-3zm8 0h34v25H21zM0 25h13v5H0zm16 0h5v5h-5zm-3 5h3v8h-3zm8 0h34v8H21zM0 38h13v55H0zm16 0h5v55h-5z"/></svg>'); */
   --bg-pattern-size:
   /* 13rem 21rem, */ 21rem 34rem, 34rem 55rem, 55rem 89rem;
 }
