@@ -632,6 +632,7 @@
       /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="rgba(119,119,119,.03)" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'), */
       url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="rgba(119,119,119,.03)" d="M8 0h2v13H8zm5 0h21v13H13zM0 13h8v3H0zm10 0h3v3h-3zm-2 3h2v5H8zm5 0h21v5H13zM0 21h8v34H0zm10 0h3v34h-3z"/></svg>'),
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="rgba(119,119,119,.03)" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
+
   /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="rgba(119,119,119,.03)" d="M13 0h3v25h-3zm8 0h34v25H21zM0 25h13v5H0zm16 0h5v5h-5zm-3 5h3v8h-3zm8 0h34v8H21zM0 38h13v55H0zm16 0h5v55h-5z"/></svg>'); */
   --bg-pattern-size:
   /* 13rem 21rem, */ 21rem 34rem, 34rem 55rem, 55rem 89rem;
@@ -1269,7 +1270,6 @@ body > header ul {
 
 body > header,
 main > header {
-  background: var(--bg-primary-container);
   color: var(--color-on-primary-container);
   box-shadow: var(--elevation-2);
 
@@ -1298,6 +1298,9 @@ body > header {
 
   /* Gap between logo and nav */
   gap: 1rem;
+
+  /* Use solid primary container compared to gradient in hero for performance */
+  background-color: var(--color-primary-container);
 }
 
 /* Hero header */
