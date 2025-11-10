@@ -116,7 +116,7 @@
 :root {
   --font-sans: "Source Sans 3 Variable", arial, sans-serif;
   --font-serif: "Bitter Variable", georgia, serif;
-  --font-mono: "Inconsolata Variable", "Courier New", monospace;
+  --font-mono: "Source Code Pro Variable", "Courier New", monospace;
 
   /*
    * Base OKLCH Color Values
@@ -672,7 +672,7 @@
 
     /* Theme Colors */
     --surface-l: 0.23;
-    --surface-c: 0.016;
+    --surface-c: 0.012;
     --surface-h: 72;
     --primary-l: 0.43;
     --primary-c: 0.048;
@@ -952,6 +952,7 @@ h3 {
 blockquote,
 header li,
 main nav li,
+body > footer h2,
 button,
 h4 {
   font-size: 1.3rem;
@@ -1141,7 +1142,7 @@ pre,
 kbd,
 samp {
   font-family: var(--font-mono);
-  font-size: 1.1em;
+  letter-spacing: -0.02em;
 }
 
 pre {
@@ -1150,7 +1151,7 @@ pre {
   overflow-x: auto;
   line-height: 1.4;
   box-shadow: var(--elevation-1);
-  font-size: 1em;
+  font-size: 0.9em;
 }
 
 /* Reset styles for code blocks because they are styled with Shiki */
@@ -1164,7 +1165,7 @@ pre code {
 kbd {
   border: 1px solid var(--color-surface-container-highest);
   box-shadow: var(--elevation-1);
-  font-size: 1em;
+  font-size: 0.9em;
 }
 
 /* Horizontal Rule - Material Design divider styling */
@@ -1542,15 +1543,16 @@ main > ul img {
 /* Caption base styles - always visible, single line with ellipsis */
 main > ul figcaption {
   position: absolute;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-family: var(--font-mono);
-  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-weight: 550;
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.2;
 
   /* Fixed dark gray - NOT theme-adaptive (see explanation above) */
-  color: oklch(50% 0 0deg);
+  color: oklch(45% 0 0deg);
 }
 
 /* === Caption Positioning Classes === */
@@ -1852,13 +1854,8 @@ body > footer nav {
   min-width: 8rem;
 }
 
-/* Navigation headings */
-body > footer nav h3 {
-  margin: 0;
-}
-
 /* Navigation lists - vertical stack */
-body > footer nav ul {
+body > footer ul {
   flex-direction: column;
   gap: 0;
 }
@@ -1987,13 +1984,13 @@ textarea:user-invalid {
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* inconsolata-latin-wght-normal */
+/* source-code-pro-latin-wght-normal */
 @font-face {
-  font-family: "Inconsolata Variable";
+  font-family: "Source Code Pro Variable";
   font-style: normal;
   font-display: block;
   font-weight: 200 900;
-  src: url("@fontsource-variable/inconsolata/files/inconsolata-latin-wght-normal.woff2")
+  src: url("@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2")
     format("woff2-variations");
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
