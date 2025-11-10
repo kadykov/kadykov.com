@@ -736,17 +736,41 @@ body {
   font-size: clamp(16px, 0.395vw + 14.42px, 22px);
   line-height: 1.75;
   color: var(--color-on-surface);
+
+  /*
+   * Fibonacci Square Tiling Background Pattern
+   * 
+   * These layered patterns are inspired by Fibonacci square tilings, where
+   * rectangles are divided into cells following Fibonacci sequence ratios.
+   * Each pattern is a 4×4 checkerboard grid with asymmetric cell divisions.
+   * 
+   * Pattern Structure:
+   * - Each SVG contains 8 rectangles (half of a 4×4 grid)
+   * - Checkerboard alternation: filled cells (opacity 0.1) vs empty cells
+   * - Cell divisions follow Fibonacci-inspired ratios for organic appearance
+   * 
+   * Four Progressive Scales (Fibonacci dimensions):
+   * 1. 13×21 pattern: (3+1+1+8) × (5+1+2+13) - Finest texture
+   * 2. 21×34 pattern: (5+1+2+13) × (8+2+3+21) - Fine texture
+   * 3. 34×55 pattern: (8+2+3+21) × (13+3+5+34) - Medium texture
+   * 4. 55×89 pattern: (13+3+5+34) × (25+5+8+55) - Coarse texture
+   * 
+   * The overlapping scales create a subtle, organic texture reminiscent of
+   * paper grain or natural materials. Dimensions follow Fibonacci sequence:
+   * 13, 21, 34, 55, 89 (each number is the sum of previous two).
+   * 
+   */
   background-image:
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><rect x="0" y="0" width="3" height="17" fill="gray" fill-opacity="0.03"/><rect x="3" y="17" width="5" height="19" fill="gray" fill-opacity="0.03"/></svg>'), */
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><path fill="gray" fill-opacity=".03" d="M0 0h3v17H0zm3 17h5v19H3z"/></svg>'),
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 24"><rect x="0" y="0" width="7" height="11" fill="gray" fill-opacity="0.03"/><rect x="7" y="11" width="11" height="13" fill="gray" fill-opacity="0.03"/></svg>'), */
-      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 24"><path fill="gray" fill-opacity=".03" d="M0 0h7v11H0zm7 11h11v13H7z"/></svg>'),
-    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 12"><rect x="0" y="0" width="13" height="5" fill="gray" fill-opacity="0.03"/><rect x="13" y="5" width="17" height="7" fill="gray" fill-opacity="0.03"/></svg>'); */
-      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 12"><path fill="gray" fill-opacity=".03" d="M0 0h13v5H0zm13 5h17v7H13z"/></svg>');
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 21"><path fill="gray" fill-opacity=".03" d="M0 0h3v5H0zm4 0h1v5H4zM3 5h1v1H3zm2 0h8v1H5zM0 6h3v2H0zm4 0h1v2H4zM3 8h1v13H3zm2 0h8v13H5z"/></svg>'), */
+
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 34"><path fill="gray" fill-opacity=".03" d="M0 0h5v8H0zm6 0h2v8H6zM5 8h1v2H5zm3 0h13v2H8zm-8 2h5v3H0zm6 0h2v3H6zm-1 3h1v21H5zm3 0h13v21H8z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 55"><path fill="gray" fill-opacity=".03" d="M0 0h8v13H0zm10 0h3v13h-3zM8 13h2v3H8zm5 0h21v3H13zM0 16h8v5H0zm10 0h3v5h-3zm-2 5h2v34H8zm5 0h21v34H13z"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="gray" fill-opacity=".03" d="M0 0h13v25H0zm16 0h5v25h-5zm-3 25h3v5h-3zm8 0h34v5H21zM0 30h13v8H0zm16 0h5v8h-5zm-3 8h3v55h-3zm8 0h34v55H21z"/></svg>');
   background-size:
-    8rem 36rem,
-    18rem 24rem,
-    30rem 12rem;
+    /* 13rem 21rem, */
+    21rem 34rem,
+    34rem 55rem,
+    55rem 89rem;
   background-repeat: repeat;
   background-color: var(--color-surface-container);
   transition:
