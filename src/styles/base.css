@@ -736,6 +736,19 @@ body {
   font-size: clamp(16px, 0.395vw + 14.42px, 22px);
   line-height: 1.75;
   color: var(--color-on-surface);
+
+  background-image:
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><rect x="0" y="0" width="3" height="17" fill="gray" fill-opacity="0.03"/><rect x="3" y="17" width="5" height="19" fill="gray" fill-opacity="0.03"/></svg>'), */
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 36"><path fill="gray" fill-opacity=".03" d="M0 0h3v17H0zm3 17h5v19H3z"/></svg>'),
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 24"><rect x="0" y="0" width="7" height="11" fill="gray" fill-opacity="0.03"/><rect x="7" y="11" width="11" height="13" fill="gray" fill-opacity="0.03"/></svg>'), */
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 24"><path fill="gray" fill-opacity=".03" d="M0 0h7v11H0zm7 11h11v13H7z"/></svg>'),
+    /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 12"><rect x="0" y="0" width="13" height="5" fill="gray" fill-opacity="0.03"/><rect x="13" y="5" width="17" height="7" fill="gray" fill-opacity="0.03"/></svg>'); */
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 12"><path fill="gray" fill-opacity=".03" d="M0 0h13v5H0zm13 5h17v7H13z"/></svg>');
+  background-size:
+    8rem 36rem,
+    18rem 24rem,
+    30rem 12rem;
+  background-repeat: repeat;
   background-color: var(--color-surface-container);
   transition:
     background-color 0.2s ease-in-out,
