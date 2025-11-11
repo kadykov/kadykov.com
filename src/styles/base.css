@@ -1155,6 +1155,10 @@ td {
   padding: 0.5rem 1rem;
   font-size: 0.9em;
   border-bottom: 0.07rem solid var(--color-surface-container);
+}
+
+/* Hover effect for rows */
+tbody tr {
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -1163,8 +1167,13 @@ tbody tr:nth-child(even) {
   background-color: var(--color-surface-container-lowest);
 }
 
+/* We don't use regular styles for hover/active states because table rows are not interactive by default */
 tbody tr:hover {
   background-color: var(--color-surface-container-low);
+}
+
+tbody tr:active {
+  background-color: var(--color-surface-container);
 }
 
 tbody tr:last-child td {
