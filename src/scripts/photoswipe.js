@@ -158,6 +158,8 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         // View details link at the end
         if (slug) {
           const separator = tags.length > 0 || dateFormatted ? " · " : ""
+          // Since we're already on the photo page when viewing the lightbox,
+          // link opens in a new tab to avoid disrupting the current view
           captionHTML += `${separator}<a href="/photo/${slug}#photo" target="_blank" rel="noopener">View details</a>`
         }
 
