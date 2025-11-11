@@ -693,49 +693,6 @@
   }
 }
 
-/* Photo Gallery Color Theme Overrides */
-
-/*
- * Neutral Gray Color Scheme for Photo Gallery Pages
- * 
- * Photo galleries require a neutral, desaturated background to avoid
- * affecting the perceived white balance of displayed photos. Any color
- * cast in the background can make photos appear warmer or cooler than
- * they actually are.
- * 
- * This uses the same pattern as the theme switcher - an attribute on <html>
- * that overrides the :root variables with higher specificity.
- * 
- * Changes from default theme:
- * - Light theme: Darker background with reduced contrast
- * - Both themes: Zero chroma (surface-c = 0) for completely neutral grays
- * - All surface colors become pure grayscale with no hue bias
- */
-
-/* Photo Gallery Light Theme Override */
-[data-page-type="photo-gallery"] {
-  /* Darker background: lightness ~0.85 for softer appearance */
-  --surface-l: 0.85;
-
-  /* Zero chroma: complete desaturation for neutral gray */
-  --surface-c: 0;
-  --primary-c: 0;
-
-  /* Reduce accent chroma */
-  --accent-c: 0.12;
-}
-
-/* Photo Gallery Dark Theme Override */
-@media (prefers-color-scheme: dark) {
-  [data-page-type="photo-gallery"] {
-    /* Keep dark theme darkness */
-    --surface-l: 0.23;
-
-    /* Reduce accent color even more */
-    --accent-c: 0.08;
-  }
-}
-
 @view-transition {
   navigation: auto;
 }
@@ -832,24 +789,6 @@ a {
 /* Square bullets are more cohesive with the overall design */
 ul {
   list-style-type: square;
-}
-
-/* Buttons */
-button {
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-h4);
-  color: var(--color-on-primary);
-  background: var(--bg-primary);
-  border: none;
-  border-radius: 0.2rem;
-  padding: 0.875rem 1.5rem;
-  cursor: pointer;
-  box-shadow: var(--elevation-2);
-
-  /* Smooth transitions */
-  transition:
-    box-shadow 0.2s ease-in-out,
-    transform 0.1s ease-in-out;
 }
 
 /* Horizontal container for icon + text */
@@ -1371,6 +1310,76 @@ main > ol article:hover {
   box-shadow: var(--elevation-3);
 }
 
+/* Single photo page - Polaroid-style figure as direct child of main */
+main > figure {
+  margin: 0;
+  width: 100%;
+}
+
+/* Image sizing: fit within viewport while maintaining aspect ratio */
+main > figure img {
+  display: block;
+  margin: 0 auto;
+  border-radius: 0.2rem;
+
+  /* Inner border: thin light gray for separation from off-white border */
+  padding: 0.1rem;
+  background-color: oklch(92% 0 0deg);
+
+  /* Outer border: percentage-based for easy sizes calculation (Polaroid aesthetic)
+   * Horizontal borders: 5vw each side
+   * Vertical borders: 5vh each side
+   * This creates asymmetric but proportional borders that scale with viewport
+   */
+  border-width: 5vh 5vw;
+  border-style: solid;
+  border-color: oklch(95% 0 0deg);
+
+  /* 
+   * Maintain aspect ratio while constraining to viewport dimensions
+   * 
+   * The image has intrinsic dimensions from width/height attributes.
+   * With width: auto and height: auto, it tries to render at intrinsic size,
+   * but max-width and max-height constrain it to fit within the viewport.
+   * 
+   * Using 100% instead of 100vw avoids scrollbar width issues.
+   * Border and padding are included in dimensions via box-sizing: border-box.
+   * 
+   * The browser automatically scales down maintaining aspect ratio when
+   * either constraint is exceeded.
+   */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: var(--elevation-3);
+}
+
+/* Figcaption contains title, description, and metadata */
+main > figure figcaption {
+  max-width: 42rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: var(--color-on-surface-low);
+}
+
+/* Description paragraph */
+main > figure p {
+  font-family: var(--font-serif);
+}
+
+/* Metadata definition list */
+main > figure dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+}
+
+main > figure dt {
+  text-align: right;
+}
+
 /* === Grid Layout Classes === */
 
 /* These control how much space the card occupies on the grid */
@@ -1474,32 +1483,6 @@ main > ul figure {
     rotate 0.2s ease-in-out;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  main > ul figure {
-    transition: none;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  main > ul figure {
-    /* Slightly darker off-white for dark theme - still provides white balance reference */
-    background-color: oklch(90% 0 0deg);
-  }
-
-  main > ul img {
-    /* Darken border slightly in dark mode for better contrast */
-    border-color: oklch(87% 0 0deg);
-  }
-
-  main > figure img {
-    /* Darken inner border for better contrast in dark theme */
-    background-color: oklch(87% 0 0deg);
-
-    /* Slightly darker off-white outer border for dark theme */
-    border-color: oklch(90% 0 0deg);
-  }
-}
-
 /* === Caption Placement Classes === */
 
 /* These control padding to accommodate captions at different positions */
@@ -1593,76 +1576,6 @@ main > ul a:focus-visible figure {
   box-shadow: var(--elevation-3);
 }
 
-/* Single photo page - Polaroid-style figure as direct child of main */
-main > figure {
-  margin: 0;
-  width: 100%;
-}
-
-/* Image sizing: fit within viewport while maintaining aspect ratio */
-main > figure img {
-  display: block;
-  margin: 0 auto;
-  border-radius: 0.2rem;
-
-  /* Inner border: thin light gray for separation from off-white border */
-  padding: 0.1rem;
-  background-color: oklch(92% 0 0deg);
-
-  /* Outer border: percentage-based for easy sizes calculation (Polaroid aesthetic)
-   * Horizontal borders: 5vw each side
-   * Vertical borders: 5vh each side
-   * This creates asymmetric but proportional borders that scale with viewport
-   */
-  border-width: 5vh 5vw;
-  border-style: solid;
-  border-color: oklch(95% 0 0deg);
-
-  /* 
-   * Maintain aspect ratio while constraining to viewport dimensions
-   * 
-   * The image has intrinsic dimensions from width/height attributes.
-   * With width: auto and height: auto, it tries to render at intrinsic size,
-   * but max-width and max-height constrain it to fit within the viewport.
-   * 
-   * Using 100% instead of 100vw avoids scrollbar width issues.
-   * Border and padding are included in dimensions via box-sizing: border-box.
-   * 
-   * The browser automatically scales down maintaining aspect ratio when
-   * either constraint is exceeded.
-   */
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  box-shadow: var(--elevation-3);
-}
-
-/* Figcaption contains title, description, and metadata */
-main > figure figcaption {
-  max-width: 42rem;
-  width: fit-content;
-  margin: 0 auto;
-  padding: 0 1rem;
-  color: var(--color-on-surface-low);
-}
-
-/* Description paragraph */
-main > figure figcaption > p {
-  font-family: var(--font-serif);
-}
-
-/* Metadata definition list */
-main > figure figcaption dl {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.5rem 1rem;
-}
-
-main > figure figcaption dt {
-  text-align: right;
-}
-
 /* Pagination navigation - centered in main */
 main > nav {
   margin-block: 3rem;
@@ -1676,74 +1589,6 @@ nav span[aria-current="page"] {
   color: var(--color-on-surface-low);
   cursor: not-allowed;
   text-decoration: underline;
-}
-
-/*
- * Floating Navigation Links - Semantic Pagination
- * 
- * Styles floating prev/next navigation buttons that use rel="prev" and rel="next"
- * attributes. Each link is independently positioned, so they appear correctly
- * even when only one is present (e.g., first or last page).
- * 
- * Design approach:
- * - Links are individually positioned (not container-based)
- * - Previous link always appears on the left
- * - Next link always appears on the right
- * - No awkward positioning when only one link is present
- */
-
-a[rel="prev"],
-a[rel="next"] {
-  /* Floating button positioning */
-  position: fixed;
-  bottom: 1rem;
-  z-index: 1;
-
-  /* Button appearance */
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: 50%;
-  box-shadow: var(--elevation-3);
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    box-shadow 0.2s ease-in-out,
-    scale 0.2s ease-in-out,
-    background 0.2s ease-in-out,
-    color 0.2s ease-in-out;
-}
-
-/* Position previous link on the left */
-a[rel="prev"] {
-  left: 1rem;
-}
-
-/* Position next link on the right */
-a[rel="next"] {
-  right: 1rem;
-}
-
-a[rel="prev"] svg,
-a[rel="next"] svg {
-  width: 2rem;
-  height: 2rem;
-}
-
-a[rel="prev"]:hover,
-a[rel="next"]:hover {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  box-shadow: var(--elevation-5);
-  scale: 1.05;
-}
-
-a[rel="prev"]:active,
-a[rel="next"]:active {
-  scale: 0.98;
-  box-shadow: var(--elevation-2);
 }
 
 /* Hierarchical date navigation with nested ordered lists */
@@ -1870,23 +1715,116 @@ body > footer ul {
   font-weight: 400;
 }
 
+/* Button-like elements and floating nav links */
+
+button,
+a[rel="prev"],
+a[rel="next"] {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-h4);
+  color: var(--color-on-primary);
+  background: var(--bg-primary);
+  border: none;
+  cursor: pointer;
+
+  /* Initial outline setup for focus/hover states */
+  outline: 0.2rem solid transparent;
+  outline-offset: 0.4rem;
+
+  /* Smooth transitions */
+  transition:
+    scale 0.2s ease-in-out,
+    outline-color 0.2s ease-in-out,
+    outline-offset 0.2s ease-in-out;
+}
+
+/* Buttons */
+button {
+  border-radius: 0.2rem;
+  padding: 0.875rem 1.5rem;
+  box-shadow: var(--elevation-2);
+}
+
+/*
+ * Floating Navigation Links - Semantic Pagination
+ * 
+ * Styles floating prev/next navigation buttons that use rel="prev" and rel="next"
+ * attributes. Each link is independently positioned, so they appear correctly
+ * even when only one is present (e.g., first or last page).
+ * 
+ * Design approach:
+ * - Links are individually positioned (not container-based)
+ * - Previous link always appears on the left
+ * - Next link always appears on the right
+ * - No awkward positioning when only one link is present
+ */
+
+a[rel="prev"],
+a[rel="next"] {
+  /* Floating button positioning */
+  position: fixed;
+  bottom: 1rem;
+  z-index: 1;
+
+  /* Button appearance */
+  border-radius: 50%;
+  box-shadow: var(--elevation-3);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Position previous link on the left */
+a[rel="prev"] {
+  left: 1rem;
+}
+
+/* Position next link on the right */
+a[rel="next"] {
+  right: 1rem;
+}
+
+a[rel="prev"] svg,
+a[rel="next"] svg {
+  width: 2rem;
+  height: 2rem;
+}
+
 /* Hover and active states */
 
-/* Links */
+/* Use animated underline for links for less-distracting effect */
 a:hover {
   text-decoration-color: var(--color-accent);
   text-underline-offset: 0.3ex;
 }
 
-a:active {
-  background-color: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
+/* Draw outline on focus and hover */
+button:hover,
+a[rel="prev"]:hover,
+a[rel="next"]:hover,
 a:focus-visible,
+button:focus-visible,
 main > ul a:focus-visible figure {
   outline: 0.2rem solid var(--color-accent);
   outline-offset: 0.2rem;
+}
+
+/* Since we draw outline on focus, don't need default focus ring */
+
+/* Paint active state with accent color */
+a:active,
+button:active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Shrink button-like elements on active state */
+button:active,
+a[rel="prev"]:active,
+a[rel="next"]:active {
+  scale: 0.98;
 }
 
 ::selection {
@@ -1903,19 +1841,6 @@ body > header svg:hover {
    * serves as a navigation link.
    */
   transform: scale(1.05);
-}
-
-/* Button hover state */
-button:hover {
-  background: var(--bg-accent);
-  color: var(--color-on-accent);
-  box-shadow: var(--elevation-3);
-}
-
-/* Button active state */
-button:active {
-  transform: scale(0.98);
-  box-shadow: var(--elevation-1);
 }
 
 /* Form input placeholder text */
@@ -1965,6 +1890,90 @@ textarea:user-invalid {
 /* Links in caption - subtle styling */
 .pswp__dynamic-caption a {
   color: inherit;
+}
+
+/* Photo Gallery Color Theme Overrides */
+
+/*
+ * Neutral Gray Color Scheme for Photo Gallery Pages
+ * 
+ * Photo galleries require a neutral, desaturated background to avoid
+ * affecting the perceived white balance of displayed photos. Any color
+ * cast in the background can make photos appear warmer or cooler than
+ * they actually are.
+ * 
+ * This uses the same pattern as the theme switcher - an attribute on <html>
+ * that overrides the :root variables with higher specificity.
+ * 
+ * Changes from default theme:
+ * - Light theme: Darker background with reduced contrast
+ * - Both themes: Zero chroma (surface-c = 0) for completely neutral grays
+ * - All surface colors become pure grayscale with no hue bias
+ */
+
+/* Photo Gallery Light Theme Override */
+[data-page-type="photo-gallery"] {
+  /* Darker background: lightness ~0.85 for softer appearance */
+  --surface-l: 0.85;
+
+  /* Zero chroma: complete desaturation for neutral gray */
+  --surface-c: 0;
+  --primary-c: 0;
+
+  /* Reduce accent chroma */
+  --accent-c: 0.12;
+}
+
+@media (prefers-color-scheme: dark) {
+  main > ul figure {
+    /* Slightly darker off-white for dark theme - still provides white balance reference */
+    background-color: oklch(90% 0 0deg);
+  }
+
+  main > ul img {
+    /* Darken border slightly in dark mode for better contrast */
+    border-color: oklch(87% 0 0deg);
+  }
+
+  main > figure img {
+    /* Darken inner border for better contrast in dark theme */
+    background-color: oklch(87% 0 0deg);
+
+    /* Slightly darker off-white outer border for dark theme */
+    border-color: oklch(90% 0 0deg);
+  }
+
+  /* Photo Gallery Dark Theme Override */
+  [data-page-type="photo-gallery"] {
+    /* Keep dark theme darkness */
+    --surface-l: 0.23;
+
+    /* Reduce accent color even more */
+    --accent-c: 0.08;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a,
+  a[rel="prev"],
+  a[rel="next"],
+  button,
+  body,
+  html,
+  main,
+  label,
+  textarea,
+  input,
+  td,
+  body > header svg,
+  main > ol article,
+  main > ul figure {
+    transition: none;
+  }
+
+  @view-transition {
+    navigation: none;
+  }
 }
 
 /* Since auto-translation feature is quite common now, include font faces for common languages */
