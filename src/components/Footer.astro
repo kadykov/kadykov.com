@@ -1,11 +1,13 @@
 ---
 import { Icon } from "astro-icon/components"
 const year = new Date().getFullYear()
-const lastUpdated = new Date().toLocaleDateString("en-US", {
+const now = new Date()
+const lastUpdated = now.toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",
 })
+const lastUpdatedISO = now.toISOString()
 const commitHash = "main" // TODO: Get actual latest commit hash
 ---
 
@@ -85,12 +87,12 @@ const commitHash = "main" // TODO: Get actual latest commit hash
   </nav>
 
   <p>
-    <small>
-      Last updated: <a
+    Last updated: <time datetime={lastUpdatedISO}>
+      <a
         href={`https://github.com/kadykov/kadykov.com/commit/${commitHash}`}
         rel="noopener"
         target="_blank">{lastUpdated}</a
       >
-    </small>
+    </time>
   </p>
 </footer>
