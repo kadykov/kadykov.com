@@ -941,8 +941,8 @@ main > article {
 }
 
 /* Accent links in articles with higher contrast */
-main > figure a,
-article a {
+article a,
+main > figure a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -1361,7 +1361,7 @@ main > figure figcaption {
   width: fit-content;
   margin: 0 auto;
   padding: 0 1rem;
-  color: var(--color-on-surface-low);
+  color: var(--color-on-surface-variant);
 }
 
 /* Description paragraph */
