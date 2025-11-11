@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Hero from "../components/Hero.astro"
+
+const frontmatter = {
+  title: "Page Not Found",
+  description: "The page does not exist.",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1 style="font-size: 5.5rem; font-weight: 100;">404</h1>
+    <p>You know what it means...</p>
+  </Hero>
+  <article>
+    <p>
+      Don't worry, you can always return to <a href="/">home</a>. Drop me a <a
+        href="mailto:web@kadykov.com">message</a
+      > if the page you are looking for is important for you.
+    </p>
+  </article>
+</BaseLayout>
