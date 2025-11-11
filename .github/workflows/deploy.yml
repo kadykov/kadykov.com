@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Remove experimental pages
-        run: rm -rf src/pages/experimental
+      - name: Remove experimental pages and test blog post
+        run: rm -rf src/pages/experimental && rm src/content/blog/markdoc-typography-test.mdoc
 
       - name: Build website
         run: npm run build
