@@ -1,6 +1,6 @@
 [
   {
-    "id": "my-site",
+    "id": "kadykov.com",
     "path": "src/content",
     "schema": {
       "path": "markdoc.config.mjs",
