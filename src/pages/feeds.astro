@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content"
+import { fetchPhotoManifest } from "../utils/photoData"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Hero from "../components/Hero.astro"
+
+const frontmatter = {
+  title: "RSS Feeds",
+  subtitle: "Subscribe to updates",
+  description: "Available RSS feeds for blog posts and photographs",
+}
+
+// Get all blog posts and their tags
+const posts = await getCollection("blog")
+const blogTags = [
+  ...new Set(posts.flatMap((post) => post.data.tags || [])),
+].sort()
+
+// Get all photos and their tags
+const photos = await fetchPhotoManifest()
+const photoTags = [
+  ...new Set(photos.flatMap((photo) => photo.tags || [])),
+].sort()
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.subtitle}</p>
+  </Hero>
+
+  <article>
+    <section>
+      <h2>Main Feeds</h2>
+      <ul>
+        <li>
+          <a href="/rss.xml">All Content</a>
+          <p>Combined feed with both blog posts and photographs</p>
+        </li>
+        <li>
+          <a href="/blog/rss.xml">Blog Posts</a>
+          <p>All blog posts</p>
+        </li>
+        <li>
+          <a href="/photos/rss.xml">Photographs</a>
+          <p>All photographs</p>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Blog Posts by Tag</h2>
+      {
+        blogTags.length > 0 ? (
+          <ul>
+            {blogTags.map((tag) => (
+              <li>
+                <a href={`/blog/tags/${tag}/rss.xml`}>{tag}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No tags available yet.</p>
+        )
+      }
+    </section>
+
+    <section>
+      <h2>Photographs by Tag</h2>
+      {
+        photoTags.length > 0 ? (
+          <ul>
+            {photoTags.map((tag) => (
+              <li>
+                <a href={`/photos/tags/${tag}/rss.xml`}>{tag}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No tags available yet.</p>
+        )
+      }
+    </section>
+  </article>
+</BaseLayout>
