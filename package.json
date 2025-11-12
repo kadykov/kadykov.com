@@ -25,6 +25,7 @@
     "@fontsource-variable/bitter": "^5.2.10",
     "@fontsource-variable/source-code-pro": "^5.2.7",
     "@fontsource-variable/source-sans-3": "^5.2.9",
+    "@iconify-json/fa": "^1.2.2",
     "@iconify-json/ri": "^1.2.6",
     "@playform/compress": "^0.1.9",
     "astro": "^5.14.5",
