@@ -1,0 +1,134 @@
+---
+title: "Designing a Photo Gallery that Respects Photographs"
+subtitle: "Grid rhythm, Polaroid borders, and neutral backgrounds for color‑accurate viewing"
+pubDate: 2025-11-13
+description: "Beyond square feeds and masonry columns: a grid that balances orientations, keeps color honest, and feels tactile."
+tags: ["photography", "design", "css", "grid", "color", "astro"]
+---
+
+# Designing a Photo Gallery that Respects Photographs
+
+Most gallery UIs copy social feeds: either everything is cropped to squares, or items flow in Pinterest‑style columns with unpredictable rhythm. Both patterns are convenient for machines, not for photographs. This post explains the approach I took: a grid that gives landscape and portrait frames equal visual weight, a tactile “Polaroid” treatment, and a neutral viewing environment that protects color perception.
+
+> Summary: three ingredients — a cell‑based grid with controlled spans, borders that act as a white‑balance anchor, and a desaturated page background.
+
+---
+
+## What’s wrong with square feeds and masonry columns
+
+- Square‑only feeds erase composition by forcing crop decisions you didn’t make.
+- Masonry columns (fixed column width, variable height) privilege portrait frames, which visually dominate the page and break rhythm.
+- CSS doesn’t natively lay out those columns left‑to‑right; the fill order feels “waterfall” top‑to‑bottom.
+- Captions fight for space under tall images; scannability suffers.
+
+I used the column approach in a previous iteration and repeatedly ran into these issues.
+
+---
+
+## A grid that balances orientations
+
+I switched to a CSS Grid where each photo occupies multiple cells depending on orientation:
+
+- Landscape → 2 rows × 3 columns
+- Square → 2 × 2
+- Portrait → 3 × 2
+
+This normalizes occupied area so landscape and portrait frames feel comparable, while squares read smaller (which matches how we usually obtain them — via cropping).
+
+### The classes
+
+```css
+/* Grid container */
+main > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1.5rem;
+}
+
+/* Spans per orientation */
+main > ul .grid-landscape { grid-row: span 2; grid-column: span 3; }
+main > ul .grid-square    { grid-row: span 2; grid-column: span 2; }
+main > ul .grid-portrait  { grid-row: span 3; grid-column: span 2; }
+```
+
+### Caption placement logic
+
+- Landscape and square: caption at the bottom edge.
+- Portrait: caption on the side, rotated, to preserve vertical space.
+
+```css
+/* Bottom caption */
+.caption-bottom figure { padding-bottom: 2rem; }
+.caption-bottom figcaption { bottom: 0.5rem; left: 0.6rem; right: 0.6rem; }
+
+/* Side caption for portraits */
+.caption-side figure { padding-left: 2rem; }
+.caption-side figcaption { top: 0.6rem; left: 0.5rem; bottom: 0.6rem; writing-mode: vertical-rl; }
+```
+
+---
+
+## Polaroid borders as a perceptual tool
+
+I frame each image with two borders:
+
+- A thin inner line in a light gray to separate the photo from the outer border.
+- A thick off‑white outer border — not pure white, but bright enough to act as a perceptual white reference.
+
+Why it matters:
+
+- The off‑white border gives the eye a stable “paper white,” helping the viewer adapt to ambient light or screen calibration.
+- Against a darker page background, the border boosts the perceived dynamic range of the photo without editing the image itself.
+- Borders are CSS, not baked into files (better compression; no ringing on sharp edges).
+
+```css
+/* Inner and outer borders on the single‑photo page */
+main > figure img {
+  padding: 0.1rem;                 /* thin inner separator */
+  background-color: oklch(92% 0 0deg);
+  border: 5vh 5vw solid oklch(95% 0 0deg);  /* thick outer border */
+  box-shadow: var(--elevation-3);
+}
+```
+
+---
+
+## Neutral background for honest color
+
+Photo pages use a neutral gray theme with zero chroma. That prevents any hue bias from the UI bleeding into your perception of the image.
+
+```css
+/* Gallery pages desaturate the surface */
+[data-page-type="photo-gallery"] {
+  --surface-l: 0.85; /* slightly darker for contrast */
+  --surface-c: 0;    /* no chroma → neutral gray */
+  --primary-c: 0;    /* keep UI accents subdued */
+}
+```
+
+This makes the white border “pop” and provides a consistent viewing environment across light and dark modes.
+
+---
+
+## Performance and accessibility
+
+- Zero framework utilities on the gallery: minimal CSS, no layout JS.
+- Keyboard‑friendly outlines and focus‑visible states.
+- Respects reduced motion preferences (no forced animations).
+
+---
+
+## Related topics (coming soon)
+
+- Natural‑sticky header: a hide‑on‑scroll behavior I discovered via a mobile browser quirk (now a separate project).
+- SVG background texture: layered checkerboards with asymmetric cell splits sized by Fibonacci pairs — produces a subtle pseudo‑random paper‑like grain.
+- Color system: OKLCH‑based variables that derive readable text and container colors from a few base values.
+- Why own your site: ownership, presentation control, findability, and long‑term resilience.
+
+I’ll link to these posts as they go live.
+
+---
+
+## Closing
+
+This layout tries to respect what a photograph is: a composition with intent, viewed in a neutral space, presented like a physical object. If you’ve struggled with square feeds or waterfall columns, a cell‑based grid with calibrated borders is a simple, robust alternative.
