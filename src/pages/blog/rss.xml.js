@@ -3,7 +3,7 @@ import { getCollection } from "astro:content"
 
 export async function GET(context) {
   // Added context for site
-  const posts = await getCollection("blog") // Changed "posts" to "blog"
+  const posts = await getCollection("blog", ({ data }) => data.draft !== true) // Exclude drafts
   return rss({
     title: "Aleksandr Kadykov | Blog",
     description: "Blog posts",

@@ -2,7 +2,7 @@ import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog")
+  const posts = await getCollection("blog", ({ data }) => data.draft !== true)
   const uniqueTags = [...new Set(posts.flatMap((post) => post.data.tags || []))]
 
   return uniqueTags.map((tag) => ({
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 export async function GET(context) {
   const { tag } = context.params
-  const posts = await getCollection("blog")
+  const posts = await getCollection("blog", ({ data }) => data.draft !== true)
 
   // Filter posts by tag
   const taggedPosts = posts.filter((post) => post.data.tags?.includes(tag))

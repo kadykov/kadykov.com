@@ -9,7 +9,7 @@ import {
   formatCount,
 } from "../../../utils/collectionHelpers"
 
-const allPosts = await getCollection("blog")
+const allPosts = await getCollection("blog", ({ data }) => data.draft !== true)
 
 const tags = getUniqueValues(allPosts, (post) => post.data.tags)
 const tagCounts = countByField(allPosts, (post) => post.data.tags)

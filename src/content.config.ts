@@ -11,6 +11,8 @@ const postsCollection = defineCollection({
     lastUpdatedDate: z.date().optional(),
     description: z.string(),
     tags: z.array(z.string()),
+    // Optional draft flag to exclude posts from listings/feeds/build
+    draft: z.boolean().optional(),
   }),
 })
 
