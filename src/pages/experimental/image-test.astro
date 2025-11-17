@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets"
+import { getImage } from "astro:assets"
+import PageLayout from "../../layouts/PageLayout.astro"
+import OptimizedImage from "../../components/OptimizedImage.astro"
+
+const frontmatter = {
+  title: "Image Component Test",
+  description:
+    "Testing the MarkdocImage component with local and remote images.",
+}
+import localImage from "./test.png"
+
+// Test 1: Direct getImage with widths (like our utility does)
+const directGetImage = await getImage({
+  src: localImage,
+  format: "avif",
+  widths: [900, 1080, 1280, 1600],
+  layout: "constrained",
+  quality: 60,
+})
+
+console.log("[image-test] directGetImage result:", directGetImage.src)
+
+// Pass src string to getImage alongside with width and height
+// In this case Astro copies test.BAmoZtXA.png to the build folder
+// const image = await getImage({
+//   src: localImage.src,
+//   // Choose awkward widths to test srcset generation
+//   widths: [800, 1333, 1666],
+//   inferSizes: true,
+//   width: 800,
+//   height: 600,
+//   format: "avif"
+// })
+
+// Pass the localImage directly to getImage
+// In this case Astro does not copy the test.BAmoZtXA.png to the build folder
+// const image = await getImage({
+//   src: localImage,
+//   // Choose awkward widths to test srcset generation
+//   widths: [800, 1333, 1666],
+//   inferSizes: true,
+// //   width: 800, // We don't actually need to pass width/height here when passing ImageMetadata
+// //   height: 600,
+//   format: "avif"
+// })
+---
+
+<PageLayout frontmatter={frontmatter}>
+  <h1>Image Component Test</h1>
+  <p>This page tests the Image component with local images.</p>
+
+  <!-- Commented out to test if this causes PNG to be copied -->
+  <!-- <Image
+    src={localImage}
+    alt="Local Image Example"
+    layout="constrained"
+    width={800}
+    format="avif"
+  /> -->
+
+  <!-- <h2>Using getImage for optimized image (only)</h2>
+  <img 
+    src={image.src} 
+    srcset={image.srcSet.attribute}
+    sizes="(max-width: 800px) 100vw, 800px" 
+    alt="Optimized Local Image Example" 
+    width={image.attributes.width}
+    height={image.attributes.height}
+  /> -->
+
+  <!-- <h2>Direct getImage with same params as our utility</h2>
+  <img 
+    src={directGetImage.src} 
+    srcset={directGetImage.srcSet.attribute}
+    alt="Direct getImage test" 
+  /> -->
+
+  <h2>Using OptimizedImage component</h2>
+  <OptimizedImage
+    src={localImage}
+    alt="Optimized Local Image Example"
+    displayWidth={800}
+  />
+</PageLayout>

@@ -38,18 +38,21 @@
  */
 
 import { getImage, inferRemoteSize } from "astro:assets"
+import type { ImageMetadata } from "astro"
 
 export interface OptimizedImageConfig {
-  src: string
+  src: ImageMetadata | string
 
   /**
    * SOURCE DIMENSIONS: Original image dimensions for performance optimization.
    * When provided together, skips remote image fetching to determine aspect ratio.
    * These are NOT used for HTML width/height attributes (see maxWidth instead).
+   *
+   * NOTE: For local images (ImageMetadata), dimensions are automatically extracted
+   * from the image metadata, so these parameters are ignored.
    */
   width?: number
   height?: number
-
   /**
    * DISPLAY WIDTH: Maximum CSS display width in pixels (at 1x DPR).
    * This determines:
@@ -179,37 +182,66 @@ export async function generateOptimizedImage(
   } = config
 
   try {
-    // Determine the original image width for filtering purposes
-    // Priority: width param > originalWidth param > infer from remote
-    let imageOriginalWidth = width || originalWidth
-    if (!imageOriginalWidth) {
-      try {
-        const dimensions = await inferRemoteSize(src)
-        imageOriginalWidth = dimensions.width
-      } catch (error) {
-        console.warn(
-          `Failed to infer dimensions for ${src}, proceeding without width filtering:`,
-          error
-        )
+    // Extract dimensions from ImageMetadata or use provided dimensions
+    let imageOriginalWidth: number | undefined
+    let imageOriginalHeight: number | undefined
+    let imageSrc: string | ImageMetadata = src
+
+    if (typeof src === "object" && "src" in src) {
+      // Local image - ImageMetadata object
+      // Keep the ImageMetadata object for getImage() to enable proper optimization
+      // and prevent copying the original file to the build directory
+      //
+      // CRITICAL: Do NOT access ImageMetadata properties (src.width, src.height, src.src, etc.)
+      // Accessing these properties causes Astro to create a reference to the original file
+      // and copy it to the build directory, even if it's never used!
+      //
+      // For width filtering, dimensions must be passed explicitly via width/originalWidth parameters
+      imageOriginalWidth = width || originalWidth
+      imageOriginalHeight = height
+      imageSrc = src // Pass ImageMetadata directly to getImage()
+    } else {
+      // Remote image - string URL
+      imageOriginalWidth = width || originalWidth
+      imageOriginalHeight = height
+      imageSrc = src
+
+      // Infer dimensions from remote image if not provided
+      if (!imageOriginalWidth) {
+        try {
+          const dimensions = await inferRemoteSize(src)
+          imageOriginalWidth = dimensions.width
+          imageOriginalHeight = dimensions.height
+        } catch (error) {
+          console.warn(
+            `Failed to infer dimensions for ${src}, proceeding without width filtering:`,
+            error
+          )
+        }
       }
     }
 
     // Build getImage parameters
     const imageParams: any = {
-      src,
+      src: imageSrc, // ImageMetadata for local, string URL for remote
       format: "avif",
       layout,
-      quality: 60, // Increase default quality
+      quality: quality ?? 60,
     }
 
-    // If both width and height are provided, use them explicitly to avoid fetching the remote image
-    // Otherwise, use inferSize which will fetch the image to get dimensions
-    if (width && height) {
-      imageParams.width = width
-      imageParams.height = height
-    } else {
-      imageParams.inferSize = true // Falls back to inferring (requires fetching)
+    // For local images (ImageMetadata), don't set width/height explicitly
+    // Let Astro handle dimensions automatically to ensure proper optimization
+    if (typeof imageSrc === "string") {
+      // For remote images, provide dimensions if available
+      if (imageOriginalWidth && imageOriginalHeight) {
+        imageParams.width = imageOriginalWidth
+        imageParams.height = imageOriginalHeight
+      } else {
+        // Use inferSize for remote images without dimensions
+        imageParams.inferSize = true
+      }
     }
+    // For ImageMetadata objects, Astro automatically knows the dimensions
 
     // Start with the appropriate width set based on layout and parameters
     let targetWidths: number[]
@@ -304,10 +336,11 @@ export async function generateOptimizedImage(
       height: displayHeight,
     }
   } catch (error) {
-    console.error(`Failed to generate optimized image for ${src}:`, error)
+    const srcString = typeof src === "string" ? src : src.src
+    console.error(`Failed to generate optimized image for ${srcString}:`, error)
     // Fallback to original image
     return {
-      src,
+      src: srcString,
       srcset: "",
     }
   }

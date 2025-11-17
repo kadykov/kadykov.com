@@ -1,5 +1,6 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro"
+import type { ImageMetadata } from "astro"
 import {
   REM_SCALING,
   remToViewport,
@@ -8,12 +9,16 @@ import {
 } from "../utils/responsiveConstants"
 
 interface Props {
-  src: string
+  src: ImageMetadata | string
   alt: string
   title?: string
 }
 
 const { src, alt, title } = Astro.props
+
+// For local images, Astro's Markdoc integration passes ImageMetadata objects
+// For remote images, we get a string URL
+// Pass through to OptimizedImage which handles both cases
 
 /*
  * Article images sizing calculation:

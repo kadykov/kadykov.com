@@ -43,11 +43,20 @@
 //      sourceHeight={photo.height}
 //    />
 //
+// 5. Local image (Astro automatically provides dimensions):
+//    import localImage from './image.png';
+//    <OptimizedImage
+//      src={localImage}
+//      alt="Local image"
+//      displayWidth={660}
+//    />
+//
 import { generateOptimizedImage } from "../utils/imageOptimization"
+import type { ImageMetadata } from "astro"
 
 interface Props {
-  /** The image source URL (local or remote) */
-  src: string
+  /** The image source (local ImageMetadata or remote URL string) */
+  src: ImageMetadata | string
   /** Alt text for accessibility */
   alt: string
 
@@ -65,6 +74,9 @@ interface Props {
    * ORIGINAL DIMENSIONS: Source image dimensions for performance optimization.
    * When provided, skips remote image fetching to determine aspect ratio.
    * Both must be provided together to be effective.
+   *
+   * NOTE: For local images (ImageMetadata), these are automatically extracted
+   * from the import and don't need to be specified.
    */
   sourceWidth?: number
   sourceHeight?: number
@@ -100,14 +112,32 @@ const {
   quality,
 } = Astro.props
 
+// Handle both ImageMetadata (local) and string (remote) sources
+// For local images (ImageMetadata), pass dimensions only if explicitly overridden
+// For remote images, use provided dimensions or let the utility infer them
+let imgWidth: number | undefined
+let imgHeight: number | undefined
+
+if (typeof src === "object" && "src" in src) {
+  // Local image - only pass dimensions if explicitly provided as overrides
+  // Otherwise let Astro handle dimensions automatically from ImageMetadata
+  imgWidth = sourceWidth
+  imgHeight = sourceHeight
+} else {
+  // Remote image - use provided dimensions if available
+  imgWidth = sourceWidth
+  imgHeight = sourceHeight
+}
+
 // Use centralized image optimization utility
-// This ensures we generate the same images as PhotoGallery
+// Pass ImageMetadata directly for local images (enables proper optimization)
+// Pass string URL for remote images
 const optimized = await generateOptimizedImage({
-  src,
+  src, // ImageMetadata or string - passed as-is
   maxWidth: displayWidth,
-  width: sourceWidth,
-  height: sourceHeight,
-  originalWidth: sourceWidth,
+  width: imgWidth,
+  height: imgHeight,
+  originalWidth: imgWidth,
   quality,
 })
 ---
