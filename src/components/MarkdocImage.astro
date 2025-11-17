@@ -18,7 +18,14 @@ const { src, alt, title } = Astro.props
 
 // For local images, Astro's Markdoc integration passes ImageMetadata objects
 // For remote images, we get a string URL
-// Pass through to OptimizedImage which handles both cases
+//
+// IMPORTANT: Markdoc integration already accesses ImageMetadata properties,
+// which causes Astro to copy the original file. So we can safely check format here.
+const isSvg =
+  typeof src === "object" &&
+  src !== null &&
+  "format" in src &&
+  src.format === "svg"
 
 /*
  * Article images sizing calculation:
@@ -62,9 +69,55 @@ const sizesAttr = [
   `(max-width: ${REM_SCALING.MAX_VIEWPORT_PX}px) ${formatCalc(vwComponent, pxComponent)}`,
   `${Math.round(articleMaxWidth)}px`,
 ].join(", ")
+
+// For SVG, extract dimensions and source
+// (Markdoc already accessed these, so no additional harm)
+let svgSrc: string | undefined
+let svgWidth: number | undefined
+let svgHeight: number | undefined
+
+if (isSvg && typeof src === "object") {
+  svgSrc = src.src
+  svgWidth = src.width
+  svgHeight = src.height
+
+  // Scale SVG to article width while maintaining aspect ratio
+  if (svgWidth && svgHeight) {
+    const aspectRatio = svgHeight / svgWidth
+    const scaledWidth = Math.round(articleMaxWidth)
+    const scaledHeight = Math.round(scaledWidth * aspectRatio)
+    svgWidth = scaledWidth
+    svgHeight = scaledHeight
+  }
+}
 ---
 
 {
+  isSvg && svgSrc ? (
+    // SVG: Use directly without optimization (vector graphics scale perfectly)
+    title ? (
+      <figure>
+        <img
+          src={svgSrc}
+          alt={alt}
+          width={svgWidth}
+          height={svgHeight}
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>{title}</figcaption>
+      </figure>
+    ) : (
+      <img
+        src={svgSrc}
+        alt={alt}
+        width={svgWidth}
+        height={svgHeight}
+        loading="lazy"
+        decoding="async"
+      />
+    )
+  ) : // Raster images: Use OptimizedImage component for AVIF conversion
   title ? (
     <figure>
       <OptimizedImage
