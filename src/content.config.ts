@@ -1,5 +1,8 @@
 import { z, defineCollection } from "astro:content"
-import { MANIFEST_URL } from "./config/photoServer"
+import { IMAGE_MANIFEST_URL, PHOTO_MANIFEST_URL } from "./config/photoServer"
+
+// Backward compatibility: keep MANIFEST_URL pointing to photo manifest
+const MANIFEST_URL = PHOTO_MANIFEST_URL
 
 // Define a `type` and `schema` for each collection
 const postsCollection = defineCollection({
@@ -57,7 +60,7 @@ const photosCollection = defineCollection({
     relativePath: z
       .string()
       .regex(
-        /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
+        /^photos\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
         "Invalid relativePath format"
       ),
     filename: z.string(),
@@ -116,9 +119,60 @@ const photosCollection = defineCollection({
   }),
 })
 
+// Images data collection - fetches from remote manifest at build time
+const imagesCollection = defineCollection({
+  loader: async () => {
+    console.log("Fetching image manifest from:", IMAGE_MANIFEST_URL)
+
+    try {
+      const response = await fetch(IMAGE_MANIFEST_URL)
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch manifest from ${IMAGE_MANIFEST_URL}: ${response.statusText} (status ${response.status})`
+        )
+      }
+
+      const jsonData = await response.json()
+      console.log(`Loaded ${jsonData.length} images from manifest`)
+
+      // Return entries with id and data
+      // The slug field is used as the unique id for each image
+      return jsonData.map((image: any) => ({
+        id: image.slug,
+        ...image,
+      }))
+    } catch (error) {
+      console.error("Failed to load image manifest:", error)
+      throw error
+    }
+  },
+  schema: z.object({
+    relativePath: z.string(),
+    filename: z.string(),
+    width: z.number().int().min(1),
+    height: z.number().int().min(1),
+    slug: z.string(),
+    fileSize: z.number().int().nullable(),
+    lastModified: z
+      .string()
+      .refine(
+        (str) => {
+          const date = new globalThis.Date(str)
+          return !isNaN(date.getTime())
+        },
+        {
+          message:
+            "lastModified string is not a valid parsable date by new Date() or results in NaN.",
+        }
+      )
+      .nullable(),
+  }),
+})
+
 // Export a single `collections` object to register your collection(s)
 export const collections = {
   blog: postsCollection,
   pages: pagesCollection,
   photos: photosCollection,
+  images: imagesCollection,
 }

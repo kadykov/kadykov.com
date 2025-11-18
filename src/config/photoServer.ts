@@ -19,8 +19,12 @@ const PHOTO_SERVER_BASE =
 // Ensure no trailing slash for consistency
 export const PHOTO_SERVER_URL = PHOTO_SERVER_BASE.replace(/\/$/, "")
 
-// Manifest URL
-export const MANIFEST_URL = `${PHOTO_SERVER_URL}/image_manifest.json`
+// Manifest URLs
+export const PHOTO_MANIFEST_URL = `${PHOTO_SERVER_URL}/photo_manifest.json`
+export const IMAGE_MANIFEST_URL = `${PHOTO_SERVER_URL}/image_manifest.json`
+
+// Manifest URL (deprecated, use PHOTO_MANIFEST_URL instead)
+export const MANIFEST_URL = PHOTO_MANIFEST_URL
 
 // Helper function to get full image URL from relative path
 export function getImageUrl(relativePath: string): string {

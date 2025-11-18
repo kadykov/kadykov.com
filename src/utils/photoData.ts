@@ -2,9 +2,9 @@ import {
   photoManifestSchema,
   type PhotoManifestItem,
 } from "./photoManifestSchema"
-import { MANIFEST_URL } from "../config/photoServer"
+import { PHOTO_MANIFEST_URL } from "../config/photoServer"
 
-const manifestUrl = MANIFEST_URL
+const manifestUrl = PHOTO_MANIFEST_URL
 
 let cachedManifest: PhotoManifestItem[] | null = null
 let fetchPromise: Promise<PhotoManifestItem[]> | null = null
@@ -70,18 +70,18 @@ export async function fetchPhotoManifest(): Promise<PhotoManifestItem[]> {
 
 /**
  * Generates a URL-friendly slug from a photo's relativePath.
- * e.g., "2023/01/01/some-image.jpg" becomes "2023-01-01-some-image"
- * @param relativePath The relativePath string (e.g., "YYYY/MM/DD/filename.ext")
+ * e.g., "photos/2023/01/01/some-image.jpg" becomes "2023-01-01-some-image"
+ * @param relativePath The relativePath string (e.g., "photos/YYYY/MM/DD/filename.ext")
  * @returns The generated slug string.
  */
 export function generateSlugFromRelativePath(relativePath: string): string {
   const parts = relativePath.split("/")
-  if (parts.length === 4) {
-    // Expected: YYYY/MM/DD/filename.ext
-    const year = parts[0]
-    const month = parts[1]
-    const day = parts[2]
-    const filenameWithExt = parts[3]
+  if (parts.length === 5 && parts[0] === "photos") {
+    // Expected: photos/YYYY/MM/DD/filename.ext
+    const year = parts[1]
+    const month = parts[2]
+    const day = parts[3]
+    const filenameWithExt = parts[4]
     // Remove extension: "filename.jpg" -> "filename"
     const filenameWithoutExt =
       filenameWithExt.substring(0, filenameWithExt.lastIndexOf(".")) ||

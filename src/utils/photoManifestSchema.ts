@@ -4,7 +4,7 @@ export const photoManifestItemSchema = z.object({
   relativePath: z
     .string()
     .regex(
-      /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
+      /^photos\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/[^/]+$/,
       "Invalid relativePath format"
     ),
   filename: z.string(),
