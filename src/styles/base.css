@@ -1014,7 +1014,6 @@ main > footer {
 article img {
   max-width: 100%;
   height: auto;
-  box-shadow: var(--elevation-1);
   border-radius: 0.2rem;
 }
 
