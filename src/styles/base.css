@@ -1289,7 +1289,7 @@ body > header svg {
   display: block;
   height: 1.7rem;
   width: auto;
-  transition: transform 0.2s ease-in-out;
+  border-radius: 0.2rem;
 }
 
 /* Blog post index - vertical stack with ordered list */
@@ -1734,7 +1734,13 @@ a[rel="next"] {
   background: var(--bg-primary);
   border: none;
   cursor: pointer;
+}
 
+/* Outline animation setup */
+button,
+a[rel="prev"],
+a[rel="next"],
+body > header svg {
   /* Initial outline setup for focus/hover states */
   outline: 0.2rem solid transparent;
   outline-offset: 0.4rem;
@@ -1812,8 +1818,17 @@ a:hover {
 button:hover,
 a[rel="prev"]:hover,
 a[rel="next"]:hover,
+/*
+   * Unlike other links on the website that use underline-based hover effects,
+   * the logo SVG needs a different hover animation because it contains no text
+   * or labels. The underline hover effect doesn't work on SVG elements, so we
+   * use an outline animation to indicate that the logo is clickable and
+   * serves as a navigation link.
+   */
+body > header svg:hover,
 a:focus-visible,
 button:focus-visible,
+body > header svg:focus-visible,
 main > ul a:focus-visible figure {
   outline: 0.2rem solid var(--color-accent);
   outline-offset: 0.2rem;
@@ -1838,17 +1853,6 @@ a[rel="next"]:active {
 ::selection {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
-}
-
-body > header svg:hover {
-  /*
-   * Unlike other links on the website that use underline-based hover effects,
-   * the logo SVG needs a different hover animation because it contains no text
-   * or labels. The underline hover effect doesn't work on SVG elements, so we
-   * use a subtle scale transform to indicate that the logo is clickable and
-   * serves as a navigation link.
-   */
-  transform: scale(1.05);
 }
 
 /* Form input placeholder text */
