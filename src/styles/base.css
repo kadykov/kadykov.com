@@ -774,13 +774,11 @@ main {
 
 a {
   color: inherit;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-skip-ink: none;
 
   /* Use line-height units for vertical scaling */
-  text-decoration-thickness: 0.1lh;
+  text-decoration: underline 0.1lh solid transparent;
   text-underline-offset: 0.2lh;
+  text-decoration-skip-ink: none;
   transition:
     text-decoration-color 0.2s ease-out,
     text-underline-offset 0.2s ease-out;
