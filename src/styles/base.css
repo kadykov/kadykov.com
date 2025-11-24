@@ -1753,7 +1753,6 @@ body > header svg {
 
   /* Smooth transitions */
   transition:
-    scale 0.2s ease-in-out,
     outline-color 0.2s ease-in-out,
     outline-offset 0.2s ease-in-out;
 }
