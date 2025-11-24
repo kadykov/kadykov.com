@@ -640,6 +640,9 @@
   /* url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 89"><path fill="rgba(119,119,119,.03)" d="M13 0h3v25h-3zm8 0h34v25H21zM0 25h13v5H0zm16 0h5v5h-5zm-3 5h3v8h-3zm8 0h34v8H21zM0 38h13v55H0zm16 0h5v55h-5z"/></svg>'); */
   --bg-pattern-size:
   /* 13rem 21rem, */ 21rem 34rem, 34rem 55rem, 55rem 89rem;
+
+  /* Animation Duration for Transitions */
+  --transition: 0.2s ease-in-out;
 }
 
 /* Theme Variants - Only Base OKLCH Values Need Changes */
@@ -754,8 +757,8 @@ body {
   background-repeat: repeat;
   background-color: var(--color-surface-container);
   transition:
-    background-color 0.2s ease-in-out,
-    color 0.2s ease-in-out;
+    background-color var(--transition),
+    color var(--transition);
 }
 
 /* Flexbox layout to push footer to bottom on short pages */
@@ -780,8 +783,8 @@ a {
   text-underline-offset: 0.2lh;
   text-decoration-skip-ink: none;
   transition:
-    text-decoration-color 0.2s ease-out,
-    text-underline-offset 0.2s ease-out;
+    text-decoration-color var(--transition),
+    text-underline-offset var(--transition);
 }
 
 /* Unordered lists */
@@ -834,8 +837,8 @@ textarea {
 
   /* Smooth transitions for focus states */
   transition:
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 /* Input fields inside labels */
@@ -1158,7 +1161,7 @@ td {
 
 /* Hover effect for rows */
 tbody tr {
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color var(--transition);
 }
 
 /* Alternating row colors for better readability */
@@ -1310,7 +1313,7 @@ main > ol article {
   background-color: var(--color-surface);
   border-radius: 0.2rem;
   box-shadow: var(--elevation-2);
-  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow var(--transition);
   padding: var(--spacing-adaptive);
   font-family: var(--font-serif);
   font-weight: 450;
@@ -1488,9 +1491,9 @@ main > ul figure {
 
   /* Smooth transitions for hover effects */
   transition:
-    box-shadow 0.2s ease-in-out,
-    scale 0.2s ease-in-out,
-    rotate 0.2s ease-in-out;
+    box-shadow var(--transition),
+    scale var(--transition),
+    rotate var(--transition);
 }
 
 /* === Caption Placement Classes === */
@@ -1751,8 +1754,8 @@ body > header svg {
 
   /* Smooth transitions */
   transition:
-    outline-color 0.2s ease-in-out,
-    outline-offset 0.2s ease-in-out;
+    outline-color var(--transition),
+    outline-offset var(--transition);
 }
 
 /* Buttons */
