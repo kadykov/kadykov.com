@@ -1289,6 +1289,8 @@ body > header svg {
   display: block;
   height: 1.7rem;
   width: auto;
+
+  /* USE border-radius: 50%; for round logo */
   border-radius: 0.2rem;
 }
 
@@ -1741,9 +1743,11 @@ button,
 a[rel="prev"],
 a[rel="next"],
 body > header svg {
-  /* Initial outline setup for focus/hover states */
-  outline: 0.2rem solid transparent;
-  outline-offset: 0.4rem;
+  /* Initial outline setup for focus/hover states.
+   * Using ex units like for the underline links for consistency.
+   */
+  outline: 0.3ex solid transparent;
+  outline-offset: 0.6ex;
 
   /* Smooth transitions */
   transition:
@@ -1830,8 +1834,8 @@ a:focus-visible,
 button:focus-visible,
 body > header svg:focus-visible,
 main > ul a:focus-visible figure {
-  outline: 0.2rem solid var(--color-accent);
-  outline-offset: 0.2rem;
+  outline-color: var(--color-accent);
+  outline-offset: 0.3ex;
 }
 
 /* Since we draw outline on focus, don't need default focus ring */
