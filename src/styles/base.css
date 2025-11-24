@@ -776,9 +776,11 @@ a {
   color: inherit;
   text-decoration: underline;
   text-decoration-color: transparent;
-  text-decoration-thickness: 0.3ex;
   text-decoration-skip-ink: none;
-  text-underline-offset: 0.6ex;
+
+  /* Use line-height units for vertical scaling */
+  text-decoration-thickness: 0.1lh;
+  text-underline-offset: 0.2lh;
   transition:
     text-decoration-color 0.2s ease-out,
     text-underline-offset 0.2s ease-out;
@@ -1744,10 +1746,10 @@ a[rel="prev"],
 a[rel="next"],
 body > header svg {
   /* Initial outline setup for focus/hover states.
-   * Using ex units like for the underline links for consistency.
+   * Using lh units like for the underline links for consistency.
    */
-  outline: 0.3ex solid transparent;
-  outline-offset: 0.6ex;
+  outline: 0.1lh solid transparent;
+  outline-offset: 0.2lh;
 
   /* Smooth transitions */
   transition:
@@ -1815,7 +1817,7 @@ a[rel="next"] svg {
 /* Use animated underline for links for less-distracting effect */
 a:hover {
   text-decoration-color: var(--color-accent);
-  text-underline-offset: 0.3ex;
+  text-underline-offset: 0.1lh;
 }
 
 /* Draw outline on focus and hover */
@@ -1835,7 +1837,7 @@ button:focus-visible,
 body > header svg:focus-visible,
 main > ul a:focus-visible figure {
   outline-color: var(--color-accent);
-  outline-offset: 0.3ex;
+  outline-offset: 0.1lh;
 }
 
 /* Since we draw outline on focus, don't need default focus ring */
