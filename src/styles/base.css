@@ -1910,6 +1910,10 @@ textarea:user-invalid {
   color: inherit;
 }
 
+.pswp__dynamic-caption a:active {
+  color: var(--color-on-accent);
+}
+
 /* Photo Gallery Color Theme Overrides */
 
 /*
