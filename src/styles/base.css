@@ -778,13 +778,32 @@ main {
 a {
   color: inherit;
 
-  /* Use line-height units for vertical scaling */
+  /*
+   * Underline of the regular links reveals and lifts on hover.
+   * Use line-height units for consistent vertical scaling.
+   * Here we prepare the transparent underline for transition.
+   */
   text-decoration: underline 0.1lh solid transparent;
   text-underline-offset: 0.2lh;
   text-decoration-skip-ink: none;
+}
+
+a,
+button,
+figure {
+  /*
+   * Buttons and button-like elements use hover effect similar to links,
+   * but with outline instead of underline, and it tightens instead of lifting.
+   */
+  outline: 0.1lh solid transparent;
+  outline-offset: 0.2lh;
+
+  /* Smooth transitions for links, buttons and button-like elements */
   transition:
     text-decoration-color var(--transition),
-    text-underline-offset var(--transition);
+    text-underline-offset var(--transition),
+    outline-color var(--transition),
+    outline-offset var(--transition);
 }
 
 /* Unordered lists */
@@ -1489,11 +1508,18 @@ main > ul figure {
   /* Base padding around image (will be overridden for caption sides) */
   padding: 0.5rem;
 
+  /* Prepare outline for focus-visible state (applied to figure because it sits on top of the link) */
+
+  /* outline: 0.1lh solid transparent;
+  outline-offset: 0.2lh; */
+
   /* Smooth transitions for hover effects */
   transition:
     box-shadow var(--transition),
     scale var(--transition),
-    rotate var(--transition);
+    rotate var(--transition),
+    outline-color var(--transition),
+    outline-offset var(--transition);
 }
 
 /* === Caption Placement Classes === */
@@ -1741,23 +1767,6 @@ a[rel="next"] {
   cursor: pointer;
 }
 
-/* Outline animation setup */
-button,
-a[rel="prev"],
-a[rel="next"],
-body > header svg {
-  /* Initial outline setup for focus/hover states.
-   * Using lh units like for the underline links for consistency.
-   */
-  outline: 0.1lh solid transparent;
-  outline-offset: 0.2lh;
-
-  /* Smooth transitions */
-  transition:
-    outline-color var(--transition),
-    outline-offset var(--transition);
-}
-
 /* Buttons */
 button {
   border-radius: 0.2rem;
@@ -1824,17 +1833,9 @@ a:hover {
 button:hover,
 a[rel="prev"]:hover,
 a[rel="next"]:hover,
-/*
-   * Unlike other links on the website that use underline-based hover effects,
-   * the logo SVG needs a different hover animation because it contains no text
-   * or labels. The underline hover effect doesn't work on SVG elements, so we
-   * use an outline animation to indicate that the logo is clickable and
-   * serves as a navigation link.
-   */
-body > header svg:hover,
+/* Use the same focus-visible style for keyboard navigation */
 a:focus-visible,
 button:focus-visible,
-body > header svg:focus-visible,
 main > ul a:focus-visible figure {
   outline-color: var(--color-accent);
   outline-offset: 0.1lh;
@@ -1908,6 +1909,11 @@ textarea:user-invalid {
 /* Links in caption - subtle styling */
 .pswp__dynamic-caption a {
   color: inherit;
+}
+
+/* Remove our custom outline */
+.pswp button:hover {
+  outline-color: transparent;
 }
 
 .pswp__dynamic-caption a:active {
