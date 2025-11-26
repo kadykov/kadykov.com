@@ -1,0 +1,5 @@
+# VNU HTML Validator filter file
+# Each line contains a regular expression to filter out specific errors/warnings
+
+# Netlify form attributes (valid for Netlify but not standard HTML)
+.*netlify-honeypot.*

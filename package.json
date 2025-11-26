@@ -13,7 +13,7 @@
     "lint:css": "stylelint \"src/**/*.{css,html,astro}\"",
     "lint:css:fix": "stylelint \"src/**/*.{css,html,astro}\" --fix",
     "lint:all": "npm run lint && npm run lint:css",
-    "validate:html": "java -jar ./node_modules/vnu-jar/build/dist/vnu.jar --skip-non-html dist/",
+    "validate:html": "./scripts/validate-html.sh",
     "prepare": "husky"
   },
   "dependencies": {
