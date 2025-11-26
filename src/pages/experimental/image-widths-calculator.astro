@@ -12,42 +12,6 @@ const CURRENT_WIDTHS = [
   200, 240, 288, 350, 420, 500, 600, 720, 900, 1080, 1280, 1600, 1920, 2400,
   2880, 3500, 4096, 5120, 6144, 7680, 8192,
 ]
-
-// Common device widths that might be good snap points
-const DEVICE_WIDTHS = [
-  480, // Small images and older phones
-  600,
-  640, // Older and lower-end phones
-  720, // HD standard
-  750, // iPhone 6-8
-  768, // iPad
-  800, // Small tablets
-  828, // iPhone XR/11
-  900,
-  960, // Older horizontal phones
-  1080, // iPhone 6-8 Plus
-  1200,
-  1280, // 720p
-  1440, // 1440p
-  1600, // 1600p
-  1668, // Various iPads
-  1920, // 1080p
-  2048, // QXGA
-  2160, // 4K UHD
-  2400, // WUXGA
-  2560, // WQXGA
-  2880, // 5K
-  3200, // QHD+
-  3840, // 4K
-  4096, // DCI 4K
-  4320, // 8K UHD
-  4480, // 4.5K
-  5120, // 5K
-  6016, // 6K
-  6144, // 6K+
-  7680, // 8K
-  8192, // 8K+
-]
 ---
 
 <BaseLayout {frontmatter}>
@@ -479,7 +443,43 @@ const DEVICE_WIDTHS = [
   }
 </style>
 
-<script define:vars={{ CURRENT_WIDTHS, DEVICE_WIDTHS }}>
+<script is:inline>
+  // Common device widths that might be good snap points
+  const DEVICE_WIDTHS = [
+    480, // Small images and older phones
+    600,
+    640, // Older and lower-end phones
+    720, // HD standard
+    750, // iPhone 6-8
+    768, // iPad
+    800, // Small tablets
+    828, // iPhone XR/11
+    900,
+    960, // Older horizontal phones
+    1080, // iPhone 6-8 Plus
+    1200,
+    1280, // 720p
+    1440, // 1440p
+    1600, // 1600p
+    1668, // Various iPads
+    1920, // 1080p
+    2048, // QXGA
+    2160, // 4K UHD
+    2400, // WUXGA
+    2560, // WQXGA
+    2880, // 5K
+    3200, // QHD+
+    3840, // 4K
+    4096, // DCI 4K
+    4320, // 8K UHD
+    4480, // 4.5K
+    5120, // 5K
+    6016, // 6K
+    6144, // 6K+
+    7680, // 8K
+    8192, // 8K+
+  ]
+
   let generatedWidths = []
 
   function generateWidths() {
@@ -649,10 +649,9 @@ const DEVICE_WIDTHS = [
     return `const STANDARD_WIDTHS = [\n${lines.join("\n")}\n]`
   }
 
-  function copyToClipboard(text) {
+  function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(() => {
       // Visual feedback
-      const button = event.target
       const originalText = button.textContent
       button.textContent = "✓ Copied!"
       setTimeout(() => {
@@ -666,14 +665,14 @@ const DEVICE_WIDTHS = [
 
   document
     .getElementById("copyArray")
-    .addEventListener("click", () =>
-      copyToClipboard(formatAsArray(generatedWidths))
+    .addEventListener("click", (e) =>
+      copyToClipboard(formatAsArray(generatedWidths), e.target)
     )
 
   document
     .getElementById("copyTypescript")
-    .addEventListener("click", () =>
-      copyToClipboard(formatAsTypescript(generatedWidths))
+    .addEventListener("click", (e) =>
+      copyToClipboard(formatAsTypescript(generatedWidths), e.target)
     )
 
   // Generate initial results
