@@ -379,7 +379,13 @@ import { Icon } from "astro-icon/components"
               class="password-toggle"
               aria-label="Show password"
             >
-              <Icon name="fa:eye" size={18} />
+              <Icon name="fa:eye" class="icon-show" size={18} />
+              <Icon
+                name="fa:eye-slash"
+                class="icon-hide"
+                size={18}
+                style="display: none;"
+              />
             </button>
           </div>
         </div>
@@ -450,17 +456,23 @@ import { Icon } from "astro-icon/components"
         const type = passwordInput.type === "password" ? "text" : "password"
         passwordInput.type = type
 
-        // Update icon (swap between eye and eye-off)
-        const icon = passwordToggle.querySelector("svg")
-        if (icon) {
-          const currentIcon = icon.getAttribute("data-icon") || "mdi:eye"
-          const newIcon = currentIcon === "mdi:eye" ? "mdi:eye-off" : "mdi:eye"
-          // Note: This is a simple toggle, in production you might want to swap the entire icon
-          passwordToggle.setAttribute(
-            "aria-label",
-            type === "password" ? "Show password" : "Hide password"
-          )
+        // Toggle icons
+        const iconShow = passwordToggle.querySelector(
+          ".icon-show"
+        ) as HTMLElement
+        const iconHide = passwordToggle.querySelector(
+          ".icon-hide"
+        ) as HTMLElement
+
+        if (iconShow && iconHide) {
+          iconShow.style.display = type === "password" ? "block" : "none"
+          iconHide.style.display = type === "password" ? "none" : "block"
         }
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          type === "password" ? "Show password" : "Hide password"
+        )
       })
 
       closeBtn.addEventListener("click", () => {
@@ -558,7 +570,7 @@ import { Icon } from "astro-icon/components"
 
         if (isWeakPassword(password)) {
           // Weak password response
-          modalTitle.textContent = "🤔 Really?"
+          modalTitle.textContent = `🤔 Really, ${username}?`
           modalBody.innerHTML = `
 					<p><strong>Do you really think I use such an insecure password?</strong></p>
 					<p>Using weak passwords is one of the biggest security risks online. Even for fake login pages like this one, it's good practice to think about password security!</p>
@@ -567,7 +579,7 @@ import { Icon } from "astro-icon/components"
 				`
         } else {
           // Strong password response
-          modalTitle.textContent = "🎉 Nice Try!"
+          modalTitle.textContent = `🎉 Nice Try, ${username}!`
           modalBody.innerHTML = `
 					<p><strong>Do you really think this site is powered by WordPress?</strong></p>
 					<p>This website is actually built with <a href="https://astro.build/" target="_blank" rel="noopener">Astro</a>, a modern static site generator that delivers fast, content-focused websites.</p>
