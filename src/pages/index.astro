@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Hero from "../components/Hero.astro"
+import OptimizedImage from "../components/OptimizedImage.astro"
+
+const frontmatter = {
+  title: "Welcome to kadykov.com",
+  description:
+    "Personal website of Aleksandr Kadykov - Research Engineer, photographer, and web developer",
+}
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <Hero>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+    <OptimizedImage
+      src="https://share.kadykov.com/photos/2023/11/28/DSC_1244.avif"
+      alt="Aleksandr Kadykov's self portrait."
+      displayWidth={200}
+      loading="eager"
+    />
+  </Hero>
+
+  <article>
+    <h2>Error 501. Not implemented</h2>
+
+    <p>
+      But wait! It only means that for now there is not much content available
+      on this website.
+    </p>
+
+    <p>
+      By the way, I'm Aleksandr, and this is my personal project where I'm
+      learning web technologies and sharing my photography and thoughts.
+      Currently, I'm exploring new opportunities as a Research Engineer.
+    </p>
+
+    <p>
+      If you're interested in learning more about my background and experience,
+      you can check my CV in <a href="cv">web</a> or <a
+        href="https://github.com/kadykov/typstCV/releases/latest/download/kadykov-cv-en.pdf"
+        >PDF</a
+      > formats.
+    </p>
+
+    <p>
+      Feel free to explore my <a href="/photos">photos</a>! You can browse them
+      by <a href="/photos/tags">tag</a>, by <a href="/photos/dates">date</a> or if
+      you are a photoequipment enthusiast, by <a href="/photos/equipment"
+        >equipment</a
+      >.
+    </p>
+  </article>
+</BaseLayout>
