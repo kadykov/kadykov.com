@@ -85,6 +85,9 @@ interface Props {
    * SIZES ATTRIBUTE: Tells the browser the actual rendered size at different viewports.
    * Use getImageDimensions() from photoClassification.ts for responsive calculations.
    *
+   * If not provided but displayWidth is set, auto-generates following Astro's pattern:
+   * "(min-width: {displayWidth}px) {displayWidth}px, 100vw"
+   *
    * Example: "(max-width: 400px) 228px, (max-width: 1920px) calc(19.16vw + 205.98px), 313px"
    */
   sizesAttr?: string
@@ -140,12 +143,22 @@ const optimized = await generateOptimizedImage({
   originalWidth: imgWidth,
   quality,
 })
+
+// Generate default sizes attribute if not provided but displayWidth is set
+// This follows Astro's responsive images pattern:
+// "(min-width: {displayWidth}px) {displayWidth}px, 100vw"
+// Meaning: use displayWidth if viewport is at least that wide, otherwise full viewport
+const computedSizes =
+  sizesAttr ??
+  (displayWidth
+    ? `(min-width: ${displayWidth}px) ${displayWidth}px, 100vw`
+    : undefined)
 ---
 
 <img
   src={optimized.src}
   srcset={optimized.srcset}
-  sizes={sizesAttr}
+  sizes={computedSizes}
   width={optimized.width}
   height={optimized.height}
   alt={alt}
