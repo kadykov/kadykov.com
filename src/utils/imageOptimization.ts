@@ -39,6 +39,10 @@
 
 import { getImage, inferRemoteSize } from "astro:assets"
 import type { ImageMetadata } from "astro"
+import {
+  lookupDimensionsFromManifest,
+  isPhotoServerUrl,
+} from "./manifestLookup"
 
 export interface OptimizedImageConfig {
   src: ImageMetadata | string
@@ -208,15 +212,28 @@ export async function generateOptimizedImage(
 
       // Infer dimensions from remote image if not provided
       if (!imageOriginalWidth) {
-        try {
-          const dimensions = await inferRemoteSize(src)
-          imageOriginalWidth = dimensions.width
-          imageOriginalHeight = dimensions.height
-        } catch (error) {
-          console.warn(
-            `Failed to infer dimensions for ${src}, proceeding without width filtering:`,
-            error
-          )
+        // First, try manifest lookup for photo server URLs (fast, no network request)
+        if (isPhotoServerUrl(src)) {
+          const manifestDims = await lookupDimensionsFromManifest(src)
+          if (manifestDims) {
+            imageOriginalWidth = manifestDims.width
+            imageOriginalHeight = manifestDims.height
+          }
+        }
+
+        // Fall back to remote fetch if manifest lookup didn't provide dimensions
+        if (!imageOriginalWidth) {
+          try {
+            console.log(`Fetching remote dimensions for: ${src}`)
+            const dimensions = await inferRemoteSize(src)
+            imageOriginalWidth = dimensions.width
+            imageOriginalHeight = dimensions.height
+          } catch (error) {
+            console.warn(
+              `Failed to infer dimensions for ${src}, proceeding without width filtering:`,
+              error
+            )
+          }
         }
       }
     }
