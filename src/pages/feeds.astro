@@ -30,56 +30,50 @@ const photoTags = [
   </Hero>
 
   <article>
-    <section>
-      <h2>Main Feeds</h2>
-      <ul>
-        <li>
-          <a href="/rss.xml">All Content</a>
-          <p>Combined feed with both blog posts and photographs</p>
-        </li>
-        <li>
-          <a href="/blog/rss.xml">Blog Posts</a>
-          <p>All blog posts</p>
-        </li>
-        <li>
-          <a href="/photos/rss.xml">Photographs</a>
-          <p>All photographs</p>
-        </li>
-      </ul>
-    </section>
+    <h2>Main Feeds</h2>
+    <ul>
+      <li>
+        <a href="/rss.xml">All Content</a>
+        <p>Combined feed with both blog posts and photographs</p>
+      </li>
+      <li>
+        <a href="/blog/rss.xml">Blog Posts</a>
+        <p>All blog posts</p>
+      </li>
+      <li>
+        <a href="/photos/rss.xml">Photographs</a>
+        <p>All photographs</p>
+      </li>
+    </ul>
 
-    <section>
-      <h2>Blog Posts by Tag</h2>
-      {
-        blogTags.length > 0 ? (
-          <ul>
-            {blogTags.map((tag) => (
-              <li>
-                <a href={`/blog/tags/${tag}/rss.xml`}>{tag}</a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No tags available yet.</p>
-        )
-      }
-    </section>
+    <h2>Blog Posts by Tag</h2>
+    {
+      blogTags.length > 0 ? (
+        <ul>
+          {blogTags.map((tag) => (
+            <li>
+              <a href={`/blog/tags/${tag}/rss.xml`}>{tag}</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No tags available yet.</p>
+      )
+    }
 
-    <section>
-      <h2>Photographs by Tag</h2>
-      {
-        photoTags.length > 0 ? (
-          <ul>
-            {photoTags.map((tag) => (
-              <li>
-                <a href={`/photos/tags/${tag}/rss.xml`}>{tag}</a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No tags available yet.</p>
-        )
-      }
-    </section>
+    <h2>Photographs by Tag</h2>
+    {
+      photoTags.length > 0 ? (
+        <ul>
+          {photoTags.map((tag) => (
+            <li>
+              <a href={`/photos/tags/${tag}/rss.xml`}>{tag}</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No tags available yet.</p>
+      )
+    }
   </article>
 </BaseLayout>
