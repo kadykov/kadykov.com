@@ -3,3 +3,6 @@
 
 # Netlify form attributes (valid for Netlify but not standard HTML)
 .*netlify-honeypot.*
+
+# Trailing slashes on void elements from Markdoc HTML generation
+.*Trailing slash on void elements.*
