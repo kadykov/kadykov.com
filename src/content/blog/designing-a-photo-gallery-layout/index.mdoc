@@ -1,149 +1,342 @@
 ---
 title: "Designing a Photo Gallery that Respects Photographs"
-subtitle: "Grid rhythm, Polaroid borders, and neutral backgrounds for color‑accurate viewing"
+subtitle: "Grid rhythm, Polaroid borders, and equal visual weight for all orientations"
 pubDate: 2025-11-13
-description: "Beyond square feeds and masonry columns: a grid that balances orientations, keeps color honest, and feels tactile."
-tags: ["photography", "design", "css", "grid", "color", "astro"]
+description: "Beyond square feeds and masonry columns: a cell-based grid that balances landscape and portrait photos with equal visual weight."
+tags: ["photography", "design", "css", "grid", "astro"]
 ---
 
-# Designing a Photo Gallery that Respects Photographs
-
-Most gallery UIs copy social feeds: either everything is cropped to squares, or items flow in Pinterest‑style columns with unpredictable rhythm. Both patterns are convenient for machines, not for photographs. This post explains the approach I took: a grid that gives landscape and portrait frames equal visual weight, a tactile “Polaroid” treatment, and a neutral viewing environment that protects color perception.
-
-> Summary: three ingredients — a cell‑based grid with controlled spans, borders that act as a white‑balance anchor, and a desaturated page background.
-
----
-
-## What’s wrong with square feeds and masonry columns
-
-- Square‑only feeds erase composition by forcing crop decisions you didn’t make.
-- Masonry columns (fixed column width, variable height) privilege portrait frames, which visually dominate the page and break rhythm.
-- CSS doesn’t natively lay out those columns left‑to‑right; the fill order feels “waterfall” top‑to‑bottom.
-- Captions fight for space under tall images; scannability suffers.
-
-I used the column approach in a previous iteration and repeatedly ran into these issues.
+<!-- 
+DRAFT STRUCTURE — content to be developed into human-readable prose
+-->
 
 ---
 
-### Examples: real-world layouts
+## 1. Introduction: What is a Photo Gallery For?
 
-Below are three screenshots that illustrate the problems I described above: Unsplash's column layout (which privileges portrait frames) and Instagram's old square grid versus the newer rectangular previews that change composition.
+<!-- TODO: Develop this section into flowing prose -->
 
-![Unsplash — column layout that privileges portrait photos](./unsplash-columns.png "Unsplash — column layout that privileges portrait shots")
+There are two fundamentally different types of photo galleries:
 
-![Instagram — original square previews](./instagram-square.png "Instagram — original square previews")
+**Editorial galleries** are story-driven. The photographer or curator controls the visual hierarchy — some photos appear larger, more prominent, creating emphasis and narrative flow. The interaction between images matters; their sequence tells a story.
 
-![Instagram — newer rectangular previews (cropped composition)](./instagram-rectangular.png "Instagram — newer rectangular previews; note how cropping can cut subjects out of frame")
+**Navigational galleries** serve a different purpose: presenting all photos with equal visual weight, letting the viewer control the order (by date, popularity, tags). The goal is discovery, not storytelling. The gallery is a tool for browsing, not a curated exhibition.
 
-*Caption: Left — Unsplash (column layout); middle — Instagram (square); right — Instagram (rectangular previews which can break composition).* 
-
+This post focuses on **navigational galleries** — specifically, how to give landscape and portrait photos equal presence without forcing crops or letting one orientation dominate.
 
 ---
 
-## A grid that balances orientations
+## 2. The Fundamental Problem: Photos Don't Fit Neatly
 
-I switched to a CSS Grid where each photo occupies multiple cells depending on orientation:
+<!-- TODO: Develop into prose -->
 
-- Landscape → 2 rows × 3 columns
-- Square → 2 × 2
-- Portrait → 3 × 2
+Photos have wildly different aspect ratios. A landscape from a 3:2 camera, a square crop, a vertical phone shot, a panorama — all competing for space on the same page.
 
-This normalizes occupied area so landscape and portrait frames feel comparable, while squares read smaller (which matches how we usually obtain them — via cropping).
+The devices viewing these galleries vary just as much: phones held vertically, tablets, wide desktop monitors.
 
-### The classes
+**Every layout is a compromise** between three competing factors:
+
+- **Equality of presentation** — do all photos receive fair visual weight?
+- **Space efficiency** — how much screen real estate goes unused?
+- **Visual rhythm** — does the gallery have structure, or is it a dense, undifferentiated block?
+
+You cannot optimize all three simultaneously. Every layout choice sacrifices something.
+
+### A note on visual rhythm and leading lines
+
+<!-- TODO: Expand this into the discussion -->
+
+Even layouts optimized for space efficiency have rhythm — just not always intentional rhythm.
+
+Rhythm emerges from **leading lines** — the aligned edges where photos meet (or where gaps separate them). When these transition lines align across multiple photos, they form strong visual guides that the eye follows. When they don't align, rhythm breaks down.
+
+In a **fixed aspect ratio grid** (like Instagram's squares), all photos have identical dimensions. Every horizontal and vertical transition aligns perfectly, creating strong leading lines in both directions — strong horizontal rhythm (as you scan left-to-right) and strong vertical rhythm (as you scan top-to-bottom).
+
+In a **column-based layout** (like Pinterest or Unsplash), columns have equal widths, so the vertical edges align — creating strong **horizontal rhythm** (repetition as you scan left-to-right). But photos have different heights, so horizontal transition lines appear at different vertical positions. These lines don't align, forming no leading lines vertically — **no vertical rhythm**. The result: monotonous vertical stripes.
+
+In a **justified row layout** (like Flickr), rows have equal widths, so horizontal edges align — creating strong **vertical rhythm** (repetition as you scan top-to-bottom). But photos within each row have different widths, so vertical transition lines don't align across rows — **weaker horizontal rhythm**. More photos per row means smaller width variations, so horizontal rhythm improves.
+
+On **very narrow devices** (one or two columns), most layouts collapse into a single column of stacked photos — a rhythmless vertical stripe with no horizontal structure at all.
+
+**Gaps amplify rhythm.** The more space between photos, the more visible the underlying structure (or lack thereof) becomes. Minimizing gaps creates a dense block where transitions blur together; increasing gaps reveals the grid's leading lines and makes rhythm explicit.
+
+---
+
+## 3. Common Layouts and Their Trade-offs
+
+### 3.1 Fixed Aspect Ratio Grids
+
+<!-- TODO: Develop prose, integrate examples -->
+
+The simplest approach: force all photos into the same aspect ratio.
+
+```css
+/* Fixed aspect ratio grid */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.gallery img {
+  aspect-ratio: 1 / 1; /* or 4/5, 3/2, etc. */
+  object-fit: cover;
+}
+```
+
+**Trade-off:** Maximum space efficiency, strong visual rhythm, but **crops composition**. Photos are forced into a shape they weren't composed for.
+
+![Square grid illustration](./square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
+
+#### Approaches to aspect ratio mismatch
+
+When photos don't match the target aspect ratio, there are two fundamental strategies:
+
+**Cover (crop):** Fill the target area completely, cutting off parts of the image that overflow. Maximizes space efficiency and preserves rhythm, but loses image content.
+
+**Contain (fit):** Show the entire image, accepting empty space around it. Preserves the full composition, but sacrifices space efficiency and breaks visual rhythm — photos of different aspect ratios appear at different sizes within their cells.
+
+Most fixed-ratio grids use cover/crop. The question then becomes: *what* to crop?
+
+- **Center crop** — the naive default. Simply takes the middle portion. Often cuts off subjects positioned using rule-of-thirds.
+- **Smart crop** — libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) analyze the image for edges, skin tones, and visual weight to find a better crop region. No AI required — just clever heuristics. The beauty is achieving good results with simple, computationally cheap operations that can run on any device.
+- **AI-assisted crop** — services like Cloudinary use machine learning to detect subjects and faces. More accurate, but requires server-side processing or API calls.
+- **Editorial tight crop** — an artistic choice where previews are cropped dramatically tighter than the full image (e.g., showing only a face from a full-body portrait). Creates intrigue — the viewer has no idea what the full image contains.
+
+The contain/fit approach is rarely used in fixed-ratio grids because it privileges only photos that happen to match the target ratio — all others appear smaller, breaking the equal-presentation goal.
+
+#### Case study: Instagram's aspect ratio shift
+
+<!-- TODO: Develop the narrative around this -->
+
+Instagram originally enforced square previews — a neutral choice that worked reasonably on both mobile and desktop, privileging neither landscape nor portrait.
+
+In early 2025, Instagram shifted to portrait-oriented rectangular previews. For a mobile-first platform where users hold phones vertically, this makes sense.
+
+But for existing content, this was a breaking change. Photos composed for square display were suddenly cropped differently. Subjects that were intentionally placed at the edges — visible in the square preview — were now cut off.
+
+![Instagram — original square previews](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram's original square grid")
+
+![Instagram — newer rectangular previews (cropped composition)](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-rectangular.avif "Instagram's portrait-oriented previews — note how edge content gets cropped")
+
+The lesson: **when you don't control the platform, you don't control how your photos appear.** Aspect ratio changes can silently break your compositions.
+
+<!-- TODO: Note for diagram — show how the same photo appears in square vs portrait crop, highlighting what gets cut -->
+
+---
+
+### 3.2 Masonry / Column Layouts (Pinterest, Unsplash)
+
+<!-- TODO: Develop prose -->
+
+Fixed column widths, variable heights. Photos keep their original aspect ratio.
+
+```css
+/* CSS columns approach */
+.gallery {
+  columns: 3;
+  column-gap: 1rem;
+}
+
+.gallery img {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+```
+
+**Trade-off:** Preserves aspect ratio, maximizes space usage, but:
+
+- **Portrait photos dominate** — taller images occupy more area, drawing more attention
+- **Fill order is top-to-bottom per column**, not left-to-right as readers expect
+- Captions under variable-height images create uneven spacing
+- Strong horizontal rhythm (aligned column edges), but no vertical rhythm (transition lines don't align) — monotonous vertical stripes
+
+Note: Real implementations (like Unsplash) often use JavaScript to control fill order, placing images left-to-right rather than accepting CSS's column-first behavior.
+
+![Unsplash — column layout that privileges portrait photos](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
+
+<!-- TODO: Diagram showing fill order difference between CSS columns (top-to-bottom) vs JS-controlled (left-to-right) -->
+
+---
+
+### 3.3 Justified Row Layouts (Flickr)
+
+<!-- TODO: Develop prose -->
+
+Photos arranged in rows, scaled so each row has the same width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
+
+Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library takes a list of aspect ratios as input and outputs coordinates and dimensions for each photo.
+
+**Trade-off:** Preserves aspect ratio, creates strong vertical rhythm (aligned row edges), row heights are relatively consistent. But:
+
+- **Requires JavaScript** — cannot be done with pure CSS
+- Horizontal rhythm varies (photos within rows have different widths, so vertical transitions don't align across rows)
+- More photos per row = more regular horizontal rhythm; fewer photos = more variation
+
+<!-- TODO: Screenshot of Flickr Explore page showing justified layout -->
+<!-- TODO: Diagram showing how row heights vary based on photo aspect ratios -->
+
+---
+
+## 4. A Cell-Based Grid with Balanced Spans
+
+<!-- TODO: Develop prose -->
+
+**Goal:** Equal visual weight for all orientations in a navigational gallery.
+
+Our approach is conceptually similar to the contain/fit strategy — we don't crop photos. But instead of fitting all photos to a single target aspect ratio (which would privilege only photos matching that ratio), we define **three target aspect ratios**: one for landscape, one for square, one for portrait. Each photo fits to its nearest target.
+
+**Method:** Each photo spans a calculated number of grid cells based on orientation:
+
+- **Landscape:** 2 rows × 3 columns
+- **Square:** 2 rows × 2 columns  
+- **Portrait:** 3 rows × 2 columns
+
+This normalizes **occupied area**, not dimensions. A portrait and landscape photo feel comparable in visual presence.
 
 ```css
 /* Grid container */
-main > ul {
+.gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
   gap: 1.5rem;
 }
 
-/* Spans per orientation */
-main > ul .grid-landscape { grid-row: span 2; grid-column: span 3; }
-main > ul .grid-square    { grid-row: span 2; grid-column: span 2; }
-main > ul .grid-portrait  { grid-row: span 3; grid-column: span 2; }
+/* Spans by orientation */
+.landscape { grid-row: span 2; grid-column: span 3; }
+.square    { grid-row: span 2; grid-column: span 2; }
+.portrait  { grid-row: span 3; grid-column: span 2; }
 ```
 
-### Caption placement logic
-
-- Landscape and square: caption at the bottom edge.
-- Portrait: caption on the side, rotated, to preserve vertical space.
-
-```css
-/* Bottom caption */
-.caption-bottom figure { padding-bottom: 2rem; }
-.caption-bottom figcaption { bottom: 0.5rem; left: 0.6rem; right: 0.6rem; }
-
-/* Side caption for portraits */
-.caption-side figure { padding-left: 2rem; }
-.caption-side figcaption { top: 0.6rem; left: 0.5rem; bottom: 0.6rem; writing-mode: vertical-rl; }
-```
+<!-- TODO: Diagram showing the span logic — how 2x3, 2x2, and 3x2 create similar visual areas -->
 
 ---
 
-## Polaroid borders as a perceptual tool
+### 4.1 Polaroid Borders as an Aspect Ratio Tool
 
-I frame each image with two borders:
+<!-- TODO: Develop prose -->
 
-- A thin inner line in a light gray to separate the photo from the outer border.
-- A thick off‑white outer border — not pure white, but bright enough to act as a perceptual white reference.
+The Polaroid-style border isn't just decorative — it's a tool for adjusting effective aspect ratios.
 
-Why it matters:
+**The logic:**
 
-- The off‑white border gives the eye a stable “paper white,” helping the viewer adapt to ambient light or screen calibration.
-- Against a darker page background, the border boosts the perceived dynamic range of the photo without editing the image itself.
-- Borders are CSS, not baked into files (better compression; no ringing on sharp edges).
+We define three target aspect ratios: one for landscape, one for square, one for portrait. These targets match the grid cell spans (3:2 for landscape, 1:1 for square, 2:3 for portrait).
+
+Real photos rarely match these targets exactly. A landscape photo might be 16:9 (too wide) or 4:3 (between landscape and square). The Polaroid border placement **nudges photos toward their nearest target**:
+
+- **Very wide landscape** (e.g., 16:9) → thick border on bottom → appears less wide, closer to 3:2 target
+- **Landscape between square and target** (e.g., 4:3) → thick border on side → appears more landscape, closer to 3:2 target
+- Similar logic applies to portraits
+
+**Customization:** The target aspect ratios can be adjusted based on your photo collection. If you frequently shoot panoramas, you might shift the landscape target wider. The system adapts.
+
+**Implementation choice:** This could be calculated with JavaScript to optimize for each device's exact width. But the beauty of our approach is that it's determined server-side — the gallery renders with pure CSS, no layout JavaScript required.
+
+**Secondary benefits:**
+
+- The off-white border provides a **white-balance reference** — a stable "paper white" for the eye to calibrate against
+- Against a darker background, the border **boosts perceived dynamic range** without editing the image
+- Borders are CSS, not baked into files — better compression, no JPEG artifacts on sharp edges
 
 ```css
-/* Inner and outer borders on the single‑photo page */
-main > figure img {
-  padding: 0.1rem;                 /* thin inner separator */
+/* Polaroid border styling */
+.photo-card img {
+  padding: 0.1rem;                    /* thin inner separator */
   background-color: oklch(92% 0 0deg);
-  border: 5vh 5vw solid oklch(95% 0 0deg);  /* thick outer border */
-  box-shadow: var(--elevation-3);
+  box-shadow: var(--elevation-2);
 }
+
+/* Border placement varies by aspect ratio category */
+.border-bottom { border-bottom: 1.5rem solid oklch(95% 0 0deg); }
+.border-side   { border-right: 1.5rem solid oklch(95% 0 0deg); }
 ```
+
+<!-- TODO: Diagram showing how border placement shifts effective aspect ratio -->
+<!-- TODO: Show examples of same photo with bottom vs side border -->
 
 ---
 
-## Neutral background for honest color
+### 4.2 Breaking the Rhythm: Random Rotation
 
-Photo pages use a neutral gray theme with zero chroma. That prevents any hue bias from the UI bleeding into your perception of the image.
+<!-- TODO: Develop prose — this could be optional/brief -->
+
+Gaps create rhythm. Strong gaps create strong leading lines — horizontal and vertical edges that the eye follows.
+
+For a more organic, hand-placed feeling, we **slightly rotate each photo** using a normal distribution of small angles. The Polaroid cards appear scattered on a wall by a human, not aligned by a machine.
+
+This intentionally breaks the rigid leading lines that gaps would otherwise form.
 
 ```css
-/* Gallery pages desaturate the surface */
-[data-page-type="photo-gallery"] {
-  --surface-l: 0.85; /* slightly darker for contrast */
-  --surface-c: 0;    /* no chroma → neutral gray */
-  --primary-c: 0;    /* keep UI accents subdued */
+/* Random rotation via CSS custom property set server-side */
+.photo-card {
+  transform: rotate(var(--rotation, 0deg));
 }
 ```
 
-This makes the white border “pop” and provides a consistent viewing environment across light and dark modes.
+```javascript
+// Server-side: assign rotation from normal distribution
+const rotation = gaussianRandom() * 2; // ±2 degrees typical
+```
+
+<!-- TODO: Visual showing grid with and without rotation -->
 
 ---
 
-## Performance and accessibility
+### 4.3 The Trade-off We Accept
 
-- Zero framework utilities on the gallery: minimal CSS, no layout JS.
-- Keyboard‑friendly outlines and focus‑visible states.
-- Respects reduced motion preferences (no forced animations).
+<!-- TODO: Brief acknowledgment -->
+
+This layout sacrifices **space efficiency** for **equal presentation**.
+
+When the viewport's column count doesn't evenly accommodate photo widths, gaps appear:
+
+- **5 columns:** Portrait (2 cols) + Landscape (3 cols) = perfect fit. But portrait + portrait = 4 cols, leaving 1 empty. Landscape + landscape requires 6 cols across 2 rows, leaving 2 empty.
+- **4 columns:** Landscape (3 cols) leaves 1 empty. Two portraits fit perfectly.
+- **3 columns:** Portrait (2 cols) leaves 1 empty.
+
+This happens at all viewport sizes, not just narrow ones. The wasted space is the cost of equal visual weight.
+
+<!-- TODO: Diagram showing gap scenarios at different column counts -->
 
 ---
 
-## Related topics (coming soon)
+## 5. Viewing Environment (Brief Note)
 
-- Natural‑sticky header: a hide‑on‑scroll behavior I discovered via a mobile browser quirk (now a separate project).
-- SVG background texture: layered checkerboards with asymmetric cell splits sized by Fibonacci pairs — produces a subtle pseudo‑random paper‑like grain.
-- Color system: OKLCH‑based variables that derive readable text and container colors from a few base values.
-- Why own your site: ownership, presentation control, findability, and long‑term resilience.
+<!-- TODO: Keep brief as discussed -->
 
-I’ll link to these posts as they go live.
+Photo pages use a **neutral gray background** with zero chroma. This prevents any hue bias from the UI affecting perception of the images.
+
+The combination of neutral background + white Polaroid border creates a consistent viewing environment across light and dark modes.
+
+This topic deserves its own post — for now, the key point is that gallery design extends beyond layout to the entire viewing context.
 
 ---
 
-## Closing
+## 6. Closing
 
-This layout tries to respect what a photograph is: a composition with intent, viewed in a neutral space, presented like a physical object. If you’ve struggled with square feeds or waterfall columns, a cell‑based grid with calibrated borders is a simple, robust alternative.
+<!-- TODO: Develop into proper conclusion -->
+
+This layout tries to respect what a photograph is: a composition with intent, presented with equal weight regardless of orientation.
+
+If you've struggled with square feeds that crop your compositions, or masonry columns that let portraits dominate, a cell-based grid with calibrated borders is a straightforward alternative.
+
+The trade-off is clear: you sacrifice some space efficiency for equal presentation. For a navigational gallery — where the goal is browsing, not storytelling — that's a trade-off worth making.
+
+---
+
+## Diagrams and Screenshots Needed
+
+<!-- Reference list for asset creation -->
+
+1. ✅ `square-grid.svg` — Fixed aspect ratio grid illustration
+2. ✅ `unsplash-columns.avif` — Unsplash column layout screenshot
+3. ✅ `instagram-square.avif` — Instagram square grid screenshot
+4. ✅ `instagram-rectangular.avif` — Instagram portrait rectangles screenshot
+5. 📋 Leading lines diagram — showing how aligned vs unaligned transitions create/break rhythm
+6. 📋 Cover vs contain diagram — same photo shown cropped vs fitted with empty space
+7. 📋 Column fill order diagram — CSS (top-to-bottom) vs JS (left-to-right)
+8. 📋 Flickr justified layout screenshot — Explore page
+9. 📋 Cell span diagram — showing 2×3, 2×2, 3×2 visual areas
+10. 📋 Border placement diagram — how borders shift effective aspect ratio
+11. 📋 Gap scenarios diagram — empty columns at different viewport widths
+12. 📋 Rotation effect comparison — with and without random rotation
