@@ -52,6 +52,8 @@ Rhythm emerges from **leading lines** — the aligned edges where photos meet (o
 
 In a **fixed aspect ratio grid** (like Instagram's squares), all photos have identical dimensions. Every horizontal and vertical transition aligns perfectly, creating strong leading lines in both directions — strong horizontal rhythm (as you scan left-to-right) and strong vertical rhythm (as you scan top-to-bottom).
 
+![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Square grid with leading lines highlighted — gaps form a perfect grid of horizontal and vertical guides")
+
 In a **column-based layout** (like Pinterest or Unsplash), columns have equal widths, so the vertical edges align — creating strong **horizontal rhythm** (repetition as you scan left-to-right). But photos have different heights, so horizontal transition lines appear at different vertical positions. These lines don't align, forming no leading lines vertically — **no vertical rhythm**. The result: monotonous vertical stripes.
 
 In a **justified row layout** (like Flickr), rows have equal widths, so horizontal edges align — creating strong **vertical rhythm** (repetition as you scan top-to-bottom). But photos within each row have different widths, so vertical transition lines don't align across rows — **weaker horizontal rhythm**. More photos per row means smaller width variations, so horizontal rhythm improves.
@@ -86,7 +88,7 @@ The simplest approach: force all photos into the same aspect ratio.
 
 **Trade-off:** Maximum space efficiency, strong visual rhythm, but **crops composition**. Photos are forced into a shape they weren't composed for.
 
-![Square grid illustration](./square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
+![Square grid illustration](./assets/square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
 
 #### Approaches to aspect ratio mismatch
 
@@ -104,6 +106,12 @@ Most fixed-ratio grids use cover/crop. The question then becomes: *what* to crop
 - **Editorial tight crop** — an artistic choice where previews are cropped dramatically tighter than the full image (e.g., showing only a face from a full-body portrait). Creates intrigue — the viewer has no idea what the full image contains.
 
 The contain/fit approach is rarely used in fixed-ratio grids because it privileges only photos that happen to match the target ratio — all others appear smaller, breaking the equal-presentation goal.
+
+![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Same photos fitted (not cropped) into square cells — notice how the square photo dominates while others shrink")
+
+With the contain/fit approach, the underlying rhythm also suffers. Since photos no longer fill their cells uniformly, the leading lines bend and break:
+
+![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent, rhythm deteriorates")
 
 #### Case study: Instagram's aspect ratio shift
 
@@ -153,6 +161,12 @@ Fixed column widths, variable heights. Photos keep their original aspect ratio.
 
 Note: Real implementations (like Unsplash) often use JavaScript to control fill order, placing images left-to-right rather than accepting CSS's column-first behavior.
 
+![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually, occupying far more area than landscapes")
+
+The column edges create strong vertical leading lines, giving the layout horizontal rhythm. But the horizontal transitions between photos occur at different heights in each column — no alignment, no vertical leading lines, no vertical rhythm:
+
+![Column layout with leading lines](./assets/columns-leading-lines.svg "Only vertical leading lines form — horizontal transitions are scattered, creating monotonous vertical stripes")
+
 ![Unsplash — column layout that privileges portrait photos](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
 
 <!-- TODO: Diagram showing fill order difference between CSS columns (top-to-bottom) vs JS-controlled (left-to-right) -->
@@ -167,11 +181,15 @@ Photos arranged in rows, scaled so each row has the same width. A JavaScript lib
 
 Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library takes a list of aspect ratios as input and outputs coordinates and dimensions for each photo.
 
+![Justified row layout](./assets/justified.svg "Justified layout — photos in each row share the same height, but row heights vary")
+
 **Trade-off:** Preserves aspect ratio, creates strong vertical rhythm (aligned row edges), row heights are relatively consistent. But:
 
 - **Requires JavaScript** — cannot be done with pure CSS
 - Horizontal rhythm varies (photos within rows have different widths, so vertical transitions don't align across rows)
 - More photos per row = more regular horizontal rhythm; fewer photos = more variation
+
+![Justified layout with leading lines](./assets/justified-leading-lines.svg "Horizontal leading lines are strong — but vertical transitions don't align across rows, and row heights differ")
 
 <!-- TODO: Screenshot of Flickr Explore page showing justified layout -->
 <!-- TODO: Diagram showing how row heights vary based on photo aspect ratios -->
@@ -194,6 +212,14 @@ Our approach is conceptually similar to the contain/fit strategy — we don't cr
 
 This normalizes **occupied area**, not dimensions. A portrait and landscape photo feel comparable in visual presence.
 
+![Cell-span layout result](./assets/cell-span.svg "Cell-span layout — landscape and portrait photos occupy similar visual area; the result feels organic, less mechanical")
+
+The photos appear almost randomly placed — no rigid grid lines visible, no strong leading lines dominating the composition. This is intentional: the layout feels more like photos pinned to a wall than a spreadsheet.
+
+But there *is* an underlying grid. Each photo is placed within cells that match its orientation:
+
+![Cell-span layout with grid overlay](./assets/cell-span-grid.svg "The hidden grid — portraits span 3×2, landscapes span 2×3, squares span 2×2")
+
 ```css
 /* Grid container */
 .gallery {
@@ -207,8 +233,6 @@ This normalizes **occupied area**, not dimensions. A portrait and landscape phot
 .square    { grid-row: span 2; grid-column: span 2; }
 .portrait  { grid-row: span 3; grid-column: span 2; }
 ```
-
-<!-- TODO: Diagram showing the span logic — how 2x3, 2x2, and 3x2 create similar visual areas -->
 
 ---
 
@@ -296,7 +320,9 @@ When the viewport's column count doesn't evenly accommodate photo widths, gaps a
 
 This happens at all viewport sizes, not just narrow ones. The wasted space is the cost of equal visual weight.
 
-<!-- TODO: Diagram showing gap scenarios at different column counts -->
+![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with red crosses — some cells get trapped between spans and cannot be filled")
+
+In this example, one cell is trapped in the middle of the layout (surrounded by four different photo spans), and five cells in the bottom-right corner remain unused. This is the price of equal visual weight without cropping.
 
 ---
 
@@ -328,15 +354,20 @@ The trade-off is clear: you sacrifice some space efficiency for equal presentati
 
 <!-- Reference list for asset creation -->
 
-1. ✅ `square-grid.svg` — Fixed aspect ratio grid illustration
-2. ✅ `unsplash-columns.avif` — Unsplash column layout screenshot
-3. ✅ `instagram-square.avif` — Instagram square grid screenshot
-4. ✅ `instagram-rectangular.avif` — Instagram portrait rectangles screenshot
-5. 📋 Leading lines diagram — showing how aligned vs unaligned transitions create/break rhythm
-6. 📋 Cover vs contain diagram — same photo shown cropped vs fitted with empty space
-7. 📋 Column fill order diagram — CSS (top-to-bottom) vs JS (left-to-right)
-8. 📋 Flickr justified layout screenshot — Explore page
-9. 📋 Cell span diagram — showing 2×3, 2×2, 3×2 visual areas
-10. 📋 Border placement diagram — how borders shift effective aspect ratio
-11. 📋 Gap scenarios diagram — empty columns at different viewport widths
-12. 📋 Rotation effect comparison — with and without random rotation
+1. ✅ `square-grid.svg` — Fixed aspect ratio grid (cropped)
+2. ✅ `square-grid-leading-lines.svg` — Square grid with leading lines highlighted
+3. ✅ `square-grid-fit.svg` — Square grid with contain/fit (no crop)
+4. ✅ `square-grid-fit-leading-lines.svg` — Fitted grid showing broken leading lines
+5. ✅ `columns.svg` — Column-based layout
+6. ✅ `columns-leading-lines.svg` — Column layout with vertical leading lines
+7. ✅ `justified.svg` — Justified row layout
+8. ✅ `justified-leading-lines.svg` — Justified layout with horizontal leading lines
+9. ✅ `cell-span.svg` — Cell-span layout result
+10. ✅ `cell-span-grid.svg` — Cell-span with grid overlay
+11. ✅ `cell-span-grid-wasted.svg` — Cell-span showing wasted cells
+12. ✅ `unsplash-columns.avif` — Unsplash column layout screenshot
+13. ✅ `instagram-square.avif` — Instagram square grid screenshot
+14. ✅ `instagram-rectangular.avif` — Instagram portrait rectangles screenshot
+15. 📋 Flickr justified layout screenshot — Explore page (real-world example)
+16. 📋 Border placement diagram — how Polaroid borders shift effective aspect ratio
+17. 📋 Rotation effect comparison — with and without random rotation
