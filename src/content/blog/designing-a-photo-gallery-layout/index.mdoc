@@ -159,13 +159,27 @@ Fixed column widths, variable heights. Photos keep their original aspect ratio.
 - Captions under variable-height images create uneven spacing
 - Strong horizontal rhythm (aligned column edges), but no vertical rhythm (transition lines don't align) — monotonous vertical stripes
 
-Note: Real implementations (like Unsplash) often use JavaScript to control fill order, placing images left-to-right rather than accepting CSS's column-first behavior.
-
 ![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually, occupying far more area than landscapes")
 
 The column edges create strong vertical leading lines, giving the layout horizontal rhythm. But the horizontal transitions between photos occur at different heights in each column — no alignment, no vertical leading lines, no vertical rhythm:
 
 ![Column layout with leading lines](./assets/columns-leading-lines.svg "Only vertical leading lines form — horizontal transitions are scattered, creating monotonous vertical stripes")
+
+#### The fill order problem
+
+CSS multi-column layout fills columns top-to-bottom, then moves to the next column. This works for text, but creates problems for photo galleries.
+
+With pure CSS, photos fill in column order — the first column fills completely before the second begins:
+
+![CSS column fill order](./assets/columns-CSS-order.svg "Pure CSS fill order: 1-2 in first column, 3-4 in second, 5-6 in third")
+
+This becomes problematic with longer galleries. If the gallery extends beyond the viewport, the most recent photos (which users typically want to see first) end up at the bottom of the first column — far below the fold:
+
+![CSS column order with long gallery](./assets/columns-CSS-order-long.svg "With 10 photos, the first row shows photos 1, 5, and 9 — photos 2, 3, 4 are hidden below the viewport")
+
+Real implementations (like Unsplash) use JavaScript to control fill order, placing images left-to-right — the natural reading order:
+
+![Natural fill order](./assets/columns-natural-order.svg "JavaScript-controlled order: row by row, left to right")
 
 ![Unsplash — column layout that privileges portrait photos](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
 
@@ -288,7 +302,9 @@ Gaps create rhythm. Strong gaps create strong leading lines — horizontal and v
 
 For a more organic, hand-placed feeling, we **slightly rotate each photo** using a normal distribution of small angles. The Polaroid cards appear scattered on a wall by a human, not aligned by a machine.
 
-This intentionally breaks the rigid leading lines that gaps would otherwise form.
+![Cell-span layout with tilted photos](./assets/cell-span-tilted.svg "Slight random rotation breaks the rigid grid feel — photos appear hand-placed")
+
+This intentionally breaks the rigid leading lines that gaps would otherwise form. Compare with the non-tilted version above — the tilted layout feels less mechanical, more like photos pinned to a corkboard.
 
 ```css
 /* Random rotation via CSS custom property set server-side */
@@ -301,8 +317,6 @@ This intentionally breaks the rigid leading lines that gaps would otherwise form
 // Server-side: assign rotation from normal distribution
 const rotation = gaussianRandom() * 2; // ±2 degrees typical
 ```
-
-<!-- TODO: Visual showing grid with and without rotation -->
 
 ---
 
@@ -360,14 +374,17 @@ The trade-off is clear: you sacrifice some space efficiency for equal presentati
 4. ✅ `square-grid-fit-leading-lines.svg` — Fitted grid showing broken leading lines
 5. ✅ `columns.svg` — Column-based layout
 6. ✅ `columns-leading-lines.svg` — Column layout with vertical leading lines
-7. ✅ `justified.svg` — Justified row layout
-8. ✅ `justified-leading-lines.svg` — Justified layout with horizontal leading lines
-9. ✅ `cell-span.svg` — Cell-span layout result
-10. ✅ `cell-span-grid.svg` — Cell-span with grid overlay
-11. ✅ `cell-span-grid-wasted.svg` — Cell-span showing wasted cells
-12. ✅ `unsplash-columns.avif` — Unsplash column layout screenshot
-13. ✅ `instagram-square.avif` — Instagram square grid screenshot
-14. ✅ `instagram-rectangular.avif` — Instagram portrait rectangles screenshot
-15. 📋 Flickr justified layout screenshot — Explore page (real-world example)
-16. 📋 Border placement diagram — how Polaroid borders shift effective aspect ratio
-17. 📋 Rotation effect comparison — with and without random rotation
+7. ✅ `columns-natural-order.svg` — Column layout with natural (JS) fill order
+8. ✅ `columns-CSS-order.svg` — Column layout with CSS fill order
+9. ✅ `columns-CSS-order-long.svg` — CSS fill order problem with long galleries
+10. ✅ `justified.svg` — Justified row layout
+11. ✅ `justified-leading-lines.svg` — Justified layout with horizontal leading lines
+12. ✅ `cell-span.svg` — Cell-span layout result
+13. ✅ `cell-span-grid.svg` — Cell-span with grid overlay
+14. ✅ `cell-span-grid-wasted.svg` — Cell-span showing wasted cells
+15. ✅ `cell-span-tilted.svg` — Cell-span with random rotation
+16. ✅ `unsplash-columns.avif` — Unsplash column layout screenshot
+17. ✅ `instagram-square.avif` — Instagram square grid screenshot
+18. ✅ `instagram-rectangular.avif` — Instagram portrait rectangles screenshot
+19. 📋 Flickr justified layout screenshot — Explore page (real-world example)
+20. 📋 Border placement diagram — how Polaroid borders shift effective aspect ratio
