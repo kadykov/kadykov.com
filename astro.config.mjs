@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config"
+import { defineConfig, fontProviders } from "astro/config"
 import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
@@ -48,5 +48,39 @@ export default defineConfig({
         dark: "github-dark",
       },
     },
+  },
+  experimental: {
+    fonts: [
+      {
+        provider: fontProviders.fontsource(),
+        name: "Source Sans 3",
+        cssVariable: "--font-sans",
+        weights: ["200 900"],
+        styles: ["normal", "italic"],
+        subsets: ["latin", "cyrillic", "greek", "vietnamese"],
+        fallbacks: ["arial", "sans-serif"],
+        display: "block",
+      },
+      {
+        provider: fontProviders.fontsource(),
+        name: "Bitter",
+        cssVariable: "--font-serif",
+        weights: ["100 900"],
+        styles: ["normal", "italic"],
+        subsets: ["latin", "cyrillic", "vietnamese"],
+        fallbacks: ["georgia", "serif"],
+        display: "block",
+      },
+      {
+        provider: fontProviders.fontsource(),
+        name: "Source Code Pro",
+        cssVariable: "--font-mono",
+        weights: ["200 900"],
+        styles: ["normal"],
+        subsets: ["latin", "cyrillic", "greek", "vietnamese"],
+        fallbacks: ["Courier New", "monospace"],
+        display: "block",
+      },
+    ],
   },
 })

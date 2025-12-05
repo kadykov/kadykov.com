@@ -1,7 +1,6 @@
 ---
 import Footer from "../components/Footer.astro"
-import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
-import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
+import { Font } from "astro:assets"
 import Header from "../components/Header.astro"
 
 interface Props {
@@ -41,20 +40,15 @@ import "../styles/base.css"
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSans}
-      crossorigin="anonymous"
+    <Font
+      cssVariable="--font-sans"
+      preload={[{ subset: "latin", style: "normal" }]}
     />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSerif}
-      crossorigin="anonymous"
+    <Font
+      cssVariable="--font-serif"
+      preload={[{ subset: "latin", style: "normal" }]}
     />
+    <Font cssVariable="--font-mono" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
