@@ -50,9 +50,13 @@ You cannot optimize all three simultaneously. Every layout choice sacrifices som
 
 ### Leading Lines and Visual Rhythm
 
-Rhythm emerges from **leading lines** — the aligned edges where photos meet (or where gaps separate them). When transition lines align across multiple photos, they form strong visual guides that the eye follows. When they don't align, rhythm breaks down.
+**Visual rhythm** emerges from repeated patterns — when elements recur at regular intervals, the eye perceives structure and order. In photo galleries, rhythm appears when rows have similar heights or columns have similar widths.
 
-The relationship between rhythm and layout becomes clearer as we examine each common approach.
+**Leading lines** are the aligned edges where photos meet (or where gaps separate them). When gaps between photos align across the layout, they form continuous lines that guide the viewer's eye. These lines also convey a sense of order — and when a line suddenly breaks, it draws attention to the imperfection.
+
+The two concepts are related: when leading lines repeat at regular intervals, they create rhythm. Vertical leading lines repeating horizontally create horizontal rhythm. Horizontal leading lines repeating vertically create vertical rhythm.
+
+The relationship between rhythm, leading lines, and layout becomes clearer as we examine each common approach.
 
 ---
 
@@ -83,9 +87,11 @@ The simplest approach: force all photos into the same aspect ratio.
 
 #### Rhythm: Perfect in Both Directions
 
-In a fixed aspect ratio grid, all photos have identical dimensions. Every horizontal and vertical transition aligns perfectly, creating strong leading lines in both directions.
+In a fixed aspect ratio grid, all photos have identical dimensions. Vertical gaps align perfectly across rows, forming vertical leading lines that repeat horizontally — strong **horizontal rhythm**. Horizontal gaps align perfectly across columns, forming horizontal leading lines that repeat vertically — strong **vertical rhythm**.
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
+
+With high contrast between photos and background, and sufficiently thick gaps, this perfect grid can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — viewers perceive phantom dark spots at the intersections of the white gaps.
 
 #### Cover vs. Contain
 
@@ -149,13 +155,15 @@ Fixed column widths, variable heights. Photos keep their original aspect ratio.
 - **Portrait photos dominate** — taller images occupy more area, drawing more attention
 - Captions under variable-height images create uneven spacing
 
-#### Rhythm: Vertical Stripes Only
+#### Rhythm: Horizontal Only (Monotonous Vertical Stripes)
 
-Column edges create strong vertical leading lines — horizontal rhythm as you scan left-to-right. But photos have different heights, so horizontal transitions occur at different positions. No alignment, no vertical leading lines.
+Columns have equal widths, so the vertical gaps between them align perfectly — forming strong **vertical leading lines**. These vertical lines repeat horizontally, creating **horizontal rhythm**.
 
-![Column layout with leading lines](./assets/columns-leading-lines.svg "Only vertical leading lines form — horizontal transitions are scattered")
+But photos have different heights, so horizontal gaps between photos occur at different vertical positions in each column. These gaps don't align across columns — no horizontal leading lines form, so there's **no vertical rhythm**.
 
-The result: monotonous vertical stripes.
+![Column layout with leading lines](./assets/columns-leading-lines.svg "Vertical leading lines are strong — horizontal gaps are scattered, forming no lines")
+
+The result: monotonous vertical stripes. The eye moves smoothly left-to-right (horizontal rhythm), but scanning top-to-bottom feels structureless.
 
 #### The Fill Order Problem
 
@@ -190,13 +198,15 @@ Flickr's open-source [justified-layout](https://github.com/flickr/justified-layo
 - **Requires JavaScript** — cannot be done with pure CSS
 - **Landscape photos dominate** — wider images occupy more area within each row
 
-#### Rhythm: Horizontal Lines Only
+#### Rhythm: Vertical Only (No Horizontal Structure)
 
-Row edges create strong horizontal leading lines — vertical rhythm as you scan top-to-bottom. But photos within rows have different widths, so vertical transitions don't align across rows.
+Rows span the full width, so the horizontal gaps between rows align perfectly — forming strong **horizontal leading lines**. These horizontal lines repeat vertically, creating **vertical rhythm**.
 
-![Justified layout with leading lines](./assets/justified-leading-lines.svg "Horizontal leading lines are strong — vertical transitions don't align")
+But photos within each row have different widths, so vertical gaps between photos occur at different horizontal positions. These gaps don't align across rows — no vertical leading lines form, so there's **no horizontal rhythm**.
 
-More photos per row means smaller width variations, improving horizontal rhythm.
+![Justified layout with leading lines](./assets/justified-leading-lines.svg "Horizontal leading lines are strong — vertical gaps don't align across rows")
+
+More photos per row means each photo is narrower, reducing width variation. This makes vertical gaps more likely to *nearly* align, improving the sense of horizontal structure — though true horizontal rhythm remains absent.
 
 ![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape in row 1 dominates two portraits in row 2")
 
@@ -229,6 +239,10 @@ The photos appear almost randomly placed — no rigid grid lines visible. This i
 There *is* an underlying grid. Each photo is placed within cells matching its orientation:
 
 ![Cell-span layout with grid overlay](./assets/cell-span-grid.svg "The hidden grid — portraits span 3×2, landscapes span 2×3, squares span 2×2")
+
+Here's how this looks in practice, with Chrome DevTools grid overlay enabled:
+
+![Real grid overlay in browser](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools reveals the grid — notice the trapped cell on the left and unused cells on the right")
 
 ```css
 .gallery {
@@ -264,11 +278,13 @@ The Polaroid-style border isn't just decorative — it adjusts effective aspect 
 The border has two layers:
 
 - **Thick outer border** — off-white, acts as a perceptual "paper white" reference
-- **Thin inner border** — separates light areas of the photo from the thick border
+- **Thin inner border** — light gray, separates light areas of the photo from the thick border
 
-Without the inner border, light parts of photos blend into the white frame. The thin separator makes the boundary clear, even when both are technically "white" (but different temperatures).
+Without the inner border, light parts of photos blend into the white frame. The thin separator makes the boundary clear, even when both are technically "white" (but different color temperatures).
 
-<!-- TODO: Add comparison screenshot showing single vs double border -->
+![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
+
+The thin inner border has minimal impact on the overall white-frame aesthetic, but prevents the visual confusion where image and border merge.
 
 **Additional benefits:**
 
@@ -344,4 +360,5 @@ The trade-off is clear: you sacrifice space efficiency for equal presentation. F
 - ✅ `unsplash-columns.avif`
 - ✅ `flickr-justified.avif`
 - ✅ `cell-span.avif`
-- 📋 Double border comparison (single vs double border)
+- ✅ `cell-span-grid.avif` (DevTools grid overlay)
+- ✅ `border.avif` (single vs double border comparison)
