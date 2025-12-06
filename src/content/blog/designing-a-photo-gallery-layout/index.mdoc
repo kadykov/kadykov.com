@@ -14,23 +14,18 @@ DRAFT STRUCTURE — content to be developed into human-readable prose
 
 ## 1. Introduction
 
-<!-- TODO: Develop into flowing prose -->
+When I redesigned this site, I also rebuilt the photo gallery. The old version used plain CSS columns (via Tailwind): it filled top-to-bottom, left-to-right, and let portrait photos dominate. It was great for space efficiency, but not for showing landscape and portrait shots with equal weight.
 
-When I redesigned this website, I wanted to rethink the photo gallery. The previous version used CSS columns (via Tailwind) — a layout that fills top-to-bottom, left-to-right, and lets portrait photos dominate the page. It prioritized space efficiency over equal representation.
-
-I wanted something different: a gallery where landscape and portrait photos receive equal visual weight, without cropping, without JavaScript layout calculations, and with a tactile, physical feel — like prints pinned to a wall.
-
-This post documents the layout I designed and the trade-offs involved.
+I wanted a different balance: no forced crops, no layout JavaScript, and a tactile feel — more like prints pinned to a wall than tiles in a spreadsheet. This post documents the layout I designed and the trade-offs it makes.
 
 ### Navigational vs. Editorial Galleries
 
-Before diving in, a distinction: there are two fundamentally different types of photo galleries.
+There are two very different kinds of photo galleries:
 
-**Editorial galleries** are story-driven. The photographer controls visual hierarchy — some photos appear larger, creating emphasis and narrative flow. The sequence tells a story.
+- **Editorial galleries** are story-driven. The photographer sets a hierarchy — some photos are larger, guiding emphasis and flow. Sequence matters.
+- **Navigational galleries** present everything with equal weight and let the viewer choose order (by date, popularity, tags). The goal is discovery, not storytelling.
 
-**Navigational galleries** serve a different purpose: presenting all photos equally, letting the viewer control the order (by date, popularity, tags). The goal is discovery, not storytelling.
-
-This post focuses on **navigational galleries** — where equal presentation matters.
+This post is about the second kind — a navigational gallery where landscape and portrait photos get equal visual presence.
 
 ---
 
