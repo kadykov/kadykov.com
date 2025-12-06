@@ -240,10 +240,6 @@ There *is* an underlying grid. Each photo is placed within cells matching its or
 
 ![Cell-span layout with grid overlay](./assets/cell-span-grid.svg "The hidden grid — portraits span 3×2, landscapes span 2×3, squares span 2×2")
 
-Here's how this looks in practice, with Chrome DevTools grid overlay enabled:
-
-![Real grid overlay in browser](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools reveals the grid — notice the trapped cell on the left and unused cells on the right")
-
 ```css
 .gallery {
   display: grid;
@@ -327,6 +323,10 @@ Here's the layout in practice:
 ![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
 
 You can explore the full gallery at [kadykov.com/photos](/photos).
+
+With browser DevTools, you can see the underlying grid — and the wasted cells that are the cost of equal visual weight:
+
+![Real grid overlay in browser](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools reveals the grid — notice the trapped cell on the left and unused cells on the right")
 
 The viewing environment complements the layout: a **neutral gray background** with zero chroma prevents any hue bias from affecting color perception. Combined with the white Polaroid borders, this creates a consistent viewing context across light and dark modes.
 
