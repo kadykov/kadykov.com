@@ -57,9 +57,9 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
-Photos come in many shapes and proportions. Place every image centered in identical cells and the visible content in each cell changes with the photo's aspect ratio: some images will fill the cell, while others leave empty bars on two sides.
+Photos come in many shapes and proportions. Place every photo centered in identical cells and you get inconsistent empty space: portraits tend to leave bars on the left and right, landscapes on the top and bottom. The empty space doesn't align across the grid, which breaks the rhythm.
 
-If you want to preserve the full image and avoid cropping, CSS offers an option: `object-fit: contain` scales each photo so the full image is visible inside the cell. It preserves composition, but the empty space is inconsistent: portraits and landscapes create different amounts of letterboxing, so the visual spacing varies across the grid.
+A common baseline is `object-fit: contain`. It shows the full image inside the cell (no cropping); the trade-off is the inconsistent letterboxing described above.
 
 Example (no-crop, `contain`):
 
@@ -79,7 +79,7 @@ Example (no-crop, `contain`):
 
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
 
-That inconsistent empty space is the raison d'être for cropping preview images: a fixed target ratio (square, 4:5, etc.) keeps the grid tidy and tension-free. Below is the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. The typical CSS for that approach is:
+That inconsistent empty space is the reason many galleries crop previews: a fixed target ratio (square, 4:5, etc.) keeps cell dimensions uniform and the page visually consistent. Below is the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. The typical CSS for that approach is:
 
 ```css
 .gallery {
@@ -115,9 +115,11 @@ You saw the `contain` example above: it preserves composition, but it also leave
 
 With `contain`, the image boxes have different visible heights and widths, so the gaps no longer align into continuous leading lines. With `cover`, the cells align perfectly and the leading lines are preserved — but at the cost of cropped content.
 
-Most galleries favor `cover` for previews because it keeps the grid tidy. That leaves a new problem: *what* do you crop?
+Most galleries favor `cover` for previews because it keeps cell dimensions uniform and the grid visually consistent. That leaves a new problem: *what* do you crop?
 
 **Center crop** is the naive default, but it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) do better — they analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary go further by detecting subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is a different strategy entirely: an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
+
+In short: one option preserves every photo (`contain`) but introduces inconsistent empty space and broken leading lines; the other (`cover`) makes the grid tidy at the cost of cropping image content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
 
 #### The Aspect Ratio Change Problem
 
