@@ -59,11 +59,7 @@ Start simply: put each photo with its geometric center in the middle of a unifor
 
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
 
-Photos come in many shapes and proportions. If you place every photo centered in identical cells, you'll end up with inconsistent empty space: portraits tend to leave bars on the sides, while landscapes leave bars on the top and bottom. The empty space doesn't align across the grid, which breaks the rhythm.
-
-A common baseline is `object-fit: contain`. It shows the full image inside the cell (no cropping); the trade-off is the inconsistent letterboxing described above.
-
-Here’s how you might implement this (no-crop baseline using `object-fit: contain`):
+A common baseline is `object-fit: contain`. It shows the full image inside the cell, by fitting the entire photo within the cell boundaries without cropping. Here’s how you might implement this:
 
 ```css
 /* Baseline — no cropping: full image fits inside the cell */
@@ -79,6 +75,8 @@ Here’s how you might implement this (no-crop baseline using `object-fit: conta
   object-fit: contain; /* show the full photo, with letterboxing */
 }
 ```
+
+However, this straightforward implementation comes with drawbacks: photos come in many shapes and proportions, so placing every photo centered in identical cells results in inconsistent empty space—portraits leave bars on the sides, landscapes on the top and bottom. This wasted space doesn't align across the grid, breaking the rhythm and undermining visual coherence.
 
 That inconsistent empty space is the reason many galleries crop previews: a fixed target ratio (square, 4:5, etc.) keeps cell dimensions uniform and the page visually consistent.
 
