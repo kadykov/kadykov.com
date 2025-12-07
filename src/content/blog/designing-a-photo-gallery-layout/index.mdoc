@@ -97,11 +97,11 @@ The CSS change is small: keep the same grid declaration, but switch image sizing
 }
 ```
 
-This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges stack into vertical guides that repeat across rows, and horizontal edges stack into horizontal guides that repeat across columns. That repeated pattern is what we mean by rhythm — consistent spacing and repeated edges that guide the eye.
+This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges form guides across rows, and horizontal edges form guides across columns. That repeated pattern is what we mean by rhythm — consistent spacing and aligned edges that guide the eye.
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
-Compare this to the `contain` baseline above: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order, but with high contrast and thick gaps it can generate the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of white gaps that make the layout feel mechanical rather than organic.
+Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In the most extreme cases — particularly when gaps are high-contrast and thick — this can produce the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of the white gaps.
 
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
@@ -317,7 +317,7 @@ In this example, one cell is trapped in the middle (surrounded by spans), and fi
 
 Here's the layout in practice:
 
-![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
+![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo_gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
 
 You can explore the full gallery at [kadykov.com/photos](/photos).
 
