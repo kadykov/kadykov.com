@@ -99,15 +99,15 @@ This approach gives you maximum space efficiency and a strong visual rhythm. Bec
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
-Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In the most extreme cases — particularly when gaps are high-contrast and thick — this can produce the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of the white gaps.
+Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In the most extreme cases — particularly when gaps are high-contrast and thick — this can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of the white gaps.
 
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
-In practice, galleries choose one of two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
+In practice, there are two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
-When teams pick `cover`, they must then choose a cropping strategy. **Center crop** is the naive default, and it often clips subjects placed off-center. **Smart crop** (e.g., [smartcrop.js](https://github.com/jwagner/smartcrop.js)) uses heuristics like faces, edges, and visual weight to pick safer crops. **AI-assisted** services go further, detecting subjects and recommending crops, at the cost of additional processing. **Editorial tight crop** is a creative choice — dramatic, teaser-like crops that prioritize visual impact over preserving everything.
+If you choose `cover`, you must then choose a cropping strategy. **Center crop** is the naive default, and it often clips subjects placed off-center. **Smart crop** (e.g., [smartcrop.js](https://github.com/jwagner/smartcrop.js)) uses heuristics like faces, edges, and visual weight to pick safer crops. **AI-assisted** services go further, detecting subjects and recommending crops, at the cost of additional processing. **Editorial tight crop** is a creative choice — dramatic, teaser-like crops that prioritize visual impact over preserving everything.
 
-Summary: `contain` → full images, inconsistent spacing, broken leading lines. `cover` → tidy, rhythmic grid, but cropped content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
+Ultimately, the choice is between preserving full images with inconsistent spacing or cropping for a tidy grid. Summary: `contain` → full images, inconsistent spacing, broken leading lines. `cover` → tidy, rhythmic grid, but cropped content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
 
 #### The Aspect Ratio Change Problem
 
@@ -273,7 +273,7 @@ The border has two layers:
 
 Without the inner border, light parts of photos blend into the white frame. The thin separator makes the boundary clear, even when both are technically "white" (but different color temperatures).
 
-![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
+![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo_gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
 
 The thin inner border has minimal impact on the overall white-frame aesthetic, but prevents the visual confusion where image and border merge.
 
