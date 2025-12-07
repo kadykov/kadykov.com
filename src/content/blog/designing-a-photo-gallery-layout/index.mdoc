@@ -59,8 +59,6 @@ Think of the grid as a set of points: the center of each photo lies in the middl
 
 Photos, however, arrive in wildly different shapes. Place every photo centered in identical cells and you’ll end up with different amounts of empty space inside each cell: some photos fill their boxes, others show letterboxing. Rather than calling this a failure, it's simply the baseline — nothing gets cropped and each composition is preserved.
 
-If you want to keep every image entirely visible, CSS gives you a simple built‑in tool: `object-fit: contain` scales the image to fit the cell without cropping, leaving bars where needed.
-
 To solve that empty-space problem, CSS gives us two choices:
 
 #### Cover vs. Contain
@@ -68,6 +66,8 @@ To solve that empty-space problem, CSS gives us two choices:
 **Cover (crop):** Scale the image so it fills the cell, cropping overflow. Keeps the cells uniform and tidy; you lose some of the original composition.
 
 **Contain (fit):** Scale the image to fit entirely inside the cell, preserving the whole photo; the downside is empty space and visual irregularity.
+
+In CSS this is usually implemented with the `object-fit` property: `object-fit: cover` (crop) or `object-fit: contain` (fit).
 
 Here is what `contain` looks like in the grid:
 
