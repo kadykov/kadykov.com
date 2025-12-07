@@ -120,9 +120,7 @@ The lesson: fixed aspect ratios require commitment. Changing them later harms co
 
 ### 3.2 Column Layouts (Pinterest, Unsplash)
 
-<!-- TODO: Develop prose -->
-
-Fixed column widths, variable heights. Photos keep their original aspect ratio.
+Column layouts use fixed column widths with variable heights. Photos keep their original aspect ratio — no cropping.
 
 ```css
 .gallery {
@@ -138,10 +136,7 @@ Fixed column widths, variable heights. Photos keep their original aspect ratio.
 
 ![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
 
-**Trade-off:** Preserves aspect ratio, maximizes space usage, but:
-
-- **Portrait photos dominate** — taller images occupy more area, drawing more attention
-- Captions under variable-height images create uneven spacing
+**Trade-off:** Preserves aspect ratio and maximizes space usage, but **portrait photos dominate** — taller images occupy more area, drawing more attention. Captions under variable-height images also create uneven spacing.
 
 #### Rhythm: Horizontal Only (Monotonous Vertical Stripes)
 
@@ -173,18 +168,13 @@ Real implementations use JavaScript to place images left-to-right:
 
 ### 3.3 Justified Row Layouts (Flickr)
 
-<!-- TODO: Develop prose -->
-
-Photos arranged in rows, scaled so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
+Justified row layouts arrange photos in rows, scaling them so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
 
 Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library takes aspect ratios as input and outputs coordinates and dimensions.
 
 ![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights vary")
 
-**Trade-off:** Preserves aspect ratio, but:
-
-- **Requires JavaScript** — cannot be done with pure CSS
-- **Landscape photos dominate** — wider images occupy more area within each row
+**Trade-off:** Preserves aspect ratio, but **requires JavaScript** (cannot be done with pure CSS) and **landscape photos dominate** — wider images occupy more area within each row.
 
 #### Rhythm: Vertical Only (No Horizontal Structure)
 
