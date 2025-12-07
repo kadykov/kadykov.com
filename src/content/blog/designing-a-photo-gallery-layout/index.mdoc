@@ -102,7 +102,9 @@ This approach gives you maximum space efficiency and a strong visual rhythm. Bec
 
 Compare this to the `contain` baseline above: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order, but with high contrast and thick gaps it can generate the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of white gaps that make the layout feel mechanical rather than organic.
 
-(See the contain example and the leading-lines illustration above.) With `contain`, images retain their entire composition, but the letterboxing breaks leading lines across the grid; `cover` preserves the visual rhythm by aligning cell content but crops image edges.
+![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
+
+With `contain`, images retain their entire composition, but the letterboxing breaks leading lines across the grid; `cover` preserves the visual rhythm by aligning cell content but crops image edges.
 
 **Center crop** is the naive default, but it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) do better — they analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary go further by detecting subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is a different strategy entirely: an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
 
