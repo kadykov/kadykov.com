@@ -55,19 +55,23 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 ### 3.1 Fixed Aspect Ratio Grids
 
-Imagine building a gallery from a simple grid: each photo sits centered inside a uniform cell. That feels like the obvious place to start — put every image in the same-sized box and let the grid do the work.
+Think of the grid as a set of points: the center of each photo lies in the middle of a cell, equidistant from its neighbors. That tidy arrangement is the simplest mental model for a gallery — each picture’s center sits on a regular grid, and visually we expect order.
 
-But photos come in all shapes. Drop a mix of landscapes and portraits into identical cells and the gaps between images quickly become inconsistent: rows break, leading lines fracture, and the page reads as a patchwork rather than a steady rhythm. The visual result can feel chaotic even when the grid itself is regular.
+Photos, however, arrive in wildly different shapes. If we leave every image intact and place its center on the grid, the cells will end up visually inconsistent because photos have different aspect ratios. You can preserve composition this way — `object-fit: contain` — but it comes at a cost we’ll compare shortly.
 
-Before we decide to crop everything, it’s worth looking at the alternative: keep every photo intact and size it to the cell using `object-fit: contain`. This preserves composition, but it also reveals the pain points — inconsistent gaps and broken leading lines.
+Before we talk about the trade-offs in detail, let’s put the two CSS choices on the table.
+
+#### Cover vs. Contain
+
+**Cover (crop):** Scale the image so it fills the cell, cropping overflow. Keeps the cells uniform and tidy; you lose some of the original composition.
+
+**Contain (fit):** Scale the image to fit entirely inside the cell, preserving the whole photo; the downside is empty space and visual irregularity.
+
+Here is what `contain` looks like in the grid:
 
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
 
-With this approach, leading lines bend and break across rows and columns:
-
-![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
-
-Most galleries reject `contain` for previews because it sacrifices space efficiency and visual rhythm. That brings us to the more common solution: crop everything to a fixed aspect ratio. Below is the typical CSS for that approach.
+Now for the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. Below is the typical CSS for that approach.
 
 ```css
 .gallery {
@@ -92,17 +96,18 @@ All photos have identical dimensions, so vertical gaps align perfectly across ro
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
+
 This perfect alignment creates a strong sense of order — everything feels structured and deliberate. But depending on your design choices, this can go too far. With high contrast between photos and background, and sufficiently thick gaps, this perfect grid can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — viewers perceive phantom dark spots at the intersections of the white gaps. It's a visual quirk that can make the layout feel mechanical rather than organic.
 
-#### Cover vs. Contain
+#### Comparing Cover vs Contain
 
-But here's the catch: most photos don't naturally match your chosen aspect ratio. CSS gives us two broad choices:
+You saw the `contain` example above: it preserves composition, but it also leaves empty space and makes the grid feel irregular. Here’s what that looks like in practice:
 
-**Cover (crop):** Fill the target area completely, cutting off overflow. Maximizes space efficiency and preserves rhythm, but loses content.
+![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
-**Contain (fit):** Show the entire image, accepting empty space. Preserves composition, but breaks rhythm — photos appear at different sizes.
+With `contain`, the image boxes have different visible heights and widths, so the gaps no longer align into continuous leading lines. With `cover`, the cells align perfectly and the leading lines are preserved — but at the cost of cropped content.
 
-You can see the `contain` example just above: it preserves composition, but the gaps and leading lines don't align. For previews, most galleries prefer `cover` so the grid appears tidy — but that choice forces the question: *what* do you crop?
+Most galleries favor `cover` for previews because it keeps the grid tidy. That leaves a new problem: *what* do you crop?
 
 **Center crop** is the naive default, but it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) do better — they analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary go further by detecting subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is a different strategy entirely: an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
 
