@@ -172,8 +172,6 @@ Real implementations use JavaScript to place images left-to-right:
 
 So columns let portrait photos dominate. What if we flip the problem and arrange photos in rows instead? Justified row layouts scale photos so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal. If you want to implement this yourself, Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library is a solid starting point.
 
-(Note: CSS Grid has an experimental [masonry layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout) feature that could eventually handle this without JavaScript, but browser support is very limited as of 2025.)
-
 ![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights vary")
 
 This approach also preserves aspect ratios, but it comes with its own problems. First, it **requires JavaScript** — you can't do this with pure CSS. Second, now **landscape photos dominate** — wider images occupy more area within each row, just like portraits dominated the column layout.
@@ -189,6 +187,8 @@ But photos within each row have different widths, so vertical gaps between photo
 More photos per row means each photo is narrower, reducing width variation. This makes vertical gaps more likely to *nearly* align, improving the sense of horizontal structure — though true horizontal rhythm remains absent.
 
 ![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape in row 1 dominates two portraits in row 2")
+
+One more aside: CSS Grid's experimental masonry layout might eventually let you get a masonry-like arrangement without JavaScript — see https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout. Browser support remains limited in 2025, so treat it as something to watch rather than a production solution.
 
 So we've seen three common approaches, and none of them solve our original problem: giving landscape and portrait photos equal visual weight without cropping. Fixed aspect ratios crop. Columns favor portraits. Justified rows favor landscapes.
 
