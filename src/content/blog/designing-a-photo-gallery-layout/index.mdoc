@@ -55,9 +55,7 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 ### 3.1 Fixed Aspect Ratio Grids
 
-<!-- TODO: Develop prose -->
-
-The simplest approach: force all photos into the same aspect ratio.
+The simplest approach is to force all photos into a single aspect ratio — typically square (1:1), though Instagram's newer portrait ratio (4:5) and traditional film formats (3:2, 4:3) are also common.
 
 ```css
 .gallery {
@@ -74,11 +72,11 @@ The simplest approach: force all photos into the same aspect ratio.
 
 ![Square grid illustration](./assets/square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
 
-**Trade-off:** Maximum space efficiency, strong visual rhythm, but **crops composition**. Photos are forced into a shape they weren't composed for.
+**Trade-off:** Maximum space efficiency and prominent rhythm, but **crops composition**. Photos are forced into a shape they weren't composed for.
 
 #### Rhythm: Perfect in Both Directions
 
-In a fixed aspect ratio grid, all photos have identical dimensions. Vertical gaps align perfectly across rows, forming vertical leading lines that repeat horizontally — strong **horizontal rhythm**. Horizontal gaps align perfectly across columns, forming horizontal leading lines that repeat vertically — strong **vertical rhythm**.
+All photos have identical dimensions, so vertical gaps align perfectly across rows (forming vertical leading lines that repeat horizontally — **horizontal rhythm**), and horizontal gaps align perfectly across columns (forming horizontal leading lines that repeat vertically — **vertical rhythm**).
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
@@ -94,16 +92,15 @@ When photos don't match the target aspect ratio, there are two strategies:
 
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
 
+Cover is standard for galleries. It prioritizes a clean grid over preserving every pixel. Contain defeats the purpose — you get rhythm and equality, but sacrifice space efficiency (empty bars around every non-matching photo).
+
 With contain/fit, leading lines bend and break:
 
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
 Most grids use cover/crop. The question becomes: *what* to crop?
 
-- **Center crop** — naive default, often cuts subjects positioned using rule-of-thirds
-- **Smart crop** — libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) analyze edges, skin tones, and visual weight. No AI required — just clever, computationally cheap heuristics
-- **AI-assisted crop** — services like Cloudinary detect subjects and faces. More accurate, but requires server-side processing
-- **Editorial tight crop** — artistic choice where previews crop dramatically tighter than the full image, creating intrigue
+**Center crop** is the naive default — it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary detect subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
 
 #### The Aspect Ratio Change Problem
 
