@@ -57,15 +57,16 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
-Photos come in many shapes and proportions. Place every photo centered in identical cells and you get inconsistent empty space: portraits tend to leave bars on the left and right, landscapes on the top and bottom. The empty space doesn't align across the grid, which breaks the rhythm.
-
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
+
+Photos come in many shapes and proportions. If you place every photo centered in identical cells, you'll end up with inconsistent empty space: portraits tend to leave bars on the sides, while landscapes leave bars on the top and bottom. The empty space doesn't align across the grid, which breaks the rhythm.
 
 A common baseline is `object-fit: contain`. It shows the full image inside the cell (no cropping); the trade-off is the inconsistent letterboxing described above.
 
-Example (no-crop, `contain`):
+Here’s how you might implement this (no-crop baseline using `object-fit: contain`):
 
 ```css
+/* Baseline — no cropping: full image fits inside the cell */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -75,32 +76,34 @@ Example (no-crop, `contain`):
 .gallery img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: contain; /* show the full photo, with letterboxing */
 }
 ```
 
-That inconsistent empty space is the reason many galleries crop previews: a fixed target ratio (square, 4:5, etc.) keeps cell dimensions uniform and the page visually consistent. Below is the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. The typical CSS for that approach is:
+That inconsistent empty space is the reason many galleries crop previews: a fixed target ratio (square, 4:5, etc.) keeps cell dimensions uniform and the page visually consistent.
 
-```css
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
-}
-
-.gallery img {
-  aspect-ratio: 1 / 1; /* or 4/5, 3/2, etc. */
-  object-fit: cover;
-}
-```
+Here’s what that looks like (cropped previews):
 
 ![Square grid illustration](./assets/square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
 
-This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges stack into vertical guides that repeat across rows, and horizontal edges stack into horizontal guides that repeat across columns. That alignment is what we mean by rhythm — consistent spacing and repeated edges that guide the eye.
+The CSS change is small: keep the same grid declaration, but switch image sizing to a fixed aspect ratio and `object-fit: cover`.
 
-![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
+```css
+/* Keep the same grid (see above) — only change the image rule */
+.gallery img {
+  /* ensure previews match the target aspect ratio */
+  aspect-ratio: 1 / 1; /* or 4/5, 3/2, etc. */
+  object-fit: cover;   /* fills the cell, cropping overflow */
+}
+```
+
+This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges stack into vertical guides that repeat across rows, and horizontal edges stack into horizontal guides that repeat across columns. That repeated pattern is what we mean by rhythm — consistent spacing and repeated edges that guide the eye.
+
+![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
 Compare this to the `contain` baseline above: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order, but with high contrast and thick gaps it can generate the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of white gaps that make the layout feel mechanical rather than organic.
+
+![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
 In practice, galleries choose one of two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
@@ -126,9 +129,12 @@ The lesson: fixed aspect ratios require commitment. Changing them later harms co
 
 ### 3.2 Column Layouts (Pinterest, Unsplash)
 
-Okay, so forcing everything into one aspect ratio requires cropping. What if we don't want to crop? The next simplest option is column layouts: fixed column widths, variable heights. Photos keep their original aspect ratio — nothing gets cut off.
+Baseline — CSS columns. A simple column layout uses fixed column widths and variable image heights. It's a quick way to preserve every photo's aspect ratio without cropping.
+
+Here’s how you can implement it in CSS:
 
 ```css
+/* Baseline: CSS multi-column layout */
 .gallery {
   columns: 3;
   column-gap: 1rem;
@@ -142,7 +148,7 @@ Okay, so forcing everything into one aspect ratio requires cropping. What if we 
 
 ![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
 
-This sounds great — we're preserving aspect ratios and maximizing space usage. But there's a problem: **portrait photos dominate**. They're taller, so they occupy more visual area and naturally draw more attention. A single portrait shot can tower over two landscape photos stacked vertically.
+So what’s the problem? Portrait photos dominate. Taller images occupy more vertical space, drawing more attention than landscape shots nearby. A single portrait tile can visually outweigh two landscapes stacked beside it.
 
 ![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
 
@@ -158,17 +164,18 @@ But photos have different heights, so horizontal gaps between photos occur at di
 
 The result: monotonous vertical stripes. The eye moves smoothly left-to-right (horizontal rhythm), but scanning top-to-bottom feels structureless.
 
+
 #### The Fill Order Problem
 
 Columns preserve aspect ratios and feel less rigid than fixed grids, but they introduce a new problem: fill order. CSS multi-column fills top-to-bottom, then moves to the next column — inherited from text layout.
 
 ![CSS column fill order](./assets/columns-CSS-order.svg "Pure CSS: 1-2 in first column, 3-4 in second, 5-6 in third")
 
-With longer galleries, this becomes problematic. Recent photos (which users want to see first) end up at the bottom of the first column — below the fold:
+With longer galleries, this becomes problematic. Recent photos (which viewers expect to see first) can end up below the fold: the visual sequence becomes confusing.
 
 ![CSS column order with long gallery](./assets/columns-CSS-order-long.svg "With 10 photos, the first row shows 1, 5, 9 — photos 2, 3, 4 are hidden below")
 
-Real implementations use JavaScript to place images left-to-right:
+Fix: JavaScript can reorder the flow to a left-to-right fill order so the first row displays the most recent images as expected.
 
 ![Natural fill order](./assets/columns-natural-order.svg "JavaScript-controlled order: row by row, left to right")
 
