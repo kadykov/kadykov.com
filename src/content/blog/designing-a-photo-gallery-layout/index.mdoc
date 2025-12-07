@@ -80,7 +80,7 @@ All photos have identical dimensions, so vertical gaps align perfectly across ro
 
 ![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
 
-With high contrast between photos and background, and sufficiently thick gaps, this perfect grid can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — viewers perceive phantom dark spots at the intersections of the white gaps.
+This perfect alignment creates a strong sense of order — everything feels structured and deliberate. But depending on your design choices, this can go too far. With high contrast between photos and background, and sufficiently thick gaps, this perfect grid can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — viewers perceive phantom dark spots at the intersections of the white gaps. It's a visual quirk that can make the layout feel mechanical rather than organic.
 
 #### Cover vs. Contain
 
@@ -136,7 +136,11 @@ Okay, so forcing everything into one aspect ratio requires cropping. What if we 
 
 ![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
 
-This sounds great — we're preserving aspect ratios and maximizing space usage. But there's a problem: **portrait photos dominate**. They're taller, so they occupy more visual area and naturally draw more attention. A single portrait shot can tower over two landscape photos stacked vertically. Plus, captions under variable-height images create uneven spacing, which looks messy.
+This sounds great — we're preserving aspect ratios and maximizing space usage. But there's a problem: **portrait photos dominate**. They're taller, so they occupy more visual area and naturally draw more attention. A single portrait shot can tower over two landscape photos stacked vertically.
+
+![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
+
+Plus, captions under variable-height images create uneven spacing, which looks messy.
 
 #### Rhythm: Horizontal Only (Monotonous Vertical Stripes)
 
@@ -162,15 +166,13 @@ Real implementations use JavaScript to place images left-to-right:
 
 ![Natural fill order](./assets/columns-natural-order.svg "JavaScript-controlled order: row by row, left to right")
 
-![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
-
 ---
 
 ### 3.3 Justified Row Layouts (Flickr)
 
-So columns let portrait photos dominate. What if we flip the problem and arrange photos in rows instead? Justified row layouts scale photos so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
+So columns let portrait photos dominate. What if we flip the problem and arrange photos in rows instead? Justified row layouts scale photos so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal. If you want to implement this yourself, Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library is a solid starting point.
 
-Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library takes aspect ratios as input and outputs coordinates and dimensions.
+(Note: CSS Grid has an experimental [masonry layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout) feature that could eventually handle this without JavaScript, but browser support is very limited as of 2025.)
 
 ![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights vary")
 
