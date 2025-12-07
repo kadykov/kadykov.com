@@ -55,25 +55,31 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 ### 3.1 Cell-centered grids
 
-Start simply: put each photo with its geometric center in the middle of a uniform cell. It’s the most obvious grid-based layout — each photo’s center is aligned to the cell center.
+Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
-Photos come in many shapes and proportions. If you place every image inside identical cells without changing the images themselves, some cells will be mostly filled while others leave empty bands or “letterboxing.” This baseline is useful because it shows the intact photos, but it also reveals a practical problem: empty space.
+Photos come in many shapes and proportions. Place every image centered in identical cells and the visible content in each cell changes with the photo's aspect ratio: some images will fill the cell, while others leave empty bars on two sides.
 
-To solve that empty-space problem, CSS gives us two choices:
+If you want to preserve the full image and avoid cropping, CSS offers an option: `object-fit: contain` scales each photo so the full image is visible inside the cell. It preserves composition, but the empty space is inconsistent: portraits and landscapes create different amounts of letterboxing, so the visual spacing varies across the grid.
 
-#### Cover vs. Contain
+Example (no-crop, `contain`):
 
-**Cover (crop):** Scale the image so it fills the cell, cropping overflow. Keeps the cells uniform and tidy; you lose some of the original composition.
+```css
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
 
-**Contain (fit):** Scale the image to fit entirely inside the cell, preserving the whole photo; the downside is empty space and visual irregularity.
-
-In CSS this is usually implemented with the `object-fit` property: `object-fit: cover` (crop) or `object-fit: contain` (fit).
-
-Here is what `contain` looks like in the grid:
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+```
 
 ![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
 
-Now for the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. Below is the typical CSS for that approach.
+That inconsistent empty space is the raison d'être for cropping preview images: a fixed target ratio (square, 4:5, etc.) keeps the grid tidy and tension-free. Below is the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. The typical CSS for that approach is:
 
 ```css
 .gallery {
