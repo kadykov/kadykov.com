@@ -103,9 +103,15 @@ Compare this to the `contain` baseline: letterboxing breaks those lines and the 
 
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
-In practice, there are two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
+Overall, there are two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
-If you choose `cover`, you must then choose a cropping strategy. **Center crop** is the naive default, and it often clips subjects placed off-center. **Smart crop** (e.g., [smartcrop.js](https://github.com/jwagner/smartcrop.js)) uses heuristics like faces, edges, and visual weight to pick safer crops. **AI-assisted** services go further, detecting subjects and recommending crops, at the cost of additional processing. **Editorial tight crop** is a creative choice — dramatic, teaser-like crops that prioritize visual impact over preserving everything.
+If you choose `cover`, you must then choose a cropping strategy. The simplest is **center crop**, the naive default that can be implemented with pure CSS—but it often clips subjects placed off-center, as the center isn't always the most important part of the image.
+
+To improve on this, you can preprocess photos with **smart crop** techniques. For example, [smartcrop.js](https://github.com/jwagner/smartcrop.js) uses heuristics like faces, edges, and visual weight to select safer crops without any AI involvement.
+
+If you're willing to go further, **AI-assisted services** can detect subjects more accurately and recommend crops, though this adds processing overhead.
+
+For the most creative approach, opt for **editorial tight crop**—manually crafting dramatic, teaser-like crops that prioritize visual impact over preserving the full image. This requires the most human judgment and effort, turning cropping into an art form in itself. Note that this method is better suited to editorial galleries, where curated emphasis guides the narrative, rather than navigational galleries that prioritize equal presentation.
 
 Ultimately, the choice is between preserving full images with inconsistent spacing or cropping for a tidy grid. Summary: `contain` → full images, inconsistent spacing, broken leading lines. `cover` → tidy, rhythmic grid, but cropped content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
 
@@ -273,7 +279,7 @@ The border has two layers:
 
 Without the inner border, light parts of photos blend into the white frame. The thin separator makes the boundary clear, even when both are technically "white" (but different color temperatures).
 
-![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo_gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
+![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
 
 The thin inner border has minimal impact on the overall white-frame aesthetic, but prevents the visual confusion where image and border merge.
 
@@ -315,7 +321,7 @@ In this example, one cell is trapped in the middle (surrounded by spans), and fi
 
 Here's the layout in practice:
 
-![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo_gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
+![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
 
 You can explore the full gallery at [kadykov.com/photos](/photos).
 
