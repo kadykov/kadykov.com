@@ -55,7 +55,7 @@ The two connect: repeated leading lines create rhythm. Vertical lines repeated h
 
 ### 3.1 Fixed Aspect Ratio Grids
 
-The simplest approach is to force all photos into a single aspect ratio — typically square (1:1), though Instagram's newer portrait ratio (4:5) and traditional film formats (3:2, 4:3) are also common.
+So how do we actually build a gallery? Let's start with the simplest approach: force all photos into a single aspect ratio. This is the strategy behind Instagram's square feed and many other platforms — pick one target ratio (typically square 1:1, though portrait 4:5 and traditional film formats like 3:2 or 4:3 are also common) and make every photo fit.
 
 ```css
 .gallery {
@@ -72,7 +72,7 @@ The simplest approach is to force all photos into a single aspect ratio — typi
 
 ![Square grid illustration](./assets/square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
 
-**Trade-off:** Maximum space efficiency and prominent rhythm, but **crops composition**. Photos are forced into a shape they weren't composed for.
+This gives you maximum space efficiency and prominent visual rhythm. The catch? It **crops composition** — you're forcing every photo into a shape it wasn't composed for. That landscape you carefully framed at 3:2 gets its edges sliced off to fit the square.
 
 #### Rhythm: Perfect in Both Directions
 
@@ -84,7 +84,7 @@ With high contrast between photos and background, and sufficiently thick gaps, t
 
 #### Cover vs. Contain
 
-When photos don't match the target aspect ratio, there are two strategies:
+But here's the catch: most photos don't naturally match your chosen aspect ratio. So what do you do when a 3:2 landscape needs to fit into a square? CSS gives you two options:
 
 **Cover (crop):** Fill the target area completely, cutting off overflow. Maximizes space efficiency and preserves rhythm, but loses content.
 
@@ -98,17 +98,17 @@ With contain/fit, leading lines bend and break:
 
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
-Most grids use cover/crop. The question becomes: *what* to crop?
+So contain doesn't really work for galleries. Most implementations use cover/crop instead — but now we have a new problem: *what* to crop?
 
-**Center crop** is the naive default — it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary detect subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
+**Center crop** is the naive default, but it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) do better — they analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary go further by detecting subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is a different strategy entirely: an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
 
 #### The Aspect Ratio Change Problem
 
-Choosing a fixed aspect ratio means committing to it. Changing later breaks existing content.
+But here's something worse than choosing how to crop: changing your mind later. Once you pick a fixed aspect ratio, you're stuck with it. Why? Because changing it breaks all your existing content.
 
-Instagram originally enforced square previews — a neutral choice that worked on both mobile and desktop. In early 2025, they shifted to portrait-oriented rectangles. For a mobile-first platform, this makes sense.
+Instagram learned this the hard way. They originally enforced square previews — a neutral choice that worked on both mobile and desktop. In early 2025, they shifted to portrait-oriented rectangles, which makes sense for a mobile-first platform.
 
-But for existing content, this was destructive. Photos composed for square display were suddenly cropped differently. Subjects intentionally placed at edges — visible in square previews — were cut off.
+But the change was destructive. Photos that were composed for square display suddenly got cropped differently. Subjects intentionally placed at edges — perfectly visible in the old square previews — were now cut off.
 
 ![Instagram — original square previews](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram's original square grid")
 
@@ -120,7 +120,7 @@ The lesson: fixed aspect ratios require commitment. Changing them later harms co
 
 ### 3.2 Column Layouts (Pinterest, Unsplash)
 
-Column layouts use fixed column widths with variable heights. Photos keep their original aspect ratio — no cropping.
+Okay, so forcing everything into one aspect ratio requires cropping. What if we don't want to crop? The next simplest option is column layouts: fixed column widths, variable heights. Photos keep their original aspect ratio — nothing gets cut off.
 
 ```css
 .gallery {
@@ -136,11 +136,11 @@ Column layouts use fixed column widths with variable heights. Photos keep their 
 
 ![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
 
-**Trade-off:** Preserves aspect ratio and maximizes space usage, but **portrait photos dominate** — taller images occupy more area, drawing more attention. Captions under variable-height images also create uneven spacing.
+This sounds great — we're preserving aspect ratios and maximizing space usage. But there's a problem: **portrait photos dominate**. They're taller, so they occupy more visual area and naturally draw more attention. A single portrait shot can tower over two landscape photos stacked vertically. Plus, captions under variable-height images create uneven spacing, which looks messy.
 
 #### Rhythm: Horizontal Only (Monotonous Vertical Stripes)
 
-Columns have equal widths, so the vertical gaps between them align perfectly — forming strong **vertical leading lines**. These vertical lines repeat horizontally, creating **horizontal rhythm**.
+What about visual rhythm? Columns have equal widths, so the vertical gaps between them align perfectly — forming strong **vertical leading lines**. These vertical lines repeat horizontally, creating **horizontal rhythm**.
 
 But photos have different heights, so horizontal gaps between photos occur at different vertical positions in each column. These gaps don't align across columns — no horizontal leading lines form, so there's **no vertical rhythm**.
 
@@ -150,7 +150,7 @@ The result: monotonous vertical stripes. The eye moves smoothly left-to-right (h
 
 #### The Fill Order Problem
 
-CSS multi-column fills top-to-bottom, then moves to the next column — inherited from text layout.
+Columns preserve aspect ratios and feel less rigid than fixed grids, but they introduce a new problem: fill order. CSS multi-column fills top-to-bottom, then moves to the next column — inherited from text layout.
 
 ![CSS column fill order](./assets/columns-CSS-order.svg "Pure CSS: 1-2 in first column, 3-4 in second, 5-6 in third")
 
@@ -168,17 +168,17 @@ Real implementations use JavaScript to place images left-to-right:
 
 ### 3.3 Justified Row Layouts (Flickr)
 
-Justified row layouts arrange photos in rows, scaling them so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
+So columns let portrait photos dominate. What if we flip the problem and arrange photos in rows instead? Justified row layouts scale photos so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal.
 
 Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library takes aspect ratios as input and outputs coordinates and dimensions.
 
 ![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights vary")
 
-**Trade-off:** Preserves aspect ratio, but **requires JavaScript** (cannot be done with pure CSS) and **landscape photos dominate** — wider images occupy more area within each row.
+This approach also preserves aspect ratios, but it comes with its own problems. First, it **requires JavaScript** — you can't do this with pure CSS. Second, now **landscape photos dominate** — wider images occupy more area within each row, just like portraits dominated the column layout.
 
 #### Rhythm: Vertical Only (No Horizontal Structure)
 
-Rows span the full width, so the horizontal gaps between rows align perfectly — forming strong **horizontal leading lines**. These horizontal lines repeat vertically, creating **vertical rhythm**.
+What about rhythm? Rows span the full width, so the horizontal gaps between rows align perfectly — forming strong **horizontal leading lines**. These horizontal lines repeat vertically, creating **vertical rhythm**.
 
 But photos within each row have different widths, so vertical gaps between photos occur at different horizontal positions. These gaps don't align across rows — no vertical leading lines form, so there's **no horizontal rhythm**.
 
@@ -187,6 +187,10 @@ But photos within each row have different widths, so vertical gaps between photo
 More photos per row means each photo is narrower, reducing width variation. This makes vertical gaps more likely to *nearly* align, improving the sense of horizontal structure — though true horizontal rhythm remains absent.
 
 ![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape in row 1 dominates two portraits in row 2")
+
+So we've seen three common approaches, and none of them solve our original problem: giving landscape and portrait photos equal visual weight without cropping. Fixed aspect ratios crop. Columns favor portraits. Justified rows favor landscapes.
+
+What if we tried something different?
 
 ---
 
