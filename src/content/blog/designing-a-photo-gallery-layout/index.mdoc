@@ -79,8 +79,6 @@ Example (no-crop, `contain`):
 }
 ```
 
- 
-
 That inconsistent empty space is the reason many galleries crop previews: a fixed target ratio (square, 4:5, etc.) keeps cell dimensions uniform and the page visually consistent. Below is the more common strategy: crop everything to a fixed aspect ratio so every cell looks identical. The typical CSS for that approach is:
 
 ```css
@@ -100,19 +98,19 @@ That inconsistent empty space is the reason many galleries crop previews: a fixe
 
 This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges stack into vertical guides that repeat across rows, and horizontal edges stack into horizontal guides that repeat across columns. That alignment is what we mean by rhythm — consistent spacing and repeated edges that guide the eye.
 
-Compare this to the `contain` baseline above: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order, but with high contrast and thick gaps it can generate the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of white gaps that make the layout feel mechanical rather than organic.
-
 ![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
 
-With `contain`, images retain their entire composition, but the letterboxing breaks leading lines across the grid; `cover` preserves the visual rhythm by aligning cell content but crops image edges.
+Compare this to the `contain` baseline above: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order, but with high contrast and thick gaps it can generate the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of white gaps that make the layout feel mechanical rather than organic.
 
-**Center crop** is the naive default, but it often cuts subjects positioned using rule-of-thirds. **Smart crop** libraries like [smartcrop.js](https://github.com/jwagner/smartcrop.js) do better — they analyze edges, skin tones, and visual weight using computationally cheap heuristics (no AI required). **AI-assisted crop** services like Cloudinary go further by detecting subjects and faces — more accurate, but requires server-side processing. **Editorial tight crop** is a different strategy entirely: an artistic choice where previews crop dramatically tighter than the full image, creating intrigue.
+In practice, galleries choose one of two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
-In short: one option preserves every photo (`contain`) but introduces inconsistent empty space and broken leading lines; the other (`cover`) makes the grid tidy at the cost of cropping image content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
+When teams pick `cover`, they must then choose a cropping strategy. **Center crop** is the naive default, and it often clips subjects placed off-center. **Smart crop** (e.g., [smartcrop.js](https://github.com/jwagner/smartcrop.js)) uses heuristics like faces, edges, and visual weight to pick safer crops. **AI-assisted** services go further, detecting subjects and recommending crops, at the cost of additional processing. **Editorial tight crop** is a creative choice — dramatic, teaser-like crops that prioritize visual impact over preserving everything.
+
+Summary: `contain` → full images, inconsistent spacing, broken leading lines. `cover` → tidy, rhythmic grid, but cropped content. If you want equal visual weight between orientations without cropping, the next section describes an alternative approach.
 
 #### The Aspect Ratio Change Problem
 
-But here's something worse than choosing how to crop: changing your mind later. Once you pick a fixed aspect ratio, you're stuck with it. Why? Because changing it breaks all your existing content.
+There's a practical downside to accepting `cover`: once you pick a fixed aspect ratio and crop your previews, you're committed. Changing it later breaks content that was composed for the original ratio.
 
 Instagram learned this the hard way. They originally enforced square previews — a neutral choice that worked on both mobile and desktop. In early 2025, they shifted to portrait-oriented rectangles, which makes sense for a mobile-first platform.
 
