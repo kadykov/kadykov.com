@@ -215,7 +215,7 @@ Each photo is assigned a calculated number of grid cells based on its orientatio
 - **Square:** 2 rows × 2 columns (area = 4 cells)
 - **Portrait:** 3 rows × 2 columns (area = 6 cells)
 
-This way, portrait and landscape photos occupy comparable visual space, while squares appear slightly smaller—a subtle nod to how square crops are usually obtained. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection's characteristics, or even add more categories, like panorama, if needed.
+This way, portrait and landscape photos occupy comparable visual space, while squares appear slightly smaller—a subtle nod to how square crops are usually obtained. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection's characteristics, or even add more categories, like panorama or very tall portrait, if needed.
 
 ![Cell-span layout result](./assets/cell-span.svg "Landscape and portrait photos occupy similar visual area")
 
@@ -262,24 +262,57 @@ At the same time, if the number of wasted cells is not too high, cell-span layou
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
+<!-- We need to think how to organize the structure of these sections, since they are not directly related to the general cell-span layout, but to our implementation details -->
 ### 4.1 Polaroid Borders: Fitting to Target Ratios
 
-But can we optimize the wasted space?
+Previously we talked about cell-span layout in general, but now let's discuss our specific implementation.
 
 Real photos rarely match target ratios exactly. A landscape might be 16:9 (too wide) or 4:3 (between landscape and square).
 
-The Polaroid-style border isn't just decorative — it adjusts effective aspect ratios.
+So, we thought how we can optimize the wasted space, and we realized that adding Polaroid-style borders around each photo can help.
 
-**Border placement nudges photos toward their nearest target:**
+Of course, the primary purpose of these borders is to provide space for captioning, but they also serve a crucial role in adjusting the effective aspect ratios of the photos.
 
+The Polaroid-style border isn't just decorative — it adjusts effective aspect ratios. Border placement nudges photos toward their nearest target ratio:
+
+<!-- Rewrite as prose and integrate in the neighboring text. Or at least rewrite it in a human-readable way -->
 - Very wide landscape (16:9) → thick border on bottom → appears less wide, closer to 3:2
 - Landscape between square and target (4:3) → thick border on side → appears more landscape
 
+And the same applies to portraits and squares. By placing borders strategically, we can shift the overall aspect ratio of each photo closer to its target, reducing wasted space.
+
 ![Polaroid borders adjusting aspect ratios](./assets/borders.svg "Border placement shifts photos toward target aspect ratios — compare with the grid overlay above")
 
-**Customization:** Target ratios can be adjusted for your collection. If you shoot panoramas frequently, shift the landscape target wider.
+The nerd readers could argue that Polaroid borders shift the aspect ratio of all photos, even those that already match targets. This is true, but since these photos are in minority, but the other photos aspect ratios are adjusted closer to targets, the overall wasted space decreases.
 
-**Implementation:** This could use JavaScript to optimize per device. But our approach determines placement server-side — the gallery renders with pure CSS, no layout JavaScript.
+#### The Off-White borders
+
+<!-- This is just pasted from CSS comments, need to be rewritten and adapted -->
+
+ * 2. White Balance Reference Point
+ *    The fixed off-white border provides a consistent white balance reference
+ *    for the viewer's eye. When viewing photos:
+ *    
+ *    a) Under non-ideal ambient lighting (warm/cool room lighting):
+ *       - Both the photo and border will be affected by the same color cast
+ *       - The human visual system will use the "white" border as a reference
+ *       - This recalibrates perception, making the photo colors appear more accurate
+ *    
+ *    b) On displays with incorrect white balance:
+ *       - The entire image + border shifts together
+ *       - The viewer's eye adapts using the border as the "white" anchor
+ *       - This compensates for display calibration issues
+ * 
+ * 3. Perceptual Contrast Boost
+ *    The border uses 90-95% white instead of pure 100% white. Combined with
+ *    the deliberately darker, desaturated background (see data-page-type
+ *    overrides above), this creates a perceptual contrast enhancement:
+ *    
+ *    - The viewer's eye perceives the border as "pure white" in context
+ *    - Any 100% white elements in the photo itself appear even brighter
+ *    - This increases the perceived dynamic range of the photos
+ *    - Black elements appear deeper against the bright border
+ * 
 
 #### The Double Border
 
@@ -296,10 +329,13 @@ The thin inner border has minimal impact on the overall white-frame aesthetic, b
 
 **Additional benefits:**
 
+<!-- Do we need it here, as we have already discussed this in the Off-White borders section? -->
+
 - Off-white border provides a **white-balance reference** for the eye
 - Against darker backgrounds, the border **boosts perceived dynamic range**
 - Borders are CSS, not baked into files — better compression, no JPEG artifacts
 
+<!-- Should it be here, or move it to the general cell-based section where we talk about the rhythm and spacing? It could fit there better as an option to break the mechanical feel even more -->
 ### 4.4 Breaking the Mechanical Feel
 
 Gaps create rhythm. Strong gaps create strong leading lines.
@@ -308,7 +344,7 @@ For a more organic feel, we **slightly rotate each photo** using a normal distri
 
 ![Cell-span layout with tilted photos](./assets/cell-span-tilted.svg "Slight random rotation breaks the rigid grid feel")
 
-Compare with the non-tilted version — the tilted layout feels less mechanical, more like photos pinned to a corkboard.
+Compare with the non-tilted version — the tilted layout feels less mechanical, and more playful.
 
 ---
 
