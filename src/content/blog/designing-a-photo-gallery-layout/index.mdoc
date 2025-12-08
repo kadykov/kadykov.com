@@ -201,31 +201,27 @@ So, like the other approaches we've seen, justified rows trade one bias for anot
 
 ---
 
-## 4. The Cell-Span Solution
+## 4. The Cell-Span Layout
 
-<!-- TODO: Develop prose -->
+One of the key goals for navigational galleries is to give all photos—regardless of orientation—equal visual weight, without cropping, and ideally without relying on client-side JavaScript.
 
-**Goal:** Equal visual weight for all orientations, no cropping, no JavaScript layout.
+The cell-span layout is an approach designed to strike that balance.
 
-### 4.1 The Core Idea: Equal Area Through Different Spans
+Conceptually, it’s similar to the contain/fit method: we don’t crop images. But instead of forcing every photo into a single target aspect ratio (which inevitably favors some shapes over others), we define **three targets**: landscape, square, and portrait.
 
-Our approach is conceptually similar to contain/fit — we don't crop. But instead of fitting all photos to one target aspect ratio (privileging only matching photos), we define **three targets**: landscape, square, portrait.
-
-Each photo spans a calculated number of grid cells based on orientation:
+Each photo is assigned a calculated number of grid cells based on its orientation:
 
 - **Landscape:** 2 rows × 3 columns (area = 6 cells)
 - **Square:** 2 rows × 2 columns (area = 4 cells)
 - **Portrait:** 3 rows × 2 columns (area = 6 cells)
 
-This normalizes **occupied area**, not dimensions. Portrait and landscape photos feel comparable in visual presence. Squares appear slightly smaller — which matches how we typically obtain them (via cropping).
+This way, portrait and landscape photos occupy comparable visual space, while squares appear slightly smaller—a subtle nod to how square crops are usually obtained. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection's characteristics, or even add more categories, like panorama, if needed.
 
 ![Cell-span layout result](./assets/cell-span.svg "Landscape and portrait photos occupy similar visual area")
 
-The photos appear almost randomly placed — no rigid grid lines visible. This is intentional: the layout feels like photos pinned to a wall, not a spreadsheet.
+At first glance, the photos seem almost randomly placed—there are no rigid grid lines. The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
 
-### 4.2 The Underlying Grid
-
-There *is* an underlying grid. Each photo is placed within cells matching its orientation:
+Yet, beneath the surface, there’s a structured grid. Each photo is positioned within cells that match its orientation:
 
 ![Cell-span layout with grid overlay](./assets/cell-span-grid.svg "The hidden grid — portraits span 3×2, landscapes span 2×3, squares span 2×2")
 
@@ -241,7 +237,34 @@ There *is* an underlying grid. Each photo is placed within cells matching its or
 .portrait  { grid-row: span 3; grid-column: span 2; }
 ```
 
-### 4.3 Polaroid Borders: Fitting to Target Ratios
+A practical consideration: you need to know each photo’s orientation in advance to assign the correct CSS class. This can be done with JavaScript on the client, but if you want to avoid layout JS entirely, you can determine orientation server-side during rendering.
+
+What about visual rhythm? Unlike strict cell-based grids, the cell-span layout doesn’t produce strong, continuous leading lines—gaps don’t always align. However, the underlying grid still imparts a subtle bidirectional rhythm. Because photos span multiple cells and gaps don’t consistently line up, the result feels less mechanical and more organic.
+
+### Wasted Space
+
+Why isn’t this layout more common? The answer is simple: it sacrifices **space efficiency** for **equal presentation**.
+
+Consider a viewport that fits 5 columns of cells. When the number of columns doesn’t evenly accommodate photo widths, gaps appear:
+
+- **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty column on the side.
+- **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
+- **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
+
+But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space.
+In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused in the corners. This is the price of equal visual weight without cropping.
+
+![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with crosses — some cells get trapped between spans")
+
+However, the wasted space here feels less jarring than in the contain/fit layout. The gaps are consistent and rhythmic—they seem intentional, part of the design. Because there are no strong leading lines, the empty cells don’t disrupt the overall flow.
+
+At the same time, if the number of wasted cells is not too high, cell-span layout is more space-efficient than the contain/fit approach, since more photos match the target aspect ratios more closely.
+
+With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
+
+### 4.1 Polaroid Borders: Fitting to Target Ratios
+
+But can we optimize the wasted space?
 
 Real photos rarely match target ratios exactly. A landscape might be 16:9 (too wide) or 4:3 (between landscape and square).
 
@@ -286,22 +309,6 @@ For a more organic feel, we **slightly rotate each photo** using a normal distri
 ![Cell-span layout with tilted photos](./assets/cell-span-tilted.svg "Slight random rotation breaks the rigid grid feel")
 
 Compare with the non-tilted version — the tilted layout feels less mechanical, more like photos pinned to a corkboard.
-
-### 4.5 The Trade-off: Wasted Space
-
-This layout sacrifices **space efficiency** for **equal presentation**.
-
-When the viewport's column count doesn't evenly accommodate photo widths, gaps appear:
-
-- **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty.
-- **4 columns:** Landscape (3) leaves 1 empty.
-- **3 columns:** Portrait (2) leaves 1 empty.
-
-![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with crosses — some cells get trapped between spans")
-
-In this example, one cell is trapped in the middle (surrounded by spans), and five cells in the corner remain unused. This is the price of equal visual weight without cropping.
-
-If in the case of previous layouts you could adjust the wasted space by changing gap size or aspect ratio, here the wasted space is inherent to the cell-span strategy.
 
 ---
 
