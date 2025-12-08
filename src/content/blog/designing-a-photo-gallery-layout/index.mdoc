@@ -177,31 +177,27 @@ In short: the columns layout preserves full images and feels organic. Portrait d
  
 ---
 
-### 3.3 Justified Row Layouts (Flickr)
+### 3.3 Justified Row Layouts
 
-So columns let portrait photos dominate. What if we flip the problem and arrange photos in rows instead? Justified row layouts scale photos so each row spans the full width. A JavaScript library determines how many photos fit per row to keep row heights roughly equal. If you want to implement this yourself, Flickr's open-source [justified-layout](https://github.com/flickr/justified-layout) library is a solid starting point.
+If columns let portrait photos dominate, a justified row layout leans the other way: photos in each row share the same height, and the row is scaled so its contents span the full container width. In practice this means every photo keeps its aspect ratio, but widths vary so the row fills the line.
 
-![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights vary")
+![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights and number of photos per row vary")
 
-This approach also preserves aspect ratios, but it comes with its own problems. First, it **requires JavaScript** — you can't do this with pure CSS. Second, now **landscape photos dominate** — wider images occupy more area within each row, just like portraits dominated the column layout.
+Because width maps directly to area in this scheme, wide images tend to dominate. A single landscape or panorama can occupy as much visual weight as several portraits combined — the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
-#### Rhythm: Vertical Only (No Horizontal Structure)
+![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape takes more space than two portraits combined")
 
-What about rhythm? Rows span the full width, so the horizontal gaps between rows align perfectly — forming strong **horizontal leading lines**. These horizontal lines repeat vertically, creating **vertical rhythm**.
+That dominance shapes the layout's rhythm. Justified rows create strong horizontal leading lines: the aligned gaps between rows repeat across the page, producing a unidirectional rhythm. When most of your collection is landscape-oriented, this layout can actually reinforce the work rather than fight it.
 
-But photos within each row have different widths, so vertical gaps between photos occur at different horizontal positions. These gaps don't align across rows — no vertical leading lines form, so there's **no horizontal rhythm**.
+![Justified layout with leading lines](./assets/justified-leading-lines.svg "Strong horizontal leading lines from aligned row gaps")
 
-![Justified layout with leading lines](./assets/justified-leading-lines.svg "Horizontal leading lines are strong — vertical gaps don't align across rows")
+However, the rhythm is softer than in strict column layouts because row heights change with their contents. Narrower viewports fit fewer photos per row, so row heights vary more and the pattern reads less mechanical. This variation can make the layout feel more organic even while preserving aspect ratios.
 
-More photos per row means each photo is narrower, reducing width variation. This makes vertical gaps more likely to *nearly* align, improving the sense of horizontal structure — though true horizontal rhythm remains absent.
+A practical downside: justified rows require JavaScript, because you need to measure image dimensions and compute scale factors so each row fills the container while keeping consistent heights. If you want a ready-made solution, [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point.
 
-![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape in row 1 dominates two portraits in row 2")
+As a side note, CSS Grid's [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) may one day provide similar, more automatic arrangements without JS, but [browser support remains limited](https://caniuse.com/?search=masonry) as of late 2025.
 
-One more aside: CSS Grid's experimental masonry layout might eventually let you get a masonry-like arrangement without JavaScript — see https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout. Browser support remains limited in 2025, so treat it as something to watch rather than a production solution.
-
-So we've seen three common approaches, and none of them solve our original problem: giving landscape and portrait photos equal visual weight without cropping. Fixed aspect ratios crop. Columns favor portraits. Justified rows favor landscapes.
-
-What if we tried something different?
+So, like the other approaches we've seen, justified rows trade one bias for another — they favor wide formats while preserving compositions. What if we tried something different?
 
 ---
 
@@ -304,6 +300,8 @@ When the viewport's column count doesn't evenly accommodate photo widths, gaps a
 ![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with crosses — some cells get trapped between spans")
 
 In this example, one cell is trapped in the middle (surrounded by spans), and five cells in the corner remain unused. This is the price of equal visual weight without cropping.
+
+If in the case of previous layouts you could adjust the wasted space by changing gap size or aspect ratio, here the wasted space is inherent to the cell-span strategy.
 
 ---
 
