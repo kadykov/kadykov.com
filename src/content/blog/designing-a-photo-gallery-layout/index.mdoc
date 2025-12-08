@@ -129,11 +129,13 @@ Ultimately, the choice boils down to preserving full images with inconsistent sp
 
 ---
 
-### 3.2 Column Layouts (Pinterest, Unsplash)
+### 3.2 Column Layouts
 
-Baseline — CSS columns. A simple column layout uses fixed column widths and variable image heights. It's a quick way to preserve every photo's aspect ratio without cropping.
+If you want to preserve every photo's full composition without cropping and use the space efficiently, CSS columns layout is one of the options. It uses fixed column widths so images keep their intrinsic aspect ratios while the columns create vertical stacks.
 
-Here’s how you can implement it in CSS:
+![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
+
+Here's a minimal implementation:
 
 ```css
 /* Baseline: CSS multi-column layout */
@@ -148,39 +150,31 @@ Here’s how you can implement it in CSS:
 }
 ```
 
-![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
+Columns layout is attractive because it preserves composition, has minimal wasted space, and feels less rigid than strict cells. It, however, has a few practical implications you should be aware of when choosing a gallery strategy:
 
-So what’s the problem? Portrait photos dominate. Taller images occupy more vertical space, drawing more attention than landscape shots nearby. A single portrait tile can visually outweigh two landscapes stacked beside it.
+1) Portraits dominate visually.  
+Taller images occupy more vertical space than wide ones, so a single portrait can outweigh two landscapes beside it. That imbalance makes portrait-heavy collections read as visually dominant.
 
-![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots visually dominate")
+![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots on the sides visually dominate the landscapes in the center column")
 
-Plus, captions under variable-height images create uneven spacing, which looks messy.
-
-#### Rhythm: Horizontal Only (Monotonous Vertical Stripes)
-
-What about visual rhythm? Columns have equal widths, so the vertical gaps between them align perfectly — forming strong **vertical leading lines**. These vertical lines repeat horizontally, creating **horizontal rhythm**.
-
-But photos have different heights, so horizontal gaps between photos occur at different vertical positions in each column. These gaps don't align across columns — no horizontal leading lines form, so there's **no vertical rhythm**.
+2) Rhythm is directional.  
+Consistent column widths produce strong vertical leading lines repeated horizontally. That directional rhythm is not inherently a flaw — it is a characteristic you can lean into or soften by adjusting the gap size. For galleries that prioritize portraits, the unidirectional rhythm can be an asset: it reinforces the prominence of tall images and helps guide the eye down columns.
 
 ![Column layout with leading lines](./assets/columns-leading-lines.svg "Vertical leading lines are strong — horizontal gaps are scattered, forming no lines")
 
-The result: monotonous vertical stripes. The eye moves smoothly left-to-right (horizontal rhythm), but scanning top-to-bottom feels structureless.
+3) Fill order is counterintuitive.  
+By default multi-column layout fills top-to-bottom, then left-to-right (like text). For long galleries this can hide recently added photos below the fold — viewers often expect the newest items to appear first across the top row, not stacked down the first column.
 
+![CSS column fill order](./assets/columns-CSS-order.svg "Filling inherited from text: complete the first column before moving to the next one")
 
-#### The Fill Order Problem
+![CSS column order with long gallery](./assets/columns-CSS-order-long.svg "CSS-only filling hides photos 3-4 and 7-8 below the fold")
 
-Columns preserve aspect ratios and feel less rigid than fixed grids, but they introduce a new problem: fill order. CSS multi-column fills top-to-bottom, then moves to the next column — inherited from text layout.
+Fixing the fill order requires JavaScript: reorder or position items so the layout fills left-to-right row by row instead of the browser's default text-like flow.
 
-![CSS column fill order](./assets/columns-CSS-order.svg "Pure CSS: 1-2 in first column, 3-4 in second, 5-6 in third")
+![Natural fill order](./assets/columns-natural-order.svg "Natural fill order: left-to-right, top-to-bottom, requires JS to implement")
 
-With longer galleries, this becomes problematic. Recent photos (which viewers expect to see first) can end up below the fold: the visual sequence becomes confusing.
-
-![CSS column order with long gallery](./assets/columns-CSS-order-long.svg "With 10 photos, the first row shows 1, 5, 9 — photos 2, 3, 4 are hidden below")
-
-Fix: JavaScript can reorder the flow to a left-to-right fill order so the first row displays the most recent images as expected.
-
-![Natural fill order](./assets/columns-natural-order.svg "JavaScript-controlled order: row by row, left to right")
-
+In short: the columns layout preserves full images and feels organic. Portrait dominance and a pronounced directional rhythm are natural outcomes — not defects — and can be used deliberately (or tuned via gap size and composition choices). The fill-order quirk is the main practical downside to address if you want a traditional left‑to‑right browsing sequence.
+ 
 ---
 
 ### 3.3 Justified Row Layouts (Flickr)
