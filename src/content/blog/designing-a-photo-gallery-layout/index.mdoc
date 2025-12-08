@@ -262,89 +262,52 @@ At the same time, if the number of wasted cells is not too high, cell-span layou
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
-<!-- We need to think how to organize the structure of these sections, since they are not directly related to the general cell-span layout, but to our implementation details -->
-### 4.1 Polaroid Borders: Fitting to Target Ratios
+### 4.1 Polaroid Borders: Adjusting Aspect Ratios
 
-Previously we talked about cell-span layout in general, but now let's discuss our specific implementation.
+So far we've discussed the cell-span layout in general terms. Now let's turn to the specific implementation details of our gallery—particularly how **Polaroid-style borders** help optimize the layout.
 
-Real photos rarely match target ratios exactly. A landscape might be 16:9 (too wide) or 4:3 (between landscape and square).
+Real photographs rarely match target aspect ratios exactly. A landscape shot might be 16:9 (much wider than our 3:2 target) or 4:3 (falling between landscape and square). These mismatches contribute to wasted space within grid cells.
 
-So, we thought how we can optimize the wasted space, and we realized that adding Polaroid-style borders around each photo can help.
+Polaroid borders solve two problems at once. Their primary purpose is to provide space for captions, but they also serve a structural role: **strategically placed borders nudge photos toward their nearest target ratio**.
 
-Of course, the primary purpose of these borders is to provide space for captioning, but they also serve a crucial role in adjusting the effective aspect ratios of the photos.
+Here's the logic: for each photo, we decide whether to place the thicker Polaroid border on the side or bottom. For panorama-like landscapes (16:9 or wider), we place it on the bottom to make the overall frame more "squarish"—closer to the 3:2 target. For less extreme landscapes (4:3), we add the thicker border to the side to stretch it wider toward 3:2. The same logic applies to square and portrait photos: borders are positioned to minimize the gap between actual and target ratios.
 
-The Polaroid-style border isn't just decorative — it adjusts effective aspect ratios. Border placement nudges photos toward their nearest target ratio:
-
-<!-- Rewrite as prose and integrate in the neighboring text. Or at least rewrite it in a human-readable way -->
-- Very wide landscape (16:9) → thick border on bottom → appears less wide, closer to 3:2
-- Landscape between square and target (4:3) → thick border on side → appears more landscape
-
-And the same applies to portraits and squares. By placing borders strategically, we can shift the overall aspect ratio of each photo closer to its target, reducing wasted space.
+By placing borders asymmetrically based on each photo's aspect ratio, we shift the overall visual proportions closer to grid targets. This doesn't reduce the number of trapped or unused cells—that's inherent to the cell-span approach—but it does reduce the amount of wasted space *within* the cells that photos occupy.
 
 ![Polaroid borders adjusting aspect ratios](./assets/borders.svg "Border placement shifts photos toward target aspect ratios — compare with the grid overlay above")
 
-The nerd readers could argue that Polaroid borders shift the aspect ratio of all photos, even those that already match targets. This is true, but since these photos are in minority, but the other photos aspect ratios are adjusted closer to targets, the overall wasted space decreases.
+You might note that borders shift the aspect ratio of *all* photos, including those that already match targets. This is true. However, since perfectly matched photos are in the minority, the net effect is positive: overall wasted space decreases.
 
-#### The Off-White borders
+#### Off-White Borders and White Balance
 
-<!-- This is just pasted from CSS comments, need to be rewritten and adapted -->
+Look closely at the Polaroid borders and you might notice something subtle: they're not pure white. Instead, they're set to a light off-white—around 90–95% white. This choice serves multiple perceptual purposes.
 
- * 2. White Balance Reference Point
- *    The fixed off-white border provides a consistent white balance reference
- *    for the viewer's eye. When viewing photos:
- *    
- *    a) Under non-ideal ambient lighting (warm/cool room lighting):
- *       - Both the photo and border will be affected by the same color cast
- *       - The human visual system will use the "white" border as a reference
- *       - This recalibrates perception, making the photo colors appear more accurate
- *    
- *    b) On displays with incorrect white balance:
- *       - The entire image + border shifts together
- *       - The viewer's eye adapts using the border as the "white" anchor
- *       - This compensates for display calibration issues
- * 
- * 3. Perceptual Contrast Boost
- *    The border uses 90-95% white instead of pure 100% white. Combined with
- *    the deliberately darker, desaturated background (see data-page-type
- *    overrides above), this creates a perceptual contrast enhancement:
- *    
- *    - The viewer's eye perceives the border as "pure white" in context
- *    - Any 100% white elements in the photo itself appear even brighter
- *    - This increases the perceived dynamic range of the photos
- *    - Black elements appear deeper against the bright border
- * 
+First, the border acts as a **white balance reference point**. When viewing photos under non-ideal lighting—warm incandescent bulbs, cool fluorescent lights, or miscalibrated displays—both the photo and border shift color together. The human visual system uses the "white" border as an anchor and recalibrates perception accordingly. This helps photo colors appear more accurate despite environmental color casts.
 
-#### The Double Border
+Second, the off-white creates a **perceptual contrast boost**. Against the deliberately darker, desaturated page background, the viewer's eye perceives the border as "pure white" in context. This means any 100% white elements in the photo itself—clouds, snow, highlights—appear even brighter by comparison. The effect increases perceived dynamic range: whites feel more brilliant and blacks appear deeper.
 
-The border has two layers:
+Finally, because borders are CSS rather than baked into image files, they compress better and introduce no artifacts around frame edges.
 
-- **Thick outer border** — off-white, acts as a perceptual "paper white" reference
-- **Thin inner border** — light gray, separates light areas of the photo from the thick border
+#### The Double Border Structure
 
-Without the inner border, light parts of photos blend into the white frame. The thin separator makes the boundary clear, even when both are technically "white" (but different color temperatures).
+Another small detail that plays a crucial role is the double borders:
+
+- **Thick outer border** — off-white, provides the perceptual "paper white" reference
+- **Thin inner border** — light gray, separates bright photo areas from the outer frame
+
+Without the inner border, bright photo regions—clouds, snow, light skies—visually blend into the white frame. This breaks our contrast illusion: the viewer can see that the border isn't pure white. Worse, if the white color temperature of the photo doesn't match the neutral border, the transition looks unpleasant. The thin gray separator solves both problems by making the boundary clear, even when both surfaces are technically "white" but at different color temperatures.
 
 ![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
 
-The thin inner border has minimal impact on the overall white-frame aesthetic, but prevents the visual confusion where image and border merge.
+When the photo has darker edges, the inner border's impact is minimal—just a few pixels of light gray very close to the off-white outer border. It doesn't disrupt the overall white-frame aesthetic or wash out deep blacks. But it prevents the visual confusion where image and mount merge into one.
 
-**Additional benefits:**
+#### Adding Visual Playfulness: Rotation
 
-<!-- Do we need it here, as we have already discussed this in the Off-White borders section? -->
-
-- Off-white border provides a **white-balance reference** for the eye
-- Against darker backgrounds, the border **boosts perceived dynamic range**
-- Borders are CSS, not baked into files — better compression, no JPEG artifacts
-
-<!-- Should it be here, or move it to the general cell-based section where we talk about the rhythm and spacing? It could fit there better as an option to break the mechanical feel even more -->
-### 4.4 Breaking the Mechanical Feel
-
-Gaps create rhythm. Strong gaps create strong leading lines.
-
-For a more organic feel, we **slightly rotate each photo** using a normal distribution of small angles. The Polaroid cards appear scattered by a human, not aligned by a machine.
+One more detail softens the mechanical feel: **slight random rotation**. We rotate each photo by a small random angle drawn from a normal distribution. The result: Polaroid cards that look scattered by hand rather than aligned by machine.
 
 ![Cell-span layout with tilted photos](./assets/cell-span-tilted.svg "Slight random rotation breaks the rigid grid feel")
 
-Compare with the non-tilted version — the tilted layout feels less mechanical, and more playful.
+The rotation is subtle—just enough to break rigid alignment without creating chaos. Combined with the inconsistent gap alignment we discussed earlier, this produces a layout that feels organic and tactile, more like prints pinned to a wall than tiles in a spreadsheet.
 
 ---
 
