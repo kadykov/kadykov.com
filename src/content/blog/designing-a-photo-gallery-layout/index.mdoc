@@ -6,7 +6,7 @@ description: "Beyond square feeds and masonry columns: a cell-based grid that ba
 tags: ["photography", "design", "css", "grid", "astro"]
 ---
 
-## Introduction
+## Why Most Photo Galleries Force You to Choose
 
 Most photo galleries force a choice: crop everything to one aspect ratio for visual consistency, or preserve full images and accept that some orientations will dominate the page. Instagram's square grid favors neither landscape nor portrait. Masonry columns let tall photos overshadow wide ones. Justified rows do the opposite.
 
@@ -36,9 +36,11 @@ In practice you must choose which compromise to live with: preserve full images 
  
 ---
 
-## Common Layouts and Their Trade-offs
+## The Usual Suspects: Four Common Approaches
 
-### Cell-centered grids
+### The Square Grid Compromise: Crop Everything or Accept Chaos
+
+#### Cell-centered grids
 
 Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
@@ -98,7 +100,7 @@ If you're willing to go further, **AI-assisted services** can detect subjects mo
 
 For the most creative approach, opt for **editorial tight crop**—manually crafting dramatic, teaser-like crops that prioritize visual impact over preserving the full image. This requires the most human judgment and effort, turning cropping into an art form in itself. Note that this method is better suited to editorial galleries, where curated emphasis guides the narrative, rather than navigational galleries that prioritize equal presentation.
 
-#### The Aspect Ratio Change Problem
+#### When Changing Your Mind Breaks Everything
 
 There's a practical downside to accepting `cover`: once you pick a fixed aspect ratio and crop your previews, you're committed. Changing it later breaks content that was composed for the original ratio.
 
@@ -116,7 +118,7 @@ Ultimately, the choice boils down to preserving full images with inconsistent sp
 
 ---
 
-### Column Layouts
+### Vertical Flow: The Column Layout's Portrait Bias
 
 If you want to preserve every photo's full composition without cropping and use the space efficiently, CSS columns layout is one of the options. It uses fixed column widths so images keep their intrinsic aspect ratios while the columns create vertical stacks.
 
@@ -164,7 +166,7 @@ In short: the columns layout preserves full images and feels organic. Portrait d
  
 ---
 
-### Justified Row Layouts
+### Horizontal Stretch: Justified Rows and the Landscape Advantage
 
 If columns let portrait photos dominate, a justified row layout leans the other way: photos in each row share the same height, and the row is scaled so its contents span the full container width. In practice this means every photo keeps its aspect ratio, but widths vary so the row fills the line.
 
@@ -188,7 +190,7 @@ So, like the other approaches we've seen, justified rows trade one bias for anot
 
 ---
 
-## The Cell-Span Layout
+## A Different Strategy: Matching Photos to Grid Cells
 
 One of the key goals for navigational galleries is to give all photos—regardless of orientation—equal visual weight, without cropping, and ideally without relying on client-side JavaScript.
 
@@ -228,7 +230,7 @@ A practical consideration: you need to know each photo’s orientation in advanc
 
 What about visual rhythm? Unlike strict cell-based grids, the cell-span layout doesn’t produce strong, continuous leading lines—gaps don’t always align. However, the underlying grid still imparts a subtle bidirectional rhythm. Because photos span multiple cells and gaps don’t consistently line up, the result feels less mechanical and more organic.
 
-### Wasted Space
+### The Cost: Empty Cells by Design
 
 Why isn’t this layout more common? The answer is simple: it sacrifices **space efficiency** for **equal presentation**.
 
@@ -248,7 +250,7 @@ At the same time, if the number of wasted cells is not too high, cell-span layou
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
-### Polaroid Borders: Adjusting Aspect Ratios
+### Making It Work: Polaroid Borders as Optimization
 
 So far we've discussed the cell-span layout in general terms. Now let's turn to the specific implementation details of our gallery—particularly how **Polaroid-style borders** help optimize the layout.
 
@@ -264,7 +266,7 @@ By placing borders asymmetrically based on each photo's aspect ratio, we shift t
 
 You might note that borders shift the aspect ratio of *all* photos, including those that already match targets. This is true. However, since perfectly matched photos are in the minority, the net effect is positive: overall wasted space decreases.
 
-#### Off-White Borders and White Balance
+#### Why Off-White Matters More Than You'd Think
 
 Look closely at the Polaroid borders and you might notice something subtle: they're not pure white. Instead, they're set to a light off-white—around 90–95% white. This choice serves multiple perceptual purposes.
 
@@ -297,7 +299,7 @@ The rotation is subtle—just enough to break rigid alignment without creating c
 
 ---
 
-## The Result
+## Seeing It in Action
 
 Here's how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots of street scenes sit alongside wide mountain landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
 
@@ -315,7 +317,7 @@ The wasted space is noticeable if you look for it, but in practice it reads as i
 
 ---
 
-## Closing
+## When Equal Presentation Matters More Than Efficiency
 
 Every gallery layout encodes a philosophy about how photographs should be presented. Square grids declare that consistency matters more than composition. Masonry columns prioritize space efficiency and accept that portraits will dominate. Justified rows favor landscapes. Each choice reflects different values.
 
