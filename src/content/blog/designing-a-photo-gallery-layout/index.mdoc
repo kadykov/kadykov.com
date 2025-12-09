@@ -6,7 +6,7 @@ description: "Beyond square feeds and masonry columns: a cell-based grid that ba
 tags: ["photography", "design", "css", "grid", "astro"]
 ---
 
-## 1. Introduction
+## Introduction
 
 Most photo galleries force a choice: crop everything to one aspect ratio for visual consistency, or preserve full images and accept that some orientations will dominate the page. Instagram's square grid favors neither landscape nor portrait. Masonry columns let tall photos overshadow wide ones. Justified rows do the opposite.
 
@@ -16,7 +16,7 @@ I'll walk through common gallery layouts and their inherent compromises, then ex
 
 ---
 
-## 2. The Problem: Photos Don't Fit Neatly
+## The Problem: Photos Don't Fit Neatly
 
 Photos arrive in every imaginable shape: a 3:2 landscape from a camera, a square crop, a vertical phone shot, a panorama. They all compete for space on the same page, and the page itself varies — a phone in portrait, a tablet, a wide desktop.
 
@@ -36,9 +36,9 @@ In practice you must choose which compromise to live with: preserve full images 
  
 ---
 
-## 3. Common Layouts and Their Trade-offs
+## Common Layouts and Their Trade-offs
 
-### 3.1 Cell-centered grids
+### Cell-centered grids
 
 Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
@@ -116,7 +116,7 @@ Ultimately, the choice boils down to preserving full images with inconsistent sp
 
 ---
 
-### 3.2 Column Layouts
+### Column Layouts
 
 If you want to preserve every photo's full composition without cropping and use the space efficiently, CSS columns layout is one of the options. It uses fixed column widths so images keep their intrinsic aspect ratios while the columns create vertical stacks.
 
@@ -164,7 +164,7 @@ In short: the columns layout preserves full images and feels organic. Portrait d
  
 ---
 
-### 3.3 Justified Row Layouts
+### Justified Row Layouts
 
 If columns let portrait photos dominate, a justified row layout leans the other way: photos in each row share the same height, and the row is scaled so its contents span the full container width. In practice this means every photo keeps its aspect ratio, but widths vary so the row fills the line.
 
@@ -188,7 +188,7 @@ So, like the other approaches we've seen, justified rows trade one bias for anot
 
 ---
 
-## 4. The Cell-Span Layout
+## The Cell-Span Layout
 
 One of the key goals for navigational galleries is to give all photos—regardless of orientation—equal visual weight, without cropping, and ideally without relying on client-side JavaScript.
 
@@ -248,7 +248,7 @@ At the same time, if the number of wasted cells is not too high, cell-span layou
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
-### 4.1 Polaroid Borders: Adjusting Aspect Ratios
+### Polaroid Borders: Adjusting Aspect Ratios
 
 So far we've discussed the cell-span layout in general terms. Now let's turn to the specific implementation details of our gallery—particularly how **Polaroid-style borders** help optimize the layout.
 
@@ -297,7 +297,7 @@ The rotation is subtle—just enough to break rigid alignment without creating c
 
 ---
 
-## 5. The Result
+## The Result
 
 Here's how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots of street scenes sit alongside wide mountain landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
 
@@ -315,7 +315,7 @@ The wasted space is noticeable if you look for it, but in practice it reads as i
 
 ---
 
-## 6. Closing
+## Closing
 
 Every gallery layout encodes a philosophy about how photographs should be presented. Square grids declare that consistency matters more than composition. Masonry columns prioritize space efficiency and accept that portraits will dominate. Justified rows favor landscapes. Each choice reflects different values.
 
@@ -326,24 +326,3 @@ This approach makes most sense for **navigational galleries**: collections where
 The implementation is pure CSS with server-side orientation detection—no client JavaScript required for layout. Borders are asymmetric to nudge aspect ratios toward targets. Slight rotation breaks mechanical alignment. A neutral background provides consistent color context.
 
 If you've struggled with layouts that crop compositions or let one orientation dominate, this strategy offers an alternative. The code is simple, the trade-offs are clear, and the result respects what a photograph is: a deliberate composition that deserves to be seen in full.
-
----
-
-## Assets Reference
-
-<!-- For tracking during development -->
-
-**SVG Diagrams (local):**
-- ✅ `square-grid.svg`, `square-grid-leading-lines.svg`, `square-grid-fit.svg`, `square-grid-fit-leading-lines.svg`
-- ✅ `columns.svg`, `columns-leading-lines.svg`, `columns-natural-order.svg`, `columns-CSS-order.svg`, `columns-CSS-order-long.svg`
-- ✅ `justified.svg`, `justified-leading-lines.svg`
-- ✅ `cell-span.svg`, `cell-span-grid.svg`, `cell-span-grid-wasted.svg`, `cell-span-tilted.svg`
-- ✅ `borders.svg`
-
-**Screenshots (remote):**
-- ✅ `instagram-square.avif`, `instagram-rectangular.avif`
-- ✅ `unsplash-columns.avif`
-- ✅ `flickr-justified.avif`
-- ✅ `cell-span.avif`
-- ✅ `cell-span-grid.avif` (DevTools grid overlay)
-- ✅ `border.avif` (single vs double border comparison)
