@@ -1,7 +1,7 @@
 ---
 title: "Designing a Photo Gallery that Respects Photographs"
 subtitle: "Grid rhythm, Polaroid borders, and equal visual weight for all orientations"
-pubDate: 2025-11-13
+pubDate: 2025-12-09
 description: "Beyond square feeds and masonry columns: a cell-based grid that balances landscape and portrait photos with equal visual weight."
 tags: ["photography", "design", "css", "grid", "astro"]
 ---
@@ -106,9 +106,9 @@ Instagram learned this the hard way. They originally enforced square previews �
 
 But the change was destructive. Photos that were composed for square display suddenly got cropped differently. Subjects intentionally placed at edges — perfectly visible in the old square previews — were now cut off.
 
-![Instagram — original square previews](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram's original square grid")
+![Instagram — original square previews showing a profile grid of six square thumbnails with no edge cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram's original square grid — six square thumbnails, no edge cropping")
 
-![Instagram — newer rectangular previews](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-rectangular.avif "Portrait-oriented previews — edge content gets cropped")
+![Instagram — newer portrait previews showing rectangular thumbnails where image edges are cropped](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-rectangular.avif "Instagram's portrait-oriented previews — cropping can cut off image edges in thumbnails")
 
 The lesson: fixed aspect ratios require commitment. Changing them later harms content that was composed for the original ratio.
 
@@ -142,7 +142,7 @@ Columns layout is attractive because it preserves composition, has minimal waste
 1) Portraits dominate visually.  
 Taller images occupy more vertical space than wide ones, so a single portrait can outweigh two landscapes beside it. That imbalance makes portrait-heavy collections read as visually dominant.
 
-![Unsplash — column layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Unsplash's column layout — portrait shots on the sides visually dominate the landscapes in the center column")
+![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
 
 2) Rhythm is directional.  
 Consistent column widths produce strong vertical leading lines repeated horizontally. That directional rhythm is not inherently a flaw — it is a characteristic you can lean into or soften by adjusting the gap size. For galleries that prioritize portraits, the unidirectional rhythm can be an asset: it reinforces the prominence of tall images and helps guide the eye down columns.
@@ -172,7 +172,7 @@ If columns let portrait photos dominate, a justified row layout leans the other 
 
 Because width maps directly to area in this scheme, wide images tend to dominate. A single landscape or panorama can occupy as much visual weight as several portraits combined — the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
-![Flickr justified layout](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — the landscape takes more space than two portraits combined")
+![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
 That dominance shapes the layout's rhythm. Justified rows create strong horizontal leading lines: the aligned gaps between rows repeat across the page, producing a unidirectional rhythm. When most of your collection is landscape-oriented, this layout can actually reinforce the work rather than fight it.
 
@@ -283,7 +283,7 @@ The border actually has two layers:
 
 Without the inner border, bright photo regions—clouds, snow, light skies—visually blend into the white frame. This breaks our contrast illusion: the viewer can see that the border isn't pure white. Worse, if the white color temperature of the photo doesn't match the neutral border, the transition looks unpleasant. The thin gray separator solves both problems by making the boundary clear, even when both surfaces are technically "white" but at different color temperatures.
 
-![Single vs double border comparison](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick border — clouds blend into the frame. Right: double border — thin gray line separates the image cleanly")
+![Two Polaroid-style frames comparing single vs double border](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick off-white border — bright clouds can visually blend into the frame. Right: double border with a thin light-gray inner line — creates a clear separation between image highlights and the frame, preserving detail.")
 
 When the photo has darker edges, the inner border's impact is minimal—just a few pixels of light gray very close to the off-white outer border. It doesn't disrupt the overall white-frame aesthetic or wash out deep blacks. But it prevents the visual confusion where image and mount merge into one.
 
@@ -301,13 +301,13 @@ The rotation is subtle—just enough to break rigid alignment without creating c
 
 Here's how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots of street scenes sit alongside wide mountain landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
 
-![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
+![Polaroid-framed gallery showing mixed portrait and landscape photos arranged on a cell-span CSS grid with subtle rotation](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Polaroid-framed gallery: mixed orientations in a cell-span grid with subtle rotation and equal visual weight.")
 
 You can explore the full implementation at [kadykov.com/photos](/photos) or the [source code](https://github.com/kadykov/kadykov.com).
 
 The layout's effectiveness becomes clearer when you examine it with browser DevTools. The underlying grid reveals both the structure and the cost: some cells remain trapped between photo spans, others sit unused at row ends. This is the visual price of equal presentation—space efficiency traded for balanced weight across orientations.
 
-![Real grid overlay in browser](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools reveals the grid — notice the trapped cell on the left and unused cells on the right")
+![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools overlay of gallery grid highlighting trapped cells and unused columns — illustrates wasted space in the cell-span layout.")
 
 One final detail completes the viewing environment: the page uses a **neutral gray background** with zero chroma. This prevents any hue bias from affecting color perception—unlike warm beige or cool blue-grays, true neutral gray doesn't push reds, greens, or blues in any direction. Combined with the off-white Polaroid borders, this creates a consistent viewing context that works equally well in light and dark modes. The result is closer to a color-neutral print viewing environment than the stark white or deep black backgrounds common on photo sites.
 
