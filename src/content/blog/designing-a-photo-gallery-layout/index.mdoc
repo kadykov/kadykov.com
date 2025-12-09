@@ -6,26 +6,13 @@ description: "Beyond square feeds and masonry columns: a cell-based grid that ba
 tags: ["photography", "design", "css", "grid", "astro"]
 ---
 
-<!-- 
-DRAFT STRUCTURE — content to be developed into human-readable prose
--->
-
----
-
 ## 1. Introduction
 
-When I redesigned this site, I also rebuilt the photo gallery. The old version used plain CSS columns (via Tailwind): it filled top-to-bottom, left-to-right, and let portrait photos dominate. It was great for space efficiency, but not for showing landscape and portrait shots with equal weight.
+Most photo galleries force a choice: crop everything to one aspect ratio for visual consistency, or preserve full images and accept that some orientations will dominate the page. Instagram's square grid favors neither landscape nor portrait. Masonry columns let tall photos overshadow wide ones. Justified rows do the opposite.
 
-I wanted a different balance: no forced crops, no layout JavaScript, and a tactile feel — more like prints pinned to a wall than tiles in a spreadsheet. This post documents the layout I designed and the trade-offs it makes.
+This post documents a different approach: a cell-based grid layout that gives landscape and portrait photos equal visual weight without cropping. The trade-off is space efficiency—some grid cells remain unused—but the result feels more like photographs pinned to a wall than tiles arranged by an algorithm.
 
-### Navigational vs. Editorial Galleries
-
-There are two very different kinds of photo galleries:
-
-- **Editorial galleries** are story-driven. The photographer sets a hierarchy — some photos are larger, guiding emphasis and flow. **Sequence matters** because adjacent images converse: placing two photos side by side suggests they share a theme (or intentionally clash), and the order of images steers the narrative the viewer constructs.
-- **Navigational galleries** present everything with equal weight and let the viewer choose order (by date, popularity, tags). The goal is discovery, not storytelling.
-
-This post is about the second kind — a navigational gallery where landscape and portrait photos get equal visual presence.
+I'll walk through common gallery layouts and their inherent compromises, then explain the cell-span strategy I designed for this site's photo gallery: how it works, why borders matter, and what you sacrifice for equal presentation.
 
 ---
 
@@ -251,8 +238,7 @@ Consider a viewport that fits 5 columns of cells. When the number of columns doe
 - **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
 - **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
 
-But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space.
-In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused in the corners. This is the price of equal visual weight without cropping.
+But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space. In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused in the corners.
 
 ![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with crosses — some cells get trapped between spans")
 
@@ -290,7 +276,7 @@ Finally, because borders are CSS rather than baked into image files, they compre
 
 #### The Double Border Structure
 
-Another small detail that plays a crucial role is the double borders:
+The border actually has two layers:
 
 - **Thick outer border** — off-white, provides the perceptual "paper white" reference
 - **Thin inner border** — light gray, separates bright photo areas from the outer frame
@@ -313,31 +299,33 @@ The rotation is subtle—just enough to break rigid alignment without creating c
 
 ## 5. The Result
 
-<!-- TODO: Develop brief prose -->
-
-Here's the layout in practice:
+Here's how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots of street scenes sit alongside wide mountain landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
 
 ![Photo gallery on kadykov.com](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "The cell-span layout with Polaroid borders and slight rotation")
 
-You can explore the full gallery at [kadykov.com/photos](/photos).
+You can explore the full implementation at [kadykov.com/photos](/photos) or the [source code](https://github.com/kadykov/kadykov.com).
 
-With browser DevTools, you can see the underlying grid — and the wasted cells that are the cost of equal visual weight:
+The layout's effectiveness becomes clearer when you examine it with browser DevTools. The underlying grid reveals both the structure and the cost: some cells remain trapped between photo spans, others sit unused at row ends. This is the visual price of equal presentation—space efficiency traded for balanced weight across orientations.
 
 ![Real grid overlay in browser](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools reveals the grid — notice the trapped cell on the left and unused cells on the right")
 
-The viewing environment complements the layout: a **neutral gray background** with zero chroma prevents any hue bias from affecting color perception. Combined with the white Polaroid borders, this creates a consistent viewing context across light and dark modes.
+One final detail completes the viewing environment: the page uses a **neutral gray background** with zero chroma. This prevents any hue bias from affecting color perception—unlike warm beige or cool blue-grays, true neutral gray doesn't push reds, greens, or blues in any direction. Combined with the off-white Polaroid borders, this creates a consistent viewing context that works equally well in light and dark modes. The result is closer to a color-neutral print viewing environment than the stark white or deep black backgrounds common on photo sites.
+
+The wasted space is noticeable if you look for it, but in practice it reads as intentional—part of the design rather than a layout bug. Because gaps don't align into strong leading lines, the empty cells feel like natural breathing room rather than obvious inefficiency. For a navigational gallery where the goal is equal browsing weight, not maximum density, that trade-off makes sense.
 
 ---
 
 ## 6. Closing
 
-<!-- TODO: Develop into proper conclusion -->
+Every gallery layout encodes a philosophy about how photographs should be presented. Square grids declare that consistency matters more than composition. Masonry columns prioritize space efficiency and accept that portraits will dominate. Justified rows favor landscapes. Each choice reflects different values.
 
-This layout tries to respect what a photograph is: a composition with intent, presented with equal weight regardless of orientation.
+The cell-span layout documented here prioritizes something different: equal visual weight across orientations without cropping. Landscape and portrait photos occupy comparable screen area. Squares appear slightly smaller, acknowledging their cropped nature. The price is space efficiency—some grid cells remain unused—but the benefit is a gallery that treats every photograph fairly, regardless of how it was framed.
 
-If you've struggled with square feeds that crop your compositions, or masonry columns that let portraits dominate, a cell-based grid with calibrated borders is a straightforward alternative.
+This approach makes most sense for **navigational galleries**: collections where the viewer browses freely and no image should be privileged by the layout itself. If you're building an editorial gallery—one where hierarchy and sequence tell a story—you probably want deliberate visual weight differences and tighter control over adjacency. But if you're presenting a collection for discovery, and you want portraits and landscapes to have equal presence, a cell-based grid with calibrated spans offers a straightforward path.
 
-The trade-off is clear: you sacrifice space efficiency for equal presentation. For a navigational gallery — where the goal is browsing, not storytelling — that's a trade-off worth making.
+The implementation is pure CSS with server-side orientation detection—no client JavaScript required for layout. Borders are asymmetric to nudge aspect ratios toward targets. Slight rotation breaks mechanical alignment. A neutral background provides consistent color context.
+
+If you've struggled with layouts that crop compositions or let one orientation dominate, this strategy offers an alternative. The code is simple, the trade-offs are clear, and the result respects what a photograph is: a deliberate composition that deserves to be seen in full.
 
 ---
 
