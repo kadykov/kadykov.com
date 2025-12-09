@@ -42,7 +42,7 @@ In practice you must choose which compromise to live with: preserve full images 
 
 Start simply: put each photo with its geometric center in the middle of a uniform cell. This is the most straightforward grid layout — the photo's center is aligned inside the cell.
 
-![Contain/fit approach in a square grid](./assets/square-grid-fit.svg "Photos fitted (not cropped) into square cells — the square photo dominates while others shrink")
+![Photos fitted into square cells (contain, letterboxed)](./assets/square-grid-fit.svg "Contain: full photos fitted into uniform square cells; letterboxing creates inconsistent empty space and breaks grid rhythm.")
 
 A common baseline is `object-fit: contain`. It shows the full image inside the cell, by fitting the entire photo within the cell boundaries without cropping. Here’s how you might implement this:
 
@@ -67,7 +67,7 @@ That inconsistent empty space is a common reason why many designers and sites ch
 
 Here’s what that looks like (cropped previews):
 
-![Square grid illustration](./assets/square-grid.svg "Fixed aspect ratio grid — all photos cropped to squares")
+![Photos cropped to square previews (cover)](./assets/square-grid.svg "Cover: all photos cropped to a square aspect ratio to preserve visual rhythm; gaps align into continuous guides.")
 
 The CSS change is small: keep the same grid declaration, but switch image sizing to a fixed aspect ratio and `object-fit: cover`.
 
@@ -82,11 +82,11 @@ The CSS change is small: keep the same grid declaration, but switch image sizing
 
 This approach gives you maximum space efficiency and a strong visual rhythm. Because every cell shares the same dimensions, gaps align into continuous leading lines: vertical edges form guides across rows, and horizontal edges form guides across columns. That repeated pattern is what we mean by rhythm — consistent spacing and aligned edges that guide the eye.
 
-![Fixed aspect ratio grid with leading lines](./assets/square-grid-leading-lines.svg "Gaps form a perfect grid of horizontal and vertical guides")
+![Square grid with aligned leading lines](./assets/square-grid-leading-lines.svg "Fixed-aspect grid showing aligned leading lines where gaps form continuous horizontal and vertical guides, producing strong visual rhythm.")
 
 Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In the most extreme cases — particularly when gaps are high-contrast and thick — this can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion) — phantom dark spots at intersections of the white gaps.
 
-![Contain/fit grid with broken leading lines](./assets/square-grid-fit-leading-lines.svg "Fitted photos break the leading lines — gaps become inconsistent")
+![Contain grid showing broken leading lines](./assets/square-grid-fit-leading-lines.svg "Contain approach showing broken leading lines caused by letterboxing; inconsistent gaps across cells reduce visual rhythm.")
 
 Overall, there are two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
@@ -120,7 +120,7 @@ Ultimately, the choice boils down to preserving full images with inconsistent sp
 
 If you want to preserve every photo's full composition without cropping and use the space efficiently, CSS columns layout is one of the options. It uses fixed column widths so images keep their intrinsic aspect ratios while the columns create vertical stacks.
 
-![Column-based layout](./assets/columns.svg "Column layout — portrait photos dominate visually")
+![Column-based gallery showing images keeping original aspect ratios in three columns](./assets/columns.svg "Column layout — three fixed-width columns; preserves composition; portrait images visually dominate")
 
 Here's a minimal implementation:
 
@@ -147,18 +147,18 @@ Taller images occupy more vertical space than wide ones, so a single portrait ca
 2) Rhythm is directional.  
 Consistent column widths produce strong vertical leading lines repeated horizontally. That directional rhythm is not inherently a flaw — it is a characteristic you can lean into or soften by adjusting the gap size. For galleries that prioritize portraits, the unidirectional rhythm can be an asset: it reinforces the prominence of tall images and helps guide the eye down columns.
 
-![Column layout with leading lines](./assets/columns-leading-lines.svg "Vertical leading lines are strong — horizontal gaps are scattered, forming no lines")
+![Column layout emphasizing vertical leading lines created by consistent column widths](./assets/columns-leading-lines.svg "Vertical leading lines are strong; horizontal gaps are irregular and do not form continuous horizontal guides")
 
 3) Fill order is counterintuitive.  
 By default multi-column layout fills top-to-bottom, then left-to-right (like text). For long galleries this can hide recently added photos below the fold — viewers often expect the newest items to appear first across the top row, not stacked down the first column.
 
-![CSS column fill order](./assets/columns-CSS-order.svg "Filling inherited from text: complete the first column before moving to the next one")
+![CSS multi-column fill order diagram (top-to-bottom, then left-to-right)](./assets/columns-CSS-order.svg "CSS column fill order — browser fills columns like text: top-to-bottom, then left-to-right")
 
-![CSS column order with long gallery](./assets/columns-CSS-order-long.svg "CSS-only filling hides photos 3-4 and 7-8 below the fold")
+![Long-gallery example showing CSS column fill hiding items below the fold](./assets/columns-CSS-order-long.svg "Column fill order with long gallery — some photos are pushed below the fold because columns fill top-to-bottom first")
 
 Fixing the fill order requires JavaScript: reorder or position items so the layout fills left-to-right row by row instead of the browser's default text-like flow.
 
-![Natural fill order](./assets/columns-natural-order.svg "Natural fill order: left-to-right, top-to-bottom, requires JS to implement")
+![Desired natural fill order diagram (left-to-right, then top-to-bottom)](./assets/columns-natural-order.svg "Natural fill order — left-to-right, top-to-bottom; requires JavaScript to emulate in a multi-column layout")
 
 In short: the columns layout preserves full images and feels organic. Portrait dominance and a pronounced directional rhythm are natural outcomes — not defects — and can be used deliberately (or tuned via gap size and composition choices). The fill-order quirk is the main practical downside to address if you want a traditional left‑to‑right browsing sequence.
  
@@ -168,7 +168,7 @@ In short: the columns layout preserves full images and feels organic. Portrait d
 
 If columns let portrait photos dominate, a justified row layout leans the other way: photos in each row share the same height, and the row is scaled so its contents span the full container width. In practice this means every photo keeps its aspect ratio, but widths vary so the row fills the line.
 
-![Justified row layout](./assets/justified.svg "Photos in each row share the same height, but row heights and number of photos per row vary")
+![Justified row layout — photos share equal row height](./assets/justified.svg "Photos in each row share the same height; row heights and photo counts per row adapt to fill the container width, preserving each image's aspect ratio.")
 
 Because width maps directly to area in this scheme, wide images tend to dominate. A single landscape or panorama can occupy as much visual weight as several portraits combined — the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
@@ -176,7 +176,7 @@ Because width maps directly to area in this scheme, wide images tend to dominate
 
 That dominance shapes the layout's rhythm. Justified rows create strong horizontal leading lines: the aligned gaps between rows repeat across the page, producing a unidirectional rhythm. When most of your collection is landscape-oriented, this layout can actually reinforce the work rather than fight it.
 
-![Justified layout with leading lines](./assets/justified-leading-lines.svg "Strong horizontal leading lines from aligned row gaps")
+![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
 
 However, the rhythm is softer than in strict column layouts because row heights change with their contents. Narrower viewports fit fewer photos per row, so row heights vary more and the pattern reads less mechanical. This variation can make the layout feel more organic even while preserving aspect ratios.
 
@@ -204,13 +204,13 @@ Each photo is assigned a calculated number of grid cells based on its orientatio
 
 This way, portrait and landscape photos occupy comparable visual space, while squares appear slightly smaller—a subtle nod to how square crops are usually obtained. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection's characteristics, or even add more categories, like panorama or very tall portrait, if needed.
 
-![Cell-span layout result](./assets/cell-span.svg "Landscape and portrait photos occupy similar visual area")
+![Cell-span layout — photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
 At first glance, the photos seem almost randomly placed—there are no rigid grid lines. The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
 
 Yet, beneath the surface, there’s a structured grid. Each photo is positioned within cells that match its orientation:
 
-![Cell-span layout with grid overlay](./assets/cell-span-grid.svg "The hidden grid — portraits span 3×2, landscapes span 2×3, squares span 2×2")
+![Grid overlay showing how photos span multiple cells (hidden grid)](./assets/cell-span-grid.svg "Grid overlay showing each photo positioned to span multiple grid cells according to orientation: portraits 3×2, landscapes 2×3, squares 2×2")
 
 ```css
 .gallery {
@@ -240,7 +240,7 @@ Consider a viewport that fits 5 columns of cells. When the number of columns doe
 
 But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space. In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused in the corners.
 
-![Wasted cells in the cell-span layout](./assets/cell-span-grid-wasted.svg "Wasted cells marked with crosses — some cells get trapped between spans")
+![Cell-span grid with wasted or trapped cells marked](./assets/cell-span-grid-wasted.svg "Grid overlay highlighting wasted or trapped cells marked with crosses where photo spans create unusable gaps")
 
 However, the wasted space here feels less jarring than in the contain/fit layout. The gaps are consistent and rhythmic—they seem intentional, part of the design. Because there are no strong leading lines, the empty cells don’t disrupt the overall flow.
 
@@ -260,7 +260,7 @@ Here's the logic: for each photo, we decide whether to place the thicker Polaroi
 
 By placing borders asymmetrically based on each photo's aspect ratio, we shift the overall visual proportions closer to grid targets. This doesn't reduce the number of trapped or unused cells—that's inherent to the cell-span approach—but it does reduce the amount of wasted space *within* the cells that photos occupy.
 
-![Polaroid borders adjusting aspect ratios](./assets/borders.svg "Border placement shifts photos toward target aspect ratios — compare with the grid overlay above")
+![Polaroid-style borders shifting photo aspect ratios](./assets/borders.svg "Asymmetric Polaroid borders placed on the side or bottom to nudge actual photo aspect ratios toward the grid's target ratios")
 
 You might note that borders shift the aspect ratio of *all* photos, including those that already match targets. This is true. However, since perfectly matched photos are in the minority, the net effect is positive: overall wasted space decreases.
 
@@ -291,7 +291,7 @@ When the photo has darker edges, the inner border's impact is minimal—just a f
 
 One more detail softens the mechanical feel: **slight random rotation**. We rotate each photo by a small random angle drawn from a normal distribution. The result: Polaroid cards that look scattered by hand rather than aligned by machine.
 
-![Cell-span layout with tilted photos](./assets/cell-span-tilted.svg "Slight random rotation breaks the rigid grid feel")
+![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile 'pinned' look while maintaining the cell-span layout")
 
 The rotation is subtle—just enough to break rigid alignment without creating chaos. Combined with the inconsistent gap alignment we discussed earlier, this produces a layout that feels organic and tactile, more like prints pinned to a wall than tiles in a spreadsheet.
 
