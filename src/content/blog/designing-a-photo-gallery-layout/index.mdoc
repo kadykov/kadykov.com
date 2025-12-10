@@ -86,7 +86,7 @@ This approach gives you maximum space efficiency and a strong visual rhythm. Bec
 
 ![Square grid with aligned leading lines](./assets/square-grid-leading-lines.svg "Fixed-aspect grid showing aligned leading lines where gaps form continuous horizontal and vertical guides, producing strong visual rhythm.")
 
-Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In the most extreme cases—particularly when gaps are high-contrast and thick—this can even trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion)—phantom dark spots at intersections of the white gaps.
+Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In rare cases—when you combine very thick gaps, high contrast (like white gaps on dark images), many visible rows and columns, and specific viewing distances—the regular grid pattern can trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion), where phantom dark spots appear at gap intersections. In practice, most gallery designs don’t meet these extreme conditions.
 
 ![Contain grid showing broken leading lines](./assets/square-grid-fit-leading-lines.svg "Contain approach showing broken leading lines caused by letterboxing; inconsistent gaps across cells reduce visual rhythm.")
 
@@ -102,11 +102,11 @@ For the most creative approach, opt for **editorial tight crop**—manually craf
 
 #### When Changing Your Mind Breaks Everything
 
-There’s a practical downside to accepting `cover`: once you pick a fixed aspect ratio and crop your previews, you’re committed. Changing it later breaks content that was composed for the original ratio.
+Using fixed aspect ratios with `cover` cropping works well—until you decide to change the ratio. Once you pick a target aspect ratio and users compose content for it, changing that ratio later becomes destructive.
 
-Instagram learned this the hard way. They originally enforced square previews—a neutral choice that worked on both mobile and desktop. In early 2025, they [announced a shift to portrait-oriented rectangles](https://www.instagram.com/mosseri/p/DFBmKBBy24A/), which makes sense for a mobile-first platform.
+Instagram demonstrates this risk. They originally enforced square previews—a neutral choice that worked on both mobile and desktop. In early 2025, they [announced a shift to portrait-oriented rectangles](https://www.instagram.com/mosseri/p/DFBmKBBy24A/), which makes sense for a mobile-first platform.
 
-But the change was destructive. Photos that were composed for square display suddenly got cropped differently. Subjects intentionally placed at edges—perfectly visible in the old square previews—were now cut off.
+The change broke existing content. Photos that were composed for square display suddenly got cropped differently. Subjects intentionally placed at edges—perfectly visible in the old square previews—were now cut off.
 
 ![Instagram—original square previews showing a profile grid of six square thumbnails with no edge cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram’s original square grid—six square thumbnails, no edge cropping")
 
@@ -142,7 +142,7 @@ Here’s a minimal implementation:
 Columns layout is attractive because it preserves composition, has minimal wasted space, and feels less rigid than strict cells. However, it has a few practical implications you should be aware of when choosing a gallery strategy:
 
 1) Portraits dominate visually.  
-Taller images occupy more vertical space than wide ones, so a single portrait can outweigh two landscapes beside it. That imbalance makes portrait-heavy collections read as visually dominant.
+Taller images occupy more vertical space than wide ones, so a single portrait can outweigh two landscapes beside it. For portrait-focused collections—this visual prominence can be a feature rather than a bug, naturally emphasizing the work’s primary orientation.
 
 ![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
 
@@ -176,6 +176,8 @@ Because width maps directly to area in this scheme, wide images tend to dominate
 
 ![Flickr justified layout—wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout—a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
+For collections where landscape photos are the primary focus—this visual hierarchy can be entirely appropriate, naturally showcasing the work at its intended scale.
+
 That dominance shapes the layout’s rhythm. Justified rows create strong horizontal leading lines: the aligned gaps between rows repeat across the page, producing a unidirectional rhythm. When most of your collection is landscape-oriented, this layout can actually reinforce the work rather than fight it.
 
 ![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
@@ -186,7 +188,7 @@ A practical downside: justified rows require JavaScript, because you need to mea
 
 As a side note, CSS Grid’s [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) may one day provide similar, more automatic arrangements without JS, but [browser support remains limited](https://caniuse.com/?search=masonry) as of late 2025.
 
-So, like the other approaches we’ve seen, justified rows trade one bias for another—they favor wide formats while preserving compositions. What if we tried something different?
+So, like the other approaches we’ve seen, justified rows trade one bias for another—they favor wide formats while preserving compositions. Each layout reflects different priorities: columns suit portrait-focused work, justified rows suit landscape collections, and fixed-aspect grids prioritize consistency. What if your collection mixes orientations freely and you want to avoid favoring any particular format?
 
 ---
 
@@ -204,7 +206,7 @@ Each photo is assigned a calculated number of grid cells based on its orientatio
 - **Square:** 2 rows × 2 columns (area = 4 cells)
 - **Portrait:** 3 rows × 2 columns (area = 6 cells)
 
-This way, portrait and landscape photos occupy comparable visual space, while squares appear slightly smaller—a subtle nod to how square crops are usually obtained. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection’s characteristics, or even add more categories, like panorama or very tall portrait, if needed.
+This approach deliberately gives portrait and landscape photos equal visual area (6 cells each), while squares occupy less space (4 cells). This isn’t an oversight—it reflects the reality that square images are typically obtained by cropping original landscape or portrait photos. Treating them as slightly smaller acknowledges their derived nature. The aspect ratios for portrait and landscape are chosen to match common camera formats (3:2). However, you can adjust these targets based on your collection’s characteristics, or even add more categories, like panorama or very tall portrait, if needed.
 
 ![Cell-span layout—photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
@@ -225,6 +227,12 @@ Yet, beneath the surface, there’s a structured grid. Each photo is positioned 
 .square    { grid-row: span 2; grid-column: span 2; }
 .portrait  { grid-row: span 3; grid-column: span 2; }
 ```
+
+#### Responsive Behavior and Content Ordering
+
+The cell-span grid adapts naturally to narrower viewports. For mobile devices, it’s important to size grid cells and gaps so that at least three columns are visible—otherwise, landscape photos (which span 3 columns) would extend beyond the viewport. In practice, on narrow screens landscape photos typically span the full width while portraits occupy two columns, leaving one empty.
+
+A practical advantage of this CSS Grid approach: content fills naturally in reading order—left-to-right, then top-to-bottom. Unlike the CSS columns layout (which fills top-to-bottom first), the cell-span grid presents photos in their source order, making chronological browsing intuitive without requiring JavaScript.
 
 A practical consideration: you need to know each photo’s orientation in advance to assign the correct CSS class. This can be done with JavaScript on the client, but if you want to avoid layout JS entirely, you can determine orientation server-side during rendering.
 
@@ -250,21 +258,11 @@ At the same time, if the number of wasted cells is not too high, cell-span layou
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
-### Making It Work: Polaroid Borders as Optimization
+### The Aesthetic Layer: Polaroid-Style Framing
 
-So far we’ve discussed the cell-span layout in general terms. Now let’s turn to the specific implementation details of our gallery—particularly how **Polaroid-style borders** help optimize the layout.
+So far we’ve discussed the cell-span layout in general terms. Now let’s turn to the specific implementation details of our gallery—particularly how **Polaroid-style borders** enhance the presentation aesthetically while providing a modest practical benefit.
 
-Real photographs rarely match target aspect ratios exactly. A landscape shot might be 16:9 (much wider than our 3:2 target) or 4:3 (falling between landscape and square). These mismatches contribute to wasted space within grid cells.
-
-Polaroid borders solve two problems at once. Their primary purpose is to provide space for captions, but they also serve a structural role: **strategically placed borders nudge photos toward their nearest target ratio**.
-
-Here’s the logic: for each photo, we decide whether to place the thicker Polaroid border on the side or bottom. For panorama-like landscapes (16:9 or wider), we place it on the bottom to make the overall frame more “squarish”—closer to the 3:2 target. For less extreme landscapes (4:3), we add the thicker border to the side to stretch it wider toward 3:2. The same logic applies to square and portrait photos: borders are positioned to minimize the gap between actual and target ratios.
-
-By placing borders asymmetrically based on each photo’s aspect ratio, we shift the overall visual proportions closer to grid targets. This doesn’t reduce the number of trapped or unused cells—that’s inherent to the cell-span approach—but it does reduce the amount of wasted space *within* the cells that photos occupy.
-
-![Polaroid-style borders shifting photo aspect ratios](./assets/borders.svg "Asymmetric Polaroid borders placed on the side or bottom to nudge actual photo aspect ratios toward the grid’s target ratios")
-
-You might note that borders shift the aspect ratio of *all* photos, including those that already match targets. This is true. However, since perfectly matched photos are in the minority, the net effect is positive: overall wasted space decreases.
+The borders serve multiple purposes: perceptual enhancement, space for captions, and a minor optimization of aspect ratios.
 
 #### Why Off-White Matters More Than You’d Think
 
@@ -293,9 +291,29 @@ When the photo has darker edges, the inner border’s impact is minimal—just a
 
 One more detail softens the mechanical feel: **slight random rotation**. We rotate each photo by a small random angle drawn from a normal distribution. The result: Polaroid cards that look scattered by hand rather than aligned by machine.
 
-![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile 'pinned' look while maintaining the cell-span layout")
+![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile “pinned” look while maintaining the cell-span layout")
 
 The rotation is subtle—just enough to break rigid alignment without creating chaos. Combined with the inconsistent gap alignment we discussed earlier, this produces a layout that feels organic and tactile, more like prints pinned to a wall than tiles in a spreadsheet.
+
+#### A Side Benefit: Aspect Ratio Nudging
+
+Beyond aesthetics, the asymmetric Polaroid borders provide a modest practical benefit: they help nudge photos closer to their target aspect ratios.
+
+Real photographs rarely match target aspect ratios exactly. A landscape shot might be 16:9 (much wider than our 3:2 target) or 4:3 (falling between landscape and square). For each photo, we decide whether to place the thicker border on the side or bottom. For panorama-like landscapes (16:9 or wider), placing it on the bottom makes the overall frame more “squarish”—closer to the 3:2 target. For less extreme landscapes (4:3), adding the thicker border to the side stretches it wider toward 3:2.
+
+![Polaroid-style borders shifting photo aspect ratios](./assets/borders.svg "Asymmetric Polaroid borders placed on the side or bottom to nudge actual photo aspect ratios toward the grid’s target ratios")
+
+This doesn’t reduce the number of trapped or unused cells—that’s inherent to the cell-span approach—but it does reduce wasted space *within* the cells that photos occupy. The effect is modest, and borders shift the aspect ratio of all photos (even those already at target), but since perfectly matched photos are in the minority, the net effect is a slight improvement in space utilization.
+
+---
+
+## Practical Considerations
+
+Before implementing a cell-span gallery, a few practical factors are worth considering:
+
+**Performance**: The computational cost depends on your data architecture. If you already know image dimensions or aspect ratios (stored in a database, image manifest, or metadata file), determining orientation and border placement is trivial—a few comparisons per image. If you need to read dimensions from image files, performance depends on I/O speed. In the worst case—fetching remote images just to extract dimensions—network latency becomes the bottleneck. For static sites, this happens once at build time; for dynamic galleries, consider caching dimension data.
+
+**Accessibility**: The cell-span layout inherits CSS Grid’s built-in accessibility features. Screen readers traverse content in source order (which matches visual reading order thanks to grid’s left-to-right fill). Images should still have proper `alt` text, and the grid structure doesn’t interfere with keyboard navigation. No special accessibility work is required beyond standard image gallery practices.
 
 ---
 
@@ -325,6 +343,6 @@ The cell-span layout documented here prioritizes something different: equal visu
 
 This approach makes most sense for **navigational galleries**: collections where the viewer browses freely and no image should be privileged by the layout itself. If you’re building an editorial gallery—one where hierarchy and sequence tell a story—you probably want deliberate visual weight differences and tighter control over adjacency. But if you’re presenting a collection for discovery, and you want portraits and landscapes to have equal presence, a cell-based grid with calibrated spans offers a straightforward path.
 
-The implementation is pure CSS with server-side orientation detection—no client JavaScript required for layout. Borders are asymmetric to nudge aspect ratios toward targets. Slight rotation breaks mechanical alignment. A neutral background provides consistent color context.
+The implementation is client-side JavaScript-free when using server-side rendering or static site generation—orientation detection happens once during build, then CSS handles everything. For dynamic scenarios, orientation calculation is simpler than justified layout algorithms (which can exceed 9KB minified). Borders provide aesthetic framing with a minor aspect-ratio benefit. Slight rotation breaks mechanical alignment. A neutral background provides consistent color context.
 
 If you’ve struggled with layouts that crop compositions or let one orientation dominate, this strategy offers an alternative. The code is simple, the trade-offs are clear, and the result respects what a photograph is: a deliberate composition that deserves to be seen in full.
