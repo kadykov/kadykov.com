@@ -86,13 +86,13 @@ This approach gives you maximum space efficiency and a strong visual rhythm. Bec
 
 ![Square grid with aligned leading lines](./assets/square-grid-leading-lines.svg "Fixed-aspect grid showing aligned leading lines where gaps form continuous horizontal and vertical guides, producing strong visual rhythm.")
 
-Compare this to the `contain` baseline: letterboxing breaks those lines and the grid feels inconsistent. The fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In rare cases—when you combine very thick gaps, high contrast (like white gaps on dark images), many visible rows and columns, and specific viewing distances—the regular grid pattern can trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion), where phantom dark spots appear at gap intersections. In practice, most gallery designs don’t meet these extreme conditions.
+Compare this to the `contain` baseline: letterboxing bends those lines by asymmetrically enlarging the gaps, and the grid feels inconsistent. The straight and periodic leading lines of the fixed-aspect grid can produce a strong sense of order; that order can feel mechanical rather than organic. In some configurations with thick and high-contrast gaps, when multiple rows and columns are visible from specific viewing distances—the regular grid pattern can trigger the [Hermann grid illusion](https://en.wikipedia.org/wiki/Grid_illusion), where phantom dark spots appear at gap intersections. In practice, this effect is rather rare, as most gallery designs don’t meet these conditions.
 
 ![Contain grid showing broken leading lines](./assets/square-grid-fit-leading-lines.svg "Contain approach showing broken leading lines caused by letterboxing; inconsistent gaps across cells reduce visual rhythm.")
 
 Overall, there are two approaches: show the full photo (`contain`) or crop every preview to the same ratio (`cover`). `Contain` preserves composition but leaves letterboxed gaps that break leading lines; `cover` preserves rhythm by aligning cell content, but it crops image edges.
 
-If you choose `cover`, you must then choose a cropping strategy. The simplest is **center crop**, the naive default that can be implemented with pure CSS—but it often clips subjects placed off-center, as the center isn’t always the most important part of the image.
+If you choose `cover`, you must then choose a cropping strategy. The simplest is **center crop**, the naïve default that can be implemented with pure CSS—but it often clips subjects placed off-center, as the center isn’t always the most important part of the image.
 
 To improve on this, you can preprocess photos with **smart crop** techniques. For example, [smartcrop.js](https://github.com/jwagner/smartcrop.js) uses heuristics like faces, edges, and visual weight to select safer crops without any AI involvement.
 
@@ -139,7 +139,7 @@ Here’s a minimal implementation:
 }
 ```
 
-Columns layout is attractive because it preserves composition, has minimal wasted space, and feels less rigid than strict cells. However, it has a few practical implications you should be aware of when choosing a gallery strategy:
+Columns layout is attractive because it preserves composition, has minimal wasted space, and feels less rigid than strict cells. However, it has a few practical implications you should be aware of:
 
 1) Portraits dominate visually.  
 Taller images occupy more vertical space than wide ones, so a single portrait can outweigh two landscapes beside it. For portrait-focused collections—this visual prominence can be a feature rather than a bug, naturally emphasizing the work’s primary orientation.
@@ -194,13 +194,9 @@ So, like the other approaches we’ve seen, justified rows trade one bias for an
 
 ## A Different Strategy: Matching Photos to Grid Cells
 
-One of the key goals for navigational galleries is to give all photos—regardless of orientation—equal visual weight, without cropping, and ideally without relying on client-side JavaScript.
+One of the key goals for navigational galleries is to give all photos—regardless of orientation—equal visual weight, without cropping, and ideally without relying on client-side JavaScript. The cell-span layout is an approach designed to strike that balance.
 
-The cell-span layout is an approach designed to strike that balance.
-
-Conceptually, it’s similar to the contain/fit method: we don’t crop images. But instead of forcing every photo into a single target aspect ratio (which inevitably favors some shapes over others), we define **three targets**: landscape, square, and portrait.
-
-Each photo is assigned a calculated number of grid cells based on its orientation:
+Conceptually, it’s similar to the contain/fit method: we place the images on the grid without cropping. But instead of forcing every photo into a single target aspect ratio (which inevitably favors some shapes over others), we define **multiple targets**: landscape, square, and portrait. Each photo is assigned a calculated number of grid cells based on its orientation:
 
 - **Landscape:** 2 rows × 3 columns (area = 6 cells)
 - **Square:** 2 rows × 2 columns (area = 4 cells)
@@ -210,9 +206,7 @@ This approach deliberately gives portrait and landscape photos equal visual area
 
 ![Cell-span layout—photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
-At first glance, the photos seem almost randomly placed—there are no rigid grid lines. The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
-
-Yet, beneath the surface, there’s a structured grid. Each photo is positioned within cells that match its orientation:
+At first glance, the photos seem almost randomly placed—there are no rigid grid lines. The layout feels more like frames pinned to a wall than tiles in a spreadsheet. Yet, beneath the surface, there’s a structured grid. Each photo is positioned within cells that match its orientation:
 
 ![Grid overlay showing how photos span multiple cells (hidden grid)](./assets/cell-span-grid.svg "Grid overlay showing each photo positioned to span multiple grid cells according to orientation: portraits 3×2, landscapes 2×3, squares 2×2")
 
@@ -236,7 +230,7 @@ A practical advantage of this CSS Grid approach: content fills naturally in read
 
 A practical consideration: you need to know each photo’s orientation in advance to assign the correct CSS class. This can be done with JavaScript on the client, but if you want to avoid layout JS entirely, you can determine orientation server-side during rendering.
 
-What about visual rhythm? Unlike strict cell-based grids, the cell-span layout doesn’t produce strong, continuous leading lines—gaps don’t always align. However, the underlying grid still imparts a subtle bidirectional rhythm. Because photos span multiple cells and gaps don’t consistently line up, the result feels less mechanical and more organic.
+What about visual rhythm? Unlike strict cell-based grids, the cell-span layout doesn’t produce strong, continuous leading lines—gaps don’t always align. However, the underlying grid still imparts a subtle bidirectional rhythm, but because photos span multiple cells and gaps don’t consistently line up, the result feels less mechanical and more organic.
 
 ### The Cost: Empty Cells by Design
 
@@ -248,13 +242,13 @@ Consider a viewport that fits 5 columns of cells. When the number of columns doe
 - **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
 - **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
 
-But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space. In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused in the corners.
+But it is not just about leftover columns. Because photos span multiple cells, some cells can get trapped between spans, creating unusable pockets of space. In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused on the sides.
 
 ![Cell-span grid with wasted or trapped cells marked](./assets/cell-span-grid-wasted.svg "Grid overlay highlighting wasted or trapped cells marked with crosses where photo spans create unusable gaps")
 
 However, the wasted space here feels less jarring than in the contain/fit layout. The gaps are consistent and rhythmic—they seem intentional, part of the design. Because there are no strong leading lines, the empty cells don’t disrupt the overall flow.
 
-At the same time, if the number of wasted cells is not too high, cell-span layout is more space-efficient than the contain/fit approach, since more photos match the target aspect ratios more closely.
+At the same time, if the number of wasted cells is not too high, cell-span layout is more space-efficient than the contain/fit approach, since a larger proportion of photos matches the target aspect ratios more closely.
 
 With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space. In the cell-span strategy, however, the inefficiency is inherent. This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
@@ -281,9 +275,9 @@ The border actually has two layers:
 - **Thick outer border**—off-white, provides the perceptual “paper white” reference
 - **Thin inner border**—light gray, separates bright photo areas from the outer frame
 
-Without the inner border, bright photo regions—clouds, snow, light skies—visually blend into the white frame. This breaks our contrast illusion: the viewer can see that the border isn’t pure white. Worse, if the white color temperature of the photo doesn’t match the neutral border, the transition looks unpleasant. The thin gray separator solves both problems by making the boundary clear, even when both surfaces are technically “white” but at different color temperatures.
+Without the inner border, bright photo regions—clouds, snow, light skies—visually blend into the white frame. This breaks our contrast illusion: the viewer can see that the border isn’t pure white. Even when both surfaces are technically “white” but at different color temperatures, the transition looks unpleasant. The thin gray separator solves both problems by making the boundary clear.
 
-![Two Polaroid-style frames comparing single vs double border](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick off-white border—bright clouds can visually blend into the frame. Right: double border with a thin light-gray inner line—creates a clear separation between image highlights and the frame, preserving detail.")
+![Two Polaroid-style frames comparing single vs double border](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick off-white border—bright clouds can visually blend into the frame. Right: double border with a thin light-gray inner line—creates a clear separation between image highlights and the frame.")
 
 When the photo has darker edges, the inner border’s impact is minimal—just a few pixels of light gray very close to the off-white outer border. It doesn’t disrupt the overall white-frame aesthetic or wash out deep blacks. But it prevents the visual confusion where image and mount merge into one.
 
@@ -303,7 +297,7 @@ Real photographs rarely match target aspect ratios exactly. A landscape shot mig
 
 ![Polaroid-style borders shifting photo aspect ratios](./assets/borders.svg "Asymmetric Polaroid borders placed on the side or bottom to nudge actual photo aspect ratios toward the grid’s target ratios")
 
-This doesn’t reduce the number of trapped or unused cells—that’s inherent to the cell-span approach—but it does reduce wasted space *within* the cells that photos occupy. The effect is modest, and borders shift the aspect ratio of all photos (even those already at target), but since perfectly matched photos are in the minority, the net effect is a slight improvement in space utilization.
+This doesn’t reduce the number of trapped or unused cells—that’s inherent to the cell-span approach—but it does reduce wasted space *within* the cells that photos occupy. The effect is modest, and borders shift the aspect ratio of all photos (even those already at target), but since perfectly matched photos are in the minority, the net effect is still an improvement in space utilization.
 
 ---
 
@@ -311,7 +305,7 @@ This doesn’t reduce the number of trapped or unused cells—that’s inherent 
 
 Before implementing a cell-span gallery, a few practical factors are worth considering:
 
-**Performance**: The computational cost depends on your data architecture. If you already know image dimensions or aspect ratios (stored in a database, image manifest, or metadata file), determining orientation and border placement is trivial—a few comparisons per image. If you need to read dimensions from image files, performance depends on I/O speed. In the worst case—fetching remote images just to extract dimensions—network latency becomes the bottleneck. For static sites, this happens once at build time; for dynamic galleries, consider caching dimension data.
+**Performance**: The computational cost depends on your data architecture. If you already know image dimensions or aspect ratios (stored in a database, image manifest, or metadata file), determining orientation and border placement is trivial—a few comparisons per image. If you need to read dimensions from image files, performance depends on I/O speed. In the worst case—fetching remote images just to extract dimensions—network latency becomes the bottleneck. For static sites, this happens only once at build time; for dynamic galleries, consider caching dimension data.
 
 **Accessibility**: The cell-span layout inherits CSS Grid’s built-in accessibility features. Screen readers traverse content in source order (which matches visual reading order thanks to grid’s left-to-right fill). Images should still have proper `alt` text, and the grid structure doesn’t interfere with keyboard navigation. No special accessibility work is required beyond standard image gallery practices.
 
@@ -319,7 +313,7 @@ Before implementing a cell-span gallery, a few practical factors are worth consi
 
 ## Seeing It in Action
 
-Here’s how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots of street scenes sit alongside wide mountain landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
+Here’s how the layout works in practice. The cell-span grid handles mixed orientations naturally—portrait shots sit alongside wide landscapes, and neither dominates visually. Polaroid borders frame each image consistently, and the slight rotation gives the page a tactile, handmade quality.
 
 ![Polaroid-framed gallery showing mixed portrait and landscape photos arranged on a cell-span CSS grid with subtle rotation](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Polaroid-framed gallery: mixed orientations in a cell-span grid with subtle rotation and equal visual weight.")
 
