@@ -291,14 +291,13 @@ In practice this means every photo keeps its aspect ratio, but widths vary so th
 Because width maps directly to area in this scheme, wide images tend to dominate.
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
 the same effect that made portraits stand out in the column layout now applies to landscapes here.
-
-![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
-
 For collections where landscape photos are the primary focus —
 this visual hierarchy can be entirely appropriate,
 naturally showcasing the work at its intended scale.
 
-That dominance shapes the layout’s rhythm.
+![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
+
+That landscape dominance shapes the layout’s rhythm.
 Justified rows create strong horizontal leading lines:
 the aligned gaps between rows repeat across the page,
 producing a unidirectional rhythm.
@@ -312,7 +311,7 @@ Narrower viewports fit fewer photos per row,
 so row heights vary more and the pattern reads less mechanical.
 This variation can make the layout feel more organic even while preserving aspect ratios.
 
-A practical downside: justified rows require JavaScript,
+The main implementation consideration is that justified rows require JavaScript,
 because you need to measure image dimensions and compute scale factors
 so each row fills the container while keeping consistent heights.
 If you want a ready-made solution,
