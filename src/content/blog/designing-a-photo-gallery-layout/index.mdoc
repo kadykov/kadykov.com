@@ -291,25 +291,19 @@ In practice this means every photo keeps its aspect ratio, but widths vary so th
 Because width maps directly to area in this scheme, wide images tend to dominate.
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
 the same effect that made portraits stand out in the column layout now applies to landscapes here.
-For collections where landscape photos are the primary focus —
-this visual hierarchy can be entirely appropriate,
-naturally showcasing the work at its intended scale.
 
 ![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
-That landscape dominance shapes the layout’s rhythm.
+That landscape dominance is reinforced by the layout’s rhythm.
 Justified rows create strong horizontal leading lines:
 the aligned gaps between rows repeat across the page,
-producing a unidirectional rhythm.
-When most of your collection is landscape-oriented,
-this layout can actually reinforce the work rather than fight it.
-
-![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
-
-However, the rhythm is softer than in strict column layouts because row heights change with their contents.
+producing a unidirectional rhythm that emphasizes horizontal flow.
+However, this rhythm is softer than in strict column layouts because row heights change with their contents.
 Narrower viewports fit fewer photos per row,
 so row heights vary more and the pattern reads less mechanical.
 This variation can make the layout feel more organic even while preserving aspect ratios.
+
+![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
 
 The main implementation consideration is that justified rows require JavaScript,
 because you need to measure image dimensions and compute scale factors
@@ -320,12 +314,13 @@ If you want a ready-made solution,
 As a side note, CSS Grid’s [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) may one day provide similar, more automatic arrangements without JS,
 but [browser support remains limited](https://caniuse.com/?search=masonry) as of late 2025.
 
-So, like the other approaches we’ve seen, justified rows trade one bias for another —
-they favor wide formats while preserving compositions.
-Each layout reflects different priorities:
-columns suit portrait-focused work,
-justified rows suit landscape collections,
-and fixed-aspect grids prioritize consistency.
+So in summary: justified rows favor wide formats while preserving compositions.
+Landscape dominance combined with pronounced horizontal rhythm makes this layout particularly suitable
+for collections where landscape photos are the primary focus —
+the visual hierarchy naturally showcases wide images at their intended scale.
+The rhythm is less mechanical than fixed-column layouts,
+and while the JavaScript requirement adds implementation complexity,
+it’s a worthwhile trade-off when your collection aligns with the layout’s inherent bias.
 What if your collection mixes orientations freely and you want to avoid favoring any particular format?
 
 ---
