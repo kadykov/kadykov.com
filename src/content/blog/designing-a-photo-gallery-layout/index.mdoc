@@ -233,50 +233,51 @@ Here’s a minimal implementation:
 
 Columns layout is attractive because it preserves composition, has minimal wasted space,
 and feels less rigid than strict cells.
-However, it has a few practical implications you should be aware of.
+However, it comes with characteristic behaviors worth understanding.
 
-#### Portrait Visual Dominance
-
-Taller images occupy more vertical space than wide ones,
+The most visible characteristic is that taller images occupy more vertical space than wide ones,
 so a single portrait can outweigh two landscapes beside it.
-For portrait-focused collections —
+This isn’t a flaw — for portrait-focused collections,
 this visual prominence can be a feature rather than a bug,
 naturally emphasizing the work’s primary orientation.
 
 ![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
 
-#### Directional Rhythm
-
-Consistent column widths produce strong vertical leading lines repeated horizontally.
-That directional rhythm is not inherently a flaw —
-it is a characteristic you can lean into or soften by adjusting the gap size.
-For galleries that prioritize portraits, the unidirectional rhythm can be an asset:
+That portrait dominance is reinforced by the layout’s directional rhythm.
+Consistent column widths produce strong vertical leading lines repeated horizontally,
+creating a unidirectional flow.
+For galleries that prioritize portraits, this rhythm can be an asset:
 it reinforces the prominence of tall images and helps guide the eye down columns.
+You can tune this effect by adjusting gap size —
+wider gaps make the vertical lines more pronounced,
+while narrower gaps soften the directional emphasis.
 
 ![Column layout emphasizing vertical leading lines created by consistent column widths](./assets/columns-leading-lines.svg "Vertical leading lines are strong; horizontal gaps are irregular and do not form continuous horizontal guides")
 
-#### Counterintuitive Fill Order
+#### The Fill Order Problem
 
-By default multi-column layout fills top-to-bottom, then left-to-right (like text).
+Beyond these visual characteristics, the column layout has one practical quirk that often requires attention:
+by default, multi-column layout fills top-to-bottom, then left-to-right (like text).
 For long galleries this can hide recently added photos below the fold —
-viewers often expect the newest items to appear first across the top row, not stacked down the first column.
+viewers often expect the newest items to appear first across the top row,
+not stacked down the first column.
 
 ![CSS multi-column fill order diagram (top-to-bottom, then left-to-right)](./assets/columns-CSS-order.svg "CSS column fill order — browser fills columns like text: top-to-bottom, then left-to-right")
 
 ![Long-gallery example showing CSS column fill hiding items below the fold](./assets/columns-CSS-order-long.svg "Column fill order with long gallery — some photos are pushed below the fold because columns fill top-to-bottom first")
 
-Fixing the fill order requires JavaScript:
-reorder or position items so the layout fills left-to-right row by row instead of the browser’s default text-like flow.
+Fixing this requires JavaScript:
+you need to reorder or position items so the layout fills left-to-right row by row
+instead of the browser’s default text-like flow.
 
 ![Desired natural fill order diagram (left-to-right, then top-to-bottom)](./assets/columns-natural-order.svg "Natural fill order — left-to-right, top-to-bottom; requires JavaScript to emulate in a multi-column layout")
 
-#### Trade-offs Summary
-
-In short: the columns layout preserves full images and feels organic.
+So in summary: the columns layout preserves full images and feels organic.
 Portrait dominance and a pronounced directional rhythm are natural outcomes — not defects —
-and can be used deliberately (or tuned via gap size and composition choices).
-The fill-order quirk is the main practical downside to address if you want a traditional left-to-right browsing sequence.
-
+and can be used deliberately or tuned via gap size and composition choices.
+The fill-order quirk is the main practical downside to address
+if you want a traditional left-to-right browsing sequence.
+ 
 ---
 
 ### Horizontal Stretch: Justified Rows and the Landscape Advantage
