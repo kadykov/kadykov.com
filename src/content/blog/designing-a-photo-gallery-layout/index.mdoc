@@ -354,12 +354,21 @@ or even add more categories, like panorama or very tall portrait, if needed.
 
 ![Cell-span layout — photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
+Here’s how this looks in practice —
+the cell-span grid handles mixed orientations naturally,
+and portrait shots sit alongside wide landscapes with neither dominating visually:
+
+![Polaroid-framed gallery showing mixed portrait and landscape photos arranged on a cell-span CSS grid with subtle rotation](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "One possible implementation showing cell-span layout with Polaroid-style borders and subtle rotation (aesthetic refinements discussed later).")
+
 At first glance, the photos seem almost randomly placed — there are no rigid grid lines.
 The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
 Yet, beneath the surface, there’s a structured grid.
 Each photo is positioned within cells that match its orientation:
 
 ![Grid overlay showing how photos span multiple cells (hidden grid)](./assets/cell-span-grid.svg "Grid overlay showing each photo positioned to span multiple grid cells according to orientation: portraits 3×2, landscapes 2×3, squares 2×2")
+
+The implementation is straightforward with CSS Grid.
+The key is using `grid-row: span` and `grid-column: span` to make each photo occupy multiple cells:
 
 ```css
 .gallery {
@@ -373,7 +382,12 @@ Each photo is positioned within cells that match its orientation:
 .portrait  { grid-row: span 3; grid-column: span 2; }
 ```
 
-#### Responsive Behavior and Content Ordering
+Notice the three classes — `.landscape`, `.square`, and `.portrait`.
+This reveals a practical requirement:
+you need to know each photo’s orientation in advance to assign the correct CSS class.
+This can be done with JavaScript on the client,
+but if you want to avoid layout JS entirely,
+you can determine orientation server-side during rendering.
 
 The cell-span grid adapts naturally to narrower viewports.
 For mobile devices, it’s important to size grid cells and gaps so that at least three columns are visible —
@@ -387,17 +401,12 @@ Unlike the CSS columns layout (which fills top-to-bottom first),
 the cell-span grid presents photos in their source order,
 making chronological browsing intuitive without requiring JavaScript.
 
-A practical consideration:
-you need to know each photo’s orientation in advance to assign the correct CSS class.
-This can be done with JavaScript on the client,
-but if you want to avoid layout JS entirely,
-you can determine orientation server-side during rendering.
-
 What about visual rhythm?
 Unlike strict cell-based grids,
 the cell-span layout doesn’t produce strong, continuous leading lines —
 gaps don’t always align.
 However, the underlying grid still imparts a subtle bidirectional rhythm,
+inherited from the grid structure,
 but because photos span multiple cells and gaps don’t consistently line up,
 the result feels less mechanical and more organic.
 
@@ -406,40 +415,58 @@ the result feels less mechanical and more organic.
 Why isn’t this layout more common?
 The answer is simple: it sacrifices **space efficiency** for **equal presentation**.
 
-Consider a viewport that fits 5 columns of cells.
-When the number of columns doesn’t evenly accommodate photo widths, gaps appear:
-
-- **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty column on the side.
-- **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
-- **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
-
-But it is not just about leftover columns.
-Because photos span multiple cells, some cells can get trapped between spans,
+The inefficiency manifests in two ways.
+First, because photos span multiple cells, some cells can get trapped between spans,
 creating unusable pockets of space.
-In these scenarios, some cells get trapped in the middle (surrounded by spans), and others remain unused on the sides.
+These cells sit surrounded by photo spans and cannot accommodate new images:
 
 ![Cell-span grid with wasted or trapped cells marked](./assets/cell-span-grid-wasted.svg "Grid overlay highlighting wasted or trapped cells marked with crosses where photo spans create unusable gaps")
 
-However, the wasted space here feels less jarring than in the contain/fit layout.
+Second, when the viewport width doesn’t evenly accommodate photo spans, entire columns could remain unused.
+Consider these scenarios:
+
+- **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty column.
+- **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
+- **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
+
+![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "Real-world example showing trapped cells and unused columns in an actual gallery — the same wasted-space pattern visible in the conceptual diagram above.")
+
+The inefficiency is inherent to the approach.
+Even with zero gap size, the trapped cells and unused columns persist —
+a direct consequence of giving equal visual weight to different orientations.
+You cannot tune the aspect ratios or adjust spacing to eliminate this waste,
+unlike previous layouts where gap adjustments could improve space utilization.
+This fundamental trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
+
+Yet despite this cost, the wasted space feels less jarring than in the contain/fit layout.
 The gaps are consistent and rhythmic — they seem intentional, part of the design.
-Because there are no strong leading lines, the empty cells don’t disrupt the overall flow.
-
-At the same time, if the number of wasted cells is not too high,
-cell-span layout is more space-efficient than the contain/fit approach,
+Because there are no strong leading lines, the empty cells don’t disrupt the overall flow but read as natural breathing room.
+When the number of wasted cells is not excessive,
+cell-span layout can actually be more space-efficient than the contain/fit approach,
 since a larger proportion of photos matches the target aspect ratios more closely.
+For a navigational gallery where the goal is equal browsing weight rather than maximum density,
+this trade-off makes sense.
 
-With previous layouts, you could tweak gap size or aspect ratio to adjust wasted space.
-In the cell-span strategy, however, the inefficiency is inherent.
-This trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
+Beyond space efficiency, there’s another practical consideration: performance.
+The computational cost for classifying your images depends on your data architecture.
+If you already know image dimensions or aspect ratios (stored in a database, image manifest, or metadata file),
+determining orientation is trivial — a few comparisons per image.
+If you need to read dimensions from image files, performance depends on I/O speed.
+In the worst case, you might need to fetch each image to read its headers.
+For static sites, this happens only once at build time;
+for dynamic galleries, caching dimension data is advisable.
+
+---
 
 ### The Aesthetic Layer: Polaroid-Style Framing
 
-So far we’ve discussed the cell-span layout in general terms.
-Now let’s turn to the specific implementation details of our gallery —
-particularly how **Polaroid-style borders** enhance the presentation aesthetically
+The cell-span layout handles orientation equality,
+but the gallery shown earlier includes additional aesthetic refinements.
+Polaroid-style borders enhance the presentation
 while providing a modest practical benefit.
 
-The borders serve multiple purposes: perceptual enhancement, space for captions, and a minor optimization of aspect ratios.
+You can see this implementation in action at [kadykov.com/photos](/photos),
+and explore the [source code](https://github.com/kadykov/kadykov.com) for implementation details.
 
 #### Why Off-White Matters More Than You’d Think
 
@@ -486,18 +513,16 @@ just a few pixels of light gray very close to the off-white outer border.
 It doesn’t disrupt the overall white-frame aesthetic or wash out deep blacks.
 But it prevents the visual confusion where image and mount merge into one.
 
-#### Adding Visual Playfulness: Rotation
+#### Neutral Gray Environment
 
-One more detail softens the mechanical feel: **slight random rotation**.
-We rotate each photo by a small random angle drawn from a normal distribution.
-The result: Polaroid cards that look scattered by hand rather than aligned by machine.
-
-![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile “pinned” look while maintaining the cell-span layout")
-
-The rotation is subtle — just enough to break rigid alignment without creating chaos.
-Combined with the inconsistent gap alignment we discussed earlier,
-this produces a layout that feels organic and tactile,
-more like prints pinned to a wall than tiles in a spreadsheet.
+One final detail completes the viewing environment:
+the page uses a **neutral gray background** with zero chroma.
+This prevents any hue bias from affecting color perception —
+unlike warm beige or cool blue-grays, true neutral gray doesn’t push reds, greens, or blues in any direction.
+Combined with the off-white Polaroid borders,
+this creates a consistent viewing context that works equally well in light and dark modes.
+The result is closer to a color-neutral print viewing environment
+than the stark white or deep black backgrounds common on photo sites.
 
 #### A Side Benefit: Aspect Ratio Nudging
 
@@ -521,64 +546,18 @@ The effect is modest, and borders shift the aspect ratio of all photos (even tho
 but since perfectly matched photos are in the minority,
 the net effect is still an improvement in space utilization.
 
----
+#### Adding Visual Playfulness: Rotation
 
-## Practical Considerations
+One more detail softens the mechanical feel: **slight random rotation**.
+We rotate each photo by a small random angle drawn from a normal distribution.
+The result: Polaroid cards that look scattered by hand rather than aligned by machine.
 
-Before implementing a cell-span gallery,
-a few practical factors are worth considering:
+![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile “pinned” look while maintaining the cell-span layout")
 
-**Performance**:
-The computational cost depends on your data architecture.
-If you already know image dimensions or aspect ratios (stored in a database, image manifest, or metadata file),
-determining orientation and border placement is trivial — a few comparisons per image.
-If you need to read dimensions from image files, performance depends on I/O speed.
-In the worst case — fetching remote images just to extract dimensions — network latency becomes the bottleneck.
-For static sites, this happens only once at build time;
-for dynamic galleries, consider caching dimension data.
-
-**Accessibility**:
-The cell-span layout inherits CSS Grid’s built-in accessibility features.
-Screen readers traverse content in source order (which matches visual reading order thanks to grid’s left-to-right fill).
-Images should still have proper `alt` text, and the grid structure doesn’t interfere with keyboard navigation.
-No special accessibility work is required beyond standard image gallery practices.
-
----
-
-## Seeing It in Action
-
-Here’s how the layout works in practice.
-The cell-span grid handles mixed orientations naturally —
-portrait shots sit alongside wide landscapes, and neither dominates visually.
-Polaroid borders frame each image consistently,
-and the slight rotation gives the page a tactile, handmade quality.
-
-![Polaroid-framed gallery showing mixed portrait and landscape photos arranged on a cell-span CSS grid with subtle rotation](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Polaroid-framed gallery: mixed orientations in a cell-span grid with subtle rotation and equal visual weight.")
-
-You can explore the full implementation at [kadykov.com/photos](/photos) or the [source code](https://github.com/kadykov/kadykov.com).
-
-The layout’s effectiveness becomes clearer when you examine it with browser DevTools.
-The underlying grid reveals both the structure and the cost:
-some cells remain trapped between photo spans, others sit unused at row ends.
-This is the visual price of equal presentation — space efficiency traded for balanced weight across orientations.
-
-![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools overlay of gallery grid highlighting trapped cells and unused columns — illustrates wasted space in the cell-span layout.")
-
-One final detail completes the viewing environment:
-the page uses a **neutral gray background** with zero chroma.
-This prevents any hue bias from affecting color perception —
-unlike warm beige or cool blue-grays, true neutral gray doesn’t push reds, greens, or blues in any direction.
-Combined with the off-white Polaroid borders,
-this creates a consistent viewing context that works equally well in light and dark modes.
-The result is closer to a color-neutral print viewing environment
-than the stark white or deep black backgrounds common on photo sites.
-
-The wasted space is noticeable if you look for it,
-but in practice it reads as intentional —
-part of the design rather than a layout bug.
-Because gaps don’t align into strong leading lines,
-the empty cells feel like natural breathing room rather than obvious inefficiency.
-For a navigational gallery where the goal is equal browsing weight, not maximum density, that trade-off makes sense.
+The rotation is subtle — just enough to break rigid alignment without creating chaos.
+Combined with the inconsistent gap alignment we discussed earlier,
+this produces a layout that feels organic and tactile,
+more like prints pinned to a wall than tiles in a spreadsheet.
 
 ---
 
