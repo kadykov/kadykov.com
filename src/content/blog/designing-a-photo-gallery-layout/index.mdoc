@@ -94,7 +94,7 @@ Here’s how you might implement this:
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .gallery img {
@@ -291,9 +291,56 @@ Because width maps directly to area in this scheme, wide images tend to dominate
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
 the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
-![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
+![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
-That landscape dominance is reinforced by the layout’s rhythm.
+#### The Flexbox Approximation: Simple but Imperfect
+
+The simplest approach to justified rows uses Flexbox with wrapping.
+Set all images to the same height and let them expand based on their aspect ratios:
+
+```css
+/* Flexbox wrap simulating justified rows */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gallery img {
+  height: 200px;     /* fixed height per row */
+  object-fit: contain;
+}
+```
+
+This approach is CSS-only and works reasonably well.
+Photos wrap into rows with consistent heights,
+and widths adjust based on each image's proportions.
+The implementation is straightforward and requires no JavaScript.
+
+However, the Flexbox approach has a key limitation:
+**row edges don't align perfectly**.
+Because images wrap based on available space,
+the last photo in each row often doesn't reach the container edge,
+creating irregular gaps at the end of lines.
+Unlike true justified layout where every row spans exactly to the edge,
+Flexbox wrapping produces ragged right margins that vary by row.
+
+This imperfect alignment weakens the horizontal leading lines.
+While gaps between rows remain consistent,
+the irregular right edge breaks the visual rhythm that justified layouts are known for.
+For some galleries this looseness is acceptable or even desirable —
+it can feel more organic than mechanical precision.
+But if you want the crisp, fully-aligned rows that sites like Flickr use,
+you'll need to move beyond pure CSS.
+
+#### The JavaScript Solution: Perfect Alignment
+
+For true justified rows with perfectly aligned edges,
+you need JavaScript to measure image dimensions and compute scale factors.
+The algorithm calculates how to scale each row so its contents exactly span the container width
+while keeping heights consistent within each row.
+
+That landscape dominance is reinforced by the layout's rhythm.
 Justified rows create strong horizontal leading lines:
 the aligned gaps between rows repeat across the page,
 producing a unidirectional rhythm that emphasizes horizontal flow.
@@ -309,17 +356,33 @@ because you need to measure image dimensions and compute scale factors
 so each row fills the container while keeping consistent heights.
 If you want a ready-made solution,
 [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point.
+It handles the scaling calculations and provides positioning data for each image.
 
 As a side note, CSS Grid’s [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) may one day provide similar, more automatic arrangements without JS,
 but [browser support remains limited](https://caniuse.com/?search=masonry) as of late 2025.
+
+#### Choosing Between Flexbox and JavaScript
+
+The choice between Flexbox wrapping and JavaScript-based justified layout depends on your priorities:
+
+**Use Flexbox when:**
+- You want a simple, JavaScript-free implementation
+- Slightly irregular row edges are acceptable
+- The organic feel of imperfect alignment suits your design
+- Implementation simplicity matters more than pixel-perfect rhythm
+
+**Use JavaScript when:**
+- You need perfectly aligned row edges
+- Strong horizontal leading lines are essential
+- You're building a photography-focused site where visual precision matters
+- The complexity of JavaScript implementation is justified by the result
 
 So in summary: justified rows favor wide formats while preserving compositions.
 Landscape dominance combined with pronounced horizontal rhythm makes this layout particularly suitable
 for collections where landscape photos are the primary focus —
 the visual hierarchy naturally showcases wide images at their intended scale.
-The rhythm is less mechanical than fixed-column layouts,
-and while the JavaScript requirement adds implementation complexity,
-it’s a worthwhile trade-off when your collection aligns with the layout’s inherent bias.
+The Flexbox approach offers a simple starting point,
+while JavaScript provides the precision needed for professional photography galleries.
 What if your collection mixes orientations freely and you want to avoid favoring any particular format?
 
 ---
@@ -373,7 +436,7 @@ The key is using `grid-row: span` and `grid-column: span` to make each photo occ
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .landscape { grid-row: span 2; grid-column: span 3; }
