@@ -299,41 +299,69 @@ the aligned gaps between rows repeat across the page,
 producing a unidirectional rhythm that emphasizes horizontal flow.
 
 However, there is a catch.
-In the case of the column layout, we have infinite height (the page can scroll vertically),
-so when we let the images keep their aspect ratios, they can grow as tall as needed.
-But in the case of rows, we have a limited width (the viewport width),
-therefore, when we set equal heights for the images,
+In the case of the column layout, we have infinite height,
+as the page can scroll vertically,
+so when we let the images keep their aspect ratios, they can grow as tall as needed,
+and we can stack them vertically as many as we want.
+But in the case of rows,
+the available horizontal space is limited by the width of the container.
+Therefore, when we set equal heights for the images,
 their widths can vary significantly,
 and each row has different total width depending on the images it contains.
 
 This imperfect alignment weakens the horizontal leading lines.
 While gaps between rows remain consistent,
-the irregular edge margins break the visual rhythm.
+the irregular edge margins weaken the visual rhythm.
 
 Therefore, you need to decide how to deal with the rows of varying total widths.
-Unfortunately, there is no perfect CSS-only solution for this problem.
-The CSS offers you two main options: distribute the extra space around the images,
+Unfortunately, there is no perfect CSS-only solution for this problem,
+and you have two main options: distribute the extra space around the images,
 or crop the images to fit the row width exactly.
 
 If you choose to crop the images,
-you can use `object-fit: cover` to fill the row width exactly.
-But then you can find that some images are cropped vertically.
-In some cases this cropping can be quite destructive,
-and you may end up cropping portrait images into landscapes,
-like in the example below.
+you can use `object-fit: cover` in conjunction with `flex: auto`
+to make the flex items grow and shrink as needed
+to fill the row width exactly.
 
-<!-- TODO: flexbox wrap object-fit cover example -->
+<!-- TODO: flexbox wrap object-fit cover flex auto example -->
 <!-- Caption idea:
 The portrait and square photos in the third row are cropped
 so that they are landscapes now,
 leaving out only the small central portion of the original images.
  -->
 
-Indeed, in most of the cases cropping is not as destructive as in the example above,
-and you may argue that it is better to crop some images slightly,
-than to crop every image heavily to a fixed aspect ratio.
+From the first glance, this approach looks appealing:
+all rows fill the container width exactly,
+and the horizontal leading lines are strong and consistent.
+But if you look closer, you will notice a problem:
+some of the portrait images are heavily cropped.
+Why is that happening?
+Let's take a closer look.
+Consider we have two images in a row:
+a portrait image 200x300 (aspect ratio 2:3)
+and a landscape image 450x300 (aspect ratio 3:2).
+Let's say that this particular row is 200px shorter than the container width,
+When we set `flex: auto` on both images,
+it means that we set `flex-grow: 1` for both images,
+so the extra 200px will be distributed equally between them,
+giving each image an extra 100px of width.
+Therefore, the portrait image will strech to 300x300,
+cropping out 50% of its height,
+while the landscape image will stretch to 550x300,
+cropping out only about 18% of its height.
+
+The workaround is to use separate `flex-grow` values for each image,
+proportional to its aspect ratio.
+In our particular example, the aspect ratios are 2:3 (0.67) and 3:2 (1.5).
+
+<!-- TODO: flex-grow proportional to aspect ratio example -->
+
+Indeed, in many cases cropping is not as destructive as in the examples above.
+And you may argue that cropping slightly some images is a small price to pay,
+and it is still better than grid layout cropping,
+when most of the images are cropped to the fixed aspect ratio.
 However, in the case of flexbox wrap,
-the cropping depends on the container width and neibouring images,
+the cropping depends on how much extra space there is in each row,
 therefore, it is less predictable, than cropping to a fixed aspect ratio,
 where you know in advance how the images will be cropped,
 and adjust your cropping strategy accordingly.
@@ -341,6 +369,18 @@ The unpredictability increases at the narrower viewports,
 where fewer images fit per row, and each image occupies a larger portion of the row width.
 Therefore, it makes sense do disable this cropping behavior on small screens,
 to avoid unpleasant surprises.
+
+<!-- TODO: example with media queries to disable cropping on small screens -->
+
+But before you rush to implement cropping,
+let's take a closer look to the last row.
+What if the last row is not full?
+In this case, there is a lot of extra space left in the row,
+and cropping would be very destructive.
+And in this case,
+you cannot disable cropping only for the last row with pure CSS.
+
+<!-- TODO: last row screenshots -->
 
 The less distructive option is to distribute the extra space,
 keeping the original compositions intact.
