@@ -423,16 +423,6 @@ This variation can make the layout feel more organic even while preserving aspec
 
 ![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
 
-The main implementation consideration is that justified rows require JavaScript,
-because you need to measure image dimensions and compute scale factors
-so each row fills the container while keeping consistent heights.
-If you want a ready-made solution,
-[justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point.
-It handles the scaling calculations and provides positioning data for each image.
-
-As a side note, CSS Grid’s [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) may one day provide similar, more automatic arrangements without JS,
-but [browser support remains limited](https://caniuse.com/?search=masonry) as of late 2025.
-
 So in summary: justified rows favor wide formats while preserving compositions.
 Landscape dominance combined with pronounced horizontal rhythm makes this layout particularly suitable
 for collections where landscape photos are the primary focus —
