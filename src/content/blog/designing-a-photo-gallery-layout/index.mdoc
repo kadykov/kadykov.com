@@ -281,155 +281,174 @@ if you want a traditional left-to-right browsing sequence.
 
 ### Horizontal Stretch: Justified Rows and the Landscape Advantage
 
-In the previous section we set the equal width of the photos,
-and let the portait images dominate vertically.
-But what if we prefer landscape photos to take precedence instead?
-In this case, we should rather set the equal height of the photos and align them into rows.
-And here’s where flexbox wrap could help us to some extent.
+The column layout sets equal widths and lets portraits dominate vertically.
+What if we want landscape photos to take precedence instead?
+The answer is to flip the constraint:
+set equal heights and align images into rows.
+Flexbox wrap offers a CSS-only starting point for this approach.
 
-<!-- TODO: flexbox wrap justify-content: center diagram and screenshot -->
-
-Because width maps directly to area in this scheme, wide images tend to dominate.
+Because width maps directly to area when heights are fixed,
+wide images naturally dominate.
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
 the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
 That landscape dominance is reinforced by the layout's rhythm.
-Justified rows create strong horizontal leading lines:
-the aligned gaps between rows repeat across the page,
-producing a unidirectional rhythm that emphasizes horizontal flow.
+Rows with aligned gaps create strong horizontal leading lines,
+producing a unidirectional flow that emphasizes horizontal movement across the page.
 
-However, there is a catch.
-In the case of the column layout, we have infinite height,
-as the page can scroll vertically,
-so when we let the images keep their aspect ratios, they can grow as tall as needed,
-and we can stack them vertically as many as we want.
-But in the case of rows,
-the available horizontal space is limited by the width of the container.
-Therefore, when we set equal heights for the images,
-their widths can vary significantly,
-and each row has different total width depending on the images it contains.
+However, there's a fundamental constraint.
+Columns can grow infinitely tall — the page simply scrolls.
+Rows cannot grow infinitely wide — the container has a fixed width.
+When images share a fixed height but vary in aspect ratio,
+each row ends up with a different total width.
+Some rows fall short of the container edge; others might overflow.
 
 This imperfect alignment weakens the horizontal leading lines.
 While gaps between rows remain consistent,
-the irregular edge margins weaken the visual rhythm.
+irregular edge margins break the visual rhythm.
 
-Therefore, you need to decide how to deal with the rows of varying total widths.
-Unfortunately, there is no perfect CSS-only solution for this problem,
-and you have two main options: distribute the extra space around the images,
-or crop the images to fit the row width exactly.
+You have two main options to address this:
+distribute the extra space around images,
+or crop images to fill the row exactly.
 
-If you choose to crop the images,
-you can use `object-fit: cover` in conjunction with `flex: auto`
-to make the flex items grow and shrink as needed
-to fill the row width exactly.
+#### Option 1: Distribute Extra Space
 
-<!-- TODO: flexbox wrap object-fit cover flex auto example -->
-<!-- Caption idea:
-The portrait and square photos in the third row are cropped
-so that they are landscapes now,
-leaving out only the small central portion of the original images.
- -->
+The less destructive approach preserves original compositions
+by distributing leftover space rather than cropping.
+Use `justify-content: center` to group images together with consistent gaps,
+letting margins vary at the row edges:
 
-From the first glance, this approach looks appealing:
+```css
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.gallery img {
+  height: 150px;  /* fixed height for all images */
+  width: auto;    /* width determined by aspect ratio */
+}
+```
+
+![Flexbox gallery with justify-content: center — images centered with equal gaps](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center.avif "Flexbox with justify-content: center — images grouped in the center with consistent gaps; edge margins vary per row")
+
+Alternatively, `justify-content: space-between` pins the first and last images to container edges,
+varying the gaps between images instead:
+
+![Flexbox gallery with justify-content: space-between — images pinned to edges](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
+
+You can also try `justify-content: space-evenly` to balance both —
+sacrificing both perfect alignment and consistent gaps for a middle ground:
+
+![Flexbox gallery with justify-content: space-evenly — balanced spacing](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-evenly.avif "Flexbox with justify-content: space-evenly — space distributed evenly around all images; neither edges nor gaps are perfectly consistent")
+
+In all these cases, the horizontal leading lines are weakened
+by inconsistent edge margins or gaps,
+and the rhythm feels less pronounced than in strict column layouts.
+
+#### Option 2: Crop to Fill Rows
+
+If you want rows to fill the container exactly,
+you can use `object-fit: cover` with `flex: auto`
+to make flex items grow and fill the available space:
+
+```css
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gallery img {
+  height: 150px;
+  flex: auto;        /* grow to fill row */
+  object-fit: cover; /* crop overflow */
+}
+```
+
+![Flexbox gallery with cropping — rows fill container width exactly](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop.avif "Flexbox with flex: auto and object-fit: cover — rows fill container width exactly; portrait and square images are heavily cropped")
+
+At first glance, this looks appealing:
 all rows fill the container width exactly,
-and the horizontal leading lines are strong and consistent.
-But if you look closer, you will notice a problem:
-some of the portrait images are heavily cropped.
-Why is that happening?
-Let's take a closer look.
-Consider we have two images in a row:
-a portrait image 200x300 (aspect ratio 2:3)
-and a landscape image 450x300 (aspect ratio 3:2).
-Let's say that this particular row is 200px shorter than the container width,
-When we set `flex: auto` on both images,
-it means that we set `flex-grow: 1` for both images,
-so the extra 200px will be distributed equally between them,
-giving each image an extra 100px of width.
-Therefore, the portrait image will strech to 300x300,
-cropping out 50% of its height,
-while the landscape image will stretch to 550x300,
-cropping out only about 18% of its height.
+and horizontal leading lines are strong and consistent.
 
-The workaround is to use separate `flex-grow` values for each image,
-proportional to its aspect ratio.
-In our particular example, the aspect ratios are 2:3 (0.67) and 3:2 (1.5).
+But look closer — some portrait images are heavily cropped.
+Why does this happen?
 
-<!-- TODO: flex-grow proportional to aspect ratio example -->
+Consider two images in a row:
+a portrait (200×300, aspect ratio 2:3) and a landscape (450×300, aspect ratio 3:2).
+If the row is 200px short of the container width,
+setting `flex: auto` (which implies `flex-grow: 1`) on both images
+distributes the extra 200px equally — 100px to each.
+The portrait stretches from 200px to 300px wide, cropping 50% of its height.
+The landscape stretches from 450px to 550px, cropping only about 18%.
 
-Indeed, in many cases cropping is not as destructive as in the examples above.
-And you may argue that cropping slightly some images is a small price to pay,
-and it is still better than grid layout cropping,
-when most of the images are cropped to the fixed aspect ratio.
-However, in the case of flexbox wrap,
-the cropping depends on how much extra space there is in each row,
-therefore, it is less predictable, than cropping to a fixed aspect ratio,
-where you know in advance how the images will be cropped,
-and adjust your cropping strategy accordingly.
-The unpredictability increases at the narrower viewports,
-where fewer images fit per row, and each image occupies a larger portion of the row width.
-Therefore, it makes sense do disable this cropping behavior on small screens,
-to avoid unpleasant surprises.
+The workaround is to set `flex-grow` proportional to each image's aspect ratio.
+With aspect ratios of 0.67 (portrait) and 1.5 (landscape),
+the extra space is distributed proportionally,
+reducing the disproportionate cropping:
 
-<!-- TODO: example with media queries to disable cropping on small screens -->
+![Flexbox gallery with proportional flex-grow — more balanced cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional.avif "Flexbox with proportional flex-grow values — cropping is distributed more evenly across images based on their aspect ratios")
 
-But before you rush to implement cropping,
-let's take a closer look to the last row.
-What if the last row is not full?
-In this case, there is a lot of extra space left in the row,
-and cropping would be very destructive.
-And in this case,
-you cannot disable cropping only for the last row with pure CSS.
+You might argue that slight cropping is a small price for filled rows,
+especially compared to grid layouts that crop everything to a fixed ratio.
+However, flexbox cropping is less predictable:
+it depends on how much extra space exists in each row,
+which varies with viewport width and image combinations.
 
-<!-- TODO: last row screenshots -->
+At narrower viewports, fewer images fit per row,
+and each image occupies a larger portion of the row width.
+The cropping becomes more severe and less predictable.
+Consider disabling cropping on small screens to avoid unpleasant surprises.
 
-The less distructive option is to distribute the extra space,
-keeping the original compositions intact.
-The first option is to keep the horizontal gaps between images equal,
-and vary the margins at the row edges.
-This is how it is shown in the example below,
-that uses `justify-content: center` to squash the images towards the center,
-keeping equal gaps between images.
+But there's a bigger problem: the last row.
+When the last row isn't full,
+there's far more extra space to distribute —
+and the cropping becomes destructive.
 
-Another option is to align the first and last images in the row to the edges of the container,
-and vary the gaps between images with `justify-content: space-between`.
-Also, you can try `justify-content: space-around` or `justify-content: space-evenly`
-to somewhat balance between the two,
-and give up on perfect alignment and consistent gaps at the same time.
+Compare the proportional cropping approach with the no-crop centered approach:
 
-Note, that in all these cases,
-the horizontal leading lines are weakened by the inconsistent edge margins or gaps,
-and the rhythm is less pronounced than in strict column layouts.
+![Flexbox proportional cropping on last row — still problematic](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional-end.avif "Last row with proportional flex-grow — cropping is still severe when few images must fill the entire row width")
 
-<!-- TODO: flexbox wrap justify-content space-between example -->
+![Flexbox gallery showing last row without cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center-end.avif "Last row with justify-content: center — no cropping, images preserve their original composition")
 
-But what if instead of cropping or distributing the extra space,
-we will scale each row independently, so that all rows fit the container width exactly?
-And it is exactly what the justified row layout does.
-So, we keep the heights of images equal in each row,
-and scale the entire row so that its contents span the full container width.
+Even with proportional `flex-grow`, the cropping on an incomplete last row is severe.
+Unfortunately, you cannot disable cropping only for the last row with pure CSS.
 
-![Justified row layout — photos share equal row height](./assets/justified.svg "Photos in each row share the same height; row heights and photo counts per row adapt to fill the container width, preserving each image’s aspect ratio.")
+#### The JavaScript Solution: True Justified Layout
 
-Unfortunately, there is no pure CSS solution for this layout,
-but with some JavaScript it can be implemented quite effectively.
-The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point for this approach.
+What if instead of cropping or distributing extra space,
+we scale each row independently so all rows fit the container exactly?
+This is what the justified row layout does:
+keep images within each row at equal height,
+then scale that height so the row spans the full container width.
+
+![Justified row layout — photos share equal row height](./assets/justified.svg "Photos in each row share the same height; row heights and photo counts per row adapt to fill the container width, preserving each image's aspect ratio.")
+
+There's no pure CSS solution for this layout,
+but JavaScript implementations are effective.
+The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point.
 
 ![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
-However, this rhythm is softer than in strict column layouts because row heights change with their contents.
-Narrower viewports fit fewer photos per row,
+The rhythm is softer than in column layouts because row heights vary with their contents.
+At narrower viewports, fewer photos fit per row,
 so row heights vary more and the pattern reads less mechanical.
-This variation can make the layout feel more organic even while preserving aspect ratios.
+This variation can make the layout feel more organic while still preserving aspect ratios.
 
 ![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
 
-So in summary: justified rows favor wide formats while preserving compositions.
-Landscape dominance combined with pronounced horizontal rhythm makes this layout particularly suitable
-for collections where landscape photos are the primary focus —
+In summary: justified rows favor wide formats while preserving compositions.
+Landscape dominance combined with pronounced horizontal rhythm
+makes this layout particularly suitable for collections where landscape photos are the focus —
 the visual hierarchy naturally showcases wide images at their intended scale.
-The Flexbox approach offers a simple starting point,
+The CSS Flexbox approach offers a starting point with trade-offs,
 while JavaScript provides the precision needed for professional photography galleries.
-What if your collection mixes orientations freely and you want to avoid favoring any particular format?
+
+What if your collection mixes orientations freely
+and you want to avoid favoring any particular format?
 
 ---
 
