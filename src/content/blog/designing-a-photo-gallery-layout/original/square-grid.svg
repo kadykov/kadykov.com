@@ -26,8 +26,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="2.015"
-     inkscape:cx="115.63275"
-     inkscape:cy="165.50868"
+     inkscape:cx="222.33251"
+     inkscape:cy="131.76179"
      inkscape:window-width="2560"
      inkscape:window-height="1403"
      inkscape:window-x="0"
@@ -117,137 +117,164 @@
        d="M188 96a81 40 0 0 0-50 9v26q0 5 5 5h90q5 0 5-5v-26a81 40 0 0 0-50-9z"
        id="path3" />
   </g>
-  <use
-     xlink:href="#a"
-     id="c"
-     x="0"
-     y="0"
-     transform="translate(115 115)" />
-  <use
-     xlink:href="#b"
-     id="d"
-     x="0"
-     y="0"
-     transform="translate(115 -115)" />
-  <use
-     xlink:href="#a"
-     id="e"
-     x="0"
-     y="0"
-     transform="translate(-230)" />
-  <use
-     xlink:href="#b"
-     id="g"
-     x="0"
-     y="0"
-     transform="translate(-230)" />
-  <use
-     xlink:href="#c"
-     id="h"
-     x="0"
-     y="0"
-     transform="translate(-230)" />
-  <use
-     xlink:href="#d"
-     id="f"
-     x="0"
-     y="0"
-     transform="matrix(-1,0,0,1,400,0)" />
-  <use
-     xlink:href="#a"
-     id="i"
-     x="0"
-     y="0"
-     transform="translate(0 230)" />
-  <use
-     xlink:href="#d"
-     transform="translate(0 230)"
-     id="use3" />
-  <use
-     xlink:href="#e"
-     transform="translate(0 230)"
-     id="use4" />
-  <use
-     xlink:href="#f"
-     transform="translate(0 230)"
-     id="use5" />
-  <use
-     xlink:href="#b"
-     id="j"
-     x="0"
-     y="0"
-     transform="translate(0 -230)" />
-  <use
-     xlink:href="#c"
-     transform="translate(0 -230)"
-     id="use6" />
-  <use
-     xlink:href="#g"
-     transform="translate(0 -230)"
-     id="use7" />
-  <use
-     xlink:href="#h"
-     transform="translate(0 -230)"
-     id="use8" />
-  <use
-     xlink:href="#a"
-     transform="translate(230)"
-     id="use9" />
-  <use
-     xlink:href="#b"
-     transform="translate(230)"
-     id="use10" />
-  <use
-     xlink:href="#i"
-     transform="translate(230)"
-     id="use11" />
-  <use
-     xlink:href="#j"
-     transform="translate(230)"
-     id="use12" />
   <g
      id="g15"
      inkscape:label="leading-lines"
      style="display:inline">
     <path
        id="k"
-       fill="none"
        stroke="#ff7f2a"
        stroke-dasharray="12, 8"
-       stroke-dashoffset="0"
        stroke-width="4"
        d="M 0,37 H 400" />
-    <use
-       xlink:href="#k"
-       id="l"
-       x="0"
-       y="0"
-       transform="translate(0,116)" />
-    <use
-       xlink:href="#l"
-       transform="translate(0,115)"
-       id="use13" />
     <path
        id="m"
-       fill="none"
        stroke="#ff7f2a"
        stroke-dasharray="12, 8"
-       stroke-dashoffset="0"
        stroke-width="4"
        d="M 27,0 V 300" />
     <use
-       xlink:href="#m"
-       id="n"
        x="0"
        y="0"
+       xlink:href="#m"
+       id="use1"
        transform="translate(115)" />
     <use
-       xlink:href="#n"
-       transform="translate(115)"
-       id="use14" />
-    <use
+       x="0"
+       y="0"
        xlink:href="#m"
-       transform="translate(345)"
-       id="use15" />
+       id="use2" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#use2"
+       id="use13"
+       transform="translate(230)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#use2"
+       id="use14"
+       transform="translate(345)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#k"
+       id="use15"
+       transform="translate(0,115)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#k"
+       id="use16"
+       transform="translate(0,230)" />
   </g>
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use17"
+     transform="translate(115,115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use18"
+     transform="matrix(-1,0,0,1,515,-115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use19"
+     transform="translate(-115,115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use20"
+     transform="translate(-115,-115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use21"
+     transform="translate(0,-230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use22"
+     transform="translate(115,-115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use23"
+     transform="translate(-115,-115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use24"
+     transform="translate(0,230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use25"
+     transform="translate(115,115)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use27"
+     transform="translate(230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use28"
+     transform="translate(230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use29"
+     transform="translate(230,230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use30"
+     transform="translate(230,-230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use31"
+     transform="translate(-230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use32"
+     transform="translate(-230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#b"
+     id="use33"
+     transform="translate(-230,-230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#a"
+     id="use34"
+     transform="translate(-230,230)" />
+  <use
+     x="0"
+     y="0"
+     xlink:href="#use18"
+     id="use35"
+     transform="translate(-230,230)" />
 </svg>
