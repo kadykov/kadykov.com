@@ -327,7 +327,7 @@ You have two main options to address this:
 distribute the extra space around images,
 or crop images to fill the row exactly.
 
-#### Option 1: Distribute Extra Space
+#### Flexbox with Variable Spacing
 
 The less destructive approach preserves original compositions
 by distributing leftover space rather than cropping.
@@ -364,7 +364,7 @@ In all these cases, the horizontal leading lines are weakened
 by inconsistent edge margins or gaps,
 and the rhythm feels less pronounced than in strict column layouts.
 
-#### Option 2: Crop to Fill Rows
+#### Growing to Fit: The Cropping Trade-off
 
 If you want rows to fill the container exactly,
 you can use `object-fit: cover` with `flex: auto`
@@ -435,7 +435,7 @@ Compare the proportional cropping approach with the no-crop centered approach:
 Even with proportional `flex-grow`, the cropping on an incomplete last row is severe.
 Unfortunately, you cannot disable cropping only for the last row with pure CSS.
 
-#### The JavaScript Solution: True Justified Layout
+#### Justified Layout: The JavaScript Solution
 
 What if instead of cropping or distributing extra space,
 we scale each row independently so all rows fit the container exactly?
