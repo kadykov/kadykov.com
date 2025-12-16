@@ -272,6 +272,8 @@ by default, multi-column layout fills top-to-bottom, then left-to-right (like te
 For long galleries this can hide recently added photos below the fold —
 viewers often expect the newest items to appear first across the top row,
 not stacked down the first column.
+This also affects keyboard and screen-reader navigation:
+users traversing the DOM encounter photos in column order, not the visual left-to-right sequence.
 
 ![Long-gallery example showing CSS column fill hiding items below the fold](./assets/columns-CSS-order-long.svg "Column fill order with long gallery — some photos are pushed below the fold because columns fill top-to-bottom first")
 
@@ -545,6 +547,8 @@ content fills naturally in reading order — left-to-right, then top-to-bottom.
 Unlike the CSS columns layout (which fills top-to-bottom first),
 the cell-span grid presents photos in their source order,
 making chronological browsing intuitive without requiring JavaScript.
+This natural flow also means that keyboard navigation and screen readers
+traverse photos in the same sequence as visual browsing.
 
 What about visual rhythm?
 Unlike strict cell-based grids,
