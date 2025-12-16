@@ -24,9 +24,12 @@ The trade-off is space efficiency — some grid cells remain unused —
 but the result feels more like photographs pinned to a wall
 than tiles arranged by an algorithm.
 
-I’ll walk through common gallery layouts and their inherent compromises,
-then explain the cell-span strategy I designed for this site’s photo gallery:
-how it works, why borders matter, and what you sacrifice for equal presentation.
+I'll walk through common gallery layouts and their inherent compromises,
+then explain the cell-span strategy I designed for this site's photo gallery:
+how it works and what you sacrifice for equal presentation.
+
+All layout examples discussed in this post are available as interactive demos
+in the [accompanying CodePen collection](https://codepen.io/collection/ojBrwQ).
 
 ---
 
@@ -87,7 +90,8 @@ the photo’s center is aligned inside the cell.
 A common baseline is `object-fit: contain`.
 It shows the full image inside the cell,
 by fitting the entire photo within the cell boundaries without cropping.
-Here’s how you might implement this:
+Here's how you might implement this
+([interactive demo](https://codepen.io/kadykov/pen/wBGOaLm)):
 
 ```css
 /* Baseline — no cropping: full image fits inside the cell */
@@ -104,6 +108,8 @@ Here’s how you might implement this:
 }
 ```
 
+![Square grid gallery with contain (letterboxed)](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid-fit.avif "Square grid with object-fit: contain — full photos with letterboxing")
+
 However, this straightforward implementation comes with drawbacks:
 photos come in many shapes and proportions,
 so placing every photo centered in identical cells results in inconsistent empty space —
@@ -113,12 +119,13 @@ This wasted space doesn’t align across the grid, breaking the rhythm and under
 That inconsistent empty space is a common reason why many designers and sites choose to crop previews:
 adopting a fixed target ratio (square, 4/5, etc.) keeps cell dimensions uniform and the page visually consistent.
 
-Here’s what that looks like (cropped previews):
+Here's what that looks like (cropped previews):
 
 ![Photos cropped to square previews (cover)](./assets/square-grid.svg "Cover: all photos cropped to a square aspect ratio to preserve visual rhythm; gaps align into continuous guides.")
 
 The CSS change is small: keep the same grid declaration,
-but switch image sizing to a fixed aspect ratio and `object-fit: cover`.
+but switch image sizing to a fixed aspect ratio and `object-fit: cover`
+([interactive demo](https://codepen.io/kadykov/pen/QwNojWZ)):
 
 ```css
 /* Keep the same grid (see above) — only change the image rule */
@@ -128,6 +135,8 @@ but switch image sizing to a fixed aspect ratio and `object-fit: cover`.
   object-fit: cover;   /* fills the cell, cropping overflow */
 }
 ```
+
+![Square grid gallery with cover (cropped)](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid.avif "Square grid with object-fit: cover — all photos cropped to square")
 
 This approach gives you maximum space efficiency and a strong visual rhythm.
 Because every cell shares the same dimensions, gaps align into continuous leading lines:
@@ -215,7 +224,8 @@ while the columns create vertical stacks.
 
 ![Column-based gallery showing images keeping original aspect ratios in three columns](./assets/columns.svg "Column layout — three fixed-width columns; preserves composition; portrait images visually dominate")
 
-Here’s a minimal implementation:
+Here's a minimal implementation
+([interactive demo](https://codepen.io/kadykov/pen/OPNqyPQ)):
 
 ```css
 /* Baseline: CSS multi-column layout */
@@ -229,6 +239,8 @@ Here’s a minimal implementation:
   margin-bottom: 1rem;
 }
 ```
+
+![Column layout gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/columns.avif "Column layout — three columns with preserved compositions")
 
 Columns layout is attractive because it preserves composition, has minimal wasted space,
 and feels less rigid than strict cells.
@@ -261,8 +273,6 @@ For long galleries this can hide recently added photos below the fold —
 viewers often expect the newest items to appear first across the top row,
 not stacked down the first column.
 
-![CSS multi-column fill order diagram (top-to-bottom, then left-to-right)](./assets/columns-CSS-order.svg "CSS column fill order — browser fills columns like text: top-to-bottom, then left-to-right")
-
 ![Long-gallery example showing CSS column fill hiding items below the fold](./assets/columns-CSS-order-long.svg "Column fill order with long gallery — some photos are pushed below the fold because columns fill top-to-bottom first")
 
 Fixing this requires JavaScript:
@@ -287,6 +297,8 @@ The answer is to flip the constraint:
 set equal heights and align images into rows.
 Flexbox wrap offers a CSS-only starting point for this approach.
 
+![Row-based layout — photos with fixed height in rows](./assets/rows.svg "Row-based layout — photos share fixed height; rows can extend freely without width constraints")
+
 Because width maps directly to area when heights are fixed,
 wide images naturally dominate.
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
@@ -296,12 +308,16 @@ That landscape dominance is reinforced by the layout's rhythm.
 Rows with aligned gaps create strong horizontal leading lines,
 producing a unidirectional flow that emphasizes horizontal movement across the page.
 
+![Row-based layout with horizontal leading lines](./assets/rows-leading-lines.svg "Row-based layout showing strong horizontal leading lines from aligned row gaps")
+
 However, there's a fundamental constraint.
 Columns can grow infinitely tall — the page simply scrolls.
 Rows cannot grow infinitely wide — the container has a fixed width.
 When images share a fixed height but vary in aspect ratio,
 each row ends up with a different total width.
 Some rows fall short of the container edge; others might overflow.
+
+![Flexbox gallery with justify-content: center](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center.avif "Flexbox with justify-content: center — images grouped in the center with consistent gaps; edge margins vary per row")
 
 This imperfect alignment weakens the horizontal leading lines.
 While gaps between rows remain consistent,
@@ -316,7 +332,8 @@ or crop images to fill the row exactly.
 The less destructive approach preserves original compositions
 by distributing leftover space rather than cropping.
 Use `justify-content: center` to group images together with consistent gaps,
-letting margins vary at the row edges:
+letting margins vary at the row edges
+([interactive demo](https://codepen.io/kadykov/pen/ogxVjEe)):
 
 ```css
 .gallery {
@@ -332,12 +349,11 @@ letting margins vary at the row edges:
 }
 ```
 
-![Flexbox gallery with justify-content: center — images centered with equal gaps](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center.avif "Flexbox with justify-content: center — images grouped in the center with consistent gaps; edge margins vary per row")
-
 Alternatively, `justify-content: space-between` pins the first and last images to container edges,
-varying the gaps between images instead:
+varying the gaps between images instead
+([interactive demo](https://codepen.io/kadykov/pen/QwNRjNQ)):
 
-![Flexbox gallery with justify-content: space-between — images pinned to edges](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
+![Flexbox gallery with justify-content: space-between](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
 
 You can also try `justify-content: space-evenly` to balance both —
 sacrificing both perfect alignment and consistent gaps for a middle ground:
@@ -352,7 +368,8 @@ and the rhythm feels less pronounced than in strict column layouts.
 
 If you want rows to fill the container exactly,
 you can use `object-fit: cover` with `flex: auto`
-to make flex items grow and fill the available space:
+to make flex items grow and fill the available space
+([interactive demo](https://codepen.io/kadykov/pen/vEGMQWx)):
 
 ```css
 .gallery {
@@ -388,7 +405,8 @@ The landscape stretches from 450px to 550px, cropping only about 18%.
 The workaround is to set `flex-grow` proportional to each image's aspect ratio.
 With aspect ratios of 0.67 (portrait) and 1.5 (landscape),
 the extra space is distributed proportionally,
-reducing the disproportionate cropping:
+reducing the disproportionate cropping
+([interactive demo](https://codepen.io/kadykov/pen/JoXVwZM)):
 
 ![Flexbox gallery with proportional flex-grow — more balanced cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional.avif "Flexbox with proportional flex-grow values — cropping is distributed more evenly across images based on their aspect ratios")
 
@@ -429,7 +447,10 @@ then scale that height so the row spans the full container width.
 
 There's no pure CSS solution for this layout,
 but JavaScript implementations are effective.
-The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point.
+The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point
+([interactive demo](https://codepen.io/kadykov/pen/ogxrvxy)).
+
+![Justified layout gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/justified-layout.avif "Justified layout — each row scales to fill the container width while preserving aspect ratios")
 
 ![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
@@ -437,8 +458,6 @@ The rhythm is softer than in column layouts because row heights vary with their 
 At narrower viewports, fewer photos fit per row,
 so row heights vary more and the pattern reads less mechanical.
 This variation can make the layout feel more organic while still preserving aspect ratios.
-
-![Justified layout with pronounced horizontal leading lines](./assets/justified-leading-lines.svg "Aligned gaps between rows create pronounced horizontal leading lines, emphasizing row-based rhythm and visual hierarchy in the gallery.")
 
 In summary: justified rows favor wide formats while preserving compositions.
 Landscape dominance combined with pronounced horizontal rhythm
@@ -481,18 +500,17 @@ or even add more categories, like panorama or very tall portrait, if needed.
 
 ![Cell-span layout — photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
-Here’s how this looks in practice —
+Here's how this looks in practice —
 the cell-span grid handles mixed orientations naturally,
-and portrait shots sit alongside wide landscapes with neither dominating visually:
+and portrait shots sit alongside wide landscapes with neither dominating visually
+([interactive demo](https://codepen.io/kadykov/pen/xbVBwwZ)):
 
-![Polaroid-framed gallery showing mixed portrait and landscape photos arranged on a cell-span CSS grid with subtle rotation](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "One possible implementation showing cell-span layout with Polaroid-style borders and subtle rotation (aesthetic refinements discussed later).")
+![Cell-span grid gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Cell-span layout — photos sized to span multiple grid cells based on orientation")
 
 At first glance, the photos seem almost randomly placed — there are no rigid grid lines.
 The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
-Yet, beneath the surface, there’s a structured grid.
-Each photo is positioned within cells that match its orientation:
-
-![Grid overlay showing how photos span multiple cells (hidden grid)](./assets/cell-span-grid.svg "Grid overlay showing each photo positioned to span multiple grid cells according to orientation: portraits 3×2, landscapes 2×3, squares 2×2")
+Yet, beneath the surface, there's a structured grid.
+Each photo is positioned within cells that match its orientation.
 
 The implementation is straightforward with CSS Grid.
 The key is using `grid-row: span` and `grid-column: span` to make each photo occupy multiple cells:
@@ -545,18 +563,16 @@ The answer is simple: it sacrifices **space efficiency** for **equal presentatio
 The inefficiency manifests in two ways.
 First, because photos span multiple cells, some cells can get trapped between spans,
 creating unusable pockets of space.
-These cells sit surrounded by photo spans and cannot accommodate new images:
+These cells sit surrounded by photo spans and cannot accommodate new images.
 
-![Cell-span grid with wasted or trapped cells marked](./assets/cell-span-grid-wasted.svg "Grid overlay highlighting wasted or trapped cells marked with crosses where photo spans create unusable gaps")
-
-Second, when the viewport width doesn’t evenly accommodate photo spans, entire columns could remain unused.
+Second, when the viewport width doesn't evenly accommodate photo spans, entire columns could remain unused.
 Consider these scenarios:
 
 - **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty column.
 - **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
 - **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
 
-![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "Real-world example showing trapped cells and unused columns in an actual gallery — the same wasted-space pattern visible in the conceptual diagram above.")
+![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools overlay showing trapped cells and unused columns in a cell-span gallery — a direct consequence of giving equal visual weight to different orientations")
 
 The inefficiency is inherent to the approach.
 Even with zero gap size, the trapped cells and unused columns persist —
@@ -582,109 +598,6 @@ If you need to read dimensions from image files, performance depends on I/O spee
 In the worst case, you might need to fetch each image to read its headers.
 For static sites, this happens only once at build time;
 for dynamic galleries, caching dimension data is advisable.
-
----
-
-### The Aesthetic Layer: Polaroid-Style Framing
-
-The cell-span layout handles orientation equality,
-but the gallery shown earlier includes additional aesthetic refinements.
-Polaroid-style borders enhance the presentation
-while providing a modest practical benefit.
-
-You can see this implementation in action at [kadykov.com/photos](/photos),
-and explore the [source code](https://github.com/kadykov/kadykov.com) for implementation details.
-
-#### Why Off-White Matters More Than You’d Think
-
-Look closely at the Polaroid borders and you might notice something subtle: they’re not pure white.
-Instead, they’re set to a light off-white — around 90–95% white.
-This choice serves multiple perceptual purposes.
-
-First, the border acts as a **white balance reference point**.
-When viewing photos under non-ideal lighting —
-warm incandescent bulbs, cool fluorescent lights, or miscalibrated displays —
-both the photo and border shift color together.
-The human visual system uses the “white” border as an anchor and recalibrates perception accordingly.
-This helps photo colors appear more accurate despite environmental color casts.
-
-Second, the off-white creates a **perceptual contrast boost**.
-Against the deliberately darker, desaturated page background,
-the viewer’s eye perceives the border as “pure white” in context.
-This means any 100% white elements in the photo itself —
-clouds, snow, highlights — appear even brighter by comparison.
-The effect increases perceived dynamic range:
-whites feel more brilliant and blacks appear deeper.
-
-Finally, because borders are CSS rather than baked into image files,
-they compress better and introduce no artifacts around frame edges.
-
-#### The Double Border Structure
-
-The border actually has two layers:
-
-- **Thick outer border** — off-white, provides the perceptual “paper white” reference
-- **Thin inner border** — light gray, separates bright photo areas from the outer frame
-
-Without the inner border, bright photo regions —
-clouds, snow, light skies — visually blend into the white frame.
-This breaks our contrast illusion: the viewer can see that the border isn’t pure white.
-Even when both surfaces are technically “white”,
-but at different color temperatures, the transition looks unpleasant.
-The thin gray separator solves both problems by making the boundary clear.
-
-![Two Polaroid-style frames comparing single vs double border](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/border.avif "Left: single thick off-white border — bright clouds can visually blend into the frame. Right: double border with a thin light-gray inner line — creates a clear separation between image highlights and the frame.")
-
-When the photo has darker edges, the inner border’s impact is minimal —
-just a few pixels of light gray very close to the off-white outer border.
-It doesn’t disrupt the overall white-frame aesthetic or wash out deep blacks.
-But it prevents the visual confusion where image and mount merge into one.
-
-#### Neutral Gray Environment
-
-One final detail completes the viewing environment:
-the page uses a **neutral gray background** with zero chroma.
-This prevents any hue bias from affecting color perception —
-unlike warm beige or cool blue-grays, true neutral gray doesn’t push reds, greens, or blues in any direction.
-Combined with the off-white Polaroid borders,
-this creates a consistent viewing context that works equally well in light and dark modes.
-The result is closer to a color-neutral print viewing environment
-than the stark white or deep black backgrounds common on photo sites.
-
-#### A Side Benefit: Aspect Ratio Nudging
-
-Beyond aesthetics, the asymmetric Polaroid borders provide a modest practical benefit:
-they help nudge photos closer to their target aspect ratios.
-
-Real photographs rarely match target aspect ratios exactly.
-A landscape shot might be 16:9 (much wider than our 3:2 target)
-or 4:3 (falling between landscape and square).
-For each photo, we decide whether to place the thicker border on the side or bottom.
-For panorama-like landscapes (16:9 or wider),
-placing it on the bottom makes the overall frame more “squarish” — closer to the 3:2 target.
-For less extreme landscapes (4:3), adding the thicker border to the side stretches it wider toward 3:2.
-
-![Polaroid-style borders shifting photo aspect ratios](./assets/borders.svg "Asymmetric Polaroid borders placed on the side or bottom to nudge actual photo aspect ratios toward the grid’s target ratios")
-
-This doesn’t reduce the number of trapped or unused cells —
-that’s inherent to the cell-span approach —
-but it does reduce wasted space *within* the cells that photos occupy.
-The effect is modest, and borders shift the aspect ratio of all photos (even those already at target),
-but since perfectly matched photos are in the minority,
-the net effect is still an improvement in space utilization.
-
-#### Adding Visual Playfulness: Rotation
-
-One more detail softens the mechanical feel: **slight random rotation**.
-We rotate each photo by a small random angle drawn from a normal distribution.
-The result: Polaroid cards that look scattered by hand rather than aligned by machine.
-
-![Cell-span layout with subtle random rotations applied to photos](./assets/cell-span-tilted.svg "Subtle random rotations applied to photos to create a scattered, tactile “pinned” look while maintaining the cell-span layout")
-
-The rotation is subtle — just enough to break rigid alignment without creating chaos.
-Combined with the inconsistent gap alignment we discussed earlier,
-this produces a layout that feels organic and tactile,
-more like prints pinned to a wall than tiles in a spreadsheet.
 
 ---
 
@@ -714,11 +627,14 @@ a cell-based grid with calibrated spans offers a straightforward path.
 The implementation is client-side JavaScript-free when using server-side rendering or static site generation —
 orientation detection happens once during build, then CSS handles everything.
 For dynamic scenarios, orientation calculation is simpler than justified layout algorithms.
-Borders provide aesthetic framing with a minor aspect-ratio benefit.
-Slight rotation breaks mechanical alignment.
-A neutral background provides consistent color context.
 
-If you’ve struggled with layouts that crop compositions or let one orientation dominate,
+You can see this approach in action at [kadykov.com/photos](/photos),
+and explore the [source code](https://github.com/kadykov/kadykov.com) for implementation details.
+In a future post, I'll cover the aesthetic refinements layered on top of this grid:
+Polaroid-style borders, subtle rotation, and neutral backgrounds
+that enhance the viewing experience.
+
+If you've struggled with layouts that crop compositions or let one orientation dominate,
 this strategy offers an alternative.
 The code is simple, the trade-offs are clear, and the result respects what a photograph is:
 a deliberate composition that deserves to be seen in full.

@@ -1,0 +1,155 @@
+---
+title: "Polaroid-Style Aesthetics for Photo Galleries"
+subtitle: "Visual refinements that enhance photo perception without JavaScript"
+pubDate: 2025-12-16
+draft: true
+description: "An exploration of aesthetic enhancements for photo galleries — Polaroid-style borders, subtle rotation, and neutral backgrounds — that improve color perception and create an organic, tactile viewing experience."
+tags: ["css", "photography", "web-design", "visual-design", "color-theory"]
+---
+
+<!-- Inside paragraphs separate sentences and phrases by new lines for git tracking. -->
+<!-- Use spaced em dashes ( — ) for breaks within paragraphs. -->
+
+## Beyond Layout: The Viewing Experience
+
+In a [previous post](/blog/designing-a-photo-gallery-layout),
+I explored different photo gallery layouts and why I chose a cell-span grid
+that gives landscape and portrait photos equal visual weight.
+But layout is only part of the story.
+
+This post documents the aesthetic refinements layered on top of that grid:
+Polaroid-style borders that anchor color perception,
+a double-border structure that handles bright highlights,
+subtle rotation that breaks mechanical alignment,
+and a neutral gray background that provides consistent color context.
+
+You can see this implementation in action at [kadykov.com/photos](/photos),
+and explore the [source code](https://github.com/kadykov/kadykov.com) for implementation details.
+
+---
+
+## Polaroid-Style Framing
+
+The cell-span layout handles orientation equality,
+but additional aesthetic refinements enhance the presentation
+while providing practical benefits.
+
+### Why Off-White Matters More Than You'd Think
+
+Look closely at the Polaroid borders and you might notice something subtle: they're not pure white.
+Instead, they're set to a light off-white — around 90–95% white.
+This choice serves multiple perceptual purposes.
+
+First, the border acts as a **white balance reference point**.
+When viewing photos under non-ideal lighting —
+warm incandescent bulbs, cool fluorescent lights, or miscalibrated displays —
+both the photo and border shift color together.
+The human visual system uses the "white" border as an anchor and recalibrates perception accordingly.
+This helps photo colors appear more accurate despite environmental color casts.
+
+Second, the off-white creates a **perceptual contrast boost**.
+Against the deliberately darker, desaturated page background,
+the viewer's eye perceives the border as "pure white" in context.
+This means any 100% white elements in the photo itself —
+clouds, snow, highlights — appear even brighter by comparison.
+The effect increases perceived dynamic range:
+whites feel more brilliant and blacks appear deeper.
+
+Finally, because borders are CSS rather than baked into image files,
+they compress better and introduce no artifacts around frame edges.
+
+### The Double Border Structure
+
+The border actually has two layers:
+
+- **Thick outer border** — off-white, provides the perceptual "paper white" reference
+- **Thin inner border** — light gray, separates bright photo areas from the outer frame
+
+Without the inner border, bright photo regions —
+clouds, snow, light skies — visually blend into the white frame.
+This breaks our contrast illusion: the viewer can see that the border isn't pure white.
+Even when both surfaces are technically "white",
+but at different color temperatures, the transition looks unpleasant.
+The thin gray separator solves both problems by making the boundary clear.
+
+<!-- TODO: Add border comparison screenshot showing single vs double border -->
+
+When the photo has darker edges, the inner border's impact is minimal —
+just a few pixels of light gray very close to the off-white outer border.
+It doesn't disrupt the overall white-frame aesthetic or wash out deep blacks.
+But it prevents the visual confusion where image and mount merge into one.
+
+---
+
+## Neutral Gray Environment
+
+One final detail completes the viewing environment:
+the page uses a **neutral gray background** with zero chroma.
+This prevents any hue bias from affecting color perception —
+unlike warm beige or cool blue-grays, true neutral gray doesn't push reds, greens, or blues in any direction.
+Combined with the off-white Polaroid borders,
+this creates a consistent viewing context that works equally well in light and dark modes.
+The result is closer to a color-neutral print viewing environment
+than the stark white or deep black backgrounds common on photo sites.
+
+---
+
+## A Side Benefit: Aspect Ratio Nudging
+
+Beyond aesthetics, the asymmetric Polaroid borders provide a modest practical benefit:
+they help nudge photos closer to their target aspect ratios.
+
+Real photographs rarely match target aspect ratios exactly.
+A landscape shot might be 16:9 (much wider than our 3:2 target)
+or 4:3 (falling between landscape and square).
+For each photo, we decide whether to place the thicker border on the side or bottom.
+For panorama-like landscapes (16:9 or wider),
+placing it on the bottom makes the overall frame more "squarish" — closer to the 3:2 target.
+For less extreme landscapes (4:3), adding the thicker border to the side stretches it wider toward 3:2.
+
+<!-- TODO: Add borders.svg diagram showing aspect ratio nudging -->
+
+This doesn't reduce the number of trapped or unused cells —
+that's inherent to the cell-span approach —
+but it does reduce wasted space *within* the cells that photos occupy.
+The effect is modest, and borders shift the aspect ratio of all photos (even those already at target),
+but since perfectly matched photos are in the minority,
+the net effect is still an improvement in space utilization.
+
+---
+
+## Adding Visual Playfulness: Rotation
+
+One more detail softens the mechanical feel: **slight random rotation**.
+We rotate each photo by a small random angle drawn from a normal distribution.
+The result: Polaroid cards that look scattered by hand rather than aligned by machine.
+
+<!-- TODO: Add cell-span-tilted.svg diagram showing rotation effect -->
+
+The rotation is subtle — just enough to break rigid alignment without creating chaos.
+Combined with the inconsistent gap alignment inherent in the cell-span layout,
+this produces a layout that feels organic and tactile,
+more like prints pinned to a wall than tiles in a spreadsheet.
+
+---
+
+## Bringing It All Together
+
+These aesthetic choices work together to create a viewing experience
+that feels intentional and considered:
+
+- **Off-white borders** anchor color perception and boost perceived dynamic range
+- **Double-border structure** cleanly separates bright photo edges from frames
+- **Neutral gray background** provides unbiased color context
+- **Asymmetric borders** nudge photos toward target aspect ratios
+- **Subtle rotation** breaks mechanical alignment for an organic feel
+
+None of these refinements require JavaScript.
+They're pure CSS enhancements that work on top of any grid layout,
+though they complement the cell-span approach particularly well
+because that layout already accepts some visual irregularity in exchange for equal presentation.
+
+The result is a gallery that feels less like a digital interface
+and more like a physical collection of photographs —
+prints scattered on a desk or pinned to a wall,
+each one presented fairly and viewed in optimal conditions.
