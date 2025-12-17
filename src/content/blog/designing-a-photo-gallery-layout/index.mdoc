@@ -31,8 +31,7 @@ and show you the specific trade-offs each makes.
 Then I'll explain the cell-span strategy:
 a CSS Grid approach that gives equal visual weight to all orientations
 while accepting lower space efficiency as the cost.
-
-All layout examples discussed in this post are available as interactive demos
+All layout examples are available as interactive demos
 in the [accompanying CodePen collection](https://codepen.io/collection/ojBrwQ).
 
 ---
@@ -65,7 +64,7 @@ The rest of this post explores those trade-offs and the layout I arrived at.
  
 ---
 
-## The Usual Suspects: Four Common Approaches
+## The Usual Suspects: Common Approaches
 
 ### The Square Grid Compromise: Crop Everything or Accept Chaos
 
@@ -163,12 +162,10 @@ In practice, this effect is rather rare, as most gallery designs don’t meet th
 
 ![Contain grid showing broken leading lines](./assets/square-grid-fit-leading-lines.svg "Contain approach showing broken leading lines caused by letterboxing; inconsistent gaps across cells reduce visual rhythm.")
 
-Overall, there are two approaches:
-show the full photo (`contain`) or crop every preview to the same ratio (`cover`).
-`Contain` preserves composition but leaves letterboxed gaps that break leading lines;
-`cover` preserves rhythm by aligning cell content, but it crops image edges.
+By contrast, the `contain` baseline feels less coherent:
+letterboxing bends the leading lines by asymmetrically enlarging gaps, making the grid feel inconsistent.
 
-If you choose `cover`, you must then choose a cropping strategy.
+If you choose `cover` cropping, you must then choose a cropping strategy.
 The simplest is **center crop**,
 the naïve default that can be implemented with pure CSS —
 but it often clips subjects placed off-center,
@@ -189,7 +186,9 @@ rather than navigational galleries that prioritize equal presentation.
 
 #### When Changing Your Mind Breaks Everything
 
-Using fixed aspect ratios with `cover` cropping works well —
+Whichever cropping strategy you choose,
+there's a deeper problem:
+using fixed aspect ratios with `cover` cropping works well —
 until you decide to change the ratio.
 Once you pick a target aspect ratio and users compose content for it,
 changing that ratio later becomes destructive.
@@ -253,20 +252,17 @@ However, it comes with characteristic behaviors worth understanding.
 
 The most visible characteristic is that taller images occupy more vertical space than wide ones,
 so a single portrait can outweigh two landscapes beside it.
-This isn’t a flaw — for portrait-focused collections,
-this visual prominence can be a feature rather than a bug,
-naturally emphasizing the work’s primary orientation.
-
-![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
-
-That portrait dominance is reinforced by the layout’s directional rhythm.
-Consistent column widths produce strong vertical leading lines repeated horizontally,
+This portrait dominance is reinforced by the layout's directional rhythm:
+consistent column widths produce strong vertical leading lines repeated horizontally,
 creating a unidirectional flow.
-For galleries that prioritize portraits, this rhythm can be an asset:
-it reinforces the prominence of tall images and helps guide the eye down columns.
+This isn't a flaw — for portrait-focused collections,
+this visual prominence can be a feature rather than a bug,
+naturally emphasizing the work's primary orientation and guiding the eye down columns.
 You can tune this effect by adjusting gap size —
 wider gaps make the vertical lines more pronounced,
 while narrower gaps soften the directional emphasis.
+
+![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
 
 ![Column layout emphasizing vertical leading lines created by consistent column widths](./assets/columns-leading-lines.svg "Vertical leading lines are strong; horizontal gaps are irregular and do not form continuous horizontal guides")
 
@@ -337,22 +333,21 @@ While gaps between rows remain consistent,
 irregular edge margins break the visual rhythm.
 
 You have two main options to address this:
-distribute the extra space around images,
+distribute the extra space among images,
 or crop images to fill the row exactly.
 
 #### Flexbox with Variable Spacing
 
 The less destructive approach preserves original compositions
 by distributing leftover space rather than cropping.
-Use `justify-content: center` to group images together with consistent gaps,
-letting margins vary at the row edges
-([interactive demo](https://codepen.io/kadykov/pen/ogxVjEe)):
+Flexbox offers several strategies,
+each making different trade-offs:
 
 ```css
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center;  /* or space-between, space-evenly */
   gap: 1rem;
 }
 
@@ -362,18 +357,19 @@ letting margins vary at the row edges
 }
 ```
 
-Alternatively, `justify-content: space-between` pins the first and last images to container edges,
-varying the gaps between images instead
-([interactive demo](https://codepen.io/kadykov/pen/QwNRjNQ)):
+With `justify-content: center`, images group together with consistent gaps,
+while edge margins vary ([interactive demo](https://codepen.io/kadykov/pen/ogxVjEe)).
+With `space-between`, the first and last images pin to container edges,
+while gaps between images vary ([interactive demo](https://codepen.io/kadykov/pen/QwNRjNQ)):
 
 ![Flexbox gallery with justify-content: space-between](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
 
-You can also try `justify-content: space-evenly` to balance both —
-sacrificing both perfect alignment and consistent gaps for a middle ground:
+With `space-evenly`, both edges and gaps vary,
+balancing the compromise:
 
 ![Flexbox gallery with justify-content: space-evenly — balanced spacing](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-evenly.avif "Flexbox with justify-content: space-evenly — space distributed evenly around all images; neither edges nor gaps are perfectly consistent")
 
-In all these cases, the horizontal leading lines are weakened
+Regardless of which you choose, the horizontal leading lines are weakened
 by inconsistent edge margins or gaps,
 and the rhythm feels less pronounced than in strict column layouts.
 
@@ -522,8 +518,8 @@ and portrait shots sit alongside wide landscapes with neither dominating visuall
 
 At first glance, the photos seem almost randomly placed — there are no rigid grid lines.
 The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
-Yet, beneath the surface, there's a structured grid.
-Each photo is positioned within cells that match its orientation.
+Yet beneath the surface lies a structured grid,
+with each photo positioned within cells that match its orientation.
 
 The implementation is straightforward with CSS Grid.
 The key is using `grid-row: span` and `grid-column: span` to make each photo occupy multiple cells:
@@ -572,8 +568,9 @@ the result feels less mechanical and more organic.
 
 ### The Cost: Empty Cells by Design
 
-Why isn’t this layout more common?
-The answer is simple: it sacrifices **space efficiency** for **equal presentation**.
+This organic feel comes at a cost.
+The approach sacrifices **space efficiency** for **equal presentation** —
+and that trade-off explains why this layout is rarely seen in practice.
 
 The inefficiency manifests in two ways.
 First, because photos span multiple cells, some cells can get trapped between spans,
