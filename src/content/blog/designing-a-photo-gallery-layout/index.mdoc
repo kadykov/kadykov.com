@@ -25,11 +25,11 @@ some grid cells remain unused, but portraits and landscapes occupy comparable vi
 The result feels more like photographs pinned to a wall than tiles arranged by an algorithm.
 You can see this approach in action at [kadykov.com/photos](/photos).
 
-I'll walk through common gallery layouts —
+I’ll walk through common gallery layouts —
 square grids that demand cropping, masonry columns that favor portraits,
 flexbox and justified rows that privilege landscapes —
 and show you the specific trade-offs each makes.
-Then I'll explain the cell-span strategy:
+Then I’ll explain the cell-span strategy:
 a CSS Grid approach that gives equal visual weight to all orientations
 while accepting lower space efficiency as the cost.
 All layout examples are available as interactive demos
@@ -80,7 +80,7 @@ the photo’s center is aligned inside the cell.
 A common baseline is `object-fit: contain`.
 It shows the full image inside the cell,
 by fitting the entire photo within the cell boundaries without cropping.
-Here's how you might implement this
+Here’s how you might implement this
 ([interactive demo](https://codepen.io/kadykov/pen/wBGOaLm)):
 
 ```css
@@ -109,7 +109,7 @@ This wasted space doesn’t align across the grid, breaking the rhythm and under
 That inconsistent empty space is a common reason why many designers and sites choose to crop previews:
 adopting a fixed target ratio (square, 4/5, etc.) keeps cell dimensions uniform and the page visually consistent.
 
-Here's what that looks like (cropped previews):
+Here’s what that looks like (cropped previews):
 
 ![Photos cropped to square previews (cover)](./assets/square-grid.svg "Cover: all photos cropped to a square aspect ratio to preserve visual rhythm; gaps align into continuous guides.")
 
@@ -140,8 +140,8 @@ But what exactly do we mean by visual rhythm?
 Visual rhythm arises from repeated, predictable structure:
 when elements and gaps align across the layout, the eye perceives a pattern.
 In gallery design, that pattern is created by the aligned edges of photos and the spaces between them.
-When gaps line up, they form continuous **leading lines** that guide the viewer's eye;
-when they don't, the composition reads as looser and more spontaneous.
+When gaps line up, they form continuous **leading lines** that guide the viewer’s eye;
+when they don’t, the composition reads as looser and more spontaneous.
 
 Leading lines are simply the aligned edges and consistent gaps that the grid produces.
 Strong, repeated leading lines create a mechanical rhythm —
@@ -188,7 +188,7 @@ rather than navigational galleries that prioritize equal presentation.
 #### When Changing Your Mind Breaks Everything
 
 Whichever cropping strategy you choose,
-there's a deeper problem:
+there’s a deeper problem:
 using fixed aspect ratios with `cover` cropping works well —
 until you decide to change the ratio.
 Once you pick a target aspect ratio and users compose content for it,
@@ -229,7 +229,7 @@ while the columns create vertical stacks.
 
 ![Column-based gallery showing images keeping original aspect ratios in three columns](./assets/columns.svg "Column layout — three fixed-width columns; preserves composition; portrait images visually dominate")
 
-Here's a minimal implementation
+Here’s a minimal implementation
 ([interactive demo](https://codepen.io/kadykov/pen/OPNqyPQ)):
 
 ```css
@@ -253,12 +253,12 @@ However, it comes with characteristic behaviors worth understanding.
 
 The most visible characteristic is that taller images occupy more vertical space than wide ones,
 so a single portrait can outweigh two landscapes beside it.
-This portrait dominance is reinforced by the layout's directional rhythm:
+This portrait dominance is reinforced by the layout’s directional rhythm:
 consistent column widths produce strong vertical leading lines repeated horizontally,
 creating a unidirectional flow.
-This isn't a flaw — for portrait-focused collections,
+This isn’t a flaw — for portrait-focused collections,
 this visual prominence can be a feature rather than a bug,
-naturally emphasizing the work's primary orientation and guiding the eye down columns.
+naturally emphasizing the work’s primary orientation and guiding the eye down columns.
 You can tune this effect by adjusting gap size —
 wider gaps make the vertical lines more pronounced,
 while narrower gaps soften the directional emphasis.
@@ -285,7 +285,7 @@ instead of the browser’s default text-like flow.
 
 ![Desired natural fill order diagram (left-to-right, then top-to-bottom)](./assets/columns-natural-order.svg "Natural fill order — left-to-right, top-to-bottom; requires JavaScript to emulate in a multi-column layout")
 
-CSS Grid's [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) could address this fill order issue with a CSS-only implementation —
+CSS Grid’s [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) could address this fill order issue with a CSS-only implementation —
 it supports both vertical tracks (column-like with natural fill order) and horizontal tracks (row-like),
 with the ability to vary track sizes and span elements across adjacent tracks.
 However, [browser support remains very limited](https://caniuse.com/?search=masonry) as of late 2025,
@@ -314,13 +314,13 @@ wide images naturally dominate.
 A single landscape or panorama can occupy as much visual weight as several portraits combined —
 the same effect that made portraits stand out in the column layout now applies to landscapes here.
 
-That landscape dominance is reinforced by the layout's rhythm.
+That landscape dominance is reinforced by the layout’s rhythm.
 Rows with aligned gaps create strong horizontal leading lines,
 producing a unidirectional flow that emphasizes horizontal movement across the page.
 
 ![Row-based layout with horizontal leading lines](./assets/rows-leading-lines.svg "Row-based layout showing strong horizontal leading lines from aligned row gaps")
 
-However, there's a fundamental constraint.
+However, there’s a fundamental constraint.
 Columns can grow infinitely tall — the page simply scrolls.
 Rows cannot grow infinitely wide — the container has a fixed width.
 When images share a fixed height but vary in aspect ratio,
@@ -412,7 +412,7 @@ distributes the extra 200px equally — 100px to each.
 The portrait stretches from 200px to 300px wide, cropping 50% of its height.
 The landscape stretches from 450px to 550px, cropping only about 18%.
 
-The workaround is to set `flex-grow` proportional to each image's aspect ratio.
+The workaround is to set `flex-grow` proportional to each image’s aspect ratio.
 With aspect ratios of 0.67 (portrait) and 1.5 (landscape),
 the extra space is distributed proportionally,
 reducing the disproportionate cropping
@@ -431,9 +431,9 @@ and each image occupies a larger portion of the row width.
 The cropping becomes more severe and less predictable.
 Consider disabling cropping on small screens to avoid unpleasant surprises.
 
-But there's a bigger problem: the last row.
-When the last row isn't full,
-there's far more extra space to distribute —
+But there’s a bigger problem: the last row.
+When the last row isn’t full,
+there’s far more extra space to distribute —
 and the cropping becomes destructive.
 
 Compare the proportional cropping approach with the no-crop centered approach:
@@ -453,14 +453,14 @@ This is what the justified row layout does:
 keep images within each row at equal height,
 then scale that height so the row spans the full container width.
 
-There's no pure CSS solution for this layout,
+There’s no pure CSS solution for this layout,
 but JavaScript implementations are effective.
 The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point
 ([interactive demo](https://codepen.io/kadykov/pen/ogxrvxy)).
 
 ![Justified layout gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/justified-layout.avif "Justified layout — each row scales to fill the container width while preserving aspect ratios")
 
-![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr's justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
+![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
 The rhythm is softer than in column layouts because row heights vary with their contents.
 At narrower viewports, fewer photos fit per row,
@@ -508,7 +508,7 @@ or even add more categories, like panorama or very tall portrait, if needed.
 
 ![Cell-span layout — photos sized to span grid cells (landscape 2×3, square 2×2, portrait 3×2)](./assets/cell-span.svg "Cell-span layout showing landscape, square, and portrait photos sized to occupy comparable visual area (landscape 2×3, square 2×2, portrait 3×2)")
 
-Here's how this looks in practice —
+Here’s how this looks in practice —
 the cell-span grid handles mixed orientations naturally,
 and portrait shots sit alongside wide landscapes with neither dominating visually
 ([interactive demo](https://codepen.io/kadykov/pen/xbVBwwZ)):
@@ -555,7 +555,7 @@ function getPhotoClass(width, height) {
 Run this server-side during build or rendering to avoid layout shifts.
 For static sites, this happens once at build time;
 for dynamic galleries, cache the results.
-The thresholds (1.2 and 0.8) can be adjusted based on your collection's characteristics
+The thresholds (1.2 and 0.8) can be adjusted based on your collection’s characteristics
 and chosen span values.
 
 The cell-span grid adapts naturally to narrower viewports.
@@ -592,7 +592,7 @@ First, because photos span multiple cells, some cells can get trapped between sp
 creating unusable pockets of space.
 These cells sit surrounded by photo spans and cannot accommodate new images.
 
-Second, when the viewport width doesn't evenly accommodate photo spans, entire columns could remain unused.
+Second, when the viewport width doesn’t evenly accommodate photo spans, entire columns could remain unused.
 Consider these scenarios:
 
 - **5 columns:** Portrait (2) + Landscape (3) = perfect. But Portrait + Portrait = 4, leaving 1 empty column.
@@ -661,10 +661,10 @@ and explore the [source code](https://github.com/kadykov/kadykov.com) for implem
 
 ---
 
-The choice you make about gallery layout isn't just technical — it's philosophical.
-Every time you choose a layout, you're declaring what matters:
+The choice you make about gallery layout isn’t just technical — it’s philosophical.
+Every time you choose a layout, you’re declaring what matters:
 space efficiency, visual consistency, or equal presentation.
-Most galleries optimize for the first two because they're easier to measure and justify.
+Most galleries optimize for the first two because they’re easier to measure and justify.
 
 But if you believe that a landscape and a portrait should have equal presence on the page —
 that neither orientation should be privileged by default —
@@ -673,7 +673,7 @@ The implementation is straightforward, the trade-offs are transparent,
 and the result returns to first principles:
 showing photographs as they were composed, in full, without cropping.
 
-That fundamental respect for the photograph's original frame
+That fundamental respect for the photograph’s original frame
 is what separates navigational galleries from editorial ones,
 and what makes this approach worth considering
 despite the space it leaves unused.
