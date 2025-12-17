@@ -537,9 +537,25 @@ The key is using `grid-row: span` and `grid-column: span` to make each photo occ
 Notice the three classes — `.landscape`, `.square`, and `.portrait`.
 This reveals a practical requirement:
 you need to know each photo’s orientation in advance to assign the correct CSS class.
-This can be done with JavaScript on the client,
-but if you want to avoid layout JS entirely,
-you can determine orientation server-side during rendering.
+
+The classification logic is straightforward:
+
+```javascript
+// Classify images by aspect ratio
+function getPhotoClass(width, height) {
+  const aspectRatio = width / height;
+  
+  if (aspectRatio > 1.2) return 'landscape';  // wider than tall
+  if (aspectRatio < 0.8) return 'portrait';   // taller than wide
+  return 'square';                             // roughly square
+}
+```
+
+Run this server-side during build or rendering to avoid layout shifts.
+For static sites, this happens once at build time;
+for dynamic galleries, cache the results.
+The thresholds (1.2 and 0.8) can be adjusted based on your collection's characteristics
+and chosen span values.
 
 The cell-span grid adapts naturally to narrower viewports.
 For mobile devices, it’s important to size grid cells and gaps so that at least three columns are visible —
