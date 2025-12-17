@@ -1075,6 +1075,12 @@ article h4 a {
   font-weight: inherit;
 }
 
+/* Calm down bold statements in articles */
+article strong {
+  color: var(--color-on-surface-variant);
+  font-weight: 650;
+}
+
 /*
  * Heading Visual Hierarchy with Sheet Border Bars
  * 
@@ -1135,6 +1141,7 @@ article img {
   max-width: 100%;
   height: auto;
   border-radius: 0.2rem;
+  box-shadow: var(--elevation-1);
 }
 
 /* Article figures - remove default margins for consistent spacing */
