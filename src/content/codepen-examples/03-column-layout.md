@@ -62,21 +62,8 @@ body {
 
 /* CSS columns layout */
 .gallery {
-  columns: 3;
+  column-width: 250px;
   column-gap: 1rem;
-}
-
-/* Adjust column count for smaller screens */
-@media (max-width: 768px) {
-  .gallery {
-    columns: 2;
-  }
-}
-
-@media (max-width: 480px) {
-  .gallery {
-    columns: 1;
-  }
 }
 
 .gallery img {
