@@ -1142,6 +1142,10 @@ article img {
   height: auto;
   border-radius: 0.2rem;
   box-shadow: var(--elevation-1);
+
+  /* Center images when narrower than article content */
+  display: block;
+  margin: 1rem auto;
 }
 
 /* Article figures - remove default margins for consistent spacing */
