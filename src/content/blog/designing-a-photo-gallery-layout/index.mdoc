@@ -283,6 +283,12 @@ instead of the browser’s default text-like flow.
 
 ![Desired natural fill order diagram (left-to-right, then top-to-bottom)](./assets/columns-natural-order.svg "Natural fill order — left-to-right, top-to-bottom; requires JavaScript to emulate in a multi-column layout")
 
+CSS Grid's [experimental masonry feature](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout) could address this fill order issue with a CSS-only implementation —
+it supports both vertical tracks (column-like with natural fill order) and horizontal tracks (row-like),
+with the ability to vary track sizes and span elements across adjacent tracks.
+However, [browser support remains very limited](https://caniuse.com/?search=masonry) as of late 2025,
+making it impractical for production use.
+
 So in summary: the columns layout preserves full images and feels organic.
 Portrait dominance and a pronounced directional rhythm are natural outcomes — not defects —
 and can be used deliberately or tuned via gap size and composition choices.
