@@ -24,9 +24,13 @@ The trade-off is space efficiency — some grid cells remain unused —
 but the result feels more like photographs pinned to a wall
 than tiles arranged by an algorithm.
 
-I'll walk through common gallery layouts and their inherent compromises,
-then explain the cell-span strategy I designed for this site's photo gallery:
-how it works and what you sacrifice for equal presentation.
+I'll walk through common gallery layouts —
+square grids that demand cropping, masonry columns that favor portraits,
+flexbox and justified rows that privilege landscapes —
+and show you the specific trade-offs each makes.
+Then I'll explain the cell-span strategy:
+a CSS Grid approach that gives equal visual weight to all orientations
+while accepting lower space efficiency as the cost.
 
 All layout examples discussed in this post are available as interactive demos
 in the [accompanying CodePen collection](https://codepen.io/collection/ojBrwQ).
@@ -52,20 +56,6 @@ making every photo equally prominent usually wastes space,
 while squeezing for maximum density tends to favor the most common shapes.
 Visual rhythm is related but different —
 it’s an aesthetic choice about how orderly or organic the page should feel.
-
-What do we mean by visual rhythm?
-Visual rhythm arises from repeated, predictable structure:
-when elements and gaps align across the layout, the eye perceives a pattern.
-In gallery design, that pattern is created by the aligned edges of photos and the spaces between them.
-When gaps line up, they form continuous leading lines that guide the viewer’s eye;
-when they don’t, the composition reads as looser and more spontaneous.
-
-Leading lines are simply the aligned edges and consistent gaps that the grid produces.
-Strong, repeated leading lines create a mechanical rhythm —
-excellent for tidy, navigational grids —
-while breaking those lines yields a more organic, “pinned-on-a-board” feel.
-Increasing gap size makes these lines more visible,
-but it also reduces space efficiency and draws attention to the layout itself rather than the images.
 
 In practice you must choose which compromise to live with:
 preserve full images and accept varying empty space;
@@ -146,7 +136,22 @@ consistent spacing and aligned edges that guide the eye.
 
 ![Square grid with aligned leading lines](./assets/square-grid-leading-lines.svg "Fixed-aspect grid showing aligned leading lines where gaps form continuous horizontal and vertical guides, producing strong visual rhythm.")
 
-Compare this to the `contain` baseline:
+But what exactly do we mean by visual rhythm?
+Visual rhythm arises from repeated, predictable structure:
+when elements and gaps align across the layout, the eye perceives a pattern.
+In gallery design, that pattern is created by the aligned edges of photos and the spaces between them.
+When gaps line up, they form continuous **leading lines** that guide the viewer's eye;
+when they don't, the composition reads as looser and more spontaneous.
+
+Leading lines are simply the aligned edges and consistent gaps that the grid produces.
+Strong, repeated leading lines create a mechanical rhythm —
+excellent for tidy, navigational grids —
+while breaking those lines yields a more organic, "pinned-on-a-board" feel.
+Increasing gap size makes these lines more visible,
+but it also reduces space efficiency and draws attention to the layout itself rather than the images.
+
+With this understanding of visual rhythm and leading lines,
+we can now see why the `contain` baseline feels less coherent:
 letterboxing bends those lines by asymmetrically enlarging the gaps, and the grid feels inconsistent.
 The straight and periodic leading lines of the fixed-aspect grid can produce a strong sense of order;
 that order can feel mechanical rather than organic.
@@ -640,11 +645,24 @@ For dynamic scenarios, orientation calculation is simpler than justified layout 
 
 You can see this approach in action at [kadykov.com/photos](/photos),
 and explore the [source code](https://github.com/kadykov/kadykov.com) for implementation details.
-In a future post, I'll cover the aesthetic refinements layered on top of this grid:
-Polaroid-style borders, subtle rotation, and neutral backgrounds
-that enhance the viewing experience.
 
-If you've struggled with layouts that crop compositions or let one orientation dominate,
-this strategy offers an alternative.
-The code is simple, the trade-offs are clear, and the result respects what a photograph is:
-a deliberate composition that deserves to be seen in full.
+<!-- TODO: Add link to future post about Polaroid aesthetics (borders, rotation, backgrounds) -->
+
+---
+
+The choice you make about gallery layout isn't just technical — it's philosophical.
+Every time you choose a layout, you're declaring what matters:
+space efficiency, visual consistency, or equal presentation.
+Most galleries optimize for the first two because they're easier to measure and justify.
+
+But if you believe that a landscape and a portrait should have equal presence on the page —
+that neither orientation should be privileged by default —
+then the cell-span approach offers a clear path forward.
+The implementation is straightforward, the trade-offs are transparent,
+and the result returns to first principles:
+showing photographs as they were composed, in full, without cropping.
+
+That fundamental respect for the photograph's original frame
+is what separates navigational galleries from editorial ones,
+and what makes this approach worth considering
+despite the space it leaves unused.
