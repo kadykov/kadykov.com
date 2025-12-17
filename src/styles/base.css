@@ -880,8 +880,10 @@ a {
    * Underline of the regular links reveals and lifts on hover.
    * Use line-height units for consistent vertical scaling.
    * Here we prepare the transparent underline for transition.
+   * WebKit fix: Use separate text-decoration-color to ensure transparency works.
    */
-  text-decoration: underline 0.1lh solid transparent;
+  text-decoration: underline 0.1lh solid;
+  text-decoration-color: transparent;
   text-underline-offset: 0.2lh;
   text-decoration-skip-ink: none;
 }
