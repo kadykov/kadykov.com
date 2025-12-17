@@ -14,36 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Cache Astro build artifacts
-        uses: actions/cache@v4
-        with:
-          path: |
-            cache/image-optimization
-            node_modules/.astro
-            .astro
-          key: ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**/*.{ts,astro,js,jsx,tsx}') }}
-          restore-keys: |
-            ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-
-            ${{ runner.os }}-astro-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Remove experimental pages and test blog post
+      - name: Remove experimental pages
         run: rm -rf src/pages/experimental
 
-      - name: Build website
-        run: npm run build
-        env:
-          # Ensure production photo server URL is used (default)
-          # PHOTO_SERVER_URL is NOT set, so it uses default: https://share.kadykov.com
-          NODE_ENV: production
+      - name: Install, build, and cache with official Astro action
+        uses: withastro/action@v5
+        with:
+          node-version: "24"
+          package-manager: "npm"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
