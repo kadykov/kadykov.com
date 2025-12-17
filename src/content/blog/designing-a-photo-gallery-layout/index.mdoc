@@ -452,8 +452,6 @@ This is what the justified row layout does:
 keep images within each row at equal height,
 then scale that height so the row spans the full container width.
 
-![Justified row layout — photos share equal row height](./assets/justified.svg "Photos in each row share the same height; row heights and photo counts per row adapt to fill the container width, preserving each image's aspect ratio.")
-
 There's no pure CSS solution for this layout,
 but JavaScript implementations are effective.
 The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point
@@ -594,7 +592,6 @@ unlike previous layouts where gap adjustments could improve space utilization.
 This fundamental trade-off is likely the main reason why the cell-span approach is rarely seen in practice.
 
 Yet despite this cost, the wasted space feels less jarring than in the contain/fit layout.
-The gaps are consistent and rhythmic — they seem intentional, part of the design.
 Because there are no strong leading lines, the empty cells don’t disrupt the overall flow but read as natural breathing room.
 When the number of wasted cells is not excessive,
 cell-span layout can actually be more space-efficient than the contain/fit approach,
