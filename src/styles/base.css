@@ -1420,7 +1420,7 @@ body > header svg {
    * within flex containers.
    */
   display: block;
-  height: 1.7rem;
+  height: 2.7rem;
   width: auto;
 
   /* USE border-radius: 50%; for round logo */
@@ -1833,8 +1833,8 @@ body > footer p {
 /* Logo styling - centered at top of footer */
 body > footer svg {
   margin: 0 auto;
-  height: 2em;
-  width: 2em;
+  height: 3em;
+  width: 3em;
 }
 
 /* Footer paragraphs - centered text, full width */
