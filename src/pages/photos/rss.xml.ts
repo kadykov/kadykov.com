@@ -1,36 +1,22 @@
 import rss from "@astrojs/rss"
-import { fetchPhotoManifest } from "../../../../utils/photoData"
-import { getImageUrl } from "../../../../config/photoServer"
+import { fetchPhotoManifest } from "../../utils/photoData"
+import { getImageUrl } from "../../config/photoServer"
+import type { APIContext } from "astro"
 
-export async function getStaticPaths() {
+export async function GET(context: APIContext) {
   const photos = await fetchPhotoManifest()
 
-  // Get all unique tags from photos
-  const uniqueTags = [...new Set(photos.flatMap((photo) => photo.tags || []))]
-
-  return uniqueTags.map((tag) => ({
-    params: { tag },
-  }))
-}
-
-export async function GET(context) {
-  const { tag } = context.params
-  const photos = await fetchPhotoManifest()
-
-  // Filter photos by tag
-  const taggedPhotos = photos.filter((photo) => photo.tags?.includes(tag))
-
-  // Sort by date (newest first)
-  const sortedPhotos = [...taggedPhotos].sort((a, b) => {
+  // Sort photos by date (newest first)
+  const sortedPhotos = [...photos].sort((a, b) => {
     const dateA = a.dateTaken ? new Date(a.dateTaken).getTime() : 0
     const dateB = b.dateTaken ? new Date(b.dateTaken).getTime() : 0
     return dateB - dateA
   })
 
   return rss({
-    title: `Aleksandr Kadykov | Photos - ${tag}`,
-    description: `Photographs tagged with "${tag}"`,
-    site: context.site,
+    title: "Aleksandr Kadykov | Photos",
+    description: "Latest photographs",
+    site: context.site!,
     items: sortedPhotos.map((photo) => {
       const photoUrl = `${context.site}photo/${photo.slug}/`
       const imageUrl = getImageUrl(photo.relativePath)
@@ -40,14 +26,15 @@ export async function GET(context) {
           photo.title || `Photo from ${photo.dateTaken || photo.relativePath}`,
         pubDate: photo.dateTaken
           ? new Date(photo.dateTaken)
-          : new Date(photo.year, photo.month - 1, photo.day),
+          : new Date(photo.year ?? 0, (photo.month ?? 1) - 1, photo.day ?? 1),
         description: photo.description || photo.title || "",
         link: photoUrl,
         categories: photo.tags || [],
+        // Include image as enclosure for RSS readers that support it
         enclosure: {
           url: imageUrl,
           type: "image/jpeg",
-          length: 0,
+          length: 0, // RSS spec requires this, but we don't have file size
         },
       }
     }),

@@ -2,8 +2,9 @@ import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
 import { fetchPhotoManifest } from "../utils/photoData"
 import { getImageUrl } from "../config/photoServer"
+import type { APIContext } from "astro"
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = await getCollection("blog")
   const photos = await fetchPhotoManifest()
 
@@ -26,7 +27,7 @@ export async function GET(context) {
         photo.title || `Photo from ${photo.dateTaken || photo.relativePath}`,
       pubDate: photo.dateTaken
         ? new Date(photo.dateTaken)
-        : new Date(photo.year, photo.month - 1, photo.day),
+        : new Date(photo.year ?? 0, (photo.month ?? 1) - 1, photo.day ?? 1),
       description: photo.description || photo.title || "",
       link: photoUrl,
       categories: [...(photo.tags || []), "photo"],
@@ -46,7 +47,7 @@ export async function GET(context) {
   return rss({
     title: "Aleksandr Kadykov",
     description: "Blog posts and photographs",
-    site: context.site,
+    site: context.site!,
     items: allItems,
     customData: `<language>en-us</language>`,
   })
