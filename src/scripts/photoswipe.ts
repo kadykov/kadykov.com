@@ -1,25 +1,46 @@
 import PhotoSwipeLightbox from "photoswipe/lightbox"
 import "photoswipe/style.css"
+// @ts-ignore - photoswipe-dynamic-caption-plugin doesn't provide types
 import PhotoSwipeDynamicCaption from "photoswipe-dynamic-caption-plugin"
 import "photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.css"
 
+// Photo data structure matching what's passed from Astro
+interface PhotoData {
+  src: string
+  width: number
+  height: number
+  alt?: string
+  title?: string
+  dateTaken?: string
+  tags?: string[]
+  slug?: string
+}
+
 // Fullscreen API helper
 // Supports unprefixed and webkit-prefixed versions
-function getFullscreenAPI() {
-  let api
-  let enterFS
-  let exitFS
-  let elementFS
-  let changeEvent
-  let errorEvent
+interface FullscreenAPI {
+  request: (el: HTMLElement) => void
+  exit: () => Promise<void>
+  isFullscreen: () => Element | null
+  change: string
+  error: string
+}
 
-  if (document.documentElement.requestFullscreen) {
+function getFullscreenAPI(): FullscreenAPI | undefined {
+  let api: FullscreenAPI | undefined
+  let enterFS: string | undefined
+  let exitFS: string | undefined
+  let elementFS: string | undefined
+  let changeEvent: string | undefined
+  let errorEvent: string | undefined
+
+  if ("requestFullscreen" in document.documentElement) {
     enterFS = "requestFullscreen"
     exitFS = "exitFullscreen"
     elementFS = "fullscreenElement"
     changeEvent = "fullscreenchange"
     errorEvent = "fullscreenerror"
-  } else if (document.documentElement.webkitRequestFullscreen) {
+  } else if ("webkitRequestFullscreen" in document.documentElement) {
     enterFS = "webkitRequestFullscreen"
     exitFS = "webkitExitFullscreen"
     elementFS = "webkitFullscreenElement"
@@ -27,22 +48,22 @@ function getFullscreenAPI() {
     errorEvent = "webkitfullscreenerror"
   }
 
-  if (enterFS) {
+  if (enterFS && exitFS && elementFS && changeEvent && errorEvent) {
     api = {
-      request: function (el) {
+      request: function (el: HTMLElement) {
         if (enterFS === "webkitRequestFullscreen") {
-          el[enterFS](Element.ALLOW_KEYBOARD_INPUT)
+          ;(el as any)[enterFS]((Element as any).ALLOW_KEYBOARD_INPUT)
         } else {
-          el[enterFS]()
+          ;(el as any)[enterFS]()
         }
       },
 
       exit: function () {
-        return document[exitFS]()
+        return (document as any)[exitFS!]()
       },
 
       isFullscreen: function () {
-        return document[elementFS]
+        return (document as any)[elementFS!]
       },
 
       change: changeEvent,
@@ -55,12 +76,12 @@ function getFullscreenAPI() {
 
 const fullscreenAPI = getFullscreenAPI()
 
-let parsedDataSource = null
+let parsedDataSource: PhotoData[] | null = null
 const dataSourceElement = document.getElementById("photoswipe-data")
 
 if (dataSourceElement) {
   try {
-    const jsonData = JSON.parse(dataSourceElement.textContent)
+    const jsonData = JSON.parse(dataSourceElement.textContent || "")
     if (Array.isArray(jsonData) && jsonData.length > 0) {
       parsedDataSource = jsonData
     }
@@ -70,7 +91,7 @@ if (dataSourceElement) {
   }
 }
 
-let lightbox = null
+let lightbox: PhotoSwipeLightbox | null = null
 let isClosingViaPopstate = false // Flag to prevent history.back() loop
 
 if (parsedDataSource && parsedDataSource.length > 0) {
@@ -78,22 +99,24 @@ if (parsedDataSource && parsedDataSource.length > 0) {
     dataSource: parsedDataSource,
     bgOpacity: 1,
     pswpModule: () => import("photoswipe"),
-    // Disable built-in history - we'll manage it manually with real URLs
-    history: false,
   })
 
   // Set alt text on dynamically created images
   lightbox.on("contentLoad", (e) => {
     const { content } = e
-    if (content.data && content.data.alt && content.element) {
+    if (
+      content.data &&
+      content.data.alt &&
+      content.element instanceof HTMLImageElement
+    ) {
       content.element.alt = content.data.alt
     }
   })
 
   new PhotoSwipeDynamicCaption(lightbox, {
     type: "auto",
-    captionContent: (slide) => {
-      const data = slide.data
+    captionContent: (slide: any) => {
+      const data = slide.data as PhotoData | undefined
       if (!data) {
         return ""
       }
@@ -109,7 +132,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       }
 
       // Format date to human-readable format (e.g., "January 15, 2024")
-      let dateFormatted = null
+      let dateFormatted: string | null = null
       if (dateISO && typeof dateISO === "string") {
         const datePart = dateISO.substring(0, 10) // Extract YYYY-MM-DD
         const dateObj = new Date(datePart)
@@ -173,6 +196,8 @@ if (parsedDataSource && parsedDataSource.length > 0) {
   // Note: Web Share API requires HTTPS (or localhost for development)
   // If testing on HTTP, the share button will fall back to clipboard copy
   lightbox.on("uiRegister", function () {
+    if (!lightbox?.pswp?.ui) return
+
     lightbox.pswp.ui.registerElement({
       name: "share",
       order: 8,
@@ -186,7 +211,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
       </svg>`,
       title: "Share photo",
       onClick: async (_event, el, pswp) => {
-        const currentPhotoData = pswp.currSlide?.data
+        const currentPhotoData = pswp.currSlide?.data as PhotoData | undefined
         if (!currentPhotoData?.slug) {
           return
         }
@@ -194,13 +219,17 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         const photoUrl = `${window.location.origin}/photo/${currentPhotoData.slug}`
         const photoTitle = currentPhotoData.title || "Photo"
 
-        const shareData = {
+        const shareData: ShareData = {
           title: photoTitle,
           url: photoUrl,
         }
 
-        const shareIcon = el.querySelector("#pswp__icn-share")
-        const checkIcon = el.querySelector("#pswp__icn-share-check")
+        const shareIcon = el.querySelector(
+          "#pswp__icn-share"
+        ) as HTMLElement | null
+        const checkIcon = el.querySelector(
+          "#pswp__icn-share-check"
+        ) as HTMLElement | null
 
         const showCheckmark = () => {
           if (shareIcon && checkIcon) {
@@ -217,8 +246,8 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         // Try Web Share API first (requires HTTPS, works on mobile)
         // Use canShare() if available to check if sharing is actually possible
         const canTryWebShare =
-          navigator.share &&
-          (!navigator.canShare || navigator.canShare(shareData))
+          "share" in navigator &&
+          (!("canShare" in navigator) || navigator.canShare(shareData))
 
         if (canTryWebShare) {
           try {
@@ -226,7 +255,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
             // Successfully shared via native dialog
             // Don't show checkmark as the native UI provides its own feedback
             return
-          } catch (err) {
+          } catch (err: any) {
             // Web Share failed (user cancelled, not supported, or error)
             // Fall through to clipboard fallback
             if (err.name === "AbortError") {
@@ -251,6 +280,8 @@ if (parsedDataSource && parsedDataSource.length > 0) {
   // Register fullscreen button
   if (fullscreenAPI) {
     lightbox.on("uiRegister", function () {
+      if (!lightbox?.pswp?.ui) return
+
       lightbox.pswp.ui.registerElement({
         name: "fullscreen",
         order: 9,
@@ -267,7 +298,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           if (fullscreenAPI.isFullscreen()) {
             fullscreenAPI.exit()
           } else {
-            fullscreenAPI.request(pswp.element)
+            fullscreenAPI.request(pswp.element as HTMLElement)
           }
         },
       })
@@ -275,11 +306,12 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 
     // Handle fullscreen state changes
     lightbox.on("uiRegister", function () {
+      if (!lightbox?.pswp) return
       const pswp = lightbox.pswp
 
       document.addEventListener(fullscreenAPI.change, () => {
         const isFullscreen = fullscreenAPI.isFullscreen()
-        const fullscreenButton = pswp.element.querySelector(
+        const fullscreenButton = pswp.element?.querySelector(
           ".pswp__button--fullscreen"
         )
 
@@ -287,10 +319,10 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           // Toggle icon visibility
           const requestIcon = fullscreenButton.querySelector(
             "#pswp__icn-fullscreen-request"
-          )
+          ) as HTMLElement | null
           const exitIcon = fullscreenButton.querySelector(
             "#pswp__icn-fullscreen-exit"
-          )
+          ) as HTMLElement | null
 
           if (isFullscreen) {
             if (requestIcon) requestIcon.style.display = "none"
@@ -311,7 +343,7 @@ if (parsedDataSource && parsedDataSource.length > 0) {
           if (fullscreenAPI.isFullscreen()) {
             fullscreenAPI.exit()
           } else {
-            fullscreenAPI.request(pswp.element)
+            fullscreenAPI.request(pswp.element as HTMLElement)
           }
         }
       })
@@ -319,13 +351,16 @@ if (parsedDataSource && parsedDataSource.length > 0) {
   }
 
   // Custom URL history management using real photo page URLs
-  let originUrl = null // Store the URL before opening lightbox
+  let originUrl: string | null = null // Store the URL before opening lightbox
 
   lightbox.on("uiRegister", function () {
-    if (lightbox.pswp) {
+    if (lightbox?.pswp) {
       // When lightbox opens, save the current URL and update to photo URL
       lightbox.pswp.on("change", () => {
-        const currentPhotoData = lightbox.pswp.currSlide?.data
+        if (!lightbox?.pswp) return
+        const currentPhotoData = lightbox.pswp.currSlide?.data as
+          | PhotoData
+          | undefined
         if (currentPhotoData?.slug) {
           const photoPageUrl = `/photo/${currentPhotoData.slug}`
 
@@ -368,18 +403,20 @@ if (parsedDataSource && parsedDataSource.length > 0) {
 
   const galleryElement = document.getElementById("gallery")
   if (galleryElement) {
-    galleryElement.addEventListener("click", (e) => {
-      const clickedLink = e.target.closest("a.gallery-item")
+    galleryElement.addEventListener("click", (e: MouseEvent) => {
+      const clickedLink = (e.target as HTMLElement).closest(
+        "a.gallery-item"
+      ) as HTMLAnchorElement | null
       if (!clickedLink) {
         return
       }
       e.preventDefault()
 
-      const clickedIndex = parseInt(clickedLink.dataset.pswpIndex, 10)
+      const clickedIndex = parseInt(clickedLink.dataset.pswpIndex || "", 10)
       if (!isNaN(clickedIndex)) {
         // Reset flag before opening to ensure clean state
         isClosingViaPopstate = false
-        lightbox.loadAndOpen(clickedIndex)
+        lightbox?.loadAndOpen(clickedIndex)
       } else {
         console.warn(
           "PhotoSwipe: Could not find pswpIndex on clicked gallery item."
