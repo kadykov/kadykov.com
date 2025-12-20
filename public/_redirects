@@ -1,2 +1,2 @@
 # Proxy Umami analytics to avoid ad blockers
-/umami/*  https://cloud.umami.is/:splat  200
+/uma/*  https://cloud.umami.is/:splat  200
