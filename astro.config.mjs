@@ -6,6 +6,8 @@ import playformCompress from "@playform/compress"
 
 import markdoc from "@astrojs/markdoc"
 
+import react from "@astrojs/react"
+
 // Import the photo server domain for dynamic configuration
 const PHOTO_SERVER_DOMAIN =
   process.env.PHOTO_SERVER_URL?.replace(/^https?:\/\//, "").replace(
@@ -28,6 +30,7 @@ export default defineConfig({
       },
     }),
     markdoc(),
+    react(),
   ],
   site: "https://www.kadykov.com",
   image: {
