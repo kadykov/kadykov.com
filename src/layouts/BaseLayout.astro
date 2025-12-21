@@ -1,4 +1,5 @@
 ---
+import { SEO } from "astro-seo"
 import Footer from "../components/Footer.astro"
 import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
 import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
@@ -9,6 +10,10 @@ interface Props {
     title: string
     description: string
     pageType?: string // Optional page type for styling variations (e.g., "photo-gallery")
+    // Optional blog-specific fields for OG metadata
+    tags?: string[]
+    pubDate?: Date
+    lastUpdatedDate?: Date
     [key: string]: any
   }
 }
@@ -28,10 +33,31 @@ const finalTitle =
     ? rawTitle
     : `${rawTitle} | kadykov.com`
 
+// Canonical URL for the current page
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+
+// OpenGraph image URL - generated during build
+// Path pattern: /og/{pathname}.png (e.g., /og/about.png, /og/blog-my-post.png)
+const pathname = Astro.url.pathname
+const ogImagePath =
+  pathname === "/" || pathname === ""
+    ? "/og/index.png"
+    : `/og/${pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}.png`
+const ogImageUrl = new URL(ogImagePath, Astro.site).toString()
+
+// Blog metadata for article tags
+const isBlogPost = !!frontmatter.pubDate
+const pubDateISO = frontmatter.pubDate?.toISOString()
+
 import "../styles/base.css"
 ---
 
-<html lang="en" data-page-type={pageType}>
+<html
+  lang="en"
+  data-page-type={pageType}
+  data-og-tags={frontmatter.tags?.join(",")}
+  data-og-date={pubDateISO}
+>
   <head>
     <script
       is:inline
@@ -41,6 +67,46 @@ import "../styles/base.css"
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <SEO
+      title={finalTitle}
+      description={rawDescription}
+      canonical={canonicalUrl.toString()}
+      openGraph={{
+        basic: {
+          title: rawTitle,
+          type: isBlogPost ? "article" : "website",
+          image: ogImageUrl,
+          url: canonicalUrl.toString(),
+        },
+        optional: {
+          description: rawDescription,
+          siteName: "kadykov.com",
+          locale: "en_US",
+        },
+        image: {
+          width: 1200,
+          height: 630,
+          alt: rawTitle,
+          type: "image/png",
+        },
+        article: isBlogPost
+          ? {
+              publishedTime: pubDateISO,
+              modifiedTime: frontmatter.lastUpdatedDate?.toISOString(),
+              tags: frontmatter.tags,
+            }
+          : undefined,
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: rawTitle,
+        description: rawDescription,
+        image: ogImageUrl,
+        imageAlt: rawTitle,
+      }}
+    />
+
     <link
       rel="preload"
       as="font"
@@ -61,8 +127,6 @@ import "../styles/base.css"
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
-    <title>{finalTitle}</title>
-    <meta name="description" content={rawDescription} />
   </head>
   <body>
     <Header />

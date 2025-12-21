@@ -3,10 +3,9 @@ import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
 import playformCompress from "@playform/compress"
-
 import markdoc from "@astrojs/markdoc"
-
 import react from "@astrojs/react"
+import opengraph from "./src/integrations/opengraph"
 
 // Import the photo server domain for dynamic configuration
 const PHOTO_SERVER_DOMAIN =
@@ -21,6 +20,10 @@ export default defineConfig({
     icon(),
     sitemap(),
     mdx(),
+    markdoc(),
+    react(),
+    // OpenGraph must run before compress to avoid compressing PNGs
+    opengraph(),
     playformCompress({
       Image: false,
       HTML: {
@@ -29,8 +32,6 @@ export default defineConfig({
         },
       },
     }),
-    markdoc(),
-    react(),
   ],
   site: "https://www.kadykov.com",
   image: {
