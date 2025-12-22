@@ -20,6 +20,13 @@ import React from "react"
 import { renderToPng, preloadFonts } from "./generator"
 import { GeneralOGTemplate } from "./templates/general"
 import { BlogOGTemplate } from "./templates/blog"
+import { PhotoOGTemplate } from "./templates/photo"
+import {
+  extractPhotoMetadata,
+  parseSrcset,
+  selectBestImage,
+  loadImageAsDataUrl,
+} from "./imageUtils"
 
 // Page metadata extracted from HTML
 interface PageMeta {
@@ -61,22 +68,22 @@ async function extractPageMeta(htmlPath: string): Promise<PageMeta | null> {
     )
     const description = descMatch?.[1] || ""
 
-    // Determine page type from data attribute or path
-    const pageTypeMatch = html.match(/data-page-type="([^"]+)"/)
-    const dataPageType = pageTypeMatch?.[1]
-
-    // Check path patterns
+    // Check path patterns to determine page type
     const isBlogPost =
       htmlPath.includes("/blog/") && !htmlPath.endsWith("/blog/index.html")
-    const isPhotoPage =
-      htmlPath.includes("/photo/") || htmlPath.includes("/photos/")
+    // Individual photo pages are in /photo/ (singular)
+    const isIndividualPhoto =
+      htmlPath.includes("/photo/") && !htmlPath.includes("/photos/")
+    // Photo gallery pages are in /photos/ (plural)
+    const isPhotoGallery = htmlPath.includes("/photos/")
 
     let type: PageMeta["type"] = "general"
     if (isBlogPost) {
       type = "blog"
-    } else if (dataPageType === "photo-gallery" || isPhotoPage) {
-      // For now, treat all photo pages as general until we implement photo templates
-      type = "general"
+    } else if (isIndividualPhoto) {
+      type = "photo"
+    } else if (isPhotoGallery) {
+      type = "gallery"
     }
 
     // Extract blog-specific metadata
@@ -210,6 +217,9 @@ export function opengraphIntegration(): AstroIntegration {
 
         for (const route of routes) {
           try {
+            // Read HTML content once
+            const html = await fs.readFile(route.htmlPath, "utf-8")
+
             const meta = await extractPageMeta(route.htmlPath)
             if (!meta) {
               log.warn(`Skipping ${route.pathname}: could not extract metadata`)
@@ -227,7 +237,59 @@ export function opengraphIntegration(): AstroIntegration {
             // Generate appropriate template
             let element: React.ReactElement
 
-            if (meta.type === "blog" && meta.pubDate) {
+            if (meta.type === "photo") {
+              // Handle individual photo pages
+              const photoMeta = extractPhotoMetadata(html)
+              if (photoMeta) {
+                // Find a suitable optimized image
+                const srcsetEntries = parseSrcset(photoMeta.srcset)
+                const bestImage = selectBestImage(srcsetEntries, 450)
+
+                if (bestImage) {
+                  try {
+                    // Load the optimized image as base64
+                    const photoDataUrl = await loadImageAsDataUrl(
+                      distDir,
+                      bestImage.path
+                    )
+
+                    element = React.createElement(PhotoOGTemplate, {
+                      title: photoMeta.title,
+                      description: photoMeta.description,
+                      logoSvg,
+                      photoDataUrl,
+                      photoWidth: photoMeta.width,
+                      photoHeight: photoMeta.height,
+                      dateTaken: photoMeta.dateTaken,
+                      tags: photoMeta.tags,
+                    })
+                  } catch (imgError) {
+                    log.warn(
+                      `Could not load photo for ${route.pathname}, using general template: ${imgError}`
+                    )
+                    element = React.createElement(GeneralOGTemplate, {
+                      title: meta.title,
+                      description: meta.description,
+                      logoSvg,
+                    })
+                  }
+                } else {
+                  // No suitable image found, use general template
+                  element = React.createElement(GeneralOGTemplate, {
+                    title: meta.title,
+                    description: meta.description,
+                    logoSvg,
+                  })
+                }
+              } else {
+                // Could not extract photo metadata, use general template
+                element = React.createElement(GeneralOGTemplate, {
+                  title: meta.title,
+                  description: meta.description,
+                  logoSvg,
+                })
+              }
+            } else if (meta.type === "blog" && meta.pubDate) {
               element = React.createElement(BlogOGTemplate, {
                 title: meta.title,
                 description: meta.description,
