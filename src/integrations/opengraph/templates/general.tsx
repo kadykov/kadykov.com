@@ -2,10 +2,10 @@
  * General Page OpenGraph Template
  *
  * Used for static pages: About, Privacy Policy, Contact, etc.
- * Simple layout with logo, title, and description.
+ * Simple layout with logo, title, description, and brand elements.
  */
 
-import { BaseTemplate, Title, Description } from "./base"
+import { BaseTemplate, Title, Description, HorizontalRule } from "./base"
 
 export interface GeneralOGProps {
   title: string
@@ -28,12 +28,13 @@ export function GeneralOGTemplate({
 }: GeneralOGProps) {
   // Truncate title and description to fit nicely
   const displayTitle = truncate(title, 80)
-  const displayDescription = truncate(description, 180)
+  const displayDescription = truncate(description, 160)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
       <Title>{displayTitle}</Title>
       <Description>{displayDescription}</Description>
+      <HorizontalRule />
     </BaseTemplate>
   )
 }

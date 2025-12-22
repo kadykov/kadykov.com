@@ -3,6 +3,13 @@
  *
  * Satori requires fonts to be loaded as ArrayBuffer.
  * We use the standard (non-variable) versions of our fonts.
+ *
+ * Typography approach (matching website CSS):
+ * - Headings: Sans-serif with weight inversely proportional to size
+ *   - Large titles: weight 200 (lightest, thinnest stroke)
+ *   - Medium titles: weight 300
+ *   - Small titles: weight 400 (bolder stroke)
+ * - Body text: Serif (Bitter) at weight 500
  */
 
 import fs from "node:fs/promises"
@@ -14,7 +21,7 @@ const FONT_DIR = "node_modules/@fontsource"
 export interface FontConfig {
   name: string
   data: ArrayBuffer
-  weight: 400 | 500 | 600 | 700
+  weight: 200 | 300 | 400 | 500 | 600 | 700
   style: "normal" | "italic"
 }
 
@@ -32,14 +39,15 @@ async function loadFont(fontPath: string): Promise<ArrayBuffer> {
  * Load all fonts needed for OpenGraph images
  *
  * We load:
- * - Source Sans 3: Regular (400), Medium (500), SemiBold (600) for body text
- * - Bitter: Regular (400) for headings/serif accents
+ * - Source Sans 3: 200, 300, 400, 600 for headings (lighter = larger text)
+ * - Bitter: 500 for body text (serif for better readability)
  */
 export async function loadFonts(): Promise<FontConfig[]> {
   const fonts: FontConfig[] = []
 
-  // Source Sans 3 - Primary sans-serif font
-  const sourceSansWeights = [400, 600] as const
+  // Source Sans 3 - Sans-serif for headings
+  // Weight graduation: lighter weights for larger text (consistent stroke thickness)
+  const sourceSansWeights = [200, 300, 400, 600] as const
   for (const weight of sourceSansWeights) {
     const fontPath = `${FONT_DIR}/source-sans-3/files/source-sans-3-latin-${weight}-normal.woff`
     const data = await loadFont(fontPath)
@@ -51,13 +59,13 @@ export async function loadFonts(): Promise<FontConfig[]> {
     })
   }
 
-  // Bitter - Serif font for headings
-  const bitterPath = `${FONT_DIR}/bitter/files/bitter-latin-400-normal.woff`
+  // Bitter - Serif font for body text
+  const bitterPath = `${FONT_DIR}/bitter/files/bitter-latin-500-normal.woff`
   const bitterData = await loadFont(bitterPath)
   fonts.push({
     name: "Bitter",
     data: bitterData,
-    weight: 400,
+    weight: 500,
     style: "normal",
   })
 

@@ -4,10 +4,17 @@
  * Extended version of general template with:
  * - Tags
  * - Publication date
- * - Optional last updated date
+ * - Horizontal rule separator (brand element)
  */
 
-import { BaseTemplate, Title, Description, TagRow, DateDisplay } from "./base"
+import {
+  BaseTemplate,
+  Title,
+  Description,
+  TagRow,
+  DateDisplay,
+  HorizontalRule,
+} from "./base"
 
 export interface BlogOGProps {
   title: string
@@ -35,20 +42,22 @@ export function BlogOGTemplate({
 }: BlogOGProps) {
   // Truncate for OG image
   const displayTitle = truncate(title, 70) // Slightly shorter for blog to fit metadata
-  const displayDescription = truncate(description, 150)
+  const displayDescription = truncate(description, 140)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
       <Title size="medium">{displayTitle}</Title>
       <Description>{displayDescription}</Description>
 
+      {/* Horizontal rule separator */}
+      <HorizontalRule />
+
       {/* Metadata row with date and tags */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 12,
-          marginTop: 8,
+          gap: 10,
         }}
       >
         <DateDisplay date={pubDate} />

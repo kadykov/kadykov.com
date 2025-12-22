@@ -1,14 +1,16 @@
 /**
  * Base OpenGraph Template
  *
- * Shared layout elements for all OG images:
- * - Logo on the left
- * - Content area on the right
- * - Consistent background and styling
+ * Design system for OG images matching the website style:
+ * - Fibonacci pattern background (two overlapping SVG patterns)
+ * - Content card with elevation shadow
+ * - Sans-serif headings with weight graduation (lighter = larger)
+ * - Serif body text
+ * - Brand elements: vertical bar on titles, horizontal rule separator
  */
 
 import type { ReactNode } from "react"
-import { defaultPalette, colors } from "../colors"
+import { defaultPalette, colors, fibonacciPatterns } from "../colors"
 import { fontFamilies } from "../fonts"
 
 // OG Image dimensions (Facebook recommended)
@@ -31,7 +33,7 @@ export function svgToDataUrl(svg: string): string {
 }
 
 /**
- * Base template wrapper with logo and content area
+ * Base template wrapper with Fibonacci pattern background and content card
  */
 export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
   const logoDataUrl = svgToDataUrl(logoSvg)
@@ -43,32 +45,105 @@ export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
         width: OG_WIDTH,
         height: OG_HEIGHT,
         backgroundColor: defaultPalette.background,
+        // Fibonacci pattern background (two overlapping patterns)
+        backgroundImage: `${fibonacciPatterns.pattern1}, ${fibonacciPatterns.pattern2}`,
+        backgroundSize: "52px 32px, 84px 52px", // 2x scale for visibility
         fontFamily: fontFamilies.sans,
-        padding: 60,
+        padding: 40,
       }}
     >
-      {/* Logo column */}
+      {/* Content card with elevation */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          width: 200,
-          marginRight: 40,
+          flex: 1,
+          backgroundColor: colors.surface.light,
+          borderRadius: 8,
+          boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.08)",
+          padding: 48,
         }}
       >
-        <img src={logoDataUrl} width={160} height={160} alt="" />
-      </div>
+        {/* Logo column */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 180,
+            marginRight: 40,
+          }}
+        >
+          <img src={logoDataUrl} width={140} height={140} alt="" />
+        </div>
 
-      {/* Content column */}
+        {/* Content column */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            flex: 1,
+            gap: 16,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Title component with brand styling
+ *
+ * Features:
+ * - Sans-serif font with weight graduation (lighter for larger text)
+ * - Vertical primary-colored bar on the left (brand element)
+ * - Negative letter-spacing for tighter headings
+ */
+interface TitleProps {
+  children: ReactNode
+  size?: "large" | "medium" | "small"
+}
+
+export function Title({ children, size = "large" }: TitleProps) {
+  // Font size and weight graduation (larger = lighter weight for consistent stroke)
+  const styles = {
+    large: { fontSize: 52, fontWeight: 200 },
+    medium: { fontSize: 42, fontWeight: 300 },
+    small: { fontSize: 34, fontWeight: 400 },
+  }
+
+  const { fontSize, fontWeight } = styles[size]
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "stretch",
+      }}
+    >
+      {/* Vertical bar (brand element) */}
+      <div
+        style={{
+          width: 4,
+          backgroundColor: colors.brand.primary,
+          marginRight: 16,
+          borderRadius: 2,
+        }}
+      />
+      {/* Title text */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          flex: 1,
-          gap: 20,
+          fontFamily: fontFamilies.sans,
+          fontSize,
+          fontWeight,
+          color: defaultPalette.textPrimary,
+          lineHeight: 1.15,
+          letterSpacing: "-0.02em",
         }}
       >
         {children}
@@ -78,36 +153,7 @@ export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
 }
 
 /**
- * Title component with consistent styling
- */
-interface TitleProps {
-  children: ReactNode
-  size?: "large" | "medium" | "small"
-}
-
-export function Title({ children, size = "large" }: TitleProps) {
-  const fontSize = size === "large" ? 56 : size === "medium" ? 44 : 36
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        fontFamily: fontFamilies.serif,
-        fontSize,
-        fontWeight: 400,
-        color: defaultPalette.textPrimary,
-        lineHeight: 1.2,
-        // Limit to 3 lines with ellipsis would require JS,
-        // so we'll rely on template logic to truncate if needed
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-/**
- * Description component
+ * Description component with serif font
  */
 interface DescriptionProps {
   children: ReactNode
@@ -118,12 +164,60 @@ export function Description({ children }: DescriptionProps) {
     <div
       style={{
         display: "flex",
-        fontSize: 24,
+        fontFamily: fontFamilies.serif,
+        fontSize: 22,
+        fontWeight: 500,
         color: defaultPalette.textSecondary,
-        lineHeight: 1.4,
+        lineHeight: 1.5,
+        paddingLeft: 20, // Align with title text (after the bar)
       }}
     >
       {children}
+    </div>
+  )
+}
+
+/**
+ * Horizontal rule separator (brand element)
+ *
+ * Right-aligned with a solid square on the right end
+ * Mimics the CSS: border-width: 0 0.5rem 0.15rem 0
+ */
+export function HorizontalRule() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        paddingLeft: 20,
+        marginTop: 8,
+        marginBottom: 8,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+        }}
+      >
+        {/* Horizontal line */}
+        <div
+          style={{
+            width: 200,
+            height: 3,
+            backgroundColor: colors.brand.primary,
+          }}
+        />
+        {/* Square end cap */}
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            backgroundColor: colors.brand.primary,
+            marginLeft: -3, // Overlap slightly
+          }}
+        />
+      </div>
     </div>
   )
 }
@@ -140,7 +234,8 @@ export function Tag({ children }: TagProps) {
     <div
       style={{
         display: "flex",
-        fontSize: 16,
+        fontSize: 14,
+        fontWeight: 600,
         color: colors.brand.primary,
         backgroundColor: colors.surface.offWhite,
         padding: "6px 12px",
@@ -170,6 +265,7 @@ export function TagRow({ tags, maxTags = 4 }: TagRowProps) {
         display: "flex",
         flexWrap: "wrap",
         gap: 8,
+        paddingLeft: 20, // Align with content after the bar
       }}
     >
       {displayTags.map((tag, i) => (
@@ -199,8 +295,10 @@ export function DateDisplay({ date, label }: DateDisplayProps) {
     <div
       style={{
         display: "flex",
-        fontSize: 18,
+        fontSize: 16,
+        fontWeight: 400,
         color: defaultPalette.textSecondary,
+        paddingLeft: 20, // Align with content after the bar
       }}
     >
       {label && <span style={{ marginRight: 8 }}>{label}</span>}
