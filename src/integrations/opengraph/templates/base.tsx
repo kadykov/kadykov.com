@@ -154,14 +154,27 @@ export function Title({ children, size = "large" }: TitleProps) {
 
 /**
  * Font size configuration for auto-scaling titles
- * Each entry defines: fontSize, fontWeight, and approximate character width ratio
- * The ratio is: averageCharWidth ≈ fontSize × ratio (for Source Sans 3)
+ *
+ * Algorithm: Try sizes from largest to smallest, picking the first that fits.
+ *
+ * Each entry defines:
+ * - fontSize: Size in pixels
+ * - fontWeight: Weight (lighter weights for larger sizes keep stroke width consistent)
+ * - charWidthRatio: Average character width as proportion of fontSize
+ *   This ratio depends on WEIGHT, not size (heavier = wider characters):
+ *   - Weight 200-300 (thin/light): ~0.48-0.50 (narrow)
+ *   - Weight 400-500 (regular/medium): ~0.52-0.54 (wider)
+ *
+ * Tuning guide:
+ * - To prefer larger titles: Remove smaller sizes or adjust maxLines in templates
+ * - To prefer bolder titles: Increase weights (but maintain size/weight balance)
+ * - To fix sizing accuracy: Adjust charWidthRatio per weight (test with real text)
  */
 const TITLE_SIZES = [
-  { fontSize: 52, fontWeight: 200, charWidthRatio: 0.52 },
-  { fontSize: 42, fontWeight: 300, charWidthRatio: 0.5 },
-  { fontSize: 34, fontWeight: 400, charWidthRatio: 0.48 },
-  { fontSize: 28, fontWeight: 500, charWidthRatio: 0.46 },
+  { fontSize: 56, fontWeight: 300, charWidthRatio: 0.5 }, // Largest: light weight, narrow chars
+  { fontSize: 48, fontWeight: 400, charWidthRatio: 0.52 }, // Large: regular weight
+  { fontSize: 38, fontWeight: 500, charWidthRatio: 0.54 }, // Medium: medium weight, wider chars
+  { fontSize: 30, fontWeight: 600, charWidthRatio: 0.56 }, // Small: semi-bold, widest chars
 ] as const
 
 /**
