@@ -15,6 +15,7 @@
 
 import type { AstroIntegration } from "astro"
 import fs from "node:fs/promises"
+import os from "node:os"
 import path from "node:path"
 import React from "react"
 import { renderToPng, preloadFonts } from "./generator"
@@ -51,6 +52,9 @@ interface RouteInfo {
 /**
  * Extract metadata from HTML content
  * Parses meta tags and data attributes to determine page type and content
+ *
+ * Note: This is a synchronous function that operates on already-loaded HTML
+ * to avoid reading the file twice (once in the main loop, once here).
  */
 function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
   try {
@@ -210,9 +214,12 @@ export function opengraphIntegration(): AstroIntegration {
         const ogDir = path.join(distDir, "og")
         await fs.mkdir(ogDir, { recursive: true })
 
-        // Generate OG images for each route in parallel
-        // Use concurrency limit to avoid overwhelming the system
-        const CONCURRENCY = 8 // Process 8 images at a time
+        // Generate OG images in parallel using work-stealing pattern
+        // Use CPU core count for concurrency (or fallback to 4)
+        const cpuCount = os.availableParallelism?.() ?? os.cpus().length
+        const concurrency = Math.max(1, cpuCount)
+        log.info(`Using ${concurrency} concurrent workers`)
+
         let generated = 0
         let skipped = 0
 
@@ -323,11 +330,14 @@ export function opengraphIntegration(): AstroIntegration {
           }
         }
 
-        // Process all routes in parallel with concurrency limit
+        // Work-stealing pattern: spawn `concurrency` workers that each
+        // pull from the shared routes array until it's empty
+        // This ensures balanced load even when individual tasks vary in duration
+        const routeQueue = [...routes] // Copy to allow mutation
         await Promise.all(
-          Array.from({ length: CONCURRENCY }, async () => {
-            while (routes.length > 0) {
-              const route = routes.shift()
+          Array.from({ length: concurrency }, async () => {
+            while (routeQueue.length > 0) {
+              const route = routeQueue.shift()
               if (route) await processRoute(route)
             }
           })
