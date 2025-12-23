@@ -45,9 +45,15 @@ export async function renderToSvg(element: ReactNode): Promise<string> {
 
 /**
  * Convert SVG string to PNG buffer using Sharp
+ * Optimized for speed with appropriate compression settings
  */
 export async function svgToPng(svg: string): Promise<Buffer> {
-  const png = await sharp(Buffer.from(svg)).png().toBuffer()
+  const png = await sharp(Buffer.from(svg))
+    .png({
+      compressionLevel: 6, // Balance between speed and size (default is 6)
+      effort: 1, // Minimal effort for faster encoding (range 1-10, default 7)
+    })
+    .toBuffer()
   return png
 }
 

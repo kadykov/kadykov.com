@@ -49,13 +49,11 @@ interface RouteInfo {
 }
 
 /**
- * Extract metadata from HTML file
+ * Extract metadata from HTML content
  * Parses meta tags and data attributes to determine page type and content
  */
-async function extractPageMeta(htmlPath: string): Promise<PageMeta | null> {
+function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
   try {
-    const html = await fs.readFile(htmlPath, "utf-8")
-
     // Extract title
     const titleMatch = html.match(/<title>([^<]+)<\/title>/)
     let title = titleMatch?.[1] || "kadykov.com"
@@ -198,6 +196,7 @@ export function opengraphIntegration(): AstroIntegration {
 
       "astro:build:done": async ({ logger }) => {
         const log = logger.fork("opengraph")
+        const startTime = performance.now()
         log.info("Generating OpenGraph images...")
 
         // Preload fonts for better performance
@@ -211,27 +210,30 @@ export function opengraphIntegration(): AstroIntegration {
         const ogDir = path.join(distDir, "og")
         await fs.mkdir(ogDir, { recursive: true })
 
-        // Generate OG images for each route
+        // Generate OG images for each route in parallel
+        // Use concurrency limit to avoid overwhelming the system
+        const CONCURRENCY = 8 // Process 8 images at a time
         let generated = 0
         let skipped = 0
 
-        for (const route of routes) {
+        // Define the processor function for each route
+        const processRoute = async (route: RouteInfo): Promise<void> => {
           try {
             // Read HTML content once
             const html = await fs.readFile(route.htmlPath, "utf-8")
 
-            const meta = await extractPageMeta(route.htmlPath)
+            const meta = extractPageMeta(html, route.htmlPath)
             if (!meta) {
               log.warn(`Skipping ${route.pathname}: could not extract metadata`)
               skipped++
-              continue
+              return
             }
 
             // Skip pages without meaningful content
             if (!meta.title || meta.title === "kadykov.com") {
               log.warn(`Skipping ${route.pathname}: no title`)
               skipped++
-              continue
+              return
             }
 
             // Generate appropriate template
@@ -321,7 +323,21 @@ export function opengraphIntegration(): AstroIntegration {
           }
         }
 
+        // Process all routes in parallel with concurrency limit
+        await Promise.all(
+          Array.from({ length: CONCURRENCY }, async () => {
+            while (routes.length > 0) {
+              const route = routes.shift()
+              if (route) await processRoute(route)
+            }
+          })
+        )
+
         log.info(`Done! Generated ${generated} images, skipped ${skipped}`)
+        const duration = ((performance.now() - startTime) / 1000).toFixed(2)
+        log.info(
+          `Total time: ${duration}s (${(generated / parseFloat(duration)).toFixed(1)} images/sec)`
+        )
       },
     },
   }
