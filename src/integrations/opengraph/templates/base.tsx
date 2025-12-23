@@ -47,9 +47,9 @@ export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
         backgroundColor: defaultPalette.background,
         // Fibonacci pattern background (two overlapping patterns)
         backgroundImage: `${fibonacciPatterns.pattern1}, ${fibonacciPatterns.pattern2}`,
-        backgroundSize: "52px 32px, 84px 52px", // 2x scale for visibility
+        backgroundSize: "260px 160px, 420px 260px",
         fontFamily: fontFamilies.sans,
-        padding: 40,
+        padding: 80,
       }}
     >
       {/* Content card with elevation */}
