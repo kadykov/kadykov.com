@@ -9,7 +9,7 @@
 
 import {
   BaseTemplate,
-  Title,
+  AutoTitle,
   Description,
   TagRow,
   DateDisplay,
@@ -33,6 +33,13 @@ function truncate(text: string, maxLength: number): string {
   return text.slice(0, maxLength - 3).trim() + "..."
 }
 
+/**
+ * Calculate available width for title in the content area
+ * Layout: 1200px total - 80px*2 padding - 48px*2 card padding - 180px logo - 40px logo margin - 20px title bar
+ * = 1200 - 160 - 96 - 180 - 40 - 20 = 704px
+ */
+const CONTENT_WIDTH = 704
+
 export function BlogOGTemplate({
   title,
   description,
@@ -40,13 +47,14 @@ export function BlogOGTemplate({
   tags,
   pubDate,
 }: BlogOGProps) {
-  // Truncate for OG image
-  const displayTitle = truncate(title, 70) // Slightly shorter for blog to fit metadata
+  // Truncate description (title auto-scales)
   const displayDescription = truncate(description, 140)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
-      <Title size="medium">{displayTitle}</Title>
+      <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={2}>
+        {title}
+      </AutoTitle>
       <Description>{displayDescription}</Description>
 
       {/* Horizontal rule separator */}

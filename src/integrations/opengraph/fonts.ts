@@ -47,7 +47,7 @@ export async function loadFonts(): Promise<FontConfig[]> {
 
   // Source Sans 3 - Sans-serif for headings
   // Weight graduation: lighter weights for larger text (consistent stroke thickness)
-  const sourceSansWeights = [200, 300, 400, 600] as const
+  const sourceSansWeights = [200, 300, 400, 500, 600] as const
   for (const weight of sourceSansWeights) {
     const fontPath = `${FONT_DIR}/source-sans-3/files/source-sans-3-latin-${weight}-normal.woff`
     const data = await loadFont(fontPath)

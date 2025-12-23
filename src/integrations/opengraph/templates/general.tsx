@@ -5,7 +5,7 @@
  * Simple layout with logo, title, description, and brand elements.
  */
 
-import { BaseTemplate, Title, Description, HorizontalRule } from "./base"
+import { BaseTemplate, AutoTitle, Description, HorizontalRule } from "./base"
 
 export interface GeneralOGProps {
   title: string
@@ -21,18 +21,26 @@ function truncate(text: string, maxLength: number): string {
   return text.slice(0, maxLength - 3).trim() + "..."
 }
 
+/**
+ * Calculate available width for title in the content area
+ * Layout: 1200px total - 80px*2 padding - 48px*2 card padding - 180px logo - 40px logo margin - 20px title bar
+ * = 1200 - 160 - 96 - 180 - 40 - 20 = 704px
+ */
+const CONTENT_WIDTH = 704
+
 export function GeneralOGTemplate({
   title,
   description,
   logoSvg,
 }: GeneralOGProps) {
-  // Truncate title and description to fit nicely
-  const displayTitle = truncate(title, 80)
+  // Truncate description to fit nicely (title auto-scales)
   const displayDescription = truncate(description, 160)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
-      <Title>{displayTitle}</Title>
+      <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={3}>
+        {title}
+      </AutoTitle>
       <Description>{displayDescription}</Description>
       <HorizontalRule />
     </BaseTemplate>

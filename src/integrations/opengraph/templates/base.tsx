@@ -153,6 +153,135 @@ export function Title({ children, size = "large" }: TitleProps) {
 }
 
 /**
+ * Font size configuration for auto-scaling titles
+ * Each entry defines: fontSize, fontWeight, and approximate character width ratio
+ * The ratio is: averageCharWidth ≈ fontSize × ratio (for Source Sans 3)
+ */
+const TITLE_SIZES = [
+  { fontSize: 52, fontWeight: 200, charWidthRatio: 0.52 },
+  { fontSize: 42, fontWeight: 300, charWidthRatio: 0.5 },
+  { fontSize: 34, fontWeight: 400, charWidthRatio: 0.48 },
+  { fontSize: 28, fontWeight: 500, charWidthRatio: 0.46 },
+] as const
+
+/**
+ * Estimate the width of text at a given font size
+ * Uses character count with font-specific width ratios
+ */
+function estimateTextWidth(
+  text: string,
+  fontSize: number,
+  charWidthRatio: number
+): number {
+  // Count characters, giving more weight to wide characters
+  let effectiveLength = 0
+  for (const char of text) {
+    if (/[mwMW@]/.test(char)) {
+      effectiveLength += 1.3 // Wide characters
+    } else if (/[ilIj.,;:'"!|]/.test(char)) {
+      effectiveLength += 0.4 // Narrow characters
+    } else if (/[A-Z]/.test(char)) {
+      effectiveLength += 1.1 // Uppercase slightly wider
+    } else {
+      effectiveLength += 1.0 // Normal characters
+    }
+  }
+  return effectiveLength * fontSize * charWidthRatio
+}
+
+/**
+ * Calculate how many lines the text would need at a given font size
+ */
+function estimateLineCount(
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+  charWidthRatio: number
+): number {
+  const textWidth = estimateTextWidth(text, fontSize, charWidthRatio)
+  return Math.ceil(textWidth / maxWidth)
+}
+
+/**
+ * Auto-scaling Title component
+ *
+ * Automatically selects the optimal font size based on:
+ * - Available width (maxWidth)
+ * - Maximum allowed lines (maxLines)
+ * - Text length and character composition
+ *
+ * Features:
+ * - Sans-serif font with weight graduation (lighter for larger text)
+ * - Vertical primary-colored bar on the left (brand element)
+ * - Negative letter-spacing for tighter headings
+ */
+interface AutoTitleProps {
+  children: string
+  maxWidth: number // Available width in pixels for the title text
+  maxLines?: number // Maximum number of lines (default: 2)
+}
+
+export function AutoTitle({
+  children,
+  maxWidth,
+  maxLines = 2,
+}: AutoTitleProps) {
+  const text = children
+
+  // Find the largest font size that fits within constraints
+  let selectedSize = TITLE_SIZES[TITLE_SIZES.length - 1] // Fallback to smallest
+
+  for (const sizeConfig of TITLE_SIZES) {
+    const lineCount = estimateLineCount(
+      text,
+      maxWidth,
+      sizeConfig.fontSize,
+      sizeConfig.charWidthRatio
+    )
+
+    if (lineCount <= maxLines) {
+      selectedSize = sizeConfig
+      break
+    }
+  }
+
+  const { fontSize, fontWeight } = selectedSize
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "stretch",
+      }}
+    >
+      {/* Vertical bar (brand element) */}
+      <div
+        style={{
+          width: 4,
+          backgroundColor: colors.brand.primary,
+          marginRight: 16,
+          borderRadius: 2,
+        }}
+      />
+      {/* Title text */}
+      <div
+        style={{
+          display: "flex",
+          fontFamily: fontFamilies.sans,
+          fontSize,
+          fontWeight,
+          color: defaultPalette.textPrimary,
+          lineHeight: 1.15,
+          letterSpacing: "-0.02em",
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  )
+}
+
+/**
  * Description component with serif font
  */
 interface DescriptionProps {
