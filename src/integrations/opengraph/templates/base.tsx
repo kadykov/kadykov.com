@@ -171,10 +171,11 @@ export function Title({ children, size = "large" }: TitleProps) {
  * - To fix sizing accuracy: Adjust charWidthRatio per weight (test with real text)
  */
 const TITLE_SIZES = [
-  { fontSize: 56, fontWeight: 300, charWidthRatio: 0.5 }, // Largest: light weight, narrow chars
-  { fontSize: 48, fontWeight: 400, charWidthRatio: 0.52 }, // Large: regular weight
-  { fontSize: 38, fontWeight: 500, charWidthRatio: 0.54 }, // Medium: medium weight, wider chars
-  { fontSize: 30, fontWeight: 600, charWidthRatio: 0.56 }, // Small: semi-bold, widest chars
+  { fontSize: 80, fontWeight: 200, charWidthRatio: 0.48 }, // Extra Large: lightest, narrow chars
+  { fontSize: 72, fontWeight: 300, charWidthRatio: 0.5 }, // Largest: light weight, narrow chars
+  { fontSize: 64, fontWeight: 400, charWidthRatio: 0.52 }, // Large: regular weight
+  { fontSize: 56, fontWeight: 500, charWidthRatio: 0.54 }, // Medium: medium weight, wider chars
+  { fontSize: 48, fontWeight: 600, charWidthRatio: 0.56 }, // Small: semi-bold, widest chars
 ] as const
 
 /**
