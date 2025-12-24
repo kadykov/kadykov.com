@@ -9,6 +9,8 @@ import { BaseTemplate, AutoTitle, Description, HorizontalRule } from "./base"
 
 export interface GeneralOGProps {
   title: string
+  headline?: string // Visual headline for OG image (defaults to title)
+  subtitle?: string // Supporting text below headline
   description: string
   logoSvg: string
 }
@@ -30,18 +32,22 @@ const CONTENT_WIDTH = 704
 
 export function GeneralOGTemplate({
   title,
+  headline,
+  subtitle,
   description,
   logoSvg,
 }: GeneralOGProps) {
-  // Truncate description to fit nicely (title auto-scales)
-  const displayDescription = truncate(description, 160)
+  // Use headline for display (falls back to title)
+  const displayHeadline = headline ?? title
+  // Use subtitle if provided, otherwise fall back to truncated description
+  const displaySubtitle = subtitle ?? truncate(description, 160)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
       <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={3}>
-        {title}
+        {displayHeadline}
       </AutoTitle>
-      <Description>{displayDescription}</Description>
+      <Description>{displaySubtitle}</Description>
       <HorizontalRule />
     </BaseTemplate>
   )

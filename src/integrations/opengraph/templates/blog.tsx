@@ -18,6 +18,8 @@ import {
 
 export interface BlogOGProps {
   title: string
+  headline?: string // Visual headline for OG image (defaults to title)
+  subtitle?: string // Supporting text below headline
   description: string
   logoSvg: string
   tags: string[]
@@ -42,20 +44,24 @@ const CONTENT_WIDTH = 704
 
 export function BlogOGTemplate({
   title,
+  headline,
+  subtitle,
   description,
   logoSvg,
   tags,
   pubDate,
 }: BlogOGProps) {
-  // Truncate description (title auto-scales)
-  const displayDescription = truncate(description, 140)
+  // Use headline for display (falls back to title)
+  const displayHeadline = headline ?? title
+  // Use subtitle if provided, otherwise fall back to truncated description
+  const displaySubtitle = subtitle ?? truncate(description, 140)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
       <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={2}>
-        {title}
+        {displayHeadline}
       </AutoTitle>
-      <Description>{displayDescription}</Description>
+      <Description>{displaySubtitle}</Description>
 
       {/* Horizontal rule separator */}
       <HorizontalRule />

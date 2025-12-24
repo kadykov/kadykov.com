@@ -33,6 +33,8 @@ import {
 interface PageMeta {
   title: string
   description: string
+  headline?: string // Visual headline for OG image (defaults to title)
+  subtitle?: string // Supporting text below headline
   type: "general" | "blog" | "photo" | "gallery"
   // Blog-specific
   tags?: string[]
@@ -92,6 +94,13 @@ function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
     let tags: string[] = []
     let pubDate: Date | undefined
 
+    // Extract headline and subtitle from data attributes
+    const headlineMatch = html.match(/data-og-headline="([^"]+)"/)
+    const headline = headlineMatch?.[1]
+
+    const subtitleMatch = html.match(/data-og-subtitle="([^"]+)"/)
+    const subtitle = subtitleMatch?.[1]
+
     if (type === "blog") {
       // Try to extract tags from article:tag meta tags
       const tagMatches = html.matchAll(
@@ -127,6 +136,8 @@ function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
     return {
       title,
       description,
+      headline,
+      subtitle,
       type,
       tags,
       pubDate,
@@ -278,6 +289,8 @@ export function opengraphIntegration(): AstroIntegration {
                     )
                     element = React.createElement(GeneralOGTemplate, {
                       title: meta.title,
+                      headline: meta.headline,
+                      subtitle: meta.subtitle,
                       description: meta.description,
                       logoSvg,
                     })
@@ -286,6 +299,8 @@ export function opengraphIntegration(): AstroIntegration {
                   // No suitable image found, use general template
                   element = React.createElement(GeneralOGTemplate, {
                     title: meta.title,
+                    headline: meta.headline,
+                    subtitle: meta.subtitle,
                     description: meta.description,
                     logoSvg,
                   })
@@ -294,6 +309,8 @@ export function opengraphIntegration(): AstroIntegration {
                 // Could not extract photo metadata, use general template
                 element = React.createElement(GeneralOGTemplate, {
                   title: meta.title,
+                  headline: meta.headline,
+                  subtitle: meta.subtitle,
                   description: meta.description,
                   logoSvg,
                 })
@@ -301,6 +318,8 @@ export function opengraphIntegration(): AstroIntegration {
             } else if (meta.type === "blog" && meta.pubDate) {
               element = React.createElement(BlogOGTemplate, {
                 title: meta.title,
+                headline: meta.headline,
+                subtitle: meta.subtitle,
                 description: meta.description,
                 logoSvg,
                 tags: meta.tags || [],
@@ -309,6 +328,8 @@ export function opengraphIntegration(): AstroIntegration {
             } else {
               element = React.createElement(GeneralOGTemplate, {
                 title: meta.title,
+                headline: meta.headline,
+                subtitle: meta.subtitle,
                 description: meta.description,
                 logoSvg,
               })

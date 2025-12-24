@@ -6,6 +6,7 @@ import { slugify } from "../utils/slugify"
 interface Props {
   frontmatter: {
     title: string
+    headline?: string
     subtitle?: string
     description: string
     pubDate: Date
@@ -16,7 +17,8 @@ interface Props {
 }
 
 const { frontmatter } = Astro.props
-const { title, subtitle, pubDate, lastUpdatedDate, tags } = frontmatter
+const { title, headline, subtitle, pubDate, lastUpdatedDate, tags } =
+  frontmatter
 
 // Format dates
 const formatDate = (date: Date) => {
@@ -30,7 +32,7 @@ const formatDate = (date: Date) => {
 
 <BaseLayout frontmatter={frontmatter}>
   <Hero>
-    <h1>{title}</h1>
+    <h1>{headline ?? title}</h1>
     {subtitle && <p>{subtitle}</p>}
     {
       tags && tags.length > 0 && (

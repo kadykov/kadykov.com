@@ -8,6 +8,8 @@ import Header from "../components/Header.astro"
 interface Props {
   frontmatter: {
     title: string
+    headline?: string
+    subtitle?: string
     description: string
     pageType?: string // Optional page type for styling variations (e.g., "photo-gallery")
     // Optional blog-specific fields for OG metadata
@@ -57,6 +59,8 @@ import "../styles/base.css"
   data-page-type={pageType}
   data-og-tags={frontmatter.tags?.join(",")}
   data-og-date={pubDateISO}
+  data-og-headline={frontmatter.headline}
+  data-og-subtitle={frontmatter.subtitle}
 >
   <head>
     <script

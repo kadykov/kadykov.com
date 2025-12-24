@@ -9,6 +9,10 @@ const postsCollection = defineCollection({
   type: "content", // For Markdown/MDX/Markdoc files in src/content/
   schema: z.object({
     title: z.string(),
+    // Visual display fields (Hero section, OG images)
+    // headline: Punchy, attention-grabbing text (3-7 words) - defaults to title if not provided
+    // subtitle: Supporting context (10-20 words)
+    headline: z.string().optional(),
     subtitle: z.string().optional(),
     pubDate: z.date(),
     lastUpdatedDate: z.date().optional(),
@@ -24,6 +28,10 @@ const pagesCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
+    // Visual display fields (Hero section, OG images)
+    // headline: Punchy, attention-grabbing text (3-7 words) - defaults to title if not provided
+    // subtitle: Supporting context (10-20 words)
+    headline: z.string().optional(),
     subtitle: z.string().optional(),
     description: z.string(),
   }),
