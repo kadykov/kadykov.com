@@ -1,12 +1,16 @@
 /**
  * Base OpenGraph Template
  *
- * Design system for OG images matching the website style:
- * - Fibonacci pattern background (two overlapping SVG patterns)
- * - Content card with elevation shadow
+ * Frameless design system for OG images:
+ * - Subtle Fibonacci patterns directly as background (larger, 2x scale)
+ * - Content uses full available space (single padding, no card)
  * - Sans-serif headings with weight graduation (lighter = larger)
  * - Serif body text
- * - Brand elements: vertical bar on titles, horizontal rule separator
+ * - Responsive font sizing based on available space
+ *
+ * Brand elements (currently commented out, available if needed):
+ * - Vertical bar on titles
+ * - Horizontal rule separator
  */
 
 import type { ReactNode } from "react"
@@ -33,7 +37,7 @@ export function svgToDataUrl(svg: string): string {
 }
 
 /**
- * Base template wrapper with Fibonacci pattern background and content card
+ * Base template wrapper with subtle Fibonacci pattern background
  */
 export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
   const logoDataUrl = svgToDataUrl(logoSvg)
@@ -45,51 +49,38 @@ export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
         width: OG_WIDTH,
         height: OG_HEIGHT,
         backgroundColor: defaultPalette.background,
-        // Fibonacci pattern background (two overlapping patterns)
+        // Larger, subtle Fibonacci patterns for text legibility
         backgroundImage: `${fibonacciPatterns.pattern1}, ${fibonacciPatterns.pattern2}`,
-        backgroundSize: "260px 160px, 420px 260px",
+        backgroundSize: fibonacciPatterns.sizes,
         fontFamily: fontFamilies.sans,
-        padding: 80,
+        padding: 60,
       }}
     >
-      {/* Content card with elevation */}
+      {/* Logo column */}
       <div
         style={{
           display: "flex",
-          flex: 1,
-          backgroundColor: colors.surface.light,
-          borderRadius: 8,
-          boxShadow:
-            "0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.08)",
-          padding: 48,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: 160,
+          marginRight: 40,
         }}
       >
-        {/* Logo column */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: 180,
-            marginRight: 40,
-          }}
-        >
-          <img src={logoDataUrl} width={140} height={140} alt="" />
-        </div>
+        <img src={logoDataUrl} width={140} height={140} alt="" />
+      </div>
 
-        {/* Content column */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            flex: 1,
-            gap: 16,
-          }}
-        >
-          {children}
-        </div>
+      {/* Content column - uses full available space */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          flex: 1,
+          gap: 16,
+        }}
+      >
+        {children}
       </div>
     </div>
   )
@@ -125,15 +116,15 @@ export function Title({ children, size = "large" }: TitleProps) {
         alignItems: "stretch",
       }}
     >
-      {/* Vertical bar (brand element) */}
-      <div
+      {/* Vertical bar (brand element) - commented out for frameless design */}
+      {/* <div
         style={{
           width: 4,
           backgroundColor: colors.brand.primary,
           marginRight: 16,
           borderRadius: 2,
         }}
-      />
+      /> */}
       {/* Title text */}
       <div
         style={{
@@ -157,6 +148,8 @@ export function Title({ children, size = "large" }: TitleProps) {
  *
  * Algorithm: Try sizes from largest to smallest, picking the first that fits.
  *
+ * Larger sizes now possible with frameless design (more available width).
+ *
  * Each entry defines:
  * - fontSize: Size in pixels
  * - fontWeight: Weight (lighter weights for larger sizes keep stroke width consistent)
@@ -164,16 +157,13 @@ export function Title({ children, size = "large" }: TitleProps) {
  *   This ratio depends on WEIGHT, not size (heavier = wider characters):
  *   - Weight 200-300 (thin/light): ~0.48-0.50 (narrow)
  *   - Weight 400-500 (regular/medium): ~0.52-0.54 (wider)
- *
- * Tuning guide:
- * - To prefer larger titles: Remove smaller sizes or adjust maxLines in templates
- * - To prefer bolder titles: Increase weights (but maintain size/weight balance)
- * - To fix sizing accuracy: Adjust charWidthRatio per weight (test with real text)
  */
 const TITLE_SIZES = [
-  { fontSize: 80, fontWeight: 200, charWidthRatio: 0.48 }, // Extra Large: lightest, narrow chars
-  { fontSize: 72, fontWeight: 300, charWidthRatio: 0.5 }, // Largest: light weight, narrow chars
-  { fontSize: 64, fontWeight: 400, charWidthRatio: 0.52 }, // Large: regular weight
+  { fontSize: 96, fontWeight: 200, charWidthRatio: 0.48 }, // Extra extra large
+  { fontSize: 88, fontWeight: 200, charWidthRatio: 0.48 }, // Extra large
+  { fontSize: 80, fontWeight: 200, charWidthRatio: 0.48 }, // Very large: lightest, narrow chars
+  { fontSize: 72, fontWeight: 300, charWidthRatio: 0.5 }, // Large: light weight, narrow chars
+  { fontSize: 64, fontWeight: 400, charWidthRatio: 0.52 }, // Medium-large: regular weight
   { fontSize: 56, fontWeight: 500, charWidthRatio: 0.54 }, // Medium: medium weight, wider chars
   { fontSize: 48, fontWeight: 600, charWidthRatio: 0.56 }, // Small: semi-bold, widest chars
 ] as const
@@ -268,15 +258,15 @@ export function AutoTitle({
         alignItems: "stretch",
       }}
     >
-      {/* Vertical bar (brand element) */}
-      <div
+      {/* Vertical bar (brand element) - commented out for frameless design */}
+      {/* <div
         style={{
           width: 4,
           backgroundColor: colors.brand.primary,
           marginRight: 16,
           borderRadius: 2,
         }}
-      />
+      /> */}
       {/* Title text */}
       <div
         style={{
@@ -308,11 +298,10 @@ export function Description({ children }: DescriptionProps) {
       style={{
         display: "flex",
         fontFamily: fontFamilies.serif,
-        fontSize: 22,
+        fontSize: 26, // Increased from 22 (more space available)
         fontWeight: 500,
         color: defaultPalette.textSecondary,
         lineHeight: 1.5,
-        paddingLeft: 20, // Align with title text (after the bar)
       }}
     >
       {children}
@@ -323,16 +312,15 @@ export function Description({ children }: DescriptionProps) {
 /**
  * Horizontal rule separator (brand element)
  *
- * Right-aligned with a solid square on the right end
- * Mimics the CSS: border-width: 0 0.5rem 0.15rem 0
+ * COMMENTED OUT: Not needed for frameless design with patterned background.
+ * Kept here in case we want to bring it back later.
  */
-export function HorizontalRule() {
+/* export function HorizontalRule() {
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "flex-end",
-        paddingLeft: 20,
         marginTop: 8,
         marginBottom: 8,
       }}
@@ -343,7 +331,6 @@ export function HorizontalRule() {
           alignItems: "flex-end",
         }}
       >
-        {/* Horizontal line */}
         <div
           style={{
             width: 200,
@@ -351,19 +338,18 @@ export function HorizontalRule() {
             backgroundColor: colors.brand.primary,
           }}
         />
-        {/* Square end cap */}
         <div
           style={{
             width: 10,
             height: 10,
             backgroundColor: colors.brand.primary,
-            marginLeft: -3, // Overlap slightly
+            marginLeft: -3,
           }}
         />
       </div>
     </div>
   )
-}
+} */
 
 /**
  * Tag/metadata pill component
@@ -408,7 +394,6 @@ export function TagRow({ tags, maxTags = 4 }: TagRowProps) {
         display: "flex",
         flexWrap: "wrap",
         gap: 8,
-        paddingLeft: 20, // Align with content after the bar
       }}
     >
       {displayTags.map((tag, i) => (
@@ -438,10 +423,9 @@ export function DateDisplay({ date, label }: DateDisplayProps) {
     <div
       style={{
         display: "flex",
-        fontSize: 16,
+        fontSize: 18, // Increased from 16 (more space available)
         fontWeight: 400,
         color: defaultPalette.textSecondary,
-        paddingLeft: 20, // Align with content after the bar
       }}
     >
       {label && <span style={{ marginRight: 8 }}>{label}</span>}

@@ -13,7 +13,7 @@ import {
   Description,
   TagRow,
   DateDisplay,
-  HorizontalRule,
+  // HorizontalRule, // Commented out for frameless design
 } from "./base"
 
 export interface BlogOGProps {
@@ -37,10 +37,10 @@ function truncate(text: string, maxLength: number): string {
 
 /**
  * Calculate available width for title in the content area
- * Layout: 1200px total - 80px*2 padding - 48px*2 card padding - 180px logo - 40px logo margin - 20px title bar
- * = 1200 - 160 - 96 - 180 - 40 - 20 = 704px
+ * Layout: 1200px total - 60px*2 padding - 160px logo - 40px logo margin
+ * = 1200 - 120 - 160 - 40 = 880px
  */
-const CONTENT_WIDTH = 704
+const CONTENT_WIDTH = 880
 
 export function BlogOGTemplate({
   title,
@@ -63,8 +63,8 @@ export function BlogOGTemplate({
       </AutoTitle>
       <Description>{displaySubtitle}</Description>
 
-      {/* Horizontal rule separator */}
-      <HorizontalRule />
+      {/* Horizontal rule separator - commented out for frameless design */}
+      {/* <HorizontalRule /> */}
 
       {/* Metadata row with date and tags */}
       <div
