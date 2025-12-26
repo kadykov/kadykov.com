@@ -159,13 +159,10 @@ export function Title({ children, size = "large" }: TitleProps) {
  *   - Weight 400-500 (regular/medium): ~0.52-0.54 (wider)
  */
 const TITLE_SIZES = [
-  { fontSize: 96, fontWeight: 200, charWidthRatio: 0.48 }, // Extra extra large
-  { fontSize: 88, fontWeight: 200, charWidthRatio: 0.48 }, // Extra large
-  { fontSize: 80, fontWeight: 200, charWidthRatio: 0.48 }, // Very large: lightest, narrow chars
-  { fontSize: 72, fontWeight: 300, charWidthRatio: 0.5 }, // Large: light weight, narrow chars
-  { fontSize: 64, fontWeight: 400, charWidthRatio: 0.52 }, // Medium-large: regular weight
-  { fontSize: 56, fontWeight: 500, charWidthRatio: 0.54 }, // Medium: medium weight, wider chars
-  { fontSize: 48, fontWeight: 600, charWidthRatio: 0.56 }, // Small: semi-bold, widest chars
+  { fontSize: 180, fontWeight: 300, charWidthRatio: 0.5 },
+  { fontSize: 96, fontWeight: 400, charWidthRatio: 0.52 },
+  { fontSize: 72, fontWeight: 500, charWidthRatio: 0.54 },
+  { fontSize: 40, fontWeight: 600, charWidthRatio: 0.56 },
 ] as const
 
 /**
