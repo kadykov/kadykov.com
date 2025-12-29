@@ -246,6 +246,65 @@ function estimateTextWidth(
 }
 
 /**
+ * Estimate the number of lines text will take when wrapped at word boundaries
+ *
+ * This simulates CSS word-wrap behavior where text breaks at spaces,
+ * not mid-word. Much more accurate than simple width/maxWidth calculation.
+ *
+ * @param text - The text to measure
+ * @param maxWidth - Maximum available width in pixels
+ * @param fontSize - Font size in pixels
+ * @param charWidthRatio - Average character width as proportion of fontSize
+ * @param letterSpacing - Letter spacing as proportion of fontSize
+ */
+function estimateLineCountWordWrap(
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+  charWidthRatio: number,
+  letterSpacing: number = 0
+): number {
+  if (!text.trim()) return 0
+
+  // Split into words (preserving punctuation attached to words)
+  const words = text.split(/\s+/)
+  if (words.length === 0) return 0
+
+  let lineCount = 1
+  let currentLineWidth = 0
+  const spaceWidth = fontSize * charWidthRatio * 0.5 // Space is typically half a character
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i]
+    const wordWidth = estimateTextWidth(
+      word,
+      fontSize,
+      charWidthRatio,
+      letterSpacing
+    )
+
+    if (currentLineWidth === 0) {
+      // First word on line - always fits (even if it overflows)
+      currentLineWidth = wordWidth
+    } else {
+      // Check if word fits on current line (with space before it)
+      const widthWithWord = currentLineWidth + spaceWidth + wordWidth
+
+      if (widthWithWord <= maxWidth) {
+        // Word fits, add it to current line
+        currentLineWidth = widthWithWord
+      } else {
+        // Word doesn't fit, start new line
+        lineCount++
+        currentLineWidth = wordWidth
+      }
+    }
+  }
+
+  return lineCount
+}
+
+/**
  * Auto-scaling Title component
  *
  * Automatically selects the optimal font size based on:
@@ -284,13 +343,14 @@ export function AutoTitle({
   }> = []
 
   for (const sizeConfig of TITLE_SIZES) {
-    const estimatedWidth = estimateTextWidth(
+    // Use word-wrap aware line counting for accurate estimation
+    const lineCount = estimateLineCountWordWrap(
       text,
+      maxWidth,
       sizeConfig.fontSize,
       sizeConfig.charWidthRatio,
       sizeConfig.letterSpacing
     )
-    const lineCount = Math.ceil(estimatedWidth / maxWidth)
     const estimatedHeight =
       lineCount * sizeConfig.fontSize * sizeConfig.lineHeight
 
@@ -372,16 +432,16 @@ interface AutoSubtitleProps {
 }
 
 /**
- * Calculate how many lines subtitle text would need
+ * Calculate how many lines subtitle text would need (word-wrap aware)
  */
 function estimateSubtitleLineCount(text: string, maxWidth: number): number {
-  const textWidth = estimateTextWidth(
+  return estimateLineCountWordWrap(
     text,
+    maxWidth,
     SUBTITLE_STYLE.fontSize,
     SUBTITLE_STYLE.charWidthRatio,
     0 // No letter-spacing adjustment for serif
   )
-  return Math.ceil(textWidth / maxWidth)
 }
 
 /**
@@ -401,6 +461,7 @@ export function getSubtitleHeight(
 
 /**
  * Truncate text to fit within max lines, adding ellipsis
+ * Uses word-wrap aware estimation for accurate truncation
  */
 function truncateToFit(
   text: string,
@@ -410,16 +471,26 @@ function truncateToFit(
   const lineCount = estimateSubtitleLineCount(text, maxWidth)
   if (lineCount <= maxLines) return text
 
-  // Estimate characters per line
-  const charsPerLine =
-    maxWidth / (SUBTITLE_STYLE.fontSize * SUBTITLE_STYLE.charWidthRatio)
-  const maxChars = Math.floor(charsPerLine * maxLines) - 3 // Reserve space for ellipsis
+  // Truncate word by word until it fits
+  const words = text.split(/\s+/)
+  let truncated = ""
 
-  // Find a good break point (word boundary)
-  let truncated = text.slice(0, maxChars)
-  const lastSpace = truncated.lastIndexOf(" ")
-  if (lastSpace > maxChars * 0.7) {
-    truncated = truncated.slice(0, lastSpace)
+  for (let i = 0; i < words.length; i++) {
+    const candidate = truncated ? `${truncated} ${words[i]}` : words[i]
+    const candidateWithEllipsis = candidate + "…"
+
+    // Check if candidate + ellipsis would fit in maxLines
+    const estimatedLines = estimateSubtitleLineCount(
+      candidateWithEllipsis,
+      maxWidth
+    )
+
+    if (estimatedLines > maxLines) {
+      // Adding this word would overflow, stop here
+      break
+    }
+
+    truncated = candidate
   }
 
   return truncated.trim() + "…"
@@ -430,13 +501,8 @@ export function AutoSubtitle({
   maxWidth,
   maxLines = 2,
 }: AutoSubtitleProps) {
-  const estimatedWidth = estimateTextWidth(
-    children,
-    SUBTITLE_STYLE.fontSize,
-    SUBTITLE_STYLE.charWidthRatio,
-    0
-  )
-  const estimatedLines = Math.ceil(estimatedWidth / maxWidth)
+  // Use word-wrap aware line counting
+  const estimatedLines = estimateSubtitleLineCount(children, maxWidth)
   const estimatedHeight =
     Math.min(estimatedLines, maxLines) *
     SUBTITLE_STYLE.fontSize *
@@ -444,6 +510,7 @@ export function AutoSubtitle({
   const wasTruncated = estimatedLines > maxLines
 
   const displayText = truncateToFit(children, maxWidth, maxLines)
+  const displayLines = estimateSubtitleLineCount(displayText, maxWidth)
 
   debugLog("AutoSubtitle", {
     text: children.slice(0, 50) + (children.length > 50 ? "..." : ""),
@@ -451,12 +518,13 @@ export function AutoSubtitle({
     maxWidth,
     maxLines,
     fontSize: SUBTITLE_STYLE.fontSize,
-    charWidthRatio: SUBTITLE_STYLE.charWidthRatio,
-    estimatedWidth: Math.round(estimatedWidth),
     estimatedLines,
     estimatedHeight: Math.round(estimatedHeight),
     wasTruncated,
+    displayText:
+      displayText.slice(0, 60) + (displayText.length > 60 ? "..." : ""),
     displayTextLength: displayText.length,
+    displayLines,
   })
 
   return (
@@ -509,10 +577,16 @@ export function TagList({ tags, maxTags = 3 }: TagListProps) {
     tagText += `, +${remaining} more`
   }
 
-  // Estimate width (using conservative charWidthRatio for serif font)
+  // Use word-wrap aware line estimation
+  // Tags are comma-separated, so they can wrap at commas/spaces
   const charWidthRatio = 0.52
-  const estimatedWidth = tagText.length * TAGS_STYLE.fontSize * charWidthRatio
-  const estimatedLines = Math.ceil(estimatedWidth / LAYOUT.contentWidth)
+  const estimatedLines = estimateLineCountWordWrap(
+    tagText,
+    LAYOUT.contentWidth,
+    TAGS_STYLE.fontSize,
+    charWidthRatio,
+    0
+  )
 
   debugLog("TagList", {
     tags,
@@ -520,7 +594,6 @@ export function TagList({ tags, maxTags = 3 }: TagListProps) {
     textLength: tagText.length,
     fontSize: TAGS_STYLE.fontSize,
     availableWidth: LAYOUT.contentWidth,
-    estimatedWidth: Math.round(estimatedWidth),
     estimatedLines,
     expectedLines: 1,
     overflow: estimatedLines > 1,
