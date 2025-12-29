@@ -159,20 +159,54 @@ export function Title({ children, size = "large" }: TitleProps) {
  *   - Weight 400-500 (regular/medium): ~0.52-0.54 (wider)
  */
 const TITLE_SIZES = [
-  { fontSize: 180, fontWeight: 300, charWidthRatio: 0.5 },
-  { fontSize: 96, fontWeight: 400, charWidthRatio: 0.52 },
-  { fontSize: 72, fontWeight: 500, charWidthRatio: 0.54 },
-  { fontSize: 40, fontWeight: 600, charWidthRatio: 0.56 },
+  // Largest: very tight spacing, works for short titles
+  {
+    fontSize: 180,
+    fontWeight: 300,
+    charWidthRatio: 0.5,
+    lineHeight: 1.0,
+    letterSpacing: -0.04,
+  },
+  // Large: still tight but slightly more relaxed
+  {
+    fontSize: 96,
+    fontWeight: 400,
+    charWidthRatio: 0.52,
+    lineHeight: 1.05,
+    letterSpacing: -0.03,
+  },
+  // Medium: balanced spacing
+  {
+    fontSize: 72,
+    fontWeight: 500,
+    charWidthRatio: 0.54,
+    lineHeight: 1.1,
+    letterSpacing: -0.02,
+  },
+  // Small: more generous spacing for legibility
+  {
+    fontSize: 40,
+    fontWeight: 600,
+    charWidthRatio: 0.56,
+    lineHeight: 1.2,
+    letterSpacing: -0.01,
+  },
 ] as const
 
 /**
  * Estimate the width of text at a given font size
- * Uses character count with font-specific width ratios
+ * Uses character count with font-specific width ratios and letter spacing
+ *
+ * @param text - The text to measure
+ * @param fontSize - Font size in pixels
+ * @param charWidthRatio - Average character width as proportion of fontSize
+ * @param letterSpacing - Letter spacing as proportion of fontSize (e.g., -0.02 for -2%)
  */
 function estimateTextWidth(
   text: string,
   fontSize: number,
-  charWidthRatio: number
+  charWidthRatio: number,
+  letterSpacing: number = 0
 ): number {
   // Count characters, giving more weight to wide characters
   let effectiveLength = 0
@@ -187,20 +221,58 @@ function estimateTextWidth(
       effectiveLength += 1.0 // Normal characters
     }
   }
-  return effectiveLength * fontSize * charWidthRatio
+
+  // Base width from character widths
+  const baseWidth = effectiveLength * fontSize * charWidthRatio
+
+  // Letter spacing adds/removes space between characters (n-1 gaps for n characters)
+  const letterSpacingAdjustment = (text.length - 1) * fontSize * letterSpacing
+
+  return baseWidth + letterSpacingAdjustment
 }
 
 /**
  * Calculate how many lines the text would need at a given font size
+ *
+ * @param text - The text to measure
+ * @param maxWidth - Maximum available width in pixels
+ * @param fontSize - Font size in pixels
+ * @param charWidthRatio - Average character width as proportion of fontSize
+ * @param letterSpacing - Letter spacing as proportion of fontSize
  */
 function estimateLineCount(
   text: string,
   maxWidth: number,
   fontSize: number,
-  charWidthRatio: number
+  charWidthRatio: number,
+  letterSpacing: number = 0
 ): number {
-  const textWidth = estimateTextWidth(text, fontSize, charWidthRatio)
+  const textWidth = estimateTextWidth(
+    text,
+    fontSize,
+    charWidthRatio,
+    letterSpacing
+  )
   return Math.ceil(textWidth / maxWidth)
+}
+
+/**
+ * Check if a title configuration fits within height constraints
+ *
+ * @param lineCount - Number of lines the text will take
+ * @param fontSize - Font size in pixels
+ * @param lineHeight - Line height multiplier
+ * @param maxHeight - Maximum available height in pixels (optional)
+ */
+function fitsInHeight(
+  lineCount: number,
+  fontSize: number,
+  lineHeight: number,
+  maxHeight?: number
+): boolean {
+  if (!maxHeight) return true
+  const totalHeight = lineCount * fontSize * lineHeight
+  return totalHeight <= maxHeight
 }
 
 /**
@@ -220,12 +292,14 @@ interface AutoTitleProps {
   children: string
   maxWidth: number // Available width in pixels for the title text
   maxLines?: number // Maximum number of lines (default: 2)
+  maxHeight?: number // Available height in pixels (optional, for vertical constraint)
 }
 
 export function AutoTitle({
   children,
   maxWidth,
   maxLines = 2,
+  maxHeight,
 }: AutoTitleProps) {
   const text = children
 
@@ -237,16 +311,26 @@ export function AutoTitle({
       text,
       maxWidth,
       sizeConfig.fontSize,
-      sizeConfig.charWidthRatio
+      sizeConfig.charWidthRatio,
+      sizeConfig.letterSpacing
     )
 
-    if (lineCount <= maxLines) {
+    // Check both line count and height constraints
+    const fitsWidth = lineCount <= maxLines
+    const fitsHeight = fitsInHeight(
+      lineCount,
+      sizeConfig.fontSize,
+      sizeConfig.lineHeight,
+      maxHeight
+    )
+
+    if (fitsWidth && fitsHeight) {
       selectedSize = sizeConfig
       break
     }
   }
 
-  const { fontSize, fontWeight } = selectedSize
+  const { fontSize, fontWeight, lineHeight, letterSpacing } = selectedSize
 
   return (
     <div
@@ -272,8 +356,8 @@ export function AutoTitle({
           fontSize,
           fontWeight,
           color: defaultPalette.textPrimary,
-          lineHeight: 1.15,
-          letterSpacing: "-0.02em",
+          lineHeight,
+          letterSpacing: `${letterSpacing}em`,
         }}
       >
         {text}
