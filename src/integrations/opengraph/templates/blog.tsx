@@ -92,7 +92,7 @@ export function BlogOGTemplate({
         }}
       >
         <DateDisplay date={pubDate} />
-        {hasTags && <TagList tags={tags} maxTags={5} />}
+        {hasTags && <TagList tags={tags} />}
       </div>
     </BaseTemplate>
   )

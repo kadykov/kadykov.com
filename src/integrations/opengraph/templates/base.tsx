@@ -17,6 +17,15 @@ import type { ReactNode } from "react"
 import { defaultPalette, fibonacciPatterns } from "../colors"
 import { fontFamilies } from "../fonts"
 
+// Debug mode: set OG_DEBUG=1 environment variable to enable
+const DEBUG = process.env.OG_DEBUG === "1"
+
+function debugLog(component: string, data: Record<string, unknown>) {
+  if (DEBUG) {
+    console.log(`[OG:${component}]`, JSON.stringify(data, null, 2))
+  }
+}
+
 // OG Image dimensions (Facebook recommended)
 export const OG_WIDTH = 1200
 export const OG_HEIGHT = 630
@@ -237,50 +246,6 @@ function estimateTextWidth(
 }
 
 /**
- * Calculate how many lines the text would need at a given font size
- *
- * @param text - The text to measure
- * @param maxWidth - Maximum available width in pixels
- * @param fontSize - Font size in pixels
- * @param charWidthRatio - Average character width as proportion of fontSize
- * @param letterSpacing - Letter spacing as proportion of fontSize
- */
-function estimateLineCount(
-  text: string,
-  maxWidth: number,
-  fontSize: number,
-  charWidthRatio: number,
-  letterSpacing: number = 0
-): number {
-  const textWidth = estimateTextWidth(
-    text,
-    fontSize,
-    charWidthRatio,
-    letterSpacing
-  )
-  return Math.ceil(textWidth / maxWidth)
-}
-
-/**
- * Check if a title configuration fits within height constraints
- *
- * @param lineCount - Number of lines the text will take
- * @param fontSize - Font size in pixels
- * @param lineHeight - Line height multiplier
- * @param maxHeight - Maximum available height in pixels (optional)
- */
-function fitsInHeight(
-  lineCount: number,
-  fontSize: number,
-  lineHeight: number,
-  maxHeight?: number
-): boolean {
-  if (!maxHeight) return true
-  const totalHeight = lineCount * fontSize * lineHeight
-  return totalHeight <= maxHeight
-}
-
-/**
  * Auto-scaling Title component
  *
  * Automatically selects the optimal font size based on:
@@ -310,30 +275,53 @@ export function AutoTitle({
 
   // Find the largest font size that fits within constraints
   let selectedSize = TITLE_SIZES[TITLE_SIZES.length - 1] // Fallback to smallest
+  const debugSizes: Array<{
+    fontSize: number
+    estimatedLines: number
+    estimatedHeight: number
+    fitsWidth: boolean
+    fitsHeight: boolean
+  }> = []
 
   for (const sizeConfig of TITLE_SIZES) {
-    const lineCount = estimateLineCount(
+    const estimatedWidth = estimateTextWidth(
       text,
-      maxWidth,
       sizeConfig.fontSize,
       sizeConfig.charWidthRatio,
       sizeConfig.letterSpacing
     )
+    const lineCount = Math.ceil(estimatedWidth / maxWidth)
+    const estimatedHeight =
+      lineCount * sizeConfig.fontSize * sizeConfig.lineHeight
 
     // Check both line count and height constraints
     const fitsWidth = lineCount <= maxLines
-    const fitsHeight = fitsInHeight(
-      lineCount,
-      sizeConfig.fontSize,
-      sizeConfig.lineHeight,
-      maxHeight
-    )
+    const fitsHeight = !maxHeight || estimatedHeight <= maxHeight
+
+    debugSizes.push({
+      fontSize: sizeConfig.fontSize,
+      estimatedLines: lineCount,
+      estimatedHeight: Math.round(estimatedHeight),
+      fitsWidth,
+      fitsHeight,
+    })
 
     if (fitsWidth && fitsHeight) {
       selectedSize = sizeConfig
       break
     }
   }
+
+  debugLog("AutoTitle", {
+    text: text.slice(0, 50) + (text.length > 50 ? "..." : ""),
+    textLength: text.length,
+    maxWidth,
+    maxLines,
+    maxHeight,
+    selectedFontSize: selectedSize.fontSize,
+    selectedFontWeight: selectedSize.fontWeight,
+    sizeAnalysis: debugSizes,
+  })
 
   const { fontSize, fontWeight, lineHeight, letterSpacing } = selectedSize
 
@@ -368,13 +356,13 @@ export function AutoTitle({
  * - Font size: 48px (increased from 26px for better visibility)
  * - Line height: 1.35
  * - Font weight: 400
- * - Character width ratio: ~0.45 (serif fonts are slightly narrower)
+ * - Character width ratio: ~0.52 (conservative estimate for serif fonts)
  */
 const SUBTITLE_STYLE = {
   fontSize: 48,
   fontWeight: 400,
   lineHeight: 1.35,
-  charWidthRatio: 0.45,
+  charWidthRatio: 0.52,
 } as const
 
 interface AutoSubtitleProps {
@@ -442,7 +430,34 @@ export function AutoSubtitle({
   maxWidth,
   maxLines = 2,
 }: AutoSubtitleProps) {
+  const estimatedWidth = estimateTextWidth(
+    children,
+    SUBTITLE_STYLE.fontSize,
+    SUBTITLE_STYLE.charWidthRatio,
+    0
+  )
+  const estimatedLines = Math.ceil(estimatedWidth / maxWidth)
+  const estimatedHeight =
+    Math.min(estimatedLines, maxLines) *
+    SUBTITLE_STYLE.fontSize *
+    SUBTITLE_STYLE.lineHeight
+  const wasTruncated = estimatedLines > maxLines
+
   const displayText = truncateToFit(children, maxWidth, maxLines)
+
+  debugLog("AutoSubtitle", {
+    text: children.slice(0, 50) + (children.length > 50 ? "..." : ""),
+    textLength: children.length,
+    maxWidth,
+    maxLines,
+    fontSize: SUBTITLE_STYLE.fontSize,
+    charWidthRatio: SUBTITLE_STYLE.charWidthRatio,
+    estimatedWidth: Math.round(estimatedWidth),
+    estimatedLines,
+    estimatedHeight: Math.round(estimatedHeight),
+    wasTruncated,
+    displayTextLength: displayText.length,
+  })
 
   return (
     <div
@@ -484,7 +499,7 @@ export function getTagListHeight(): number {
   return TAGS_STYLE.fontSize * TAGS_STYLE.lineHeight
 }
 
-export function TagList({ tags, maxTags = 5 }: TagListProps) {
+export function TagList({ tags, maxTags = 3 }: TagListProps) {
   const displayTags = tags.slice(0, maxTags)
   const remaining = tags.length - maxTags
 
@@ -493,6 +508,23 @@ export function TagList({ tags, maxTags = 5 }: TagListProps) {
   if (remaining > 0) {
     tagText += `, +${remaining} more`
   }
+
+  // Estimate width (using conservative charWidthRatio for serif font)
+  const charWidthRatio = 0.52
+  const estimatedWidth = tagText.length * TAGS_STYLE.fontSize * charWidthRatio
+  const estimatedLines = Math.ceil(estimatedWidth / LAYOUT.contentWidth)
+
+  debugLog("TagList", {
+    tags,
+    tagText,
+    textLength: tagText.length,
+    fontSize: TAGS_STYLE.fontSize,
+    availableWidth: LAYOUT.contentWidth,
+    estimatedWidth: Math.round(estimatedWidth),
+    estimatedLines,
+    expectedLines: 1,
+    overflow: estimatedLines > 1,
+  })
 
   return (
     <div
