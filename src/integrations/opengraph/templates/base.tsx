@@ -248,7 +248,7 @@ function estimateTextWidth(
 /**
  * Estimate the number of lines text will take when wrapped at word boundaries
  *
- * This simulates CSS word-wrap behavior where text breaks at spaces,
+ * This simulates CSS word-wrap behavior where text breaks at spaces and hyphens,
  * not mid-word. Much more accurate than simple width/maxWidth calculation.
  *
  * @param text - The text to measure
@@ -266,13 +266,30 @@ function estimateLineCountWordWrap(
 ): number {
   if (!text.trim()) return 0
 
-  // Split into words (preserving punctuation attached to words)
-  const words = text.split(/\s+/)
+  // Split into words, treating hyphens as break points
+  // "cell-based" becomes ["cell-", "based"]
+  const words: string[] = []
+  for (const word of text.split(/\s+/)) {
+    // If word contains hyphens, split but keep the hyphen with the first part
+    if (word.includes("-") && word.length > 3) {
+      const parts = word.split("-")
+      for (let i = 0; i < parts.length; i++) {
+        if (i < parts.length - 1) {
+          words.push(parts[i] + "-") // Keep hyphen with first part
+        } else if (parts[i]) {
+          words.push(parts[i]) // Last part without hyphen
+        }
+      }
+    } else {
+      words.push(word)
+    }
+  }
+
   if (words.length === 0) return 0
 
   let lineCount = 1
   let currentLineWidth = 0
-  const spaceWidth = fontSize * charWidthRatio * 0.5 // Space is typically half a character
+  const spaceWidth = fontSize * charWidthRatio * 0.6 // Space is ~60% of character width (more conservative)
 
   for (let i = 0; i < words.length; i++) {
     const word = words[i]
@@ -416,13 +433,13 @@ export function AutoTitle({
  * - Font size: 48px (increased from 26px for better visibility)
  * - Line height: 1.35
  * - Font weight: 400
- * - Character width ratio: ~0.52 (conservative estimate for serif fonts)
+ * - Character width ratio: ~0.54 (conservative estimate for serif fonts)
  */
 const SUBTITLE_STYLE = {
   fontSize: 48,
   fontWeight: 400,
   lineHeight: 1.35,
-  charWidthRatio: 0.52,
+  charWidthRatio: 0.54,
 } as const
 
 interface AutoSubtitleProps {
@@ -579,7 +596,7 @@ export function TagList({ tags, maxTags = 3 }: TagListProps) {
 
   // Use word-wrap aware line estimation
   // Tags are comma-separated, so they can wrap at commas/spaces
-  const charWidthRatio = 0.52
+  const charWidthRatio = 0.54 // Match subtitle style
   const estimatedLines = estimateLineCountWordWrap(
     tagText,
     LAYOUT.contentWidth,
