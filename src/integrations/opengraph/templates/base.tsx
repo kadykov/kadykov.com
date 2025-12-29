@@ -14,12 +14,27 @@
  */
 
 import type { ReactNode } from "react"
-import { defaultPalette, colors, fibonacciPatterns } from "../colors"
+import { defaultPalette, fibonacciPatterns } from "../colors"
 import { fontFamilies } from "../fonts"
 
 // OG Image dimensions (Facebook recommended)
 export const OG_WIDTH = 1200
 export const OG_HEIGHT = 630
+
+// Layout constants for content area calculations
+export const LAYOUT = {
+  padding: 60,
+  logoWidth: 160,
+  logoMargin: 40,
+  contentGap: 16,
+  // Calculated content area dimensions
+  get contentWidth() {
+    return OG_WIDTH - this.padding * 2 - this.logoWidth - this.logoMargin
+  },
+  get contentHeight() {
+    return OG_HEIGHT - this.padding * 2
+  },
+} as const
 
 interface BaseTemplateProps {
   children: ReactNode
@@ -116,16 +131,6 @@ export function Title({ children, size = "large" }: TitleProps) {
         alignItems: "stretch",
       }}
     >
-      {/* Vertical bar (brand element) - commented out for frameless design */}
-      {/* <div
-        style={{
-          width: 4,
-          backgroundColor: colors.brand.primary,
-          marginRight: 16,
-          borderRadius: 2,
-        }}
-      /> */}
-      {/* Title text */}
       <div
         style={{
           display: "flex",
@@ -339,16 +344,6 @@ export function AutoTitle({
         alignItems: "stretch",
       }}
     >
-      {/* Vertical bar (brand element) - commented out for frameless design */}
-      {/* <div
-        style={{
-          width: 4,
-          backgroundColor: colors.brand.primary,
-          marginRight: 16,
-          borderRadius: 2,
-        }}
-      /> */}
-      {/* Title text */}
       <div
         style={{
           display: "flex",
@@ -367,120 +362,150 @@ export function AutoTitle({
 }
 
 /**
- * Description component with serif font
+ * Subtitle/Description component with serif font and auto-truncation
+ *
+ * Typography settings (fixed, not dynamic):
+ * - Font size: 48px (increased from 26px for better visibility)
+ * - Line height: 1.35
+ * - Font weight: 400
+ * - Character width ratio: ~0.45 (serif fonts are slightly narrower)
  */
-interface DescriptionProps {
-  children: ReactNode
+const SUBTITLE_STYLE = {
+  fontSize: 48,
+  fontWeight: 400,
+  lineHeight: 1.35,
+  charWidthRatio: 0.45,
+} as const
+
+interface AutoSubtitleProps {
+  children: string
+  maxWidth: number // Available width in pixels
+  maxLines?: number // Maximum lines before truncation (default: 2)
 }
 
-export function Description({ children }: DescriptionProps) {
+/**
+ * Calculate how many lines subtitle text would need
+ */
+function estimateSubtitleLineCount(text: string, maxWidth: number): number {
+  const textWidth = estimateTextWidth(
+    text,
+    SUBTITLE_STYLE.fontSize,
+    SUBTITLE_STYLE.charWidthRatio,
+    0 // No letter-spacing adjustment for serif
+  )
+  return Math.ceil(textWidth / maxWidth)
+}
+
+/**
+ * Calculate the height a subtitle will take
+ */
+export function getSubtitleHeight(
+  text: string,
+  maxWidth: number,
+  maxLines: number = 2
+): number {
+  const lineCount = Math.min(
+    estimateSubtitleLineCount(text, maxWidth),
+    maxLines
+  )
+  return lineCount * SUBTITLE_STYLE.fontSize * SUBTITLE_STYLE.lineHeight
+}
+
+/**
+ * Truncate text to fit within max lines, adding ellipsis
+ */
+function truncateToFit(
+  text: string,
+  maxWidth: number,
+  maxLines: number
+): string {
+  const lineCount = estimateSubtitleLineCount(text, maxWidth)
+  if (lineCount <= maxLines) return text
+
+  // Estimate characters per line
+  const charsPerLine =
+    maxWidth / (SUBTITLE_STYLE.fontSize * SUBTITLE_STYLE.charWidthRatio)
+  const maxChars = Math.floor(charsPerLine * maxLines) - 3 // Reserve space for ellipsis
+
+  // Find a good break point (word boundary)
+  let truncated = text.slice(0, maxChars)
+  const lastSpace = truncated.lastIndexOf(" ")
+  if (lastSpace > maxChars * 0.7) {
+    truncated = truncated.slice(0, lastSpace)
+  }
+
+  return truncated.trim() + "…"
+}
+
+export function AutoSubtitle({
+  children,
+  maxWidth,
+  maxLines = 2,
+}: AutoSubtitleProps) {
+  const displayText = truncateToFit(children, maxWidth, maxLines)
+
   return (
     <div
       style={{
         display: "flex",
         fontFamily: fontFamilies.serif,
-        fontSize: 26, // Increased from 22 (more space available)
-        fontWeight: 500,
+        fontSize: SUBTITLE_STYLE.fontSize,
+        fontWeight: SUBTITLE_STYLE.fontWeight,
         color: defaultPalette.textSecondary,
-        lineHeight: 1.5,
+        lineHeight: SUBTITLE_STYLE.lineHeight,
       }}
     >
-      {children}
+      {displayText}
     </div>
   )
 }
 
 /**
- * Horizontal rule separator (brand element)
+ * Tags display component - text-based with hashtag prefix
  *
- * COMMENTED OUT: Not needed for frameless design with patterned background.
- * Kept here in case we want to bring it back later.
+ * Matches website style: #tag1, #tag2, #tag3.
+ * Typography: serif font, same style as subtitle but slightly smaller
  */
-/* export function HorizontalRule() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        marginTop: 8,
-        marginBottom: 8,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-        }}
-      >
-        <div
-          style={{
-            width: 200,
-            height: 3,
-            backgroundColor: colors.brand.primary,
-          }}
-        />
-        <div
-          style={{
-            width: 10,
-            height: 10,
-            backgroundColor: colors.brand.primary,
-            marginLeft: -3,
-          }}
-        />
-      </div>
-    </div>
-  )
-} */
+const TAGS_STYLE = {
+  fontSize: 32,
+  fontWeight: 400,
+  lineHeight: 1.4,
+} as const
 
-/**
- * Tag/metadata pill component
- */
-interface TagProps {
-  children: ReactNode
-}
-
-export function Tag({ children }: TagProps) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        fontSize: 14,
-        fontWeight: 600,
-        color: colors.brand.primary,
-        backgroundColor: colors.surface.offWhite,
-        padding: "6px 12px",
-        borderRadius: 4,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-/**
- * Row of tags
- */
-interface TagRowProps {
+interface TagListProps {
   tags: string[]
   maxTags?: number
 }
 
-export function TagRow({ tags, maxTags = 4 }: TagRowProps) {
+/**
+ * Calculate the height the tag list will take (always 1 line)
+ */
+export function getTagListHeight(): number {
+  return TAGS_STYLE.fontSize * TAGS_STYLE.lineHeight
+}
+
+export function TagList({ tags, maxTags = 5 }: TagListProps) {
   const displayTags = tags.slice(0, maxTags)
   const remaining = tags.length - maxTags
+
+  // Build the tag string: #tag1, #tag2, #tag3
+  let tagText = displayTags.map((tag) => `#${tag}`).join(", ")
+  if (remaining > 0) {
+    tagText += `, +${remaining} more`
+  }
 
   return (
     <div
       style={{
         display: "flex",
-        flexWrap: "wrap",
-        gap: 8,
+        fontFamily: fontFamilies.serif,
+        fontSize: TAGS_STYLE.fontSize,
+        fontWeight: TAGS_STYLE.fontWeight,
+        color: defaultPalette.textSecondary,
+        lineHeight: TAGS_STYLE.lineHeight,
       }}
     >
-      {displayTags.map((tag, i) => (
-        <Tag key={i}>{tag}</Tag>
-      ))}
-      {remaining > 0 && <Tag>+{remaining} more</Tag>}
+      {tagText}
     </div>
   )
 }
@@ -488,9 +513,22 @@ export function TagRow({ tags, maxTags = 4 }: TagRowProps) {
 /**
  * Date display component
  */
+const DATE_STYLE = {
+  fontSize: 28,
+  fontWeight: 400,
+  lineHeight: 1.4,
+} as const
+
 interface DateDisplayProps {
   date: Date
   label?: string
+}
+
+/**
+ * Calculate the height the date display will take (always 1 line)
+ */
+export function getDateDisplayHeight(): number {
+  return DATE_STYLE.fontSize * DATE_STYLE.lineHeight
 }
 
 export function DateDisplay({ date, label }: DateDisplayProps) {
@@ -504,9 +542,10 @@ export function DateDisplay({ date, label }: DateDisplayProps) {
     <div
       style={{
         display: "flex",
-        fontSize: 18, // Increased from 16 (more space available)
-        fontWeight: 400,
+        fontSize: DATE_STYLE.fontSize,
+        fontWeight: DATE_STYLE.fontWeight,
         color: defaultPalette.textSecondary,
+        lineHeight: DATE_STYLE.lineHeight,
       }}
     >
       {label && <span style={{ marginRight: 8 }}>{label}</span>}

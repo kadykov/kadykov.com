@@ -8,7 +8,9 @@
 import {
   BaseTemplate,
   AutoTitle,
-  Description,
+  AutoSubtitle,
+  LAYOUT,
+  getSubtitleHeight,
   // HorizontalRule, // Commented out for frameless design
 } from "./base"
 
@@ -21,19 +23,18 @@ export interface GeneralOGProps {
 }
 
 /**
- * Truncate text to a maximum length with ellipsis
+ * Calculate available height for headline after accounting for subtitle
+ *
+ * Layout breakdown:
+ * - Content height: 510px (630 - 60*2 padding)
+ * - Subtitle: ~2 lines at 48px * 1.35 line-height = ~130px
+ * - Gap between title and subtitle: 16px
+ * - Available for title: 510 - 130 - 16 = ~364px
  */
-function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text
-  return text.slice(0, maxLength - 3).trim() + "..."
+function calculateTitleMaxHeight(subtitleText: string): number {
+  const subtitleHeight = getSubtitleHeight(subtitleText, LAYOUT.contentWidth, 2)
+  return LAYOUT.contentHeight - subtitleHeight - LAYOUT.contentGap
 }
-
-/**
- * Calculate available width for title in the content area
- * Layout: 1200px total - 60px*2 padding - 160px logo - 40px logo margin
- * = 1200 - 120 - 160 - 40 = 880px
- */
-const CONTENT_WIDTH = 880
 
 export function GeneralOGTemplate({
   title,
@@ -44,15 +45,24 @@ export function GeneralOGTemplate({
 }: GeneralOGProps) {
   // Use headline for display (falls back to title)
   const displayHeadline = headline ?? title
-  // Use subtitle if provided, otherwise fall back to truncated description
-  const displaySubtitle = subtitle ?? truncate(description, 160)
+  // Use subtitle if provided, otherwise fall back to description
+  const displaySubtitle = subtitle ?? description
+
+  // Calculate available height for the title
+  const titleMaxHeight = calculateTitleMaxHeight(displaySubtitle)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
-      <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={3}>
+      <AutoTitle
+        maxWidth={LAYOUT.contentWidth}
+        maxLines={3}
+        maxHeight={titleMaxHeight}
+      >
         {displayHeadline}
       </AutoTitle>
-      <Description>{displaySubtitle}</Description>
+      <AutoSubtitle maxWidth={LAYOUT.contentWidth} maxLines={2}>
+        {displaySubtitle}
+      </AutoSubtitle>
       {/* <HorizontalRule /> */}
     </BaseTemplate>
   )

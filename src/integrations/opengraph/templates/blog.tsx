@@ -2,18 +2,20 @@
  * Blog Post OpenGraph Template
  *
  * Extended version of general template with:
- * - Tags
+ * - Tags (hashtag text style matching website)
  * - Publication date
- * - Horizontal rule separator (brand element)
  */
 
 import {
   BaseTemplate,
   AutoTitle,
-  Description,
-  TagRow,
+  AutoSubtitle,
+  TagList,
   DateDisplay,
-  // HorizontalRule, // Commented out for frameless design
+  LAYOUT,
+  getSubtitleHeight,
+  getTagListHeight,
+  getDateDisplayHeight,
 } from "./base"
 
 export interface BlogOGProps {
@@ -28,19 +30,27 @@ export interface BlogOGProps {
 }
 
 /**
- * Truncate text to a maximum length with ellipsis
+ * Calculate available height for headline after accounting for other elements
+ *
+ * Layout breakdown:
+ * - Content height: 510px (630 - 60*2 padding)
+ * - Subtitle: ~2 lines at 48px * 1.35 = ~130px
+ * - Date: 1 line at 28px * 1.4 = ~39px
+ * - Tags: 1 line at 32px * 1.4 = ~45px
+ * - Gaps: 16px * 3 = 48px (between title-subtitle, subtitle-date, date-tags)
+ * - Available for title: 510 - 130 - 39 - 45 - 48 = ~248px
  */
-function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text
-  return text.slice(0, maxLength - 3).trim() + "..."
-}
+function calculateTitleMaxHeight(
+  subtitleText: string,
+  hasTags: boolean
+): number {
+  const subtitleHeight = getSubtitleHeight(subtitleText, LAYOUT.contentWidth, 2)
+  const dateHeight = getDateDisplayHeight()
+  const tagsHeight = hasTags ? getTagListHeight() : 0
+  const gaps = LAYOUT.contentGap * (hasTags ? 3 : 2)
 
-/**
- * Calculate available width for title in the content area
- * Layout: 1200px total - 60px*2 padding - 160px logo - 40px logo margin
- * = 1200 - 120 - 160 - 40 = 880px
- */
-const CONTENT_WIDTH = 880
+  return LAYOUT.contentHeight - subtitleHeight - dateHeight - tagsHeight - gaps
+}
 
 export function BlogOGTemplate({
   title,
@@ -53,29 +63,36 @@ export function BlogOGTemplate({
 }: BlogOGProps) {
   // Use headline for display (falls back to title)
   const displayHeadline = headline ?? title
-  // Use subtitle if provided, otherwise fall back to truncated description
-  const displaySubtitle = subtitle ?? truncate(description, 140)
+  // Use subtitle if provided, otherwise fall back to description
+  const displaySubtitle = subtitle ?? description
+  const hasTags = tags.length > 0
+
+  // Calculate available height for the title
+  const titleMaxHeight = calculateTitleMaxHeight(displaySubtitle, hasTags)
 
   return (
     <BaseTemplate logoSvg={logoSvg}>
-      <AutoTitle maxWidth={CONTENT_WIDTH} maxLines={2}>
+      <AutoTitle
+        maxWidth={LAYOUT.contentWidth}
+        maxLines={2}
+        maxHeight={titleMaxHeight}
+      >
         {displayHeadline}
       </AutoTitle>
-      <Description>{displaySubtitle}</Description>
+      <AutoSubtitle maxWidth={LAYOUT.contentWidth} maxLines={2}>
+        {displaySubtitle}
+      </AutoSubtitle>
 
-      {/* Horizontal rule separator - commented out for frameless design */}
-      {/* <HorizontalRule /> */}
-
-      {/* Metadata row with date and tags */}
+      {/* Metadata: date and tags */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 10,
+          gap: 8,
         }}
       >
         <DateDisplay date={pubDate} />
-        {tags.length > 0 && <TagRow tags={tags} maxTags={4} />}
+        {hasTags && <TagList tags={tags} maxTags={5} />}
       </div>
     </BaseTemplate>
   )
