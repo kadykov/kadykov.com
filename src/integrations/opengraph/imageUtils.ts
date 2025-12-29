@@ -7,6 +7,7 @@
 
 import path from "node:path"
 import sharp from "sharp"
+import { decodeHtmlEntities } from "./utils"
 
 /**
  * Parsed srcset entry
@@ -130,10 +131,11 @@ export function extractPhotoMetadata(html: string): PhotoMetadata | null {
   const titleMatch = html.match(/<title>([^<]+)<\/title>/)
   let title = titleMatch?.[1] || ""
   title = title.replace(/ \| kadykov\.com$/, "")
+  title = decodeHtmlEntities(title)
 
   // Extract description
   const descMatch = html.match(/<meta\s+name="description"\s+content="([^"]+)"/)
-  const description = descMatch?.[1] || ""
+  const description = decodeHtmlEntities(descMatch?.[1] || "")
 
   // Extract image dimensions from the img tag
   const widthMatch = html.match(/<img[^>]*width=(\d+)/)
@@ -145,12 +147,16 @@ export function extractPhotoMetadata(html: string): PhotoMetadata | null {
   // Look for date in figcaption or data attributes
   const dateMatch = html.match(/Date taken<\/dt><dd><a[^>]*>([^<]+)<\/a>/)
   const dateTaken = dateMatch?.[1]
+    ? decodeHtmlEntities(dateMatch[1])
+    : undefined
 
   // Extract tags
   const tagMatches = html.matchAll(
     /<a[^>]*href="\/photos\/tags\/[^"]+">([^<]+)<\/a>/g
   )
-  const tags = Array.from(tagMatches, (m) => m[1].replace(/^#/, ""))
+  const tags = Array.from(tagMatches, (m) =>
+    decodeHtmlEntities(m[1].replace(/^#/, ""))
+  )
 
   return {
     title,

@@ -28,6 +28,7 @@ import {
   selectBestImage,
   loadImageAsDataUrl,
 } from "./imageUtils"
+import { decodeHtmlEntities } from "./utils"
 
 // Page metadata extracted from HTML
 interface PageMeta {
@@ -65,12 +66,13 @@ function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
     let title = titleMatch?.[1] || "kadykov.com"
     // Remove site suffix for OG image
     title = title.replace(/ \| kadykov\.com$/, "")
+    title = decodeHtmlEntities(title)
 
     // Extract description
     const descMatch = html.match(
       /<meta\s+name="description"\s+content="([^"]+)"/
     )
-    const description = descMatch?.[1] || ""
+    const description = decodeHtmlEntities(descMatch?.[1] || "")
 
     // Check path patterns to determine page type
     const isBlogPost =
@@ -97,16 +99,20 @@ function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
     // Extract headline and subtitle from data attributes
     const headlineMatch = html.match(/data-og-headline="([^"]+)"/)
     const headline = headlineMatch?.[1]
+      ? decodeHtmlEntities(headlineMatch[1])
+      : undefined
 
     const subtitleMatch = html.match(/data-og-subtitle="([^"]+)"/)
     const subtitle = subtitleMatch?.[1]
+      ? decodeHtmlEntities(subtitleMatch[1])
+      : undefined
 
     if (type === "blog") {
       // Try to extract tags from article:tag meta tags
       const tagMatches = html.matchAll(
         /<meta\s+property="article:tag"\s+content="([^"]+)"/g
       )
-      tags = Array.from(tagMatches, (m) => m[1])
+      tags = Array.from(tagMatches, (m) => decodeHtmlEntities(m[1]))
 
       // Try to extract publish date from article:published_time
       const dateMatch = html.match(
@@ -120,7 +126,9 @@ function extractPageMeta(html: string, htmlPath: string): PageMeta | null {
       if (tags.length === 0) {
         const ogTagsMatch = html.match(/data-og-tags="([^"]+)"/)
         if (ogTagsMatch) {
-          tags = ogTagsMatch[1].split(",").map((t) => t.trim())
+          tags = ogTagsMatch[1]
+            .split(",")
+            .map((t) => decodeHtmlEntities(t.trim()))
         }
       }
 
