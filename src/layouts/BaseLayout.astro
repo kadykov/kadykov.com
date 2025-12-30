@@ -39,13 +39,17 @@ const finalTitle =
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 
 // OpenGraph image URL - generated during build
-// Path pattern: /og/{pathname}.png (e.g., /og/about.png, /og/blog-my-post.png)
+// Path pattern: /og/{pathname}.png or .jpg for photos
+// Photo pages use JPEG for smaller file sizes
 const pathname = Astro.url.pathname
+const isPhotoPage = pathname.startsWith("/photo/")
+const ogImageExtension = isPhotoPage ? ".jpg" : ".png"
 const ogImagePath =
   pathname === "/" || pathname === ""
     ? "/og/index.png"
-    : `/og/${pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}.png`
+    : `/og/${pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}${ogImageExtension}`
 const ogImageUrl = new URL(ogImagePath, Astro.site).toString()
+const ogImageType = isPhotoPage ? "image/jpeg" : "image/png"
 
 // Blog metadata for article tags
 const isBlogPost = !!frontmatter.pubDate
@@ -92,7 +96,7 @@ import "../styles/base.css"
           width: 1200,
           height: 630,
           alt: rawTitle,
-          type: "image/png",
+          type: ogImageType,
         },
         article: isBlogPost
           ? {

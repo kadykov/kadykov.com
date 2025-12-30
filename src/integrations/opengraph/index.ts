@@ -21,12 +21,11 @@ import React from "react"
 import { renderToPng, preloadFonts } from "./generator"
 import { GeneralOGTemplate } from "./templates/general"
 import { BlogOGTemplate } from "./templates/blog"
-import { PhotoOGTemplate } from "./templates/photo"
 import {
   extractPhotoMetadata,
   parseSrcset,
   selectBestImage,
-  loadImageAsDataUrl,
+  generatePhotoOGImage,
 } from "./imageUtils"
 import { decodeHtmlEntities } from "./utils"
 
@@ -262,68 +261,62 @@ export function opengraphIntegration(): AstroIntegration {
               return
             }
 
-            // Generate appropriate template
-            let element: React.ReactElement
-
             if (meta.type === "photo") {
-              // Handle individual photo pages
+              // Handle individual photo pages with direct Sharp processing
+              // This skips Satori and outputs JPEG for smaller file sizes
               const photoMeta = extractPhotoMetadata(html)
               if (photoMeta) {
-                // Find a suitable optimized image
+                // Find a suitable optimized image (prefer larger for better quality)
                 const srcsetEntries = parseSrcset(photoMeta.srcset)
-                const bestImage = selectBestImage(srcsetEntries, 450)
+                // Use a larger target width for source image quality
+                const bestImage = selectBestImage(srcsetEntries, 800)
 
                 if (bestImage) {
                   try {
-                    // Load the optimized image as base64
-                    const photoDataUrl = await loadImageAsDataUrl(
+                    // Generate photo OG image directly with Sharp
+                    const jpegBuffer = await generatePhotoOGImage(
                       distDir,
                       bestImage.path
                     )
 
-                    element = React.createElement(PhotoOGTemplate, {
-                      title: photoMeta.title,
-                      description: photoMeta.description,
-                      logoSvg,
-                      photoDataUrl,
-                      photoWidth: photoMeta.width,
-                      photoHeight: photoMeta.height,
-                      dateTaken: photoMeta.dateTaken,
-                      tags: photoMeta.tags,
-                    })
+                    // Write as JPEG (change extension from .png to .jpg)
+                    const jpegPath = route.ogPath.replace(/\.png$/, ".jpg")
+                    await fs.writeFile(jpegPath, jpegBuffer)
+                    generated++
+
+                    log.info(
+                      `Generated: ${route.pathname} -> ${path.basename(jpegPath)} (photo)`
+                    )
+                    return
                   } catch (imgError) {
                     log.warn(
-                      `Could not load photo for ${route.pathname}, using general template: ${imgError}`
+                      `Could not generate photo OG for ${route.pathname}: ${imgError}`
                     )
-                    element = React.createElement(GeneralOGTemplate, {
-                      title: meta.title,
-                      headline: meta.headline,
-                      subtitle: meta.subtitle,
-                      description: meta.description,
-                      logoSvg,
-                    })
+                    // Fall through to general template
                   }
-                } else {
-                  // No suitable image found, use general template
-                  element = React.createElement(GeneralOGTemplate, {
-                    title: meta.title,
-                    headline: meta.headline,
-                    subtitle: meta.subtitle,
-                    description: meta.description,
-                    logoSvg,
-                  })
                 }
-              } else {
-                // Could not extract photo metadata, use general template
-                element = React.createElement(GeneralOGTemplate, {
-                  title: meta.title,
-                  headline: meta.headline,
-                  subtitle: meta.subtitle,
-                  description: meta.description,
-                  logoSvg,
-                })
               }
-            } else if (meta.type === "blog" && meta.pubDate) {
+              // Fallback: use general template for photos that couldn't be processed
+              const element = React.createElement(GeneralOGTemplate, {
+                title: meta.title,
+                headline: meta.headline,
+                subtitle: meta.subtitle,
+                description: meta.description,
+                logoSvg,
+              })
+              const png = await renderToPng(element)
+              await fs.writeFile(route.ogPath, png)
+              generated++
+              log.info(
+                `Generated: ${route.pathname} -> ${path.basename(route.ogPath)} (photo fallback)`
+              )
+              return
+            }
+
+            // Generate appropriate template for non-photo pages
+            let element: React.ReactElement
+
+            if (meta.type === "blog" && meta.pubDate) {
               element = React.createElement(BlogOGTemplate, {
                 title: meta.title,
                 headline: meta.headline,

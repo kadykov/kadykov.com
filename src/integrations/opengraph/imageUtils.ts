@@ -3,11 +3,37 @@
  *
  * Handles loading and converting optimized images from the dist folder
  * for embedding in Satori-generated OG images.
+ *
+ * For photo pages, we skip Satori entirely and use Sharp directly to:
+ * 1. Decide whether to fit or smart-crop based on aspect ratio
+ * 2. Composite the photo onto a white canvas at OG dimensions
+ * 3. Output as JPEG for smaller file sizes
  */
 
 import path from "node:path"
 import sharp from "sharp"
 import { decodeHtmlEntities } from "./utils"
+
+// OG Image dimensions
+const OG_WIDTH = 1200
+const OG_HEIGHT = 630
+const OG_ASPECT_RATIO = OG_WIDTH / OG_HEIGHT // ~1.9:1
+
+/**
+ * Minimum area ratio threshold for deciding fit vs crop.
+ * If the fitted photo would occupy less than this ratio of the OG canvas,
+ * we apply smart cropping to make better use of space.
+ *
+ * 0.45 means: if photo would be less than 45% of canvas area, crop it.
+ */
+const MIN_AREA_RATIO = 0.45
+
+/**
+ * Target aspect ratio for cropping portrait photos.
+ * We don't crop all the way to OG_ASPECT_RATIO (1.9:1) as that's too aggressive.
+ * Instead, we crop to a moderate ratio that balances space usage with content preservation.
+ */
+const CROP_TARGET_ASPECT_RATIO = 4 / 3 // 1.33:1
 
 /**
  * Parsed srcset entry
@@ -75,39 +101,6 @@ export function extractPhotoSrcset(html: string): string | null {
 }
 
 /**
- * Load an optimized image from dist and convert to base64 JPEG data URL
- *
- * @param distDir - The dist directory path
- * @param imagePath - The image path from srcset (e.g., "/_astro/file.avif")
- * @param maxDimension - Optional: resize to fit within this dimension
- */
-export async function loadImageAsDataUrl(
-  distDir: string,
-  imagePath: string,
-  maxDimension?: number
-): Promise<string> {
-  // Convert URL path to filesystem path
-  const fsPath = path.join(distDir, imagePath)
-
-  // Read and convert to JPEG
-  let pipeline = sharp(fsPath)
-
-  // Optionally resize
-  if (maxDimension) {
-    pipeline = pipeline.resize(maxDimension, maxDimension, {
-      fit: "inside",
-      withoutEnlargement: true,
-    })
-  }
-
-  const buffer = await pipeline.jpeg({ quality: 85 }).toBuffer()
-
-  // Convert to base64 data URL
-  const base64 = buffer.toString("base64")
-  return `data:image/jpeg;base64,${base64}`
-}
-
-/**
  * Extract photo metadata from HTML for OG image generation
  */
 export interface PhotoMetadata {
@@ -167,4 +160,143 @@ export function extractPhotoMetadata(html: string): PhotoMetadata | null {
     dateTaken,
     tags: tags.length > 0 ? tags : undefined,
   }
+}
+
+/**
+ * Calculate what percentage of the OG canvas a fitted image would occupy
+ */
+function calculateAreaRatio(imageWidth: number, imageHeight: number): number {
+  const imageAspect = imageWidth / imageHeight
+
+  let fittedWidth: number
+  let fittedHeight: number
+
+  if (imageAspect >= OG_ASPECT_RATIO) {
+    // Image is wider than OG canvas - fit by width
+    fittedWidth = OG_WIDTH
+    fittedHeight = OG_WIDTH / imageAspect
+  } else {
+    // Image is taller than OG canvas - fit by height
+    fittedHeight = OG_HEIGHT
+    fittedWidth = OG_HEIGHT * imageAspect
+  }
+
+  const fittedArea = fittedWidth * fittedHeight
+  const canvasArea = OG_WIDTH * OG_HEIGHT
+  return fittedArea / canvasArea
+}
+
+/**
+ * Determine the processing strategy for a photo
+ */
+type ProcessingStrategy =
+  | { type: "fit" } // Fit the image as-is onto the canvas
+  | { type: "crop"; targetAspectRatio: number } // Smart crop to target aspect ratio, then fit
+
+function determineStrategy(
+  imageWidth: number,
+  imageHeight: number
+): ProcessingStrategy {
+  const areaRatio = calculateAreaRatio(imageWidth, imageHeight)
+
+  if (areaRatio >= MIN_AREA_RATIO) {
+    // Image fills enough of the canvas when fitted
+    return { type: "fit" }
+  }
+
+  // Image would be too small - crop it to fill more space
+  // Use a moderate target aspect ratio to preserve content
+  return { type: "crop", targetAspectRatio: CROP_TARGET_ASPECT_RATIO }
+}
+
+/**
+ * Generate a photo OG image directly using Sharp (no Satori)
+ *
+ * This is more efficient for photos and gives us full control over
+ * the image processing pipeline.
+ *
+ * Strategy:
+ * - Landscape/wide photos: Fit to canvas, center, white borders on sides
+ * - Portrait/square photos: Smart crop to 4:3, then fit and center
+ *
+ * @param distDir - The dist directory path
+ * @param imagePath - The image path from srcset (e.g., "/_astro/file.avif")
+ * @returns JPEG buffer of the OG image
+ */
+export async function generatePhotoOGImage(
+  distDir: string,
+  imagePath: string
+): Promise<Buffer> {
+  const fsPath = path.join(distDir, imagePath)
+
+  // Get image metadata to determine strategy
+  const metadata = await sharp(fsPath).metadata()
+  const imageWidth = metadata.width || 1
+  const imageHeight = metadata.height || 1
+
+  const strategy = determineStrategy(imageWidth, imageHeight)
+
+  let processedImage: sharp.Sharp
+
+  if (strategy.type === "crop") {
+    // Smart crop to target aspect ratio using attention strategy
+    // This focuses on regions with high luminance, saturation, and skin tones
+    const targetWidth = Math.round(imageHeight * strategy.targetAspectRatio)
+
+    if (targetWidth <= imageWidth) {
+      // Need to crop width (make narrower) - typical for very tall portraits
+      processedImage = sharp(fsPath).resize(targetWidth, imageHeight, {
+        fit: "cover",
+        position: sharp.strategy.attention,
+      })
+    } else {
+      // Need to crop height (make shorter) - atypical but handle it
+      const targetHeight = Math.round(imageWidth / strategy.targetAspectRatio)
+      processedImage = sharp(fsPath).resize(imageWidth, targetHeight, {
+        fit: "cover",
+        position: sharp.strategy.attention,
+      })
+    }
+  } else {
+    // Fit strategy: just load the image as-is
+    processedImage = sharp(fsPath)
+  }
+
+  // Sharp's extend doesn't center automatically, so we need to composite instead
+  // Create a white canvas and composite the resized image centered on it
+  const resizedBuffer = await processedImage
+    .resize(OG_WIDTH, OG_HEIGHT, {
+      fit: "inside",
+      withoutEnlargement: false,
+    })
+    .toBuffer()
+
+  const resizedMeta = await sharp(resizedBuffer).metadata()
+  const resizedWidth = resizedMeta.width || OG_WIDTH
+  const resizedHeight = resizedMeta.height || OG_HEIGHT
+
+  // Calculate centering offsets
+  const left = Math.round((OG_WIDTH - resizedWidth) / 2)
+  const top = Math.round((OG_HEIGHT - resizedHeight) / 2)
+
+  // Create white canvas and composite the photo centered
+  const finalImage = await sharp({
+    create: {
+      width: OG_WIDTH,
+      height: OG_HEIGHT,
+      channels: 3,
+      background: { r: 255, g: 255, b: 255 },
+    },
+  })
+    .composite([
+      {
+        input: resizedBuffer,
+        left,
+        top,
+      },
+    ])
+    .jpeg({ quality: 85 })
+    .toBuffer()
+
+  return finalImage
 }
