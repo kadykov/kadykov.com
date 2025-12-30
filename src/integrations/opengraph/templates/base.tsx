@@ -565,16 +565,67 @@ export function AutoSubtitle({
  *
  * Matches website style: #tag1, #tag2, #tag3.
  * Typography: serif font, same style as subtitle but slightly smaller
+ *
+ * Dynamically calculates how many tags can fit on a single line,
+ * using the same text estimation system as titles and subtitles.
  */
 const TAGS_STYLE = {
   fontSize: 32,
   fontWeight: 400,
   lineHeight: 1.4,
+  charWidthRatio: 0.54, // Match subtitle style
 } as const
 
 interface TagListProps {
   tags: string[]
-  maxTags?: number
+  maxWidth?: number // Available width in pixels (defaults to LAYOUT.contentWidth)
+}
+
+/**
+ * Build the display text for a given set of tags with optional "more" suffix
+ */
+function buildTagText(displayTags: string[], remainingCount: number): string {
+  let tagText = displayTags.map((tag) => `#${tag}`).join(", ")
+  if (remainingCount > 0) {
+    tagText += `, +${remainingCount} more`
+  }
+  return tagText
+}
+
+/**
+ * Check if the tag text fits on a single line
+ */
+function tagTextFitsOneLine(tagText: string, maxWidth: number): boolean {
+  const estimatedLines = estimateLineCountWordWrap(
+    tagText,
+    maxWidth,
+    TAGS_STYLE.fontSize,
+    TAGS_STYLE.charWidthRatio,
+    0
+  )
+  return estimatedLines <= 1
+}
+
+/**
+ * Calculate the optimal number of tags that fit on a single line
+ *
+ * Algorithm: Start with all tags and progressively reduce until they fit.
+ * The "+N more" suffix is included in the estimation when tags are truncated.
+ */
+function calculateOptimalTagCount(tags: string[], maxWidth: number): number {
+  // Try displaying all tags first
+  for (let count = tags.length; count >= 1; count--) {
+    const displayTags = tags.slice(0, count)
+    const remaining = tags.length - count
+    const tagText = buildTagText(displayTags, remaining)
+
+    if (tagTextFitsOneLine(tagText, maxWidth)) {
+      return count
+    }
+  }
+
+  // Even one tag doesn't fit - show at least one anyway
+  return 1
 }
 
 /**
@@ -584,36 +635,27 @@ export function getTagListHeight(): number {
   return TAGS_STYLE.fontSize * TAGS_STYLE.lineHeight
 }
 
-export function TagList({ tags, maxTags = 3 }: TagListProps) {
-  const displayTags = tags.slice(0, maxTags)
-  const remaining = tags.length - maxTags
+export function TagList({
+  tags,
+  maxWidth = LAYOUT.contentWidth,
+}: TagListProps) {
+  // Dynamically calculate how many tags fit on one line
+  const optimalCount = calculateOptimalTagCount(tags, maxWidth)
+  const displayTags = tags.slice(0, optimalCount)
+  const remaining = tags.length - optimalCount
 
   // Build the tag string: #tag1, #tag2, #tag3
-  let tagText = displayTags.map((tag) => `#${tag}`).join(", ")
-  if (remaining > 0) {
-    tagText += `, +${remaining} more`
-  }
-
-  // Use word-wrap aware line estimation
-  // Tags are comma-separated, so they can wrap at commas/spaces
-  const charWidthRatio = 0.54 // Match subtitle style
-  const estimatedLines = estimateLineCountWordWrap(
-    tagText,
-    LAYOUT.contentWidth,
-    TAGS_STYLE.fontSize,
-    charWidthRatio,
-    0
-  )
+  const tagText = buildTagText(displayTags, remaining)
 
   debugLog("TagList", {
     tags,
     tagText,
+    totalTags: tags.length,
+    displayedTags: optimalCount,
+    remainingTags: remaining,
     textLength: tagText.length,
     fontSize: TAGS_STYLE.fontSize,
-    availableWidth: LAYOUT.contentWidth,
-    estimatedLines,
-    expectedLines: 1,
-    overflow: estimatedLines > 1,
+    availableWidth: maxWidth,
   })
 
   return (
