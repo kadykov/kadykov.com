@@ -62,10 +62,10 @@ export const defaultPalette = {
  */
 export const fibonacciPatterns = {
   // 26x16 "golden ratio" rectangle pattern - primary pattern
-  pattern1: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 16'%3E%3Cpath fill='rgba(119,119,119,0.035)' d='M10 0v5h3V3h8V0zM0 0v5h8V0zm3 8v5h2V8zm10 3v2H5v3h11v-5zm8-8v5h2V3zm-3 8v5h8v-5z'/%3E%3C/svg%3E")`,
+  pattern1: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 16'%3E%3Cpath fill='rgba(119,119,119,0.04)' d='M10 0v5h3V3h8V0zM0 0v5h8V0zm3 8v5h2V8zm10 3v2H5v3h11v-5zm8-8v5h2V3zm-3 8v5h8v-5z'/%3E%3C/svg%3E")`,
 
   // 42x26 "golden ratio" rectangle pattern - secondary larger pattern
-  pattern2: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26'%3E%3Cpath fill='rgba(119,119,119,0.035)' d='M37 21v2h5v-2zm-3-8v8h3v-8zM29 0v8h13V0zm-8 10v3h5v-3zm0 3h-5v3h5zM5 3H0v2h5zm0 2v8h3V5zM0 18v8h13v-8zm16 0v8h18v-5H21v-3zM8 0v5h13v3h5V0z'/%3E%3C/svg%3E")`,
+  pattern2: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26'%3E%3Cpath fill='rgba(119,119,119,0.04)' d='M37 21v2h5v-2zm-3-8v8h3v-8zM29 0v8h13V0zm-8 10v3h5v-3zm0 3h-5v3h5zM5 3H0v2h5zm0 2v8h3V5zM0 18v8h13v-8zm16 0v8h18v-5H21v-3zM8 0v5h13v3h5V0z'/%3E%3C/svg%3E")`,
 
   // Background sizes (2x larger for more sparse pattern)
   sizes: "520px 320px, 840px 520px",

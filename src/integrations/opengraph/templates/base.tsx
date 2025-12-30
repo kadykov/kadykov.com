@@ -111,53 +111,6 @@ export function BaseTemplate({ children, logoSvg }: BaseTemplateProps) {
 }
 
 /**
- * Title component with brand styling
- *
- * Features:
- * - Sans-serif font with weight graduation (lighter for larger text)
- * - Vertical primary-colored bar on the left (brand element)
- * - Negative letter-spacing for tighter headings
- */
-interface TitleProps {
-  children: ReactNode
-  size?: "large" | "medium" | "small"
-}
-
-export function Title({ children, size = "large" }: TitleProps) {
-  // Font size and weight graduation (larger = lighter weight for consistent stroke)
-  const styles = {
-    large: { fontSize: 52, fontWeight: 200 },
-    medium: { fontSize: 42, fontWeight: 300 },
-    small: { fontSize: 34, fontWeight: 400 },
-  }
-
-  const { fontSize, fontWeight } = styles[size]
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "stretch",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          fontFamily: fontFamilies.sans,
-          fontSize,
-          fontWeight,
-          color: defaultPalette.textPrimary,
-          lineHeight: 1.15,
-          letterSpacing: "-0.02em",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
-/**
  * Font size configuration for auto-scaling titles
  *
  * Algorithm: Try sizes from largest to smallest, picking the first that fits.
@@ -179,7 +132,7 @@ const TITLE_SIZES = [
     fontWeight: 300,
     charWidthRatio: 0.5,
     lineHeight: 0.95,
-    letterSpacing: -0.05,
+    letterSpacing: -0.04,
   },
   // Large: still tight but slightly more relaxed
   {
