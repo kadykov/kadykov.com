@@ -59,6 +59,16 @@ export async function loadFonts(): Promise<FontConfig[]> {
     })
   }
 
+  // Source Sans 3 - Italic variant for dates and emphasis (weight 400)
+  const sourceSansItalicPath = `${FONT_DIR}/source-sans-3/files/source-sans-3-latin-400-italic.woff`
+  const sourceSansItalicData = await loadFont(sourceSansItalicPath)
+  fonts.push({
+    name: "Source Sans 3",
+    data: sourceSansItalicData,
+    weight: 400,
+    style: "italic",
+  })
+
   // Bitter - Serif font for body text
   const bitterPath = `${FONT_DIR}/bitter/files/bitter-latin-500-normal.woff`
   const bitterData = await loadFont(bitterPath)
@@ -67,6 +77,16 @@ export async function loadFonts(): Promise<FontConfig[]> {
     data: bitterData,
     weight: 500,
     style: "normal",
+  })
+
+  // Bitter - Italic variant for dates and emphasis
+  const bitterItalicPath = `${FONT_DIR}/bitter/files/bitter-latin-500-italic.woff`
+  const bitterItalicData = await loadFont(bitterItalicPath)
+  fonts.push({
+    name: "Bitter",
+    data: bitterItalicData,
+    weight: 500,
+    style: "italic",
   })
 
   return fonts

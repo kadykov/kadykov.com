@@ -178,31 +178,15 @@ const TITLE_SIZES = [
     fontSize: 180,
     fontWeight: 300,
     charWidthRatio: 0.5,
-    lineHeight: 1.0,
-    letterSpacing: -0.04,
+    lineHeight: 0.95,
+    letterSpacing: -0.05,
   },
   // Large: still tight but slightly more relaxed
   {
-    fontSize: 96,
+    fontSize: 90,
     fontWeight: 400,
     charWidthRatio: 0.52,
-    lineHeight: 1.05,
-    letterSpacing: -0.03,
-  },
-  // Medium: balanced spacing
-  {
-    fontSize: 72,
-    fontWeight: 500,
-    charWidthRatio: 0.54,
     lineHeight: 1.1,
-    letterSpacing: -0.02,
-  },
-  // Small: more generous spacing for legibility
-  {
-    fontSize: 40,
-    fontWeight: 600,
-    charWidthRatio: 0.56,
-    lineHeight: 1.2,
     letterSpacing: -0.01,
   },
 ] as const
@@ -706,8 +690,10 @@ export function DateDisplay({ date, label }: DateDisplayProps) {
     <div
       style={{
         display: "flex",
+        fontFamily: fontFamilies.sans,
         fontSize: DATE_STYLE.fontSize,
         fontWeight: DATE_STYLE.fontWeight,
+        fontStyle: "italic",
         color: defaultPalette.textSecondary,
         lineHeight: DATE_STYLE.lineHeight,
       }}
