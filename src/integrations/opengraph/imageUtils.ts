@@ -17,23 +17,23 @@ import { decodeHtmlEntities } from "./utils"
 // OG Image dimensions
 const OG_WIDTH = 1200
 const OG_HEIGHT = 630
-const OG_ASPECT_RATIO = OG_WIDTH / OG_HEIGHT // ~1.9:1
 
 /**
- * Minimum area ratio threshold for deciding fit vs crop.
- * If the fitted photo would occupy less than this ratio of the OG canvas,
- * we apply smart cropping to make better use of space.
+ * Threshold aspect ratio for cropping.
  *
- * 0.45 means: if photo would be less than 45% of canvas area, crop it.
+ * Photos with aspect ratio below this threshold will be cropped TO this ratio.
+ * This creates a unified approach: the threshold IS the crop target.
+ *
+ * For example, with THRESHOLD_ASPECT_RATIO = 1.0 (square):
+ * - A 2:3 portrait (aspect 0.67) will be cropped to 1:1 (square)
+ * - A 3:4 portrait (aspect 0.75) will be cropped to 1:1 (square)
+ * - A 3:2 landscape (aspect 1.5) will NOT be cropped (already above threshold)
+ *
+ * A value of 1.0 (square) is a good balance:
+ * - Square images fill ~53% of the OG canvas area
+ * - Prevents very narrow portrait strips while preserving content
  */
-const MIN_AREA_RATIO = 0.45
-
-/**
- * Target aspect ratio for cropping portrait photos.
- * We don't crop all the way to OG_ASPECT_RATIO (1.9:1) as that's too aggressive.
- * Instead, we crop to a moderate ratio that balances space usage with content preservation.
- */
-const CROP_TARGET_ASPECT_RATIO = 4 / 3 // 1.33:1
+const THRESHOLD_ASPECT_RATIO = 1.0 // Square
 
 /**
  * Parsed srcset entry
@@ -163,31 +163,10 @@ export function extractPhotoMetadata(html: string): PhotoMetadata | null {
 }
 
 /**
- * Calculate what percentage of the OG canvas a fitted image would occupy
- */
-function calculateAreaRatio(imageWidth: number, imageHeight: number): number {
-  const imageAspect = imageWidth / imageHeight
-
-  let fittedWidth: number
-  let fittedHeight: number
-
-  if (imageAspect >= OG_ASPECT_RATIO) {
-    // Image is wider than OG canvas - fit by width
-    fittedWidth = OG_WIDTH
-    fittedHeight = OG_WIDTH / imageAspect
-  } else {
-    // Image is taller than OG canvas - fit by height
-    fittedHeight = OG_HEIGHT
-    fittedWidth = OG_HEIGHT * imageAspect
-  }
-
-  const fittedArea = fittedWidth * fittedHeight
-  const canvasArea = OG_WIDTH * OG_HEIGHT
-  return fittedArea / canvasArea
-}
-
-/**
- * Determine the processing strategy for a photo
+ * Determine the processing strategy for a photo based on its aspect ratio.
+ *
+ * Uses a simple threshold: if the image aspect ratio is below THRESHOLD_ASPECT_RATIO,
+ * crop it to that ratio. Otherwise, fit it as-is.
  */
 type ProcessingStrategy =
   | { type: "fit" } // Fit the image as-is onto the canvas
@@ -197,16 +176,15 @@ function determineStrategy(
   imageWidth: number,
   imageHeight: number
 ): ProcessingStrategy {
-  const areaRatio = calculateAreaRatio(imageWidth, imageHeight)
+  const imageAspect = imageWidth / imageHeight
 
-  if (areaRatio >= MIN_AREA_RATIO) {
-    // Image fills enough of the canvas when fitted
+  if (imageAspect >= THRESHOLD_ASPECT_RATIO) {
+    // Image is wide enough (landscape or square-ish), fit as-is
     return { type: "fit" }
   }
 
-  // Image would be too small - crop it to fill more space
-  // Use a moderate target aspect ratio to preserve content
-  return { type: "crop", targetAspectRatio: CROP_TARGET_ASPECT_RATIO }
+  // Image is too tall (portrait), crop to threshold aspect ratio
+  return { type: "crop", targetAspectRatio: THRESHOLD_ASPECT_RATIO }
 }
 
 /**
@@ -216,8 +194,8 @@ function determineStrategy(
  * the image processing pipeline.
  *
  * Strategy:
- * - Landscape/wide photos: Fit to canvas, center, white borders on sides
- * - Portrait/square photos: Smart crop to 4:3, then fit and center
+ * - Landscape/square photos (aspect >= threshold): Fit to canvas, center, white borders
+ * - Portrait photos (aspect < threshold): Smart crop to threshold ratio, then fit and center
  *
  * @param distDir - The dist directory path
  * @param imagePath - The image path from srcset (e.g., "/_astro/file.avif")
@@ -236,7 +214,10 @@ export async function generatePhotoOGImage(
 
   const strategy = determineStrategy(imageWidth, imageHeight)
 
-  let processedImage: sharp.Sharp
+  // Step 1: Optionally crop the image
+  // Note: We must execute crop to buffer first, then resize separately,
+  // because chaining multiple .resize() calls only applies the last one.
+  let imageToFit: Buffer
 
   if (strategy.type === "crop") {
     // Smart crop to target aspect ratio using attention strategy
@@ -245,26 +226,29 @@ export async function generatePhotoOGImage(
 
     if (targetWidth <= imageWidth) {
       // Need to crop width (make narrower) - typical for very tall portraits
-      processedImage = sharp(fsPath).resize(targetWidth, imageHeight, {
-        fit: "cover",
-        position: sharp.strategy.attention,
-      })
+      imageToFit = await sharp(fsPath)
+        .resize(targetWidth, imageHeight, {
+          fit: "cover",
+          position: sharp.strategy.attention,
+        })
+        .toBuffer()
     } else {
-      // Need to crop height (make shorter) - atypical but handle it
+      // Need to crop height (make shorter) - more common for moderately tall portraits
       const targetHeight = Math.round(imageWidth / strategy.targetAspectRatio)
-      processedImage = sharp(fsPath).resize(imageWidth, targetHeight, {
-        fit: "cover",
-        position: sharp.strategy.attention,
-      })
+      imageToFit = await sharp(fsPath)
+        .resize(imageWidth, targetHeight, {
+          fit: "cover",
+          position: sharp.strategy.attention,
+        })
+        .toBuffer()
     }
   } else {
-    // Fit strategy: just load the image as-is
-    processedImage = sharp(fsPath)
+    // No cropping needed, load the original image
+    imageToFit = await sharp(fsPath).toBuffer()
   }
 
-  // Sharp's extend doesn't center automatically, so we need to composite instead
-  // Create a white canvas and composite the resized image centered on it
-  const resizedBuffer = await processedImage
+  // Step 2: Resize to fit within OG dimensions (maintaining aspect ratio)
+  const resizedBuffer = await sharp(imageToFit)
     .resize(OG_WIDTH, OG_HEIGHT, {
       fit: "inside",
       withoutEnlargement: false,
@@ -279,7 +263,7 @@ export async function generatePhotoOGImage(
   const left = Math.round((OG_WIDTH - resizedWidth) / 2)
   const top = Math.round((OG_HEIGHT - resizedHeight) / 2)
 
-  // Create white canvas and composite the photo centered
+  // Step 3: Create white canvas and composite the photo centered
   const finalImage = await sharp({
     create: {
       width: OG_WIDTH,
