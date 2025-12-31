@@ -16,7 +16,8 @@ import { decodeHtmlEntities } from "./utils"
 
 // OG Image dimensions
 export const OG_WIDTH = 1200
-const OG_HEIGHT = 630
+export const OG_HEIGHT = 630
+const OG_ASPECT = OG_WIDTH / OG_HEIGHT // ~1.9
 
 /**
  * Threshold aspect ratio for cropping.
@@ -64,17 +65,54 @@ export function parseSrcset(srcset: string): SrcsetEntry[] {
 }
 
 /**
- * Find the best image from srcset for OG embedding
- * Prefers images around 400-500px wide for good quality/size balance
+ * Calculate the optimal source width needed for a photo OG image.
+ *
+ * Based on the processing strategy:
+ * - Portrait (aspect < 1.0): cropped to square, fitted by height → need 630px
+ * - Landscape (1.0 ≤ aspect < 1.9): fitted by height → need 630 × aspect
+ * - Wide landscape (aspect ≥ 1.9): fitted by width → need 1200px
+ *
+ * Adds a 10% buffer for quality headroom.
+ */
+function calculateOptimalWidth(imageAspectRatio: number): number {
+  const QUALITY_BUFFER = 1.1 // 10% extra for quality
+
+  if (imageAspectRatio < THRESHOLD_ASPECT_RATIO) {
+    // Portrait: cropped to square (size = original width), scaled to OG_HEIGHT
+    return Math.ceil(OG_HEIGHT * QUALITY_BUFFER)
+  } else if (imageAspectRatio < OG_ASPECT) {
+    // Landscape but narrower than OG: scaled by height
+    // Final width = OG_HEIGHT × aspect, so source width needs to be at least that
+    return Math.ceil(OG_HEIGHT * imageAspectRatio * QUALITY_BUFFER)
+  } else {
+    // Wide landscape: scaled by width
+    return Math.ceil(OG_WIDTH * QUALITY_BUFFER)
+  }
+}
+
+/**
+ * Find the best image from srcset for OG embedding.
+ *
+ * Automatically calculates the optimal width based on the image's aspect ratio
+ * and the cropping/fitting strategy used in generatePhotoOGImage.
+ *
+ * @param entries - Parsed srcset entries sorted by width
+ * @param imageWidth - Original image width (from HTML)
+ * @param imageHeight - Original image height (from HTML)
+ * @returns The best srcset entry, or null if none available
  */
 export function selectBestImage(
   entries: SrcsetEntry[],
-  targetWidth: number = 450
+  imageWidth: number,
+  imageHeight: number
 ): SrcsetEntry | null {
   if (entries.length === 0) return null
 
-  // Find the smallest image that's >= targetWidth, or the largest available
-  const suitable = entries.find((e) => e.width >= targetWidth)
+  const aspectRatio = imageWidth / imageHeight
+  const optimalWidth = calculateOptimalWidth(aspectRatio)
+
+  // Find the smallest image that's >= optimalWidth, or the largest available
+  const suitable = entries.find((e) => e.width >= optimalWidth)
   return suitable || entries[entries.length - 1]
 }
 

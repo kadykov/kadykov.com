@@ -26,7 +26,6 @@ import {
   parseSrcset,
   selectBestImage,
   generatePhotoOGImage,
-  OG_WIDTH,
 } from "./imageUtils"
 import { decodeHtmlEntities } from "./utils"
 
@@ -267,10 +266,14 @@ export function opengraphIntegration(): AstroIntegration {
               // This skips Satori and outputs JPEG for smaller file sizes
               const photoMeta = extractPhotoMetadata(html)
               if (photoMeta) {
-                // Find a suitable optimized image (prefer larger for better quality)
+                // Find a suitable optimized image based on aspect ratio
                 const srcsetEntries = parseSrcset(photoMeta.srcset)
-                // Use a larger target width for source image quality
-                const bestImage = selectBestImage(srcsetEntries, OG_WIDTH)
+                // Select optimal image size based on cropping strategy
+                const bestImage = selectBestImage(
+                  srcsetEntries,
+                  photoMeta.width,
+                  photoMeta.height
+                )
 
                 if (bestImage) {
                   try {
