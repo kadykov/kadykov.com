@@ -15,7 +15,7 @@ import sharp from "sharp"
 import { decodeHtmlEntities } from "./utils"
 
 // OG Image dimensions
-const OG_WIDTH = 1200
+export const OG_WIDTH = 1200
 const OG_HEIGHT = 630
 
 /**
@@ -279,7 +279,11 @@ export async function generatePhotoOGImage(
         top,
       },
     ])
-    .jpeg({ quality: 85 })
+    .jpeg({
+      quality: 70, // Good quality/size balance for photos
+      // chromaSubsampling: "4:4:4", // Better color fidelity
+      mozjpeg: true, // Use mozjpeg for better compression
+    })
     .toBuffer()
 
   return finalImage

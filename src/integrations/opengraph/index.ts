@@ -26,6 +26,7 @@ import {
   parseSrcset,
   selectBestImage,
   generatePhotoOGImage,
+  OG_WIDTH,
 } from "./imageUtils"
 import { decodeHtmlEntities } from "./utils"
 
@@ -269,7 +270,7 @@ export function opengraphIntegration(): AstroIntegration {
                 // Find a suitable optimized image (prefer larger for better quality)
                 const srcsetEntries = parseSrcset(photoMeta.srcset)
                 // Use a larger target width for source image quality
-                const bestImage = selectBestImage(srcsetEntries, 800)
+                const bestImage = selectBestImage(srcsetEntries, OG_WIDTH)
 
                 if (bestImage) {
                   try {
