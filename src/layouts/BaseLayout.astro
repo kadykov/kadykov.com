@@ -39,15 +39,13 @@ const finalTitle =
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 
 // OpenGraph image URL - generated during build
-// Path pattern: /og/{pathname}.png or .jpg for photos
-// Photo pages use JPEG for smaller file sizes
+// OG images are colocated with index.html as og.png (or og.jpg for photos)
 const pathname = Astro.url.pathname
 const isPhotoPage = pathname.startsWith("/photo/")
-const ogImageExtension = isPhotoPage ? ".jpg" : ".png"
-const ogImagePath =
-  pathname === "/" || pathname === ""
-    ? "/og/index.png"
-    : `/og/${pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}${ogImageExtension}`
+const ogImageExtension = isPhotoPage ? "og.jpg" : "og.png"
+// Ensure pathname ends with / for proper URL joining
+const normalizedPath = pathname.endsWith("/") ? pathname : `${pathname}/`
+const ogImagePath = `${normalizedPath}${ogImageExtension}`
 const ogImageUrl = new URL(ogImagePath, Astro.site).toString()
 const ogImageType = isPhotoPage ? "image/jpeg" : "image/png"
 

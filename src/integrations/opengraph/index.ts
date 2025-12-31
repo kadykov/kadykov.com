@@ -177,12 +177,8 @@ async function findHtmlFiles(distDir: string): Promise<RouteInfo[]> {
         const relativePath = path.relative(distDir, dir)
         const pathname = relativePath === "" ? "/" : `/${relativePath}`
 
-        // Calculate OG image path
-        const ogFilename =
-          pathname === "/"
-            ? "index.png"
-            : `${relativePath.replace(/\//g, "-")}.png`
-        const ogPath = path.join(distDir, "og", ogFilename)
+        // OG image is colocated with index.html as og.png (or og.jpg for photos)
+        const ogPath = path.join(dir, "og.png")
 
         routes.push({
           pathname,
@@ -227,10 +223,6 @@ export function opengraphIntegration(): AstroIntegration {
         // Find all HTML files
         const routes = await findHtmlFiles(distDir)
         log.info(`Found ${routes.length} pages`)
-
-        // Create og directory
-        const ogDir = path.join(distDir, "og")
-        await fs.mkdir(ogDir, { recursive: true })
 
         // Generate OG images in parallel using work-stealing pattern
         // Use CPU core count for concurrency (or fallback to 4)
@@ -283,8 +275,8 @@ export function opengraphIntegration(): AstroIntegration {
                       bestImage.path
                     )
 
-                    // Write as JPEG (change extension from .png to .jpg)
-                    const jpegPath = route.ogPath.replace(/\.png$/, ".jpg")
+                    // Write as JPEG - colocated with index.html
+                    const jpegPath = route.ogPath.replace(/og\.png$/, "og.jpg")
                     await fs.writeFile(jpegPath, jpegBuffer)
                     generated++
 
