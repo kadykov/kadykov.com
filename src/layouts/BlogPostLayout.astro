@@ -2,6 +2,10 @@
 import BaseLayout from "./BaseLayout.astro"
 import Hero from "../components/Hero.astro"
 import { slugify } from "../utils/slugify"
+import {
+  type ReadingTimeResult,
+  formatReadingTimeDuration,
+} from "../utils/readingTime"
 
 interface Props {
   frontmatter: {
@@ -14,9 +18,10 @@ interface Props {
     tags: string[]
     [key: string]: any
   }
+  readingTime?: ReadingTimeResult
 }
 
-const { frontmatter } = Astro.props
+const { frontmatter, readingTime } = Astro.props
 const { title, headline, subtitle, pubDate, lastUpdatedDate, tags } =
   frontmatter
 
@@ -45,6 +50,13 @@ const formatDate = (date: Date) => {
             ))}
           </ul>
         </nav>
+      )
+    }
+    {
+      readingTime && (
+        <time datetime={formatReadingTimeDuration(readingTime.minutes)}>
+          {readingTime.text}
+        </time>
       )
     }
   </Hero>

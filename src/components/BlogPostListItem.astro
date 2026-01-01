@@ -1,12 +1,17 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { slugify } from "../utils/slugify"
+import {
+  type ReadingTimeResult,
+  formatReadingTimeDuration,
+} from "../utils/readingTime"
 
 interface Props {
   post: CollectionEntry<"blog">
+  readingTime?: ReadingTimeResult
 }
 
-const { post } = Astro.props
+const { post, readingTime } = Astro.props
 const { title, description, pubDate, lastUpdatedDate, tags } = post.data
 const postUrl = `/blog/${post.slug}`
 
@@ -41,21 +46,34 @@ const dateOptions: Intl.DateTimeFormatOptions = {
         </p>
       )
     }
-    {
-      (lastUpdatedDate || pubDate) &&
-        (lastUpdatedDate && lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
-          <time datetime={lastUpdatedDate.toISOString()}>
-            Updated on{" "}
-            {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
-          </time>
-        ) : (
-          pubDate && (
-            <time datetime={pubDate.toISOString()}>
-              Published on {pubDate.toLocaleDateString(undefined, dateOptions)}
+    <p>
+      {
+        readingTime && (
+          <>
+            <time datetime={formatReadingTimeDuration(readingTime.minutes)}>
+              {readingTime.text}
             </time>
-          )
-        ))
-    }
+            {(lastUpdatedDate || pubDate) && " · "}
+          </>
+        )
+      }
+      {
+        (lastUpdatedDate || pubDate) &&
+          (lastUpdatedDate &&
+          lastUpdatedDate.getTime() !== pubDate?.getTime() ? (
+            <time datetime={lastUpdatedDate.toISOString()}>
+              Updated{" "}
+              {lastUpdatedDate.toLocaleDateString(undefined, dateOptions)}
+            </time>
+          ) : (
+            pubDate && (
+              <time datetime={pubDate.toISOString()}>
+                Published {pubDate.toLocaleDateString(undefined, dateOptions)}
+              </time>
+            )
+          ))
+      }
+    </p>
     <hr />
   </article>
 </li>

@@ -44,6 +44,7 @@
     "photoswipe-dynamic-caption-plugin": "^1.2.7",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "reading-time": "^1.5.0",
     "satori": "^0.18.3",
     "typescript": "^5.9.3"
   },

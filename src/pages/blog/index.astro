@@ -3,6 +3,7 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Hero from "../../components/Hero.astro"
 import BlogPostListItem from "../../components/BlogPostListItem.astro"
+import { getReadingTime } from "../../utils/readingTime"
 
 const allPosts = (
   await getCollection("blog", ({ data }) => data.draft !== true)
@@ -11,6 +12,12 @@ const allPosts = (
   const dateB = b.data.pubDate?.getTime() ?? 0
   return dateB - dateA // Most recent first
 })
+
+// Pre-compute reading times for all posts
+const postsWithReadingTime = allPosts.map((post) => ({
+  post,
+  readingTime: getReadingTime(post.body),
+}))
 
 const frontmatter = {
   title: "Blog",
@@ -25,7 +32,11 @@ const frontmatter = {
   </Hero>
 
   <ol>
-    {allPosts.map((post) => <BlogPostListItem post={post} />)}
+    {
+      postsWithReadingTime.map(({ post, readingTime }) => (
+        <BlogPostListItem post={post} readingTime={readingTime} />
+      ))
+    }
   </ol>
 
   <nav>
