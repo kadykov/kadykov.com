@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Hero from "../components/Hero.astro"
-import { fontPreloadDefaults } from "../config/fontPreload"
+import { getFontPreload } from "../config/fontPreload"
 
 const frontmatter = {
   title: "Page Not Found",
@@ -11,7 +11,7 @@ const frontmatter = {
 
 <BaseLayout
   frontmatter={frontmatter}
-  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+  fontPreload={getFontPreload({ heroSubtitle: true, articleContent: true })}
 >
   <Hero>
     <h1 style="font-size: 5.5rem; font-weight: 100; letter-spacing: 1rem;">

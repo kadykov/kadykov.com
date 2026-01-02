@@ -4,7 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro"
 import Hero from "../../components/Hero.astro"
 import BlogPostListItem from "../../components/BlogPostListItem.astro"
 import { getReadingTime } from "../../utils/readingTime"
-import { fontPreloadDefaults } from "../../config/fontPreload"
+import { getFontPreload } from "../../config/fontPreload"
 
 const allPosts = (
   await getCollection("blog", ({ data }) => data.draft !== true)
@@ -28,7 +28,11 @@ const frontmatter = {
 
 <BaseLayout
   frontmatter={frontmatter}
-  fontPreload={fontPreloadDefaults.blogList}
+  fontPreload={getFontPreload({
+    heroSubtitle: true,
+    articleContent: true,
+    timeInHero: true,
+  })}
 >
   <Hero>
     <h1>Blog Posts</h1>

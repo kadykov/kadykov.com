@@ -6,7 +6,7 @@ import {
   type ReadingTimeResult,
   formatReadingTimeDuration,
 } from "../utils/readingTime"
-import { fontPreloadDefaults } from "../config/fontPreload"
+import { getFontPreload } from "../config/fontPreload"
 
 interface Props {
   frontmatter: {
@@ -38,7 +38,11 @@ const formatDate = (date: Date) => {
 
 <BaseLayout
   frontmatter={frontmatter}
-  fontPreload={fontPreloadDefaults.blogPost}
+  fontPreload={getFontPreload({
+    heroSubtitle: !!subtitle,
+    articleContent: true,
+    timeInHero: true,
+  })}
 >
   <Hero>
     <h1>{headline ?? title}</h1>

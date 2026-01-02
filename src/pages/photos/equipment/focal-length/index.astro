@@ -5,7 +5,7 @@ import { getCollection } from "astro:content"
 import Hero from "../../../../components/Hero.astro"
 import PhotoNavigation from "../../../../components/PhotoNavigation.astro"
 import { countByField, formatCount } from "../../../../utils/collectionHelpers"
-import { fontPreloadDefaults } from "../../../../config/fontPreload"
+import { getFontPreload } from "../../../../config/fontPreload"
 
 // Map of category to display name and description
 const categoryInfo = {
@@ -54,7 +54,7 @@ const frontmatter = {
 
 <BaseLayout
   frontmatter={frontmatter}
-  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+  fontPreload={getFontPreload({ heroSubtitle: true })}
 >
   <Hero>
     <h1>{frontmatter.title}</h1>

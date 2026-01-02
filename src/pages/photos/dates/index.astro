@@ -5,7 +5,7 @@ import PhotoNavigation from "../../../components/PhotoNavigation.astro"
 import { getCollection } from "astro:content"
 import type { PhotoManifestItem } from "../../../utils/photoManifestSchema"
 import { countByField, formatCount } from "../../../utils/collectionHelpers"
-import { fontPreloadDefaults } from "../../../config/fontPreload"
+import { getFontPreload } from "../../../config/fontPreload"
 
 let uniqueDates: string[] = [] // Stores dates as YYYY-MM-DD strings
 
@@ -89,7 +89,7 @@ const frontmatter = {
 
 <BaseLayout
   frontmatter={frontmatter}
-  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+  fontPreload={getFontPreload({ heroSubtitle: true })}
 >
   <Hero>
     <h1>{frontmatter.title}</h1>

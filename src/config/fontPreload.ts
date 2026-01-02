@@ -1,15 +1,15 @@
 /**
  * Font Preload Configuration
  *
- * Defines which fonts should be preloaded based on page content to prevent
- * Cumulative Layout Shift (CLS) while avoiding unnecessary preloads.
+ * Composable system for determining which fonts to preload based on page content.
+ * Prevents Cumulative Layout Shift (CLS) by preloading only fonts needed above-the-fold.
  *
- * Font Usage Analysis:
- * - sans: Body text everywhere (always needed)
- * - sansItalic: <time> elements, <figcaption> in articles (above-fold on blog posts/list)
- * - serif: <article> content, contact form (blog posts, pages, home, contact)
- * - serifItalic: Hero <p> subtitle (pages with hero subtitles)
- * - mono: Photo gallery captions, code blocks (photo galleries)
+ * Font Usage:
+ * - sans: Body text, navigation, footer (always needed)
+ * - sansItalic: <time> elements in hero/cards (blog posts, blog lists)
+ * - serif: <article> content, forms, photo descriptions
+ * - serifItalic: Hero <p> subtitle
+ * - mono: Photo gallery Polaroid-style captions
  */
 
 // Font preload options
@@ -20,37 +20,44 @@ export type FontPreload =
   | "serifItalic"
   | "mono"
 
-// Font file mappings - imported as URLs by Vite
-export const fontUrls = {
-  sans: "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2",
-  sansItalic:
-    "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2",
-  serif: "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2",
-  serifItalic:
-    "@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2",
-  mono: "@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2",
-} as const
+/**
+ * Semantic flags describing page content that affects font requirements.
+ * Each flag corresponds to a specific font need based on CSS styling.
+ */
+export interface FontPreloadOptions {
+  /** Hero section has a <p> subtitle (styled with serif italic) */
+  heroSubtitle?: boolean
+  /** Page has <article> content or forms (styled with serif) */
+  articleContent?: boolean
+  /** Has <time> elements in hero or blog cards (styled with sans italic) */
+  timeInHero?: boolean
+  /** Has photo gallery with Polaroid-style captions (styled with mono) */
+  photoGallery?: boolean
+}
 
-// Default preload sets for different layout types
-export const fontPreloadDefaults = {
-  // Base: only sans-serif (navigation, footer text)
-  base: ["sans"] as FontPreload[],
+/**
+ * Builds font preload list from semantic content flags.
+ * Always includes 'sans' as it's used on every page.
+ *
+ * @example
+ * // Blog post with subtitle and reading time
+ * getFontPreload({ heroSubtitle: true, articleContent: true, timeInHero: true })
+ * // Returns: ["sans", "serifItalic", "serif", "sansItalic"]
+ *
+ * @example
+ * // Photo gallery page with subtitle
+ * getFontPreload({ heroSubtitle: true, photoGallery: true })
+ * // Returns: ["sans", "serifItalic", "mono"]
+ */
+export function getFontPreload(
+  options: FontPreloadOptions = {}
+): FontPreload[] {
+  const fonts: FontPreload[] = ["sans"] // Always needed
 
-  // Blog posts: sans + serif for article + sans italic for reading time in hero
-  blogPost: ["sans", "serif", "sansItalic"] as FontPreload[],
+  if (options.heroSubtitle) fonts.push("serifItalic")
+  if (options.articleContent) fonts.push("serif")
+  if (options.timeInHero) fonts.push("sansItalic")
+  if (options.photoGallery) fonts.push("mono")
 
-  // Pages with hero subtitle: sans + serif + serif italic for subtitle
-  pageWithSubtitle: ["sans", "serif", "serifItalic"] as FontPreload[],
-
-  // Pages without hero subtitle: sans + serif for article content
-  pageWithoutSubtitle: ["sans", "serif"] as FontPreload[],
-
-  // Photo galleries: sans + mono for captions
-  photoGallery: ["sans", "mono"] as FontPreload[],
-
-  // Blog list: sans + serif + sans italic for cards with time elements
-  blogList: ["sans", "serif", "sansItalic"] as FontPreload[],
-
-  // Home page: sans + serif for article content
-  home: ["sans", "serif"] as FontPreload[],
-} as const
+  return fonts
+}
