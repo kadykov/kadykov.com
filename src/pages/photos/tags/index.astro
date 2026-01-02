@@ -10,6 +10,7 @@ import {
   countByField,
   formatCount,
 } from "../../../utils/collectionHelpers"
+import { fontPreloadDefaults } from "../../../config/fontPreload"
 
 // Fetch all photos from the collection (cached by Astro)
 const photoEntries = await getCollection("photos")
@@ -30,7 +31,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+>
   <Hero>
     <h1>{frontmatter.title}</h1>
     <p>Explore photos by tags</p>

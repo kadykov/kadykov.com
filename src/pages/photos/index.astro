@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Hero from "../../components/Hero.astro"
+import { fontPreloadDefaults } from "../../config/fontPreload"
 
 const frontmatter = {
   title: "Photo Gallery",
@@ -9,7 +10,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+>
   <Hero>
     <h1>{frontmatter.title}</h1>
     <p>{frontmatter.description}</p>

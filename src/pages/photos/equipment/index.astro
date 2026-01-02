@@ -10,6 +10,7 @@ import {
   countByField,
   formatCount,
 } from "../../../utils/collectionHelpers"
+import { fontPreloadDefaults } from "../../../config/fontPreload"
 
 // Fetch all photos to build equipment lists
 const photoEntries = await getCollection("photos")
@@ -68,7 +69,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+>
   <Hero>
     <h1>{frontmatter.title}</h1>
     <p>{frontmatter.description}</p>

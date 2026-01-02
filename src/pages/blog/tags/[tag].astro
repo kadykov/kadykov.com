@@ -4,6 +4,7 @@ import { getCollection } from "astro:content"
 import Hero from "../../../components/Hero.astro"
 import BlogPostListItem from "../../../components/BlogPostListItem.astro"
 import { slugify } from "../../../utils/slugify"
+import { fontPreloadDefaults } from "../../../config/fontPreload"
 
 export async function getStaticPaths() {
   const allPosts = await getCollection(
@@ -36,7 +37,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.blogList}
+>
   <Hero>
     <h1>{frontmatter.title}</h1>
     <p>Posts tagged with #{tagDisplayName}</p>

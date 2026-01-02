@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import Hero from "../components/Hero.astro"
 import OptimizedImage from "../components/OptimizedImage.astro"
 import BlogPostListItem from "../components/BlogPostListItem.astro"
+import { fontPreloadDefaults } from "../config/fontPreload"
 
 const frontmatter = {
   title: "Aleksandr Kadykov",
@@ -23,7 +24,7 @@ const allPosts = (
 const recentPosts = allPosts.slice(0, 3) // Get up to 3 most recent posts
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout frontmatter={frontmatter} fontPreload={fontPreloadDefaults.home}>
   <Hero>
     <h1>Aleksandr Kadykov</h1>
     <p>

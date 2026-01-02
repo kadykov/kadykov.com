@@ -5,6 +5,7 @@ import PaginationNav from "../components/PaginationNav.astro"
 import PhotoNavigation from "../components/PhotoNavigation.astro"
 import type { PhotoManifestItem } from "../utils/photoManifestSchema"
 import type { Page } from "astro"
+import { fontPreloadDefaults } from "../config/fontPreload"
 
 interface Props {
   page: Page<PhotoManifestItem>
@@ -24,7 +25,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.photoGallery}
+>
   <slot name="heroContent" />
 
   <PhotoGallery photos={page.data} fullPhotoDataset={fullPhotoDataset} />

@@ -8,6 +8,7 @@ import {
   countByField,
   formatCount,
 } from "../../../utils/collectionHelpers"
+import { fontPreloadDefaults } from "../../../config/fontPreload"
 
 const allPosts = await getCollection("blog", ({ data }) => data.draft !== true)
 
@@ -20,7 +21,10 @@ const frontmatter = {
 }
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout
+  frontmatter={frontmatter}
+  fontPreload={fontPreloadDefaults.pageWithSubtitle}
+>
   <Hero>
     <h1>Blog Tags</h1>
     <p>Explore posts by tags</p>

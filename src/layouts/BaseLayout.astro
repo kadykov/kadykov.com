@@ -1,9 +1,24 @@
 ---
 import { SEO } from "astro-seo"
 import Footer from "../components/Footer.astro"
-import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
-import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
 import Header from "../components/Header.astro"
+import { type FontPreload, fontPreloadDefaults } from "../config/fontPreload"
+
+// Dynamic font imports - Vite transforms these to URLs
+import fontSans from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url"
+import fontSansItalic from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-italic.woff2?url"
+import fontSerif from "@fontsource-variable/bitter/files/bitter-latin-wght-normal.woff2?url"
+import fontSerifItalic from "@fontsource-variable/bitter/files/bitter-latin-wght-italic.woff2?url"
+import fontMono from "@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2?url"
+
+// Map font preload keys to imported URLs
+const fontUrlMap: Record<FontPreload, string> = {
+  sans: fontSans,
+  sansItalic: fontSansItalic,
+  serif: fontSerif,
+  serifItalic: fontSerifItalic,
+  mono: fontMono,
+}
 
 interface Props {
   frontmatter: {
@@ -18,9 +33,14 @@ interface Props {
     lastUpdatedDate?: Date
     [key: string]: any
   }
+  /**
+   * Fonts to preload for this page. Defaults to ["sans"].
+   * Set based on above-the-fold content to prevent CLS.
+   */
+  fontPreload?: FontPreload[]
 }
 
-const { frontmatter } = Astro.props
+const { frontmatter, fontPreload = fontPreloadDefaults.base } = Astro.props
 
 // Handle title with fallbacks: frontmatter > default
 const rawTitle = frontmatter.title
@@ -113,20 +133,19 @@ import "../styles/base.css"
       }}
     />
 
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSans}
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={fontSerif}
-      crossorigin="anonymous"
-    />
+    {/* Dynamic font preloading based on page content */}
+    {
+      fontPreload.map((font) => (
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href={fontUrlMap[font]}
+          crossorigin="anonymous"
+        />
+      ))
+    }
+
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />

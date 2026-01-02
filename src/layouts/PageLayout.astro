@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
 import Hero from "../components/Hero.astro"
+import { fontPreloadDefaults } from "../config/fontPreload"
 
 interface Props {
   frontmatter: {
@@ -14,9 +15,14 @@ interface Props {
 
 const { frontmatter } = Astro.props
 const { title, headline, subtitle } = frontmatter
+
+// Preload serif italic if hero has subtitle, otherwise just serif
+const fontPreload = subtitle
+  ? fontPreloadDefaults.pageWithSubtitle
+  : fontPreloadDefaults.pageWithoutSubtitle
 ---
 
-<BaseLayout frontmatter={frontmatter}>
+<BaseLayout frontmatter={frontmatter} fontPreload={fontPreload}>
   <Hero>
     <h1>{headline ?? title}</h1>
     {subtitle && <p>{subtitle}</p>}
