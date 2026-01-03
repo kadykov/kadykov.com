@@ -48,6 +48,23 @@ const hasCodeBlocks = slotContent.includes("<pre")
     timeInHero: true,
   })}
 >
+  <!-- SVG sprite for copy button icons -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    style="display: none;"
+    aria-hidden="true"
+  >
+    <symbol id="icon-copy" viewBox="0 0 24 24">
+      <path
+        d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zM5.002 8L5 20h10V8zM9 6h8v10h2V4H9z"
+      ></path>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path
+        d="m10 15.17l9.192-9.191l1.414 1.414L10 17.999l-6.364-6.364l1.414-1.414z"
+      ></path>
+    </symbol>
+  </svg>
   <Hero>
     <h1>{headline ?? title}</h1>
     {subtitle && <p>{subtitle}</p>}
@@ -106,8 +123,13 @@ const hasCodeBlocks = slotContent.includes("<pre")
           if (!code) return;
           try {
             await navigator.clipboard.writeText(code.textContent ?? "");
+            const use = button.querySelector("use");
+            if (use) use.setAttribute("href", "#icon-check");
             button.classList.add("copied");
-            setTimeout(() => button.classList.remove("copied"), 2000);
+            setTimeout(() => {
+              if (use) use.setAttribute("href", "#icon-copy");
+              button.classList.remove("copied");
+            }, 2000);
           } catch (err) {
             console.error("Failed to copy code:", err);
           }
