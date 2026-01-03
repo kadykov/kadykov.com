@@ -1,5 +1,6 @@
 import { defineMarkdocConfig, nodes, component } from "@astrojs/markdoc/config"
 import shiki from "@astrojs/markdoc/shiki"
+import { addCopyButton } from "./src/config/shiki-transformers.mts"
 
 // Import photo server URL for use in Markdoc content
 const PHOTO_SERVER_URL = (
@@ -18,6 +19,7 @@ export default defineMarkdocConfig({
         light: "github-light",
         dark: "github-dark",
       },
+      transformers: [addCopyButton()],
     }),
   ],
   nodes: {

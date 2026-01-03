@@ -6,6 +6,7 @@ import playformCompress from "@playform/compress"
 import markdoc from "@astrojs/markdoc"
 import react from "@astrojs/react"
 import opengraph from "./src/integrations/opengraph"
+import { addCopyButton } from "./src/config/shiki-transformers.mts"
 
 // Import the photo server domain for dynamic configuration
 const PHOTO_SERVER_DOMAIN =
@@ -51,6 +52,7 @@ export default defineConfig({
         light: "github-light",
         dark: "github-dark",
       },
+      transformers: [addCopyButton()],
     },
   },
 })
