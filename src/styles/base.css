@@ -1234,7 +1234,7 @@ pre code {
 }
 
 /* Copy button styling - Material Design inspired */
-.copy-code-button {
+pre button {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -1256,19 +1256,28 @@ pre code {
   z-index: 10;
 }
 
-.copy-code-button:hover {
+/* Button text via CSS pseudo-element */
+pre button::before {
+  content: "Copy";
+}
+
+pre button:hover {
   background-color: oklch(from var(--color-surface) calc(l + 0.05) c h / 0.9);
   border-color: var(--color-primary);
   box-shadow: var(--elevation-2);
   transform: translateY(-1px);
 }
 
-.copy-code-button:active {
+pre button:active {
   transform: translateY(0);
   box-shadow: var(--elevation-1);
 }
 
-.copy-code-button.copied {
+pre button.copied::before {
+  content: "Copied!";
+}
+
+pre button.copied {
   background-color: oklch(from var(--color-primary) l c h / 0.2);
   border-color: var(--color-primary);
   color: var(--color-primary);

@@ -86,4 +86,28 @@ const formatDate = (date: Date) => {
       )
     }
   </footer>
+  <script>
+    // Copy code button functionality using event delegation
+    document.addEventListener("click", async (event) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+
+      // Match buttons inside pre elements (code blocks)
+      const button = target.closest("pre button")
+      if (!(button instanceof HTMLButtonElement)) return
+
+      // Find the code element sibling
+      const pre = button.closest("pre")
+      const code = pre?.querySelector("code")
+      if (!code) return
+
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? "")
+        button.classList.add("copied")
+        setTimeout(() => button.classList.remove("copied"), 2000)
+      } catch (err) {
+        console.error("Failed to copy code:", err)
+      }
+    })
+  </script>
 </BaseLayout>
