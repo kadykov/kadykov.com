@@ -1886,21 +1886,36 @@ body > footer ul {
 
 /* Button-like elements and floating nav links */
 
+/*
+ * Semantic Button Styles
+ * 
+ * Buttons are styled based on their semantic type attribute:
+ * - type="submit": Primary action (form submission) - primary color
+ * - type="button": Secondary/neutral action - primary container color
+ * - type="reset": Cautionary/destructive action - accent container color
+ * - disabled: Unavailable action - low contrast surface color
+ * 
+ * All buttons share:
+ * - Animated outline on hover (consistent across all interactive elements)
+ * - Type-specific color schemes for normal and active states
+ */
+
+/* Base button structure - applies to all buttons */
 button,
 a[rel="prev"],
 a[rel="next"] {
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-h4);
-  color: var(--color-on-primary);
-  background: var(--bg-primary);
-  border: none;
+  color: var(--color-on-primary-container);
+  background-color: var(--color-primary-container);
+  border: 0.1lh solid var(--color-primary);
   cursor: pointer;
 }
 
-/* Buttons */
+/* Default button style (neutral) - uses primary container with border */
 button {
   border-radius: 0.2rem;
-  padding: 0.875rem 1.5rem;
+  padding: 0.5rem;
   box-shadow: var(--elevation-2);
 }
 
@@ -1909,8 +1924,31 @@ pre button {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  padding: 0.5rem;
   border-radius: 50%;
+}
+
+/* Submit button (Primary action) - uses primary color for emphasis */
+button[type="submit"] {
+  color: var(--color-on-primary);
+  background-color: var(--color-primary);
+  border: none;
+}
+
+/* Reset button (Cautionary action) - uses accent container color */
+button[type="reset"] {
+  color: var(--color-on-accent-container);
+  background-color: var(--color-accent-container);
+  border: 0.1lh solid var(--color-accent);
+}
+
+/* Disabled button - low contrast, non-interactive */
+button:disabled,
+button[disabled] {
+  color: var(--color-on-surface-low);
+  background-color: var(--color-surface-container-low);
+  border: 0.1lh solid var(--color-surface-container-highest);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /*
@@ -1937,8 +1975,6 @@ a[rel="next"] {
   /* Button appearance */
   border-radius: 50%;
   box-shadow: var(--elevation-3);
-  width: 3rem;
-  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1969,12 +2005,12 @@ a:hover {
 }
 
 /* Draw outline on focus and hover */
-button:hover,
+button:not(:disabled):hover,
 a[rel="prev"]:hover,
 a[rel="next"]:hover,
 /* Use the same focus-visible style for keyboard navigation */
 a:focus-visible,
-button:focus-visible,
+button:not(:disabled):focus-visible,
 main > ul a:focus-visible figure {
   outline-color: var(--color-accent);
   outline-offset: 0.1lh;
@@ -1982,18 +2018,24 @@ main > ul a:focus-visible figure {
 
 /* Since we draw outline on focus, don't need default focus ring */
 
-/* Paint active state with accent color */
+/* Paint active state with type-specific colors */
+
+/* Submit and reset buttons active state - switches to accent color */
 a:active,
-button:active {
-  background: var(--color-accent);
+button[type="submit"]:active,
+button[type="reset"]:active {
   color: var(--color-on-accent);
+  background-color: var(--color-accent);
 }
 
-/* Shrink button-like elements on active state */
-button:active,
+/* Default button active state - switches to accent container */
 a[rel="prev"]:active,
-a[rel="next"]:active {
-  scale: 0.98;
+a[rel="next"]:active,
+button:not([type]):active,
+button:not(:disabled)[type="button"]:active {
+  background-color: var(--color-accent-container);
+  color: var(--color-on-accent-container);
+  border-color: var(--color-accent);
 }
 
 ::selection {
