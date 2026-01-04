@@ -929,6 +929,7 @@ label svg {
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
+  fill: currentcolor;
 }
 
 /* Contact Form Styles */
@@ -1217,6 +1218,23 @@ samp {
 
 pre {
   padding: 1rem;
+
+  /* 
+   * The article element has thick borders styled as a sheet of paper, implemented via variable padding.
+   * This confines elements inside, limiting line length for pleasant reading, but makes code blocks narrow with scrolling.
+   * To make code blocks wider, we increase their width by half the thick border width on each side.
+   * Result: thick white borders around content, but thinner (half-width) around code blocks.
+   *
+   * margin-inline: clamp(-3rem, (100% - 100vw) / 4, -1rem);
+   * - Max border width per side: 6rem, so limit negative margin to -3rem (half of max border).
+   * - Min: -1rem for narrow screens, matching padding.
+   * - Core formula: (100% - 100vw) / 4
+   *   - 100%: width inside article (confined by padding).
+   *   - 100vw: viewport width.
+   *   - To flash to viewport edges: (100% - 100vw) / 2
+   *   - But to split borders by half: divide by 4 instead of 2.
+   */
+  margin-inline: clamp(-3rem, (100% - 100vw) / 4, -1rem);
   border-radius: 0.2rem;
   overflow-x: auto;
   line-height: 1.4;
@@ -1231,25 +1249,6 @@ pre code {
   padding: 0;
   border-radius: 0;
   font-size: inherit;
-}
-
-/* Copy button styling */
-pre button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 50%;
-  /* cursor: pointer; */
-  /* transition: all 0.2s ease; */
-  /* z-index: 1; */
-}
-
-/* Style the SVG icon */
-pre button svg {
-  /* display: block; */
-  fill: currentColor;
-  /* opacity: 0.7; */
 }
 
 kbd {
@@ -1903,6 +1902,15 @@ button {
   border-radius: 0.2rem;
   padding: 0.875rem 1.5rem;
   box-shadow: var(--elevation-2);
+}
+
+/* Copy button styling */
+pre button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 50%;
 }
 
 /*
