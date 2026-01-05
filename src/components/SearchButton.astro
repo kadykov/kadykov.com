@@ -1,0 +1,51 @@
+---
+/**
+ * Search button that opens the search modal overlay.
+ * Uses the search icon from the Remix Icon set.
+ */
+import { Icon } from "astro-icon/components"
+---
+
+<button
+  type="button"
+  id="search-button"
+  aria-label="Open search"
+  aria-haspopup="dialog"
+  aria-expanded="false"
+>
+  <Icon name="ri:search-line" />
+</button>
+
+<script>
+  function initSearchButton() {
+    const searchButton = document.getElementById("search-button")
+    const searchModal = document.getElementById(
+      "search-modal"
+    ) as HTMLDialogElement | null
+
+    if (searchButton && searchModal) {
+      searchButton.addEventListener("click", () => {
+        searchModal.showModal()
+        searchButton.setAttribute("aria-expanded", "true")
+
+        // Focus the search input after a small delay to ensure modal is visible
+        requestAnimationFrame(() => {
+          const searchInput =
+            searchModal.querySelector<HTMLInputElement>('input[type="text"]')
+          searchInput?.focus()
+        })
+      })
+
+      // Update aria-expanded when modal closes
+      searchModal.addEventListener("close", () => {
+        searchButton.setAttribute("aria-expanded", "false")
+      })
+    }
+  }
+
+  // Run on initial load
+  initSearchButton()
+
+  // Re-run after view transitions (CSS-based)
+  document.addEventListener("astro:page-load", initSearchButton)
+</script>

@@ -1,0 +1,11 @@
+# Pagefind configuration
+# https://pagefind.app/docs/config-options/
+
+# The site directory is specified via CLI: npx pagefind --site dist
+
+# Exclude common non-content elements from indexing
+# Navigation and footer are already excluded by default, but we add specificity
+exclude_selectors:
+  - "[data-pagefind-ignore]"
+  - ".search-modal-content"
+  - "#search-modal"

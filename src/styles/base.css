@@ -2417,3 +2417,222 @@ textarea:user-invalid {
     U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329,
     U+1EA0-1EF9, U+20AB;
 }
+
+/*
+ * Search Modal Styles
+ * 
+ * Styles for the search button and modal overlay.
+ * Uses native <dialog> element for accessibility.
+ */
+
+/* Search button in navigation */
+#search-button {
+  /* Reset button styles */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  /* Match navigation link color */
+  color: inherit;
+
+  /* Icon sizing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#search-button svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+#search-button:hover,
+#search-button:focus-visible {
+  color: var(--color-on-primary-container-high);
+}
+
+/* Search modal dialog */
+#search-modal {
+  /* Remove default dialog styling */
+  border: none;
+  padding: 0;
+  background: transparent;
+
+  /* Center the modal */
+  margin: auto;
+  max-width: min(90vw, 40rem);
+  width: 100%;
+
+  /* Modal positioning */
+  position: fixed;
+  inset: 0;
+}
+
+/* Backdrop styling */
+#search-modal::backdrop {
+  background: oklch(10% 0 0deg / 70%);
+  backdrop-filter: blur(4px);
+}
+
+/* Modal content container */
+.search-modal-content {
+  background: var(--color-surface);
+  border-radius: 0.5rem;
+  box-shadow: var(--elevation-3);
+  overflow: hidden;
+
+  /* Flex layout for header, content, footer */
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+}
+
+/* Modal header */
+.search-modal-content > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--color-surface-container);
+  border-bottom: 1px solid var(--color-outline-variant);
+
+  /* Reset base styles for this specific header */
+  color: var(--color-on-surface);
+  box-shadow: none;
+  position: relative;
+  text-align: left;
+}
+
+.search-modal-content > header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* Close button */
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.close-button:hover,
+.close-button:focus-visible {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+}
+
+/* Search container */
+.search-container {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Search input */
+#search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--color-outline);
+  border-radius: 0.375rem;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+#search-input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+  border-color: var(--color-primary);
+}
+
+#search-input::placeholder {
+  color: var(--color-on-surface-low);
+}
+
+/* Search results */
+#search-results {
+  margin-top: 1rem;
+}
+
+.search-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results-list li {
+  border-bottom: 1px solid var(--color-outline-variant);
+}
+
+.search-results-list li:last-child {
+  border-bottom: none;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- unrelated to PhotoSwipe context */
+.search-results-list a {
+  display: block;
+  padding: 0.75rem 0;
+  text-decoration: none;
+  color: var(--color-on-surface);
+}
+
+.search-results-list a:hover,
+.search-results-list a:focus {
+  background: var(--color-surface-container-low);
+}
+
+.search-results-list strong {
+  display: block;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.search-results-list span {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+}
+
+/* Highlighted search terms in excerpts */
+.search-results-list mark {
+  background: var(--color-accent-container);
+  color: var(--color-on-accent-container);
+  padding: 0.1em 0.2em;
+  border-radius: 0.15em;
+}
+
+/* Search messages (no results, errors) */
+.search-message {
+  text-align: center;
+  color: var(--color-on-surface-variant);
+  padding: 1rem 0;
+}
+
+/* Modal footer */
+.search-modal-content > footer {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-surface-container);
+  border-top: 1px solid var(--color-outline-variant);
+  text-align: center;
+}
+
+.search-modal-content > footer p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+}
+
+.search-modal-content > footer kbd {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.15em 0.4em;
+  background: var(--color-surface-container-high);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 0.25rem;
+}

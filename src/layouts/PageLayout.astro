@@ -29,5 +29,7 @@ const { title, headline, subtitle } = frontmatter
     {subtitle && <p>{subtitle}</p>}
   </Hero>
 
-  <slot />
+  <article data-pagefind-body>
+    <slot />
+  </article>
 </BaseLayout>

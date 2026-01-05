@@ -12,21 +12,29 @@ dev:
 build:
     npm run build
 
+# Build the search index (run after build)
+index:
+    npx pagefind --site dist
+
+# Build the website and create search index
+build-index:
+    just build && just index
+
 # Preview the built website
 preview:
     npm run preview
 
-# Build and then preview the built website (sequentially)
+# Build, index, and then preview the website
 bp:
-    just build && just preview
+    just build-index && just preview
 
 # Validate HTML files in dist folder
 validate:
     npm run validate:html
 
-# Build and validate HTML
+# Build, index, and validate HTML
 build-validate:
-    just build && just validate
+    just build-index && just validate
 
 # Format code with Prettier
 fmt:

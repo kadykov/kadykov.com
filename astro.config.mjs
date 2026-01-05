@@ -35,6 +35,13 @@ export default defineConfig({
     }),
   ],
   site: "https://www.kadykov.com",
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ["/pagefind/pagefind.js"],
+      },
+    },
+  },
   image: {
     domains: [PHOTO_SERVER_DOMAIN],
     remotePatterns: [
