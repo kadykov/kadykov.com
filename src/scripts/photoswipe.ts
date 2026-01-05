@@ -266,10 +266,40 @@ if (parsedDataSource && parsedDataSource.length > 0) {
         }
 
         // Fallback: Copy to clipboard
-        try {
-          await navigator.clipboard.writeText(photoUrl)
+        const copyToClipboard = async (text: string): Promise<boolean> => {
+          // Try modern Clipboard API first
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+              await navigator.clipboard.writeText(text)
+              return true
+            } catch (err) {
+              console.warn("Clipboard API failed, trying fallback:", err)
+            }
+          }
+
+          // Fallback for mobile browsers: use execCommand with textarea
+          try {
+            const textarea = document.createElement("textarea")
+            textarea.value = text
+            textarea.style.position = "fixed"
+            textarea.style.left = "-999999px"
+            textarea.style.top = "-999999px"
+            document.body.appendChild(textarea)
+            textarea.focus()
+            textarea.select()
+            const success = document.execCommand("copy")
+            document.body.removeChild(textarea)
+            return success
+          } catch (err) {
+            console.error("Fallback copy also failed:", err)
+            return false
+          }
+        }
+
+        const success = await copyToClipboard(photoUrl)
+        if (success) {
           showCheckmark()
-        } catch (err) {
+        } else {
           // Both methods failed - show URL in alert dialog for manual copy
           alert(`Share this photo:\n\n${photoUrl}`)
         }
