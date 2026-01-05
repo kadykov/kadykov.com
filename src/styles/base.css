@@ -1429,8 +1429,14 @@ main > header p {
   font-style: italic;
 }
 
+header svg {
+  vertical-align: middle;
+  height: 2ex;
+  width: auto;
+}
+
 /* Logo size in the header */
-body > header svg {
+body > header > a > svg {
   /*
    * By default, SVGs can be treated as inline elements, which can cause
    * unexpected extra space below them due to baseline alignment. Setting
