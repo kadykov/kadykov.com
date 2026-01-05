@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
 import Hero from "../components/Hero.astro"
-import { slugify } from "../utils/slugify"
+import BlogTagList from "../components/BlogTagList.astro"
 import {
   type ReadingTimeResult,
   formatReadingTimeDuration,
@@ -51,19 +51,7 @@ const hasCodeBlocks = slotContent.includes("<pre")
   <Hero>
     <h1>{headline ?? title}</h1>
     {subtitle && <p>{subtitle}</p>}
-    {
-      tags && tags.length > 0 && (
-        <nav>
-          <ul>
-            {tags.map((tag: string) => (
-              <li>
-                <a href={`/blog/tags/${slugify(tag)}`}>#{tag}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )
-    }
+    <BlogTagList tags={tags} />
     {
       readingTime && (
         <time datetime={formatReadingTimeDuration(readingTime.minutes)}>
@@ -90,6 +78,13 @@ const hasCodeBlocks = slotContent.includes("<pre")
       )
     }
   </footer>
+  <BlogTagList tags={tags} />
+  <nav>
+    <ul>
+      <li><a href="/blog">All blog posts</a></li>
+      <li><a href="/tags">All blog tags</a></li>
+    </ul>
+  </nav>
   {
     hasCodeBlocks && (
       // Unfortunately, prettier-plugin-astro does not support <script> element inside {...}

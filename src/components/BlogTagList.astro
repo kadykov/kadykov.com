@@ -1,0 +1,23 @@
+---
+import { slugify } from "../utils/slugify"
+
+interface Props {
+  tags: string[]
+}
+
+const { tags } = Astro.props
+---
+
+{
+  tags && tags.length > 0 && (
+    <nav>
+      <ul>
+        {tags.map((tag: string) => (
+          <li>
+            <a href={`/blog/tags/${slugify(tag)}`}>#{tag}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
