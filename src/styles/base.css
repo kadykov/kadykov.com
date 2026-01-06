@@ -1023,7 +1023,7 @@ h4 {
   line-height: 1.3;
 }
 
-main > article {
+article {
   /*
    * Paper-like article container with coordinated width and padding:
    * 
@@ -1054,7 +1054,7 @@ main > article {
 }
 
 #photo,
-main > article {
+article {
   /* Use serif font for article body text for better readability */
   font-family: var(--font-serif);
 
@@ -1063,8 +1063,7 @@ main > article {
 }
 
 /* Accent links in articles with higher contrast */
-article a,
-#photo a {
+article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -1330,37 +1329,268 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* All navigation inside headers are horizontal */
+/* All navigation unordered lists are horizontal */
 nav ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
   padding-inline: 0;
+  justify-content: center;
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-h4);
 }
 
-/* Photo gallery - CSS Grid masonry with known aspect ratios */
-#gallery {
+/* Blog post index - vertical stack with ordered list */
+main > ol {
   list-style: none;
-  display: grid;
-
-  /* Responsive columns - adjust minmax for desired density */
-  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1.5rem;
+  max-width: 42rem;
+  margin: 0 auto;
   padding: var(--spacing-adaptive);
-
-  /* There is no horizontal limit, the masonry grid fills all available space */
-
-  /* Center items vertically within their grid areas */
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-adaptive);
 }
 
-/* Hero section */
-main > nav ul,
-#hero ul {
+/* Blog post cards in vertical layout - text only, no images */
+main > ol article {
+  background-color: var(--color-surface);
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-2);
+  transition: box-shadow var(--transition);
+  padding: var(--spacing-adaptive);
+  font-family: var(--font-serif);
+  font-weight: 450;
+}
+
+main > ol article:hover {
+  box-shadow: var(--elevation-3);
+}
+
+/* Metadata definition list */
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+}
+
+dt {
+  text-align: right;
+}
+
+/* Pagination navigation - centered in main */
+main > nav {
+  margin-block: 3rem;
+  text-align: center;
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 0 1rem;
+}
+
+nav span[aria-current="page"] {
+  color: var(--color-on-surface-low);
+  cursor: not-allowed;
+  text-decoration: underline;
+}
+
+/* Hierarchical date navigation with nested ordered lists */
+nav ol {
+  list-style: none;
+  padding-inline: 0;
+}
+
+/* Date in article header */
+time {
+  font-style: italic;
+}
+
+article time {
+  color: var(--color-on-surface-variant);
+  font-size: 0.9em;
+}
+
+/*
+ * Form as Direct Child of Main - Contact Form Pattern
+ * 
+ * Design: Forms that appear as direct children of main are styled as
+ * clean interactive cards with generous spacing and clear hierarchy.
+ */
+main > form {
+  /* Centered with comfortable max-width */
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: var(--spacing-adaptive);
+  background-color: var(--color-surface-container-low);
+  box-shadow: var(--elevation-2);
+  border-radius: 0.2rem;
+
+  /* Vertical stack of form elements */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  /* Use larger font size for inputs */
+  font-size: 1.2rem;
+}
+
+/*
+ * PhotoSwipe Caption Styling
+ * 
+ * Design goals:
+ * - Lower luminosity to reduce distraction from photos
+ * - Compact layout to prevent image shrinking
+ * - Semantic HTML with minimal classes
+ * - Align with site's typography system
+ */
+
+/* Caption container - semantic figcaption element */
+.pswp__dynamic-caption h4,
+.pswp__dynamic-caption p {
+  margin: 0;
+
+  /* Reduced brightness - less distracting on black background */
+  color: oklch(75% 0 0deg);
+}
+
+/* Metadata paragraph - tags, time, and details link */
+.pswp__dynamic-caption p {
+  font-family: var(--font-serif);
+}
+
+/* Links in caption - subtle styling */
+.pswp__dynamic-caption a {
+  color: inherit;
+}
+
+/* Button-like elements and floating nav links */
+
+/*
+ * Semantic Button Styles
+ * 
+ * Buttons are styled based on their semantic type attribute:
+ * - type="submit": Primary action (form submission) - primary color
+ * - type="button": Secondary/neutral action - primary container color
+ * - type="reset": Cautionary/destructive action - accent container color
+ * - disabled: Unavailable action - low contrast surface color
+ * 
+ * All buttons share:
+ * - Animated outline on hover (consistent across all interactive elements)
+ * - Type-specific color schemes for normal and active states
+ */
+
+/* Base button structure - applies to all buttons */
+button,
+a[rel="prev"],
+a[rel="next"] {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-h4);
+  color: var(--color-on-primary-container);
+  background-color: var(--color-primary-container);
+  border: 0.1lh solid var(--color-primary);
+  cursor: pointer;
+}
+
+/* Default button style (neutral) - uses primary container with border */
+button {
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  box-shadow: var(--elevation-2);
+}
+
+/* Copy button styling */
+pre button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border-radius: 50%;
+}
+
+/* Submit button (Primary action) - uses primary color for emphasis */
+button[type="submit"] {
+  color: var(--color-on-primary);
+  background-color: var(--color-primary);
+  border: none;
+}
+
+/* Reset button (Cautionary action) - uses accent container color */
+button[type="reset"] {
+  color: var(--color-on-accent-container);
+  background-color: var(--color-accent-container);
+  border: 0.1lh solid var(--color-accent);
+}
+
+/* Disabled button - low contrast, non-interactive */
+button:disabled,
+button[disabled] {
+  color: var(--color-on-surface-low);
+  background-color: var(--color-surface-container-low);
+  border: 0.1lh solid var(--color-surface-container-highest);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/*
+ * Floating Navigation Links - Semantic Pagination
+ * 
+ * Styles floating prev/next navigation buttons that use rel="prev" and rel="next"
+ * attributes. Each link is independently positioned, so they appear correctly
+ * even when only one is present (e.g., first or last page).
+ * 
+ * Design approach:
+ * - Links are individually positioned (not container-based)
+ * - Previous link always appears on the left
+ * - Next link always appears on the right
+ * - No awkward positioning when only one link is present
+ */
+
+a[rel="prev"],
+a[rel="next"] {
+  /* Floating button positioning */
+  position: fixed;
+  bottom: 1rem;
+  z-index: 1;
+
+  /* Button appearance */
+  border-radius: 50%;
+  box-shadow: var(--elevation-3);
+  display: flex;
+  align-items: center;
   justify-content: center;
+}
+
+/* Position previous link on the left */
+a[rel="prev"] {
+  left: 1rem;
+}
+
+/* Position next link on the right */
+a[rel="next"] {
+  right: 1rem;
+}
+
+a[rel="prev"] svg,
+a[rel="next"] svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Individual element styles */
+
+/* Logo size in the header */
+#logo svg {
+  /*
+   * By default, SVGs can be treated as inline elements, which can cause
+   * unexpected extra space below them due to baseline alignment. Setting
+   * display to "block" removes this behavior and ensures the element's
+   * bounds match its visual appearance, fixing vertical alignment issues
+   * within flex containers.
+   */
+  display: block;
+  height: 2.2rem;
+  width: auto;
+
+  /* USE border-radius: 50%; for round logo */
+  border-radius: 0.2rem;
 }
 
 /* Navigation bar */
@@ -1422,49 +1652,6 @@ main > nav ul,
   position: relative;
 }
 
-/* Logo size in the header */
-#navbar svg {
-  /*
-   * By default, SVGs can be treated as inline elements, which can cause
-   * unexpected extra space below them due to baseline alignment. Setting
-   * display to "block" removes this behavior and ensures the element's
-   * bounds match its visual appearance, fixing vertical alignment issues
-   * within flex containers.
-   */
-  display: block;
-  height: 2.2rem;
-  width: auto;
-
-  /* USE border-radius: 50%; for round logo */
-  border-radius: 0.2rem;
-}
-
-/* Blog post index - vertical stack with ordered list */
-main > ol {
-  list-style: none;
-  max-width: 42rem;
-  margin: 0 auto;
-  padding: var(--spacing-adaptive);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-adaptive);
-}
-
-/* Blog post cards in vertical layout - text only, no images */
-main > ol article {
-  background-color: var(--color-surface);
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
-  transition: box-shadow var(--transition);
-  padding: var(--spacing-adaptive);
-  font-family: var(--font-serif);
-  font-weight: 450;
-}
-
-main > ol article:hover {
-  box-shadow: var(--elevation-3);
-}
-
 /* Single photo page - Polaroid-style figure with #photo ID */
 #photo {
   margin: 0;
@@ -1519,20 +1706,20 @@ main > ol article:hover {
   color: var(--color-on-surface-variant);
 }
 
-/* Description paragraph */
-#photo p {
-  font-family: var(--font-serif);
-}
-
-/* Metadata definition list */
-#photo dl {
+/* Photo gallery - CSS Grid masonry with known aspect ratios */
+#gallery {
+  list-style: none;
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.5rem 1rem;
-}
 
-#photo dt {
-  text-align: right;
+  /* Responsive columns - adjust minmax for desired density */
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1.5rem;
+  padding: var(--spacing-adaptive);
+
+  /* There is no horizontal limit, the masonry grid fills all available space */
+
+  /* Center items vertically within their grid areas */
+  align-items: center;
 }
 
 /* === Grid Layout Classes === */
@@ -1738,90 +1925,6 @@ main > ol article:hover {
   box-shadow: var(--elevation-3);
 }
 
-/* Pagination navigation - centered in main */
-main > nav {
-  margin-block: 3rem;
-  text-align: center;
-  max-width: 42rem;
-  margin-inline: auto;
-  padding: 0 1rem;
-}
-
-nav span[aria-current="page"] {
-  color: var(--color-on-surface-low);
-  cursor: not-allowed;
-  text-decoration: underline;
-}
-
-/* Hierarchical date navigation with nested ordered lists */
-nav ol {
-  list-style: none;
-  padding-inline: 0;
-}
-
-/* Date in article header */
-time {
-  font-style: italic;
-}
-
-article time {
-  color: var(--color-on-surface-variant);
-  font-size: 0.9em;
-}
-
-/*
- * Form as Direct Child of Main - Contact Form Pattern
- * 
- * Design: Forms that appear as direct children of main are styled as
- * clean interactive cards with generous spacing and clear hierarchy.
- */
-main > form {
-  /* Centered with comfortable max-width */
-  max-width: 32rem;
-  margin: 0 auto;
-  padding: var(--spacing-adaptive);
-  background-color: var(--color-surface-container-low);
-  box-shadow: var(--elevation-2);
-  border-radius: 0.2rem;
-
-  /* Vertical stack of form elements */
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  /* Use larger font size for inputs */
-  font-size: 1.2rem;
-}
-
-/*
- * PhotoSwipe Caption Styling
- * 
- * Design goals:
- * - Lower luminosity to reduce distraction from photos
- * - Compact layout to prevent image shrinking
- * - Semantic HTML with minimal classes
- * - Align with site's typography system
- */
-
-/* Caption container - semantic figcaption element */
-.pswp__dynamic-caption h4,
-.pswp__dynamic-caption p {
-  margin: 0;
-
-  /* Reduced brightness - less distracting on black background */
-  color: oklch(75% 0 0deg);
-}
-
-/* Metadata paragraph - tags, time, and details link */
-.pswp__dynamic-caption p {
-  font-family: var(--font-serif);
-}
-
-/* Links in caption - subtle styling */
-.pswp__dynamic-caption a {
-  color: inherit;
-}
-
 /* Page footer styles */
 
 #footer {
@@ -1904,118 +2007,6 @@ main > form {
   /* Reset font size and weight for footer nav links, since by default they are h4-styled */
   font-size: 1rem;
   font-weight: 400;
-}
-
-/* Button-like elements and floating nav links */
-
-/*
- * Semantic Button Styles
- * 
- * Buttons are styled based on their semantic type attribute:
- * - type="submit": Primary action (form submission) - primary color
- * - type="button": Secondary/neutral action - primary container color
- * - type="reset": Cautionary/destructive action - accent container color
- * - disabled: Unavailable action - low contrast surface color
- * 
- * All buttons share:
- * - Animated outline on hover (consistent across all interactive elements)
- * - Type-specific color schemes for normal and active states
- */
-
-/* Base button structure - applies to all buttons */
-button,
-a[rel="prev"],
-a[rel="next"] {
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-h4);
-  color: var(--color-on-primary-container);
-  background-color: var(--color-primary-container);
-  border: 0.1lh solid var(--color-primary);
-  cursor: pointer;
-}
-
-/* Default button style (neutral) - uses primary container with border */
-button {
-  border-radius: 0.2rem;
-  padding: 0.5rem;
-  box-shadow: var(--elevation-2);
-}
-
-/* Copy button styling */
-pre button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  border-radius: 50%;
-}
-
-/* Submit button (Primary action) - uses primary color for emphasis */
-button[type="submit"] {
-  color: var(--color-on-primary);
-  background-color: var(--color-primary);
-  border: none;
-}
-
-/* Reset button (Cautionary action) - uses accent container color */
-button[type="reset"] {
-  color: var(--color-on-accent-container);
-  background-color: var(--color-accent-container);
-  border: 0.1lh solid var(--color-accent);
-}
-
-/* Disabled button - low contrast, non-interactive */
-button:disabled,
-button[disabled] {
-  color: var(--color-on-surface-low);
-  background-color: var(--color-surface-container-low);
-  border: 0.1lh solid var(--color-surface-container-highest);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/*
- * Floating Navigation Links - Semantic Pagination
- * 
- * Styles floating prev/next navigation buttons that use rel="prev" and rel="next"
- * attributes. Each link is independently positioned, so they appear correctly
- * even when only one is present (e.g., first or last page).
- * 
- * Design approach:
- * - Links are individually positioned (not container-based)
- * - Previous link always appears on the left
- * - Next link always appears on the right
- * - No awkward positioning when only one link is present
- */
-
-a[rel="prev"],
-a[rel="next"] {
-  /* Floating button positioning */
-  position: fixed;
-  bottom: 1rem;
-  z-index: 1;
-
-  /* Button appearance */
-  border-radius: 50%;
-  box-shadow: var(--elevation-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Position previous link on the left */
-a[rel="prev"] {
-  left: 1rem;
-}
-
-/* Position next link on the right */
-a[rel="next"] {
-  right: 1rem;
-}
-
-a[rel="prev"] svg,
-a[rel="next"] svg {
-  width: 2rem;
-  height: 2rem;
 }
 
 /* Hover and active states */
