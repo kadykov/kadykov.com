@@ -15,14 +15,14 @@
  */
 ---
 
-<header>
+<header class="hero">
   <slot />
 </header>
 
 <script>
   // Handle navigation shadow removal when hero is present
   const navigationHeader = document.querySelector(
-    "body > header"
+    "header.navbar"
   ) as HTMLElement
 
   if (navigationHeader) {

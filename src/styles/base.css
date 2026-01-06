@@ -1008,7 +1008,6 @@ h2 {
 }
 
 /* h3 styles */
-main > header p,
 h3 {
   font-size: 1.8rem;
   line-height: 1.2;
@@ -1360,17 +1359,17 @@ main > ul {
 
 /* Hero section */
 main > nav ul,
-main > header ul {
+header.hero ul {
   justify-content: center;
 }
 
 /* Navigation bar */
-body > header ul {
+header.navbar ul {
   justify-content: flex-end;
 }
 
-body > header,
-main > header {
+header.navbar,
+header.hero {
   color: var(--color-on-primary-container);
   box-shadow: var(--elevation-2);
 
@@ -1387,7 +1386,7 @@ main > header {
 }
 
 /* Navbar styles */
-body > header {
+header.navbar {
   /* Fixed position at the top of the document */
   top: 0;
 
@@ -1405,7 +1404,7 @@ body > header {
 }
 
 /* Hero header */
-main > header {
+header.hero {
   /* Centered content with vertical stacking */
   flex-direction: column;
   justify-content: center;
@@ -1423,14 +1422,8 @@ main > header {
   position: relative;
 }
 
-/* Subtitle styles in hero header */
-main > header p {
-  font-family: var(--font-serif);
-  font-style: italic;
-}
-
 /* Logo size in the header */
-body > header svg {
+header.navbar svg {
   /*
    * By default, SVGs can be treated as inline elements, which can cause
    * unexpected extra space below them due to baseline alignment. Setting
@@ -1800,9 +1793,38 @@ main > form {
   font-size: 1.2rem;
 }
 
+/*
+ * PhotoSwipe Caption Styling
+ * 
+ * Design goals:
+ * - Lower luminosity to reduce distraction from photos
+ * - Compact layout to prevent image shrinking
+ * - Semantic HTML with minimal classes
+ * - Align with site's typography system
+ */
+
+/* Caption container - semantic figcaption element */
+.pswp__dynamic-caption h4,
+.pswp__dynamic-caption p {
+  margin: 0;
+
+  /* Reduced brightness - less distracting on black background */
+  color: oklch(75% 0 0deg);
+}
+
+/* Metadata paragraph - tags, time, and details link */
+.pswp__dynamic-caption p {
+  font-family: var(--font-serif);
+}
+
+/* Links in caption - subtle styling */
+.pswp__dynamic-caption a {
+  color: inherit;
+}
+
 /* Page footer styles */
 
-body > footer {
+footer.page-footer {
   /* Theme-aware muted background */
   background-color: var(--color-surface-container-highest);
   color: var(--color-on-surface-variant);
@@ -1838,31 +1860,31 @@ body > footer {
   background-repeat: repeat;
 }
 
-body > footer h2 {
+footer.page-footer h2 {
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-h4);
 }
 
 /* Footer logo and paragraphs span full width */
-body > footer svg,
-body > footer p {
+footer.page-footer svg,
+footer.page-footer p {
   flex-basis: 100%;
 }
 
 /* Logo styling - centered at top of footer */
-body > footer svg {
+footer.page-footer svg {
   margin: 0 auto;
   height: 2.2rem;
   width: auto;
 }
 
 /* Footer paragraphs - centered text, full width */
-body > footer p {
+footer.page-footer p {
   text-align: center;
 }
 
 /* Navigation blocks - horizontal layout with wrapping */
-body > footer nav {
+footer.page-footer nav {
   /* Each nav is a vertical stack */
   display: flex;
   flex-direction: column;
@@ -1875,7 +1897,7 @@ body > footer nav {
 }
 
 /* Navigation lists - vertical stack */
-body > footer ul {
+footer.page-footer ul {
   flex-direction: column;
   gap: 0;
 
@@ -2063,42 +2085,23 @@ textarea:user-invalid {
   color: var(--color-on-accent-container);
 }
 
-/*
- * PhotoSwipe Caption Styling
- * 
- * Design goals:
- * - Lower luminosity to reduce distraction from photos
- * - Compact layout to prevent image shrinking
- * - Semantic HTML with minimal classes
- * - Align with site's typography system
- */
-
-/* Caption container - semantic figcaption element */
-.pswp__dynamic-caption h4,
-.pswp__dynamic-caption p {
-  margin: 0;
-
-  /* Reduced brightness - less distracting on black background */
-  color: oklch(75% 0 0deg);
-}
-
-/* Metadata paragraph - tags, time, and details link */
-.pswp__dynamic-caption p {
-  font-family: var(--font-serif);
-}
-
-/* Links in caption - subtle styling */
-.pswp__dynamic-caption a {
-  color: inherit;
-}
-
-/* Remove our custom outline */
+/* Remove our custom outline for PhotoSwipe buttons */
 .pswp button:hover {
   outline-color: transparent;
 }
 
 .pswp__dynamic-caption a:active {
   color: var(--color-on-accent);
+}
+
+/* Subtitle styles in hero header - placed after all similar specificity selectors */
+header.hero p {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-weight: 370;
+  margin-block: 0.7em;
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
 /* Photo Gallery Color Theme Overrides */
@@ -2174,7 +2177,7 @@ textarea:user-invalid {
   textarea,
   input,
   td,
-  body > header svg,
+  header.navbar svg,
   main > ol article,
   main > ul figure {
     transition: none;
