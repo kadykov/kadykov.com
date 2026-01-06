@@ -1053,7 +1053,7 @@ main > article {
   box-shadow: var(--elevation-1);
 }
 
-main > figure,
+#photo,
 main > article {
   /* Use serif font for article body text for better readability */
   font-family: var(--font-serif);
@@ -1064,7 +1064,7 @@ main > article {
 
 /* Accent links in articles with higher contrast */
 article a,
-main > figure a {
+#photo a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -1342,7 +1342,7 @@ nav ul {
 }
 
 /* Photo gallery - CSS Grid masonry with known aspect ratios */
-main > ul {
+#gallery {
   list-style: none;
   display: grid;
 
@@ -1359,17 +1359,17 @@ main > ul {
 
 /* Hero section */
 main > nav ul,
-header.hero ul {
+#hero ul {
   justify-content: center;
 }
 
 /* Navigation bar */
-header.navbar ul {
+#navbar ul {
   justify-content: flex-end;
 }
 
-header.navbar,
-header.hero {
+#navbar,
+#hero {
   color: var(--color-on-primary-container);
   box-shadow: var(--elevation-2);
 
@@ -1386,7 +1386,7 @@ header.hero {
 }
 
 /* Navbar styles */
-header.navbar {
+#navbar {
   /* Fixed position at the top of the document */
   top: 0;
 
@@ -1404,7 +1404,7 @@ header.navbar {
 }
 
 /* Hero header */
-header.hero {
+#hero {
   /* Centered content with vertical stacking */
   flex-direction: column;
   justify-content: center;
@@ -1423,7 +1423,7 @@ header.hero {
 }
 
 /* Logo size in the header */
-header.navbar svg {
+#navbar svg {
   /*
    * By default, SVGs can be treated as inline elements, which can cause
    * unexpected extra space below them due to baseline alignment. Setting
@@ -1465,14 +1465,14 @@ main > ol article:hover {
   box-shadow: var(--elevation-3);
 }
 
-/* Single photo page - Polaroid-style figure as direct child of main */
-main > figure {
+/* Single photo page - Polaroid-style figure with #photo ID */
+#photo {
   margin: 0;
   width: 100%;
 }
 
 /* Image sizing: fit within viewport while maintaining aspect ratio */
-main > figure img {
+#photo img {
   display: block;
   margin: 0 auto;
   border-radius: 0.2rem;
@@ -1511,7 +1511,7 @@ main > figure img {
 }
 
 /* Figcaption contains title, description, and metadata */
-main > figure figcaption {
+#photo figcaption {
   max-width: 42rem;
   width: fit-content;
   margin: 0 auto;
@@ -1520,18 +1520,18 @@ main > figure figcaption {
 }
 
 /* Description paragraph */
-main > figure p {
+#photo p {
   font-family: var(--font-serif);
 }
 
 /* Metadata definition list */
-main > figure dl {
+#photo dl {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
 }
 
-main > figure dt {
+#photo dt {
   text-align: right;
 }
 
@@ -1540,19 +1540,19 @@ main > figure dt {
 /* These control how much space the card occupies on the grid */
 
 /* Grid layout: Landscape cards - wider span */
-main > ul .grid-landscape {
+#gallery .grid-landscape {
   grid-row: span 2;
   grid-column: span 3;
 }
 
 /* Grid layout: Square cards - balanced span */
-main > ul .grid-square {
+#gallery .grid-square {
   grid-row: span 2;
   grid-column: span 2;
 }
 
 /* Grid layout: Portrait cards - taller span */
-main > ul .grid-portrait {
+#gallery .grid-portrait {
   grid-row: span 3;
   grid-column: span 2;
 }
@@ -1618,7 +1618,7 @@ main > ul .grid-portrait {
  */
 
 /* Figure container fills anchor and positions caption relative to image */
-main > ul figure {
+#gallery figure {
   margin: 0;
 
   /* Polaroid-style card: white background with shadow and rounded corners */
@@ -1650,17 +1650,17 @@ main > ul figure {
 /* These control padding to accommodate captions at different positions */
 
 /* Caption placement: Bottom (for landscape and square-ish photos) */
-.caption-bottom figure {
+#gallery .caption-bottom figure {
   padding-bottom: 2rem;
 }
 
 /* Caption placement: Side (for portrait photos) */
-.caption-side figure {
+#gallery .caption-side figure {
   padding-left: 2rem;
 }
 
 /* Image fills available space with no extra styling */
-main > ul img {
+#gallery img {
   display: block;
   width: 100%;
   height: 100%;
@@ -1687,7 +1687,7 @@ main > ul img {
  */
 
 /* Caption base styles - always visible, single line with ellipsis */
-main > ul figcaption {
+#gallery figcaption {
   position: absolute;
   font-size: 0.85rem;
   font-family: var(--font-mono);
@@ -1706,7 +1706,7 @@ main > ul figcaption {
 /* These control where the caption appears within the figure */
 
 /* Caption positioning: Bottom */
-.caption-bottom figcaption {
+#gallery .caption-bottom figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
   bottom: 0.5rem;
   left: 0.6rem;
@@ -1717,7 +1717,7 @@ main > ul figcaption {
 }
 
 /* Caption positioning: Side (rotated 90 degrees) */
-.caption-side figcaption {
+#gallery .caption-side figcaption {
   /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
   top: 0.6rem;
   left: 0.5rem;
@@ -1731,8 +1731,8 @@ main > ul figcaption {
 }
 
 /* Hover effect: scale entire figure (image + caption together) and increase shadow */
-main > ul figure:hover,
-main > ul a:focus-visible figure {
+#gallery figure:hover,
+#gallery a:focus-visible figure {
   scale: 1.02;
   rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
   box-shadow: var(--elevation-3);
@@ -1824,7 +1824,7 @@ main > form {
 
 /* Page footer styles */
 
-footer.page-footer {
+#footer {
   /* Theme-aware muted background */
   background-color: var(--color-surface-container-highest);
   color: var(--color-on-surface-variant);
@@ -1860,31 +1860,31 @@ footer.page-footer {
   background-repeat: repeat;
 }
 
-footer.page-footer h2 {
+#footer h2 {
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-h4);
 }
 
 /* Footer logo and paragraphs span full width */
-footer.page-footer svg,
-footer.page-footer p {
+#footer svg,
+#footer p {
   flex-basis: 100%;
 }
 
 /* Logo styling - centered at top of footer */
-footer.page-footer svg {
+#footer svg {
   margin: 0 auto;
   height: 2.2rem;
   width: auto;
 }
 
 /* Footer paragraphs - centered text, full width */
-footer.page-footer p {
+#footer p {
   text-align: center;
 }
 
 /* Navigation blocks - horizontal layout with wrapping */
-footer.page-footer nav {
+#footer nav {
   /* Each nav is a vertical stack */
   display: flex;
   flex-direction: column;
@@ -1897,7 +1897,7 @@ footer.page-footer nav {
 }
 
 /* Navigation lists - vertical stack */
-footer.page-footer ul {
+#footer ul {
   flex-direction: column;
   gap: 0;
 
@@ -2033,7 +2033,7 @@ a[rel="next"]:hover,
 /* Use the same focus-visible style for keyboard navigation */
 a:focus-visible,
 button:not(:disabled):focus-visible,
-main > ul a:focus-visible figure {
+#gallery a:focus-visible figure {
   outline-color: var(--color-accent);
   outline-offset: 0.1lh;
 }
@@ -2095,7 +2095,7 @@ textarea:user-invalid {
 }
 
 /* Subtitle styles in hero header - placed after all similar specificity selectors */
-header.hero p {
+#hero p {
   font-size: 1.8rem;
   line-height: 1.2;
   font-weight: 370;
@@ -2137,17 +2137,17 @@ header.hero p {
 }
 
 @media (prefers-color-scheme: dark) {
-  main > ul figure {
+  #gallery figure {
     /* Slightly darker off-white for dark theme - still provides white balance reference */
     background-color: oklch(90% 0 0deg);
   }
 
-  main > ul img {
+  #gallery img {
     /* Darken border slightly in dark mode for better contrast */
     border-color: oklch(87% 0 0deg);
   }
 
-  main > figure img {
+  #photo img {
     /* Darken inner border for better contrast in dark theme */
     background-color: oklch(87% 0 0deg);
 
@@ -2177,9 +2177,9 @@ header.hero p {
   textarea,
   input,
   td,
-  header.navbar svg,
+  #navbar svg,
   main > ol article,
-  main > ul figure {
+  #gallery figure {
     transition: none;
   }
 
