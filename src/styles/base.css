@@ -1003,8 +1003,6 @@ h2 {
   line-height: 1.1;
   font-weight: 320;
   margin-block: 0.5em;
-
-  /* border-top: 0.1em solid var(--color-primary); */
 }
 
 /* h3 styles */
@@ -1163,6 +1161,18 @@ article figcaption {
   font-style: italic;
 }
 
+/* Horizontal Rule - Material Design divider styling */
+article hr {
+  width: 70%;
+  border-style: solid; /* Required for the WebKit browsers */
+  border-width: 0 0.5rem 0.15rem 0;
+  border-color: var(--color-primary);
+  height: 0.55rem;
+  background-color: inherit;
+  margin-inline: auto -0.5rem;
+  padding: 0;
+}
+
 /* Surface block containers */
 pre,
 blockquote,
@@ -1255,21 +1265,8 @@ kbd {
   font-size: 0.9em;
 }
 
-/* Horizontal Rule - Material Design divider styling */
-article hr {
-  width: 70%;
-  border-style: solid; /* Required for the WebKit browsers */
-  border-width: 0 0.5rem 0.15rem 0;
-  border-color: var(--color-primary);
-  height: 0.55rem;
-  background-color: inherit;
-  margin-inline: auto -0.5rem;
-  padding: 0;
-}
-
 /* List Elements - Subdued markers for better content hierarchy */
-ul > li::marker,
-ol > li::marker {
+li::marker {
   color: var(--color-primary);
   font-family: var(--font-sans);
   font-weight: 550;
@@ -1344,23 +1341,23 @@ nav ul {
 /* Blog post index - vertical stack with ordered list */
 main > ol {
   list-style: none;
-  max-width: 42rem;
-  margin: 0 auto;
+  /* max-width: 42rem; */
+  /* margin: 0 auto; */
   padding: var(--spacing-adaptive);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-adaptive);
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* gap: var(--spacing-adaptive); */
 }
 
 /* Blog post cards in vertical layout - text only, no images */
 main > ol article {
-  background-color: var(--color-surface);
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
+  /* background-color: var(--color-surface); */
+  /* border-radius: 0.2rem; */
+  /* box-shadow: var(--elevation-2); */
   transition: box-shadow var(--transition);
-  padding: var(--spacing-adaptive);
-  font-family: var(--font-serif);
-  font-weight: 450;
+  /* padding: var(--spacing-adaptive); */
+  /* font-family: var(--font-serif); */
+  /* font-weight: 450; */
 }
 
 main > ol article:hover {
@@ -1570,8 +1567,8 @@ a[rel="next"] {
 
 a[rel="prev"] svg,
 a[rel="next"] svg {
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
 }
 
 /* Individual element styles */
