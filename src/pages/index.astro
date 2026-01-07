@@ -3,7 +3,7 @@ import { getCollection } from "astro:content"
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Hero from "../components/Hero.astro"
 import OptimizedImage from "../components/OptimizedImage.astro"
-import BlogPostListItem from "../components/BlogPostListItem.astro"
+import BlogPostList from "../components/BlogPostList.astro"
 import { getFontPreload } from "../config/fontPreload"
 
 const frontmatter = {
@@ -20,8 +20,6 @@ const allPosts = (
   const dateB = b.data.pubDate?.getTime() ?? 0
   return dateB - dateA // Most recent first
 })
-
-const recentPosts = allPosts.slice(0, 3) // Get up to 3 most recent posts
 ---
 
 <BaseLayout
@@ -77,7 +75,5 @@ const recentPosts = allPosts.slice(0, 3) // Get up to 3 most recent posts
     />
   </article>
 
-  <ol>
-    {recentPosts.map((post) => <BlogPostListItem post={post} />)}
-  </ol>
+  <BlogPostList posts={allPosts} limit={3} />
 </BaseLayout>

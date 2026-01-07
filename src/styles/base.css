@@ -1338,32 +1338,6 @@ nav ul {
   font-weight: var(--font-weight-h4);
 }
 
-/* Blog post index - vertical stack with ordered list */
-main > ol {
-  list-style: none;
-  /* max-width: 42rem; */
-  /* margin: 0 auto; */
-  padding: var(--spacing-adaptive);
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* gap: var(--spacing-adaptive); */
-}
-
-/* Blog post cards in vertical layout - text only, no images */
-main > ol article {
-  /* background-color: var(--color-surface); */
-  /* border-radius: 0.2rem; */
-  /* box-shadow: var(--elevation-2); */
-  transition: box-shadow var(--transition);
-  /* padding: var(--spacing-adaptive); */
-  /* font-family: var(--font-serif); */
-  /* font-weight: 450; */
-}
-
-main > ol article:hover {
-  box-shadow: var(--elevation-3);
-}
-
 /* Metadata definition list */
 dl {
   display: grid;
@@ -1407,12 +1381,12 @@ article time {
 }
 
 /*
- * Form as Direct Child of Main - Contact Form Pattern
- * 
+ * Form Styling
+ *
  * Design: Forms that appear as direct children of main are styled as
  * clean interactive cards with generous spacing and clear hierarchy.
  */
-main > form {
+form {
   /* Centered with comfortable max-width */
   max-width: 32rem;
   margin: 0 auto;
@@ -1572,6 +1546,21 @@ a[rel="next"] svg {
 }
 
 /* Individual element styles */
+
+/* Blog post index - vertical stack with ordered list */
+#blog-posts {
+  list-style: none;
+  padding: var(--spacing-adaptive);
+}
+
+/* Blog post cards in vertical layout - text only, no images */
+#blog-posts article {
+  transition: box-shadow var(--transition);
+}
+
+#blog-posts article:hover {
+  box-shadow: var(--elevation-3);
+}
 
 /* Logo size in the header */
 #logo svg {
@@ -2166,7 +2155,7 @@ textarea:user-invalid {
   input,
   td,
   #navbar svg,
-  main > ol article,
+  #blog-posts article,
   #gallery figure {
     transition: none;
   }
