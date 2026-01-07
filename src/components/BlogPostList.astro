@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content"
+import BlogPostListItem from "./BlogPostListItem.astro"
+import { getReadingTime } from "../utils/readingTime"
+
+interface Props {
+  posts: CollectionEntry<"blog">[]
+  limit?: number
+}
+
+const { posts, limit } = Astro.props
+
+// Apply limit if specified
+const displayPosts = limit ? posts.slice(0, limit) : posts
+
+// Pre-compute reading times for all posts
+const postsWithReadingTime = displayPosts.map((post) => ({
+  post,
+  readingTime: getReadingTime(post.body),
+}))
+---
+
+<ol id="blog-posts">
+  {
+    postsWithReadingTime.map(({ post, readingTime }) => (
+      <BlogPostListItem post={post} readingTime={readingTime} />
+    ))
+  }
+</ol>

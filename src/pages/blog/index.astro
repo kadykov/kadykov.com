@@ -2,8 +2,7 @@
 import { getCollection } from "astro:content"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Hero from "../../components/Hero.astro"
-import BlogPostListItem from "../../components/BlogPostListItem.astro"
-import { getReadingTime } from "../../utils/readingTime"
+import BlogPostList from "../../components/BlogPostList.astro"
 import { getFontPreload } from "../../config/fontPreload"
 
 const allPosts = (
@@ -13,12 +12,6 @@ const allPosts = (
   const dateB = b.data.pubDate?.getTime() ?? 0
   return dateB - dateA // Most recent first
 })
-
-// Pre-compute reading times for all posts
-const postsWithReadingTime = allPosts.map((post) => ({
-  post,
-  readingTime: getReadingTime(post.body),
-}))
 
 const frontmatter = {
   title: "Blog",
@@ -39,13 +32,7 @@ const frontmatter = {
     <p>Only a few posts for now, but more content is on the way!</p>
   </Hero>
 
-  <ol>
-    {
-      postsWithReadingTime.map(({ post, readingTime }) => (
-        <BlogPostListItem post={post} readingTime={readingTime} />
-      ))
-    }
-  </ol>
+  <BlogPostList posts={allPosts} />
 
   <nav>
     <ul>

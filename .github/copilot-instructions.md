@@ -90,22 +90,21 @@ Uses Shiki with custom transformer [src/config/shiki-transformers.mts](src/confi
 
 ### Styling Philosophy
 
-**Semantic HTML with minimal classes** — the CSS architecture prioritizes:
+**Semantic HTML with element-based styling** — the CSS architecture prioritizes:
 
 - **Semantic elements**: Use `<header>`, `<nav>`, `<article>`, `<section>` over `<div>`
-- **Avoid meaningless elements**: No wrapper divs unless structurally necessary
-- **Style elements directly**: Target HTML elements (`h2`, `article`, `time`) instead of classes
-- **Context-aware styling**: Elements adapt based on their container (e.g., `article h2`, `nav a`)
+- **IDs for unique elements**: Use IDs when element appears once per page (`#navbar`, `#hero`, `#footer`, `#gallery`, `#photo`, `#blog-posts`)
+- **Contextual styling**: Elements styled based on container — `article` optimizes for long-form reading, `nav ul` creates horizontal navigation
+- **Element selectors**: Style HTML elements directly rather than adding classes when semantic meaning is clear
 - **OKLCH color system**: Entire design system uses OKLCH for perceptually uniform contrast calculations
-- **Mathematical color derivation**: Only base OKLCH values defined; all variants auto-calculated
 
-Example: `BlogPostListItem.astro` uses `<li><article><h2><a>` with zero styling classes — all styled via element selectors in [src/styles/base.css](src/styles/base.css).
+Example: [BlogPostListItem.astro](src/components/BlogPostListItem.astro) uses `<li><article><h2><a>` with zero styling classes.
 
-**When classes ARE used**:
+**IDs vs Classes vs Element Selectors**:
 
-- **Functional requirements**: PhotoGallery grid classes for layout engine
-- **External libraries**: PhotoSwipe, Natural Sticky state classes
-- **Optional styling**: Pass-through `className` prop for consumer control
+- **IDs**: Unique structural elements (`#navbar`, `#footer`) — replaces fragile selectors like `body > header`, `main > ul`
+- **Contextual selectors**: `article h2`, `nav ul` — same element styled differently in different contexts
+- **Classes**: Layout requirements (PhotoGallery), external libraries (PhotoSwipe), optional styling overrides
 
 ### File Organization
 

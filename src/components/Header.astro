@@ -5,7 +5,7 @@ import SearchButton from "./SearchButton.astro"
 import SearchModal from "./SearchModal.astro"
 ---
 
-<header>
+<header id="navbar">
   <Logo />
   <nav aria-label="Main navigation">
     <!-- Simple navigation list -->
@@ -21,8 +21,8 @@ import SearchModal from "./SearchModal.astro"
   import { naturalStickyTop } from "natural-sticky"
 
   // Apply natural sticky behavior to the header
-  const header = document.querySelector("header")
+  const header = document.getElementById("navbar") as HTMLElement
   if (header) {
-    naturalStickyTop(header, { scrollThreshold: 7 })
+    naturalStickyTop(header, { snapEagerness: 2 })
   }
 </script>

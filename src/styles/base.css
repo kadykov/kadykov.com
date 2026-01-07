@@ -104,6 +104,29 @@
  * 
  * No fallbacks are provided for older browsers. Sites using this stylesheet
  * should detect browser capabilities and show an upgrade notice if needed.
+ * 
+ * STYLING APPROACH:
+ * =================
+ * Semantic HTML with element-based styling minimizes the need for classes:
+ * 
+ * 1. IDs for Unique Structural Elements
+ *    - Used when an element appears once per page (#navbar, #hero, #footer)
+ *    - Benefits: Semantic uniqueness, anchor links, JavaScript targeting
+ *    - Replaces fragile structural selectors (body > footer, main > header)
+ * 
+ * 2. Contextual Element Styling
+ *    - Elements styled differently based on container (article h2, nav ul)
+ *    - article: Optimized for long-form reading with enhanced typography
+ *    - nav ul: Horizontal flex layout for navigation lists and tags
+ *    - Semantic HTML reduces class usage since elements convey meaning
+ * 
+ * 3. Classes for Specific Purposes
+ *    - Layout requirements (PhotoGallery grid positioning)
+ *    - External library integration (PhotoSwipe, Natural Sticky state classes)
+ *    - Optional styling overrides (className pass-through props)
+ * 
+ * This approach prioritizes semantic HTML and contextual styling while using
+ * IDs and classes purposefully rather than avoiding them dogmatically.
  */
 
 /*
@@ -1003,12 +1026,9 @@ h2 {
   line-height: 1.1;
   font-weight: 320;
   margin-block: 0.5em;
-
-  /* border-top: 0.1em solid var(--color-primary); */
 }
 
 /* h3 styles */
-main > header p,
 h3 {
   font-size: 1.8rem;
   line-height: 1.2;
@@ -1024,7 +1044,7 @@ h4 {
   line-height: 1.3;
 }
 
-main > article {
+article {
   /*
    * Paper-like article container with coordinated width and padding:
    * 
@@ -1054,8 +1074,8 @@ main > article {
   box-shadow: var(--elevation-1);
 }
 
-main > figure,
-main > article {
+#photo,
+article {
   /* Use serif font for article body text for better readability */
   font-family: var(--font-serif);
 
@@ -1064,8 +1084,7 @@ main > article {
 }
 
 /* Accent links in articles with higher contrast */
-article a,
-main > figure a {
+article a {
   color: var(--color-on-surface-high);
   font-weight: 500;
 }
@@ -1165,6 +1184,18 @@ article figcaption {
   font-style: italic;
 }
 
+/* Horizontal Rule - Material Design divider styling */
+article hr {
+  width: 70%;
+  border-style: solid; /* Required for the WebKit browsers */
+  border-width: 0 0.5rem 0.15rem 0;
+  border-color: var(--color-primary);
+  height: 0.55rem;
+  background-color: inherit;
+  margin-inline: auto -0.5rem;
+  padding: 0;
+}
+
 /* Surface block containers */
 pre,
 blockquote,
@@ -1257,21 +1288,8 @@ kbd {
   font-size: 0.9em;
 }
 
-/* Horizontal Rule - Material Design divider styling */
-article hr {
-  width: 70%;
-  border-style: solid; /* Required for the WebKit browsers */
-  border-width: 0 0.5rem 0.15rem 0;
-  border-color: var(--color-primary);
-  height: 0.55rem;
-  background-color: inherit;
-  margin-inline: auto -0.5rem;
-  padding: 0;
-}
-
 /* List Elements - Subdued markers for better content hierarchy */
-ul > li::marker,
-ol > li::marker {
+li::marker {
   color: var(--color-primary);
   font-family: var(--font-sans);
   font-weight: 550;
@@ -1331,427 +1349,34 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* All navigation inside headers are horizontal */
+/* All navigation unordered lists are horizontal */
 nav ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
   padding-inline: 0;
+  justify-content: center;
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-h4);
 }
 
-/* Photo gallery - CSS Grid masonry with known aspect ratios */
-main > ul {
-  list-style: none;
-  display: grid;
-
-  /* Responsive columns - adjust minmax for desired density */
-  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1.5rem;
-  padding: var(--spacing-adaptive);
-
-  /* There is no horizontal limit, the masonry grid fills all available space */
-
-  /* Center items vertically within their grid areas */
-  align-items: center;
-}
-
-/* Hero section */
-main > nav ul,
-main > header ul {
-  justify-content: center;
-}
-
-/* Navigation bar */
-body > header ul {
-  justify-content: flex-end;
-}
-
-body > header,
-main > header {
-  color: var(--color-on-primary-container);
-  box-shadow: var(--elevation-2);
-
-  /* In combination with z-index, ensures the shadow appears above other content */
-  position: relative;
-
-  /* Flexbox layout with centered content */
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  /* Limit the content width inside the header to 42rem */
-  padding-inline: max(1rem, (100% - 42rem) / 2);
-}
-
-/* Navbar styles */
-body > header {
-  /* Fixed position at the top of the document */
-  top: 0;
-
-  /* Ensures the shadow appears above other content */
-  z-index: 2;
-
-  /* Spread out logo and nav items */
-  justify-content: space-between;
-
-  /* Gap between logo and nav */
-  gap: 1rem;
-
-  /* Use solid primary container compared to gradient in hero for performance */
-  background-color: var(--color-primary-container);
-}
-
-/* Hero header */
-main > header {
-  /* Centered content with vertical stacking */
-  flex-direction: column;
-  justify-content: center;
-
-  /* Generous vertical padding for spacious hero section */
-  padding-block: 3rem;
-
-  /* Ensure the shadow appears above other content */
-  z-index: 1;
-
-  /* Keep the original gradient background */
-  background: var(--bg-primary-container);
-
-  /* Required for pseudo-element positioning */
-  position: relative;
-}
-
-/* Subtitle styles in hero header */
-main > header p {
-  font-family: var(--font-serif);
-  font-style: italic;
-}
-
-/* Logo size in the header */
-body > header svg {
-  /*
-   * By default, SVGs can be treated as inline elements, which can cause
-   * unexpected extra space below them due to baseline alignment. Setting
-   * display to "block" removes this behavior and ensures the element's
-   * bounds match its visual appearance, fixing vertical alignment issues
-   * within flex containers.
-   */
-  display: block;
-  height: 2.2rem;
-  width: auto;
-
-  /* USE border-radius: 50%; for round logo */
-  border-radius: 0.2rem;
-}
-
-/* Blog post index - vertical stack with ordered list */
-main > ol {
-  list-style: none;
-  max-width: 42rem;
-  margin: 0 auto;
-  padding: var(--spacing-adaptive);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-adaptive);
-}
-
-/* Blog post cards in vertical layout - text only, no images */
-main > ol article {
-  background-color: var(--color-surface);
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
-  transition: box-shadow var(--transition);
-  padding: var(--spacing-adaptive);
-  font-family: var(--font-serif);
-  font-weight: 450;
-}
-
-main > ol article:hover {
-  box-shadow: var(--elevation-3);
-}
-
-/* Single photo page - Polaroid-style figure as direct child of main */
-main > figure {
-  margin: 0;
-  width: 100%;
-}
-
-/* Image sizing: fit within viewport while maintaining aspect ratio */
-main > figure img {
-  display: block;
-  margin: 0 auto;
-  border-radius: 0.2rem;
-
-  /* Inner border: thin light gray for separation from off-white border */
-  padding: 0.1rem;
-  background-color: oklch(92% 0 0deg);
-
-  /* Outer border: percentage-based for easy sizes calculation (Polaroid aesthetic)
-   * Horizontal borders: 5vw each side
-   * Vertical borders: 5vh each side
-   * This creates asymmetric but proportional borders that scale with viewport
-   */
-  border-width: 5vh 5vw;
-  border-style: solid;
-  border-color: oklch(95% 0 0deg);
-
-  /* 
-   * Maintain aspect ratio while constraining to viewport dimensions
-   * 
-   * The image has intrinsic dimensions from width/height attributes.
-   * With width: auto and height: auto, it tries to render at intrinsic size,
-   * but max-width and max-height constrain it to fit within the viewport.
-   * 
-   * Using 100% instead of 100vw avoids scrollbar width issues.
-   * Border and padding are included in dimensions via box-sizing: border-box.
-   * 
-   * The browser automatically scales down maintaining aspect ratio when
-   * either constraint is exceeded.
-   */
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  box-shadow: var(--elevation-3);
-}
-
-/* Figcaption contains title, description, and metadata */
-main > figure figcaption {
-  max-width: 42rem;
-  width: fit-content;
-  margin: 0 auto;
-  padding: 0 1rem;
-  color: var(--color-on-surface-variant);
-}
-
-/* Description paragraph */
-main > figure p {
-  font-family: var(--font-serif);
-}
-
 /* Metadata definition list */
-main > figure dl {
+dl {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
 }
 
-main > figure dt {
+dt {
   text-align: right;
 }
 
-/* === Grid Layout Classes === */
-
-/* These control how much space the card occupies on the grid */
-
-/* Grid layout: Landscape cards - wider span */
-main > ul .grid-landscape {
-  grid-row: span 2;
-  grid-column: span 3;
-}
-
-/* Grid layout: Square cards - balanced span */
-main > ul .grid-square {
-  grid-row: span 2;
-  grid-column: span 2;
-}
-
-/* Grid layout: Portrait cards - taller span */
-main > ul .grid-portrait {
-  grid-row: span 3;
-  grid-column: span 2;
-}
-
-/*
- * Polaroid-Style Photo Cards with Perceptual White Balance Strategy
- * 
- * Design Goal: Create photo cards that look like physical Polaroid prints with
- * white borders that serve both aesthetic and functional purposes.
- * 
- * WHY NOT USE GENERATED OKLCH COLORS HERE?
- * 
- * Unlike the rest of the site, these cards use fixed off-white colors (90-95%
- * lightness) that don't change with the theme. This intentional deviation from
- * the global color system serves multiple purposes:
- * 
- * 1. Polaroid Visual Aesthetic
- *    Physical Polaroid prints have white borders that don't change based on
- *    ambient lighting. This fixed white border creates an authentic tactile
- *    feeling and makes photos look like physical objects rather than digital
- *    elements that adapt to the theme.
- * 
- * 2. White Balance Reference Point
- *    The fixed off-white border provides a consistent white balance reference
- *    for the viewer's eye. When viewing photos:
- *    
- *    a) Under non-ideal ambient lighting (warm/cool room lighting):
- *       - Both the photo and border will be affected by the same color cast
- *       - The human visual system will use the "white" border as a reference
- *       - This recalibrates perception, making the photo colors appear more accurate
- *    
- *    b) On displays with incorrect white balance:
- *       - The entire image + border shifts together
- *       - The viewer's eye adapts using the border as the "white" anchor
- *       - This compensates for display calibration issues
- * 
- * 3. Perceptual Contrast Boost
- *    The border uses 90-95% white instead of pure 100% white. Combined with
- *    the deliberately darker, desaturated background (see data-page-type
- *    overrides above), this creates a perceptual contrast enhancement:
- *    
- *    - The viewer's eye perceives the border as "pure white" in context
- *    - Any 100% white elements in the photo itself appear even brighter
- *    - This increases the perceived dynamic range of the photos
- *    - Black elements appear deeper against the bright border
- * 
- * 4. Coordination with Page Background
- *    Pages with data-page-type="photo-gallery" have:
- *    - Darker background (surface-l: 0.85 in light mode)
- *    - Zero chroma (surface-c: 0) to avoid color cast interference
- *    
- *    This creates a viewing environment similar to a photo mat or gallery wall
- *    where the darker surround makes the bright photo borders "pop" visually.
- * 
- * Technical Implementation:
- * - Light theme: 95% lightness border
- * - Dark theme: 90% lightness border (maintains contrast difference)
- * - Zero chroma (0) ensures pure neutral gray-white
- * - Zero hue (0deg) becomes irrelevant with zero chroma
- * 
- * Note: These design principles may be expanded into a blog post about the
- * site's visual design system.
- */
-
-/* Figure container fills anchor and positions caption relative to image */
-main > ul figure {
-  margin: 0;
-
-  /* Polaroid-style card: white background with shadow and rounded corners */
-  border-radius: 0.2rem;
-  box-shadow: var(--elevation-2);
-
-  /* Fixed off-white background - NOT theme-adaptive (see explanation above) */
-  background-color: oklch(95% 0 0deg);
-
-  /* Base padding around image (will be overridden for caption sides) */
-  padding: 0.5rem;
-
-  /* Prepare outline for focus-visible state (applied to figure because it sits on top of the link) */
-
-  /* outline: 0.1lh solid transparent;
-  outline-offset: 0.2lh; */
-
-  /* Smooth transitions for hover effects */
-  transition:
-    box-shadow var(--transition),
-    scale var(--transition),
-    rotate var(--transition),
-    outline-color var(--transition),
-    outline-offset var(--transition);
-}
-
-/* === Caption Placement Classes === */
-
-/* These control padding to accommodate captions at different positions */
-
-/* Caption placement: Bottom (for landscape and square-ish photos) */
-.caption-bottom figure {
-  padding-bottom: 2rem;
-}
-
-/* Caption placement: Side (for portrait photos) */
-.caption-side figure {
-  padding-left: 2rem;
-}
-
-/* Image fills available space with no extra styling */
-main > ul img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 0.2rem;
-
-  /* Border around image to separate from white border */
-  border: 0.1rem solid oklch(92% 0 0deg);
-}
-
-/*
- * Photo Caption Styling - Fixed Dark Gray on White
- * 
- * Like the border background, the caption color is intentionally NOT derived
- * from the global OKLCH color system. This fixed dark gray (45% lightness)
- * maintains the Polaroid aesthetic where captions are handwritten or printed
- * in dark ink on the white border.
- * 
- * Design rationale:
- * - Provides strong, consistent contrast against the 90-95% white border
- * - Doesn't change with theme, maintaining the "physical object" illusion
- * - Zero chroma keeps it neutral to avoid competing with photo colors
- * - 45% lightness is dark enough to be easily readable but not harsh
- */
-
-/* Caption base styles - always visible, single line with ellipsis */
-main > ul figcaption {
-  position: absolute;
-  font-size: 0.85rem;
-  font-family: var(--font-mono);
-  letter-spacing: -0.02em;
-  font-weight: 550;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-
-  /* Fixed dark gray - NOT theme-adaptive (see explanation above) */
-  color: oklch(45% 0 0deg);
-}
-
-/* === Caption Positioning Classes === */
-
-/* These control where the caption appears within the figure */
-
-/* Caption positioning: Bottom */
-.caption-bottom figcaption {
-  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
-  bottom: 0.5rem;
-  left: 0.6rem;
-  right: 0.6rem; /* This constrains the width for ellipsis to work */
-
-  /* Trim text that overflows horizontally, but allow vertical overflow */
-  overflow-x: clip;
-}
-
-/* Caption positioning: Side (rotated 90 degrees) */
-.caption-side figcaption {
-  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
-  top: 0.6rem;
-  left: 0.5rem;
-  bottom: 0.6rem; /* This constrains the height (becomes width in vertical mode) */
-
-  /* Trim text that overflows vertically, but allow horizontal overflow */
-  overflow-y: clip;
-
-  /* Rotate text 90 degrees: vertical-rl makes text flow from top to bottom */
-  writing-mode: vertical-rl;
-}
-
-/* Hover effect: scale entire figure (image + caption together) and increase shadow */
-main > ul figure:hover,
-main > ul a:focus-visible figure {
-  scale: 1.02;
-  rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
-  box-shadow: var(--elevation-3);
-}
-
 /* Pagination navigation - centered in main */
-main > nav {
-  margin-block: 3rem;
+nav {
   text-align: center;
   max-width: 42rem;
   margin-inline: auto;
-  padding: 0 1rem;
 }
 
 nav span[aria-current="page"] {
@@ -1777,12 +1402,12 @@ article time {
 }
 
 /*
- * Form as Direct Child of Main - Contact Form Pattern
- * 
+ * Form Styling
+ *
  * Design: Forms that appear as direct children of main are styled as
  * clean interactive cards with generous spacing and clear hierarchy.
  */
-main > form {
+form {
   /* Centered with comfortable max-width */
   max-width: 32rem;
   margin: 0 auto;
@@ -1800,88 +1425,33 @@ main > form {
   font-size: 1.2rem;
 }
 
-/* Page footer styles */
+/*
+ * PhotoSwipe Caption Styling
+ * 
+ * Design goals:
+ * - Lower luminosity to reduce distraction from photos
+ * - Compact layout to prevent image shrinking
+ * - Semantic HTML with minimal classes
+ * - Align with site's typography system
+ */
 
-body > footer {
-  /* Theme-aware muted background */
-  background-color: var(--color-surface-container-highest);
-  color: var(--color-on-surface-variant);
+/* Caption container - semantic figcaption element */
+.pswp__dynamic-caption h4,
+.pswp__dynamic-caption p {
+  margin: 0;
 
-  /* Inner shadow on top using Material Design elevation */
-  box-shadow: inset 0 4px 6px -2px
-    hsl(0deg 0% var(--shadow-lightness) / var(--shadow-alpha-2));
-
-  /* Layout - flex with wrapping to allow nav elements to sit side-by-side */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  padding: 3rem var(--spacing-adaptive);
-  margin-top: 3rem;
-
-  /* Limit the content width inside the header to 42rem */
-  padding-inline: max(1rem, (100% - 42rem) / 2);
-
-  /*
-   * Fibonacci Pattern Background for Footer
-   * 
-   * The footer is an ideal candidate for the full-opacity pattern because:
-   * - It's visually separated from other content
-   * - No gradient blending needed with adjacent elements
-   * - The muted background color works well with the subtle texture
-   * 
-   * Unlike the hero section, we apply the pattern at full opacity without
-   * any gradient mask, creating consistent texture across the entire footer.
-   */
-  background-image: var(--bg-pattern);
-  background-size: var(--bg-pattern-size);
-  background-repeat: repeat;
+  /* Reduced brightness - less distracting on black background */
+  color: oklch(75% 0 0deg);
 }
 
-body > footer h2 {
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-h4);
+/* Metadata paragraph - tags, time, and details link */
+.pswp__dynamic-caption p {
+  font-family: var(--font-serif);
 }
 
-/* Footer logo and paragraphs span full width */
-body > footer svg,
-body > footer p {
-  flex-basis: 100%;
-}
-
-/* Logo styling - centered at top of footer */
-body > footer svg {
-  margin: 0 auto;
-  height: 2.2rem;
-  width: auto;
-}
-
-/* Footer paragraphs - centered text, full width */
-body > footer p {
-  text-align: center;
-}
-
-/* Navigation blocks - horizontal layout with wrapping */
-body > footer nav {
-  /* Each nav is a vertical stack */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  /* Allow navs to grow and shrink, with minimum width */
-  flex: 1 1 8rem;
-  min-width: 8rem;
-}
-
-/* Navigation lists - vertical stack */
-body > footer ul {
-  flex-direction: column;
-  gap: 0;
-
-  /* Reset font size and weight for footer nav links, since by default they are h4-styled */
-  font-size: 1rem;
-  font-weight: 400;
+/* Links in caption - subtle styling */
+.pswp__dynamic-caption a {
+  color: inherit;
 }
 
 /* Button-like elements and floating nav links */
@@ -1992,8 +1562,467 @@ a[rel="next"] {
 
 a[rel="prev"] svg,
 a[rel="next"] svg {
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* Individual element styles */
+
+/* Blog post index - vertical stack with ordered list */
+#blog-posts {
+  list-style: none;
+  padding: var(--spacing-adaptive);
+}
+
+/* Blog post cards in vertical layout - text only, no images */
+#blog-posts article {
+  transition: box-shadow var(--transition);
+}
+
+#blog-posts article:hover {
+  box-shadow: var(--elevation-3);
+}
+
+/* Logo size in the header */
+#logo svg {
+  /*
+   * By default, SVGs can be treated as inline elements, which can cause
+   * unexpected extra space below them due to baseline alignment. Setting
+   * display to "block" removes this behavior and ensures the element's
+   * bounds match its visual appearance, fixing vertical alignment issues
+   * within flex containers.
+   */
+  display: block;
+  height: 2.2rem;
+  width: auto;
+
+  /* USE border-radius: 50%; for round logo */
+  border-radius: 0.2rem;
+}
+
+/* Navigation bar */
+#navbar ul {
+  justify-content: flex-end;
+}
+
+#navbar nav {
+  margin: 0;
+}
+
+#navbar,
+#hero {
+  color: var(--color-on-primary-container);
+  box-shadow: var(--elevation-2);
+
+  /* In combination with z-index, ensures the shadow appears above other content */
+  position: relative;
+
+  /* Flexbox layout with centered content */
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  /* Limit the content width inside the header to 42rem */
+  padding-inline: max(1rem, (100% - 42rem) / 2);
+}
+
+/* Navbar styles */
+#navbar {
+  /* Fixed position at the top of the document */
+  top: 0;
+
+  /* Ensures the shadow appears above other content */
+  z-index: 2;
+
+  /* Spread out logo and nav items */
+  justify-content: space-between;
+
+  /* Gap between logo and nav */
+  gap: 1rem;
+
+  /* Use solid primary container compared to gradient in hero for performance */
+  background-color: var(--color-primary-container);
+}
+
+/* Hero header */
+#hero {
+  /* Centered content with vertical stacking */
+  flex-direction: column;
+  justify-content: center;
+
+  /* Generous vertical padding for spacious hero section */
+  padding-block: 3rem;
+
+  /* Ensure the shadow appears above other content */
+  z-index: 1;
+
+  /* Keep the original gradient background */
+  background: var(--bg-primary-container);
+
+  /* Required for pseudo-element positioning */
+  position: relative;
+}
+
+/* Single photo page - Polaroid-style figure with #photo ID */
+#photo {
+  margin: 0;
+  width: 100%;
+}
+
+/* Image sizing: fit within viewport while maintaining aspect ratio */
+#photo img {
+  display: block;
+  margin: 0 auto;
+  border-radius: 0.2rem;
+
+  /* Inner border: thin light gray for separation from off-white border */
+  padding: 0.1rem;
+  background-color: oklch(92% 0 0deg);
+
+  /* Outer border: percentage-based for easy sizes calculation (Polaroid aesthetic)
+   * Horizontal borders: 5vw each side
+   * Vertical borders: 5vh each side
+   * This creates asymmetric but proportional borders that scale with viewport
+   */
+  border-width: 5vh 5vw;
+  border-style: solid;
+  border-color: oklch(95% 0 0deg);
+
+  /* 
+   * Maintain aspect ratio while constraining to viewport dimensions
+   * 
+   * The image has intrinsic dimensions from width/height attributes.
+   * With width: auto and height: auto, it tries to render at intrinsic size,
+   * but max-width and max-height constrain it to fit within the viewport.
+   * 
+   * Using 100% instead of 100vw avoids scrollbar width issues.
+   * Border and padding are included in dimensions via box-sizing: border-box.
+   * 
+   * The browser automatically scales down maintaining aspect ratio when
+   * either constraint is exceeded.
+   */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: var(--elevation-3);
+}
+
+/* Figcaption contains title, description, and metadata */
+#photo figcaption {
+  max-width: 42rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: var(--color-on-surface-variant);
+}
+
+#photo a {
+  color: var(--color-on-surface-high);
+  font-weight: 500;
+}
+
+/* Photo gallery - CSS Grid masonry with known aspect ratios */
+#gallery {
+  list-style: none;
+  display: grid;
+
+  /* Responsive columns - adjust minmax for desired density */
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1.5rem;
+  padding: var(--spacing-adaptive);
+
+  /* There is no horizontal limit, the masonry grid fills all available space */
+
+  /* Center items vertically within their grid areas */
+  align-items: center;
+}
+
+/* === Grid Layout Classes === */
+
+/* These control how much space the card occupies on the grid */
+
+/* Grid layout: Landscape cards - wider span */
+#gallery .grid-landscape {
+  grid-row: span 2;
+  grid-column: span 3;
+}
+
+/* Grid layout: Square cards - balanced span */
+#gallery .grid-square {
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+/* Grid layout: Portrait cards - taller span */
+#gallery .grid-portrait {
+  grid-row: span 3;
+  grid-column: span 2;
+}
+
+/*
+ * Polaroid-Style Photo Cards with Perceptual White Balance Strategy
+ * 
+ * Design Goal: Create photo cards that look like physical Polaroid prints with
+ * white borders that serve both aesthetic and functional purposes.
+ * 
+ * WHY NOT USE GENERATED OKLCH COLORS HERE?
+ * 
+ * Unlike the rest of the site, these cards use fixed off-white colors (90-95%
+ * lightness) that don't change with the theme. This intentional deviation from
+ * the global color system serves multiple purposes:
+ * 
+ * 1. Polaroid Visual Aesthetic
+ *    Physical Polaroid prints have white borders that don't change based on
+ *    ambient lighting. This fixed white border creates an authentic tactile
+ *    feeling and makes photos look like physical objects rather than digital
+ *    elements that adapt to the theme.
+ * 
+ * 2. White Balance Reference Point
+ *    The fixed off-white border provides a consistent white balance reference
+ *    for the viewer's eye. When viewing photos:
+ *    
+ *    a) Under non-ideal ambient lighting (warm/cool room lighting):
+ *       - Both the photo and border will be affected by the same color cast
+ *       - The human visual system will use the "white" border as a reference
+ *       - This recalibrates perception, making the photo colors appear more accurate
+ *    
+ *    b) On displays with incorrect white balance:
+ *       - The entire image + border shifts together
+ *       - The viewer's eye adapts using the border as the "white" anchor
+ *       - This compensates for display calibration issues
+ * 
+ * 3. Perceptual Contrast Boost
+ *    The border uses 90-95% white instead of pure 100% white. Combined with
+ *    the deliberately darker, desaturated background (see data-page-type
+ *    overrides above), this creates a perceptual contrast enhancement:
+ *    
+ *    - The viewer's eye perceives the border as "pure white" in context
+ *    - Any 100% white elements in the photo itself appear even brighter
+ *    - This increases the perceived dynamic range of the photos
+ *    - Black elements appear deeper against the bright border
+ * 
+ * 4. Coordination with Page Background
+ *    Pages with data-page-type="photo-gallery" have:
+ *    - Darker background (surface-l: 0.85 in light mode)
+ *    - Zero chroma (surface-c: 0) to avoid color cast interference
+ *    
+ *    This creates a viewing environment similar to a photo mat or gallery wall
+ *    where the darker surround makes the bright photo borders "pop" visually.
+ * 
+ * Technical Implementation:
+ * - Light theme: 95% lightness border
+ * - Dark theme: 90% lightness border (maintains contrast difference)
+ * - Zero chroma (0) ensures pure neutral gray-white
+ * - Zero hue (0deg) becomes irrelevant with zero chroma
+ * 
+ * Note: These design principles may be expanded into a blog post about the
+ * site's visual design system.
+ */
+
+/* Figure container fills anchor and positions caption relative to image */
+#gallery figure {
+  margin: 0;
+
+  /* Polaroid-style card: white background with shadow and rounded corners */
+  border-radius: 0.2rem;
+  box-shadow: var(--elevation-2);
+
+  /* Fixed off-white background - NOT theme-adaptive (see explanation above) */
+  background-color: oklch(95% 0 0deg);
+
+  /* Base padding around image (will be overridden for caption sides) */
+  padding: 0.5rem;
+
+  /* Prepare outline for focus-visible state (applied to figure because it sits on top of the link) */
+
+  /* outline: 0.1lh solid transparent;
+  outline-offset: 0.2lh; */
+
+  /* Smooth transitions for hover effects */
+  transition:
+    box-shadow var(--transition),
+    scale var(--transition),
+    rotate var(--transition),
+    outline-color var(--transition),
+    outline-offset var(--transition);
+}
+
+/* === Caption Placement Classes === */
+
+/* These control padding to accommodate captions at different positions */
+
+/* Caption placement: Bottom (for landscape and square-ish photos) */
+#gallery .caption-bottom figure {
+  padding-bottom: 2rem;
+}
+
+/* Caption placement: Side (for portrait photos) */
+#gallery .caption-side figure {
+  padding-left: 2rem;
+}
+
+/* Image fills available space with no extra styling */
+#gallery img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0.2rem;
+
+  /* Border around image to separate from white border */
+  border: 0.1rem solid oklch(92% 0 0deg);
+}
+
+/*
+ * Photo Caption Styling - Fixed Dark Gray on White
+ * 
+ * Like the border background, the caption color is intentionally NOT derived
+ * from the global OKLCH color system. This fixed dark gray (45% lightness)
+ * maintains the Polaroid aesthetic where captions are handwritten or printed
+ * in dark ink on the white border.
+ * 
+ * Design rationale:
+ * - Provides strong, consistent contrast against the 90-95% white border
+ * - Doesn't change with theme, maintaining the "physical object" illusion
+ * - Zero chroma keeps it neutral to avoid competing with photo colors
+ * - 45% lightness is dark enough to be easily readable but not harsh
+ */
+
+/* Caption base styles - always visible, single line with ellipsis */
+#gallery figcaption {
+  position: absolute;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+  font-weight: 550;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+
+  /* Fixed dark gray - NOT theme-adaptive (see explanation above) */
+  color: oklch(45% 0 0deg);
+}
+
+/* === Caption Positioning Classes === */
+
+/* These control where the caption appears within the figure */
+
+/* Caption positioning: Bottom */
+#gallery .caption-bottom figcaption {
+  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
+  bottom: 0.5rem;
+  left: 0.6rem;
+  right: 0.6rem; /* This constrains the width for ellipsis to work */
+
+  /* Trim text that overflows horizontally, but allow vertical overflow */
+  overflow-x: clip;
+}
+
+/* Caption positioning: Side (rotated 90 degrees) */
+#gallery .caption-side figcaption {
+  /* Figure padding 0.5rem + image border 0.1rem = 0.6rem offset */
+  top: 0.6rem;
+  left: 0.5rem;
+  bottom: 0.6rem; /* This constrains the height (becomes width in vertical mode) */
+
+  /* Trim text that overflows vertically, but allow horizontal overflow */
+  overflow-y: clip;
+
+  /* Rotate text 90 degrees: vertical-rl makes text flow from top to bottom */
+  writing-mode: vertical-rl;
+}
+
+/* Hover effect: scale entire figure (image + caption together) and increase shadow */
+#gallery figure:hover,
+#gallery a:focus-visible figure {
+  scale: 1.02;
+  rotate: 0deg !important; /* Straighten the card on hover - important needed to override inline styles */
+  box-shadow: var(--elevation-3);
+}
+
+/* Page footer styles */
+
+#footer {
+  /* Theme-aware muted background */
+  background-color: var(--color-surface-container-highest);
+  color: var(--color-on-surface-variant);
+
+  /* Inner shadow on top using Material Design elevation */
+  box-shadow: inset 0 4px 6px -2px
+    hsl(0deg 0% var(--shadow-lightness) / var(--shadow-alpha-2));
+
+  /* Layout - flex with wrapping to allow nav elements to sit side-by-side */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem var(--spacing-adaptive);
+  margin-top: 3rem;
+
+  /* Limit the content width inside the header to 42rem */
+  padding-inline: max(1rem, (100% - 42rem) / 2);
+
+  /*
+   * Fibonacci Pattern Background for Footer
+   * 
+   * The footer is an ideal candidate for the full-opacity pattern because:
+   * - It's visually separated from other content
+   * - No gradient blending needed with adjacent elements
+   * - The muted background color works well with the subtle texture
+   * 
+   * Unlike the hero section, we apply the pattern at full opacity without
+   * any gradient mask, creating consistent texture across the entire footer.
+   */
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
+  background-repeat: repeat;
+}
+
+#footer h2 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-h4);
+}
+
+/* Footer logo and paragraphs span full width */
+#footer svg,
+#footer p {
+  flex-basis: 100%;
+}
+
+/* Logo styling - centered at top of footer */
+#footer svg {
+  margin: 0 auto;
+  height: 2.2rem;
+  width: auto;
+}
+
+/* Footer paragraphs - centered text, full width */
+#footer p {
+  text-align: center;
+}
+
+/* Navigation blocks - horizontal layout with wrapping */
+#footer nav {
+  /* Each nav is a vertical stack */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  /* Allow navs to grow and shrink, with minimum width */
+  flex: 1 1 8rem;
+  min-width: 8rem;
+}
+
+/* Navigation lists - vertical stack */
+#footer ul {
+  flex-direction: column;
+  gap: 0;
+
+  /* Reset font size and weight for footer nav links, since by default they are h4-styled */
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 /* Hover and active states */
@@ -2011,7 +2040,7 @@ a[rel="next"]:hover,
 /* Use the same focus-visible style for keyboard navigation */
 a:focus-visible,
 button:not(:disabled):focus-visible,
-main > ul a:focus-visible figure {
+#gallery a:focus-visible figure {
   outline-color: var(--color-accent);
   outline-offset: 0.1lh;
 }
@@ -2063,42 +2092,23 @@ textarea:user-invalid {
   color: var(--color-on-accent-container);
 }
 
-/*
- * PhotoSwipe Caption Styling
- * 
- * Design goals:
- * - Lower luminosity to reduce distraction from photos
- * - Compact layout to prevent image shrinking
- * - Semantic HTML with minimal classes
- * - Align with site's typography system
- */
-
-/* Caption container - semantic figcaption element */
-.pswp__dynamic-caption h4,
-.pswp__dynamic-caption p {
-  margin: 0;
-
-  /* Reduced brightness - less distracting on black background */
-  color: oklch(75% 0 0deg);
-}
-
-/* Metadata paragraph - tags, time, and details link */
-.pswp__dynamic-caption p {
-  font-family: var(--font-serif);
-}
-
-/* Links in caption - subtle styling */
-.pswp__dynamic-caption a {
-  color: inherit;
-}
-
-/* Remove our custom outline */
+/* Remove our custom outline for PhotoSwipe buttons */
 .pswp button:hover {
   outline-color: transparent;
 }
 
 .pswp__dynamic-caption a:active {
   color: var(--color-on-accent);
+}
+
+/* Subtitle styles in hero header - placed after all similar specificity selectors */
+#hero p {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-weight: 370;
+  margin-block: 0.7em;
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
 /* Photo Gallery Color Theme Overrides */
@@ -2134,17 +2144,17 @@ textarea:user-invalid {
 }
 
 @media (prefers-color-scheme: dark) {
-  main > ul figure {
+  #gallery figure {
     /* Slightly darker off-white for dark theme - still provides white balance reference */
     background-color: oklch(90% 0 0deg);
   }
 
-  main > ul img {
+  #gallery img {
     /* Darken border slightly in dark mode for better contrast */
     border-color: oklch(87% 0 0deg);
   }
 
-  main > figure img {
+  #photo img {
     /* Darken inner border for better contrast in dark theme */
     background-color: oklch(87% 0 0deg);
 
@@ -2174,9 +2184,9 @@ textarea:user-invalid {
   textarea,
   input,
   td,
-  body > header svg,
-  main > ol article,
-  main > ul figure {
+  #navbar svg,
+  #blog-posts article,
+  #gallery figure {
     transition: none;
   }
 
