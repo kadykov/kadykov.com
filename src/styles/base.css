@@ -1350,12 +1350,10 @@ dt {
 }
 
 /* Pagination navigation - centered in main */
-main > nav {
-  margin-block: 3rem;
+nav {
   text-align: center;
   max-width: 42rem;
   margin-inline: auto;
-  padding: 0 1rem;
 }
 
 nav span[aria-current="page"] {
@@ -1582,6 +1580,10 @@ a[rel="next"] svg {
 /* Navigation bar */
 #navbar ul {
   justify-content: flex-end;
+}
+
+#navbar nav {
+  margin: 0;
 }
 
 #navbar,
