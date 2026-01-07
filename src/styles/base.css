@@ -104,6 +104,29 @@
  * 
  * No fallbacks are provided for older browsers. Sites using this stylesheet
  * should detect browser capabilities and show an upgrade notice if needed.
+ * 
+ * STYLING APPROACH:
+ * =================
+ * Semantic HTML with element-based styling minimizes the need for classes:
+ * 
+ * 1. IDs for Unique Structural Elements
+ *    - Used when an element appears once per page (#navbar, #hero, #footer)
+ *    - Benefits: Semantic uniqueness, anchor links, JavaScript targeting
+ *    - Replaces fragile structural selectors (body > footer, main > header)
+ * 
+ * 2. Contextual Element Styling
+ *    - Elements styled differently based on container (article h2, nav ul)
+ *    - article: Optimized for long-form reading with enhanced typography
+ *    - nav ul: Horizontal flex layout for navigation lists and tags
+ *    - Semantic HTML reduces class usage since elements convey meaning
+ * 
+ * 3. Classes for Specific Purposes
+ *    - Layout requirements (PhotoGallery grid positioning)
+ *    - External library integration (PhotoSwipe, Natural Sticky state classes)
+ *    - Optional styling overrides (className pass-through props)
+ * 
+ * This approach prioritizes semantic HTML and contextual styling while using
+ * IDs and classes purposefully rather than avoiding them dogmatically.
  */
 
 /*
