@@ -1717,6 +1717,11 @@ a[rel="next"] svg {
   color: var(--color-on-surface-variant);
 }
 
+#photo a {
+  color: var(--color-on-surface-high);
+  font-weight: 500;
+}
+
 /* Photo gallery - CSS Grid masonry with known aspect ratios */
 #gallery {
   list-style: none;
