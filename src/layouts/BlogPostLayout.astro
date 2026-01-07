@@ -62,7 +62,7 @@ const hasCodeBlocks = slotContent.includes("<pre")
     }
   </Hero>
 
-  <Fragment set:html={slotContent} />
+  <Fragment set:html={slotContent} data-pagefind-body />
 
   <footer>
     <time datetime={pubDate.toISOString()}>

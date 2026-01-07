@@ -5,6 +5,7 @@ import mdx from "@astrojs/mdx"
 import playformCompress from "@playform/compress"
 import markdoc from "@astrojs/markdoc"
 import react from "@astrojs/react"
+import pagefind from "astro-pagefind"
 import opengraph from "./src/integrations/opengraph"
 import { addCopyButton } from "./src/config/shiki-transformers.mts"
 
@@ -25,6 +26,8 @@ export default defineConfig({
     react(),
     // OpenGraph must run before compress to avoid compressing PNGs
     opengraph(),
+    // Pagefind should run after opengraph but before compress
+    pagefind(),
     playformCompress({
       Image: false,
       HTML: {

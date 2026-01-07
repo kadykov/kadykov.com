@@ -1,0 +1,28 @@
+---
+import { Icon } from "astro-icon/components"
+---
+
+<button
+  id="search-button"
+  type="button"
+  aria-label="Open search"
+  title="Search site"
+>
+  <Icon name="ri:search-line" />
+</button>
+
+<script>
+  const searchButton = document.getElementById("search-button")
+  const dialog = document.getElementById("search-dialog") as HTMLDialogElement
+
+  searchButton?.addEventListener("click", () => {
+    dialog?.showModal()
+    // Focus search input after dialog opens
+    setTimeout(() => {
+      const input = dialog?.querySelector(
+        "input[type='text']"
+      ) as HTMLInputElement
+      input?.focus()
+    }, 100)
+  })
+</script>

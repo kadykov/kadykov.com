@@ -1,0 +1,46 @@
+---
+import { Icon } from "astro-icon/components"
+import PagefindSearch from "astro-pagefind/components/Search"
+---
+
+<dialog id="search-dialog">
+  <header>
+    <h2>Search</h2>
+    <button id="close-search" type="button" aria-label="Close search">
+      <Icon name="ri:close-line" />
+    </button>
+  </header>
+
+  <PagefindSearch
+    id="search"
+    uiOptions={{
+      showSubResults: true,
+      showImages: false,
+      excerptLength: 15,
+      resetStyles: false,
+    }}
+  />
+</dialog>
+
+<script>
+  const dialog = document.getElementById("search-dialog") as HTMLDialogElement
+  const closeButton = document.getElementById("close-search")
+
+  closeButton?.addEventListener("click", () => {
+    dialog?.close()
+  })
+
+  // Close on backdrop click
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) {
+      dialog.close()
+    }
+  })
+
+  // Close on Escape key (handled by browser, but kept for clarity)
+  dialog?.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      dialog.close()
+    }
+  })
+</script>

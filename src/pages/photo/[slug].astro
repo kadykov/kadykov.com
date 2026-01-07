@@ -130,11 +130,11 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
       loading="eager"
     />
     <figcaption>
-      {photo.title && <h2>{photo.title}</h2>}
-      {photo.description && <p>{photo.description}</p>}
+      {photo.title && <h2 data-pagefind-body>{photo.title}</h2>}
+      {photo.description && <p data-pagefind-body>{photo.description}</p>}
 
       {(photo.title && <h3>Details</h3>) || <h2>Details</h2>}
-      <dl>
+      <dl data-pagefind-ignore>
         <dt>Links</dt>
         <dd>
           <a
@@ -284,16 +284,16 @@ const ogImageUrl = `${imageBaseUrl}${photo.relativePath}`
             </>
           )
         }
-
-        {
-          photo.notes && (
-            <>
-              <dt>Notes</dt>
-              <dd>{photo.notes}</dd>
-            </>
-          )
-        }
       </dl>
+
+      {
+        photo.notes && (
+          <>
+            <h3>Notes</h3>
+            <p data-pagefind-body>{photo.notes}</p>
+          </>
+        )
+      }
     </figcaption>
   </figure>
 

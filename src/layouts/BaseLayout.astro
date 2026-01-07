@@ -2,6 +2,7 @@
 import { SEO } from "astro-seo"
 import Footer from "../components/Footer.astro"
 import Header from "../components/Header.astro"
+import SearchDialog from "../components/SearchDialog.astro"
 import { type FontPreload, getFontPreload } from "../config/fontPreload"
 
 // Dynamic font imports - Vite transforms these to URLs
@@ -48,6 +49,17 @@ const rawTitle = frontmatter.title
 const rawDescription = frontmatter.description
 // Optional page type for styling variations
 const pageType = frontmatter.pageType
+
+// Determine content type for Pagefind filtering
+// Default to "page" for general content
+let contentType = "page"
+if (frontmatter.pubDate) {
+  // Blog posts have pubDate
+  contentType = "blog"
+} else if (pageType === "photo-gallery") {
+  // Photo pages use photo-gallery page type
+  contentType = "photo"
+}
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
@@ -153,11 +165,12 @@ import "../styles/base.css"
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
   </head>
-  <body>
+  <body data-pagefind-filter={`type:${contentType}`}>
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
+    <SearchDialog />
   </body>
 </html>
