@@ -61,6 +61,10 @@ if (frontmatter.pubDate) {
   contentType = "photo"
 }
 
+// Add data-pagefind-body to main for blog posts and general pages
+// Photo pages handle indexing at the element level (title, description, notes)
+const shouldIndexMain = contentType === "blog" || contentType === "page"
+
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
   rawTitle === "kadykov.com" || rawTitle.endsWith(" | kadykov.com")
@@ -167,7 +171,7 @@ import "../styles/base.css"
   </head>
   <body data-pagefind-filter={`type:${contentType}`}>
     <Header />
-    <main>
+    <main data-pagefind-body={shouldIndexMain || undefined}>
       <slot />
     </main>
     <Footer />
