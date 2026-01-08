@@ -1,7 +1,6 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
 import { fetchPhotoManifest } from "../utils/photoData"
-import { getImageUrl } from "../config/photoServer"
 import type { APIContext } from "astro"
 
 export async function GET(context: APIContext) {
@@ -15,12 +14,18 @@ export async function GET(context: APIContext) {
     description: post.data.description,
     link: `/blog/${post.slug}/`,
     categories: [...(post.data.tags || []), "blog"],
+    // Use OpenGraph PNG image for RSS enclosure
+    // Note: OpenGraph images are 1200×630 and universally compatible with RSS readers
+    enclosure: {
+      url: `${context.site}blog/${post.slug}/og.png`,
+      type: "image/png",
+      length: 0,
+    },
   }))
 
   // Prepare photo items
   const photoItems = photos.map((photo) => {
     const photoUrl = `${context.site}photo/${photo.slug}/`
-    const imageUrl = getImageUrl(photo.relativePath)
 
     return {
       title:
@@ -31,8 +36,12 @@ export async function GET(context: APIContext) {
       description: photo.description || photo.title || "",
       link: photoUrl,
       categories: [...(photo.tags || []), "photo"],
+      // Use OpenGraph JPEG image for RSS enclosure
+      // Note: These are 1200×630 and may be cropped for portrait photos.
+      // TODO: When non-AVIF optimized images are available, consider using
+      // medium-resolution WebP/JPEG versions instead of cropped OG images
       enclosure: {
-        url: imageUrl,
+        url: `${context.site}photo/${photo.slug}/og.jpg`,
         type: "image/jpeg",
         length: 0,
       },
