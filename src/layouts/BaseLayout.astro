@@ -27,7 +27,7 @@ interface Props {
     headline?: string
     subtitle?: string
     description: string
-    pageType?: string // Optional page type for styling variations (e.g., "photo-gallery")
+    pageType?: string // Optional page type for styling variations (e.g., "photo", "photo-gallery")
     // Optional blog-specific fields for OG metadata
     tags?: string[]
     pubDate?: Date
@@ -39,9 +39,19 @@ interface Props {
    * Set based on above-the-fold content to prevent CLS.
    */
   fontPreload?: FontPreload[]
+  /**
+   * Whether this page renders Markdoc content that cannot add data attributes.
+   * If true, data-pagefind-body is added to the main element.
+   * If false, the page should handle indexing at the element level.
+   */
+  isMarkdocContent?: boolean
 }
 
-const { frontmatter, fontPreload = getFontPreload() } = Astro.props
+const {
+  frontmatter,
+  fontPreload = getFontPreload(),
+  isMarkdocContent = false,
+} = Astro.props
 
 // Handle title with fallbacks: frontmatter > default
 const rawTitle = frontmatter.title
@@ -53,26 +63,17 @@ const pageType = frontmatter.pageType
 // Determine content type for Pagefind filtering
 // Default to "page" for general content
 let contentType = "page"
-if (frontmatter.pubDate) {
-  // Blog posts have pubDate
+if (pageType === "blog-post") {
+  // Blog posts use pageType: "blog-post"
   contentType = "blog"
-} else if (pageType === "photo-gallery") {
-  // Photo pages use photo-gallery page type
+} else if (pageType === "photo") {
+  // Individual photo pages use pageType: "photo"
   contentType = "photo"
 }
 
-// Get pathname for multiple uses below
-const pathname = Astro.url.pathname
-
-// Add data-pagefind-body to main for blog posts and general pages
-// Exclude listing/index pages (blog tags, photo galleries, etc.)
-// Photo pages handle indexing at the element level (title, description, notes)
-const isListingPage =
-  pathname.startsWith("/blog/") ||
-  pathname.startsWith("/photos/") ||
-  pathname.startsWith("/tags/")
-const shouldIndexMain =
-  contentType === "blog" || (contentType === "page" && !isListingPage)
+// Add data-pagefind-body to main only for Markdoc content (blog posts, static pages)
+// Regular Astro pages (home, photo pages) handle indexing at element level
+const shouldIndexMain = isMarkdocContent
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
@@ -84,17 +85,17 @@ const finalTitle =
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 
 // OpenGraph image URL - generated during build
-// OG images are colocated with index.html as og.png (or og.jpg for photos)
-const isPhotoPage = pathname.startsWith("/photo/")
-const ogImageExtension = isPhotoPage ? "og.jpg" : "og.png"
+// OG images are colocated with index.html as og.png (or og.jpg for individual photos)
+const ogImageExtension = pageType === "photo" ? "og.jpg" : "og.png"
 // Ensure pathname ends with / for proper URL joining
+const pathname = Astro.url.pathname
 const normalizedPath = pathname.endsWith("/") ? pathname : `${pathname}/`
 const ogImagePath = `${normalizedPath}${ogImageExtension}`
 const ogImageUrl = new URL(ogImagePath, Astro.site).toString()
-const ogImageType = isPhotoPage ? "image/jpeg" : "image/png"
+const ogImageType = pageType === "photo" ? "image/jpeg" : "image/png"
 
 // Blog metadata for article tags
-const isBlogPost = !!frontmatter.pubDate
+const isBlogPost = pageType === "blog-post"
 const pubDateISO = frontmatter.pubDate?.toISOString()
 
 import "../styles/base.css"

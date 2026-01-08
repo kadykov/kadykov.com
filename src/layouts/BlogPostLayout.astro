@@ -39,15 +39,22 @@ const formatDate = (date: Date) => {
 // Build-time check: detect if content has code blocks
 const slotContent = await Astro.slots.render("default")
 const hasCodeBlocks = slotContent.includes("<pre")
+
+// Add pageType for blog posts
+const frontmatterWithPageType = {
+  ...frontmatter,
+  pageType: "blog-post",
+}
 ---
 
 <BaseLayout
-  frontmatter={frontmatter}
+  frontmatter={frontmatterWithPageType}
   fontPreload={getFontPreload({
     heroSubtitle: !!subtitle,
     articleContent: true,
     timeInHero: true,
   })}
+  isMarkdocContent={true}
 >
   <Hero>
     <h1>{headline ?? title}</h1>

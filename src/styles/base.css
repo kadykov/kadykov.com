@@ -2134,6 +2134,7 @@ textarea:user-invalid {
  */
 
 /* Photo Gallery Light Theme Override */
+[data-page-type="photo"],
 [data-page-type="photo-gallery"] {
   /* Darker background: lightness ~0.85 for softer appearance */
   --surface-l: 0.85;
@@ -2166,6 +2167,7 @@ textarea:user-invalid {
   }
 
   /* Photo Gallery Dark Theme Override */
+  [data-page-type="photo"],
   [data-page-type="photo-gallery"] {
     /* Keep dark theme darkness */
     --surface-l: 0.23;
