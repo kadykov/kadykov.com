@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
+import { createBlogRSSItem } from "../../../../utils/rssHelpers"
 import type { APIContext } from "astro"
 
 export async function getStaticPaths() {
@@ -14,6 +15,7 @@ export async function getStaticPaths() {
 export async function GET(context: APIContext) {
   const { tag } = context.params as { tag: string }
   const posts = await getCollection("blog", ({ data }) => data.draft !== true)
+  const siteUrl = context.site!.toString()
 
   // Filter posts by tag
   const taggedPosts = posts.filter((post) => post.data.tags?.includes(tag))
@@ -22,13 +24,7 @@ export async function GET(context: APIContext) {
     title: `Aleksandr Kadykov | Blog - ${tag}`,
     description: `Blog posts tagged with "${tag}"`,
     site: context.site!,
-    items: taggedPosts.map((post) => ({
-      title: post.data.title,
-      pubDate: post.data.pubDate,
-      description: post.data.description,
-      link: `/blog/${post.slug}/`,
-      categories: post.data.tags || [],
-    })),
+    items: taggedPosts.map((post) => createBlogRSSItem(post, siteUrl)),
     customData: `<language>en-us</language>`,
   })
 }
