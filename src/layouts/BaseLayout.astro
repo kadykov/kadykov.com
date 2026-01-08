@@ -61,9 +61,18 @@ if (frontmatter.pubDate) {
   contentType = "photo"
 }
 
+// Get pathname for multiple uses below
+const pathname = Astro.url.pathname
+
 // Add data-pagefind-body to main for blog posts and general pages
+// Exclude listing/index pages (blog tags, photo galleries, etc.)
 // Photo pages handle indexing at the element level (title, description, notes)
-const shouldIndexMain = contentType === "blog" || contentType === "page"
+const isListingPage =
+  pathname.startsWith("/blog/") ||
+  pathname.startsWith("/photos/") ||
+  pathname.startsWith("/tags/")
+const shouldIndexMain =
+  contentType === "blog" || (contentType === "page" && !isListingPage)
 
 // Add site suffix to title unless it's the default or already has the suffix
 const finalTitle =
@@ -76,7 +85,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 
 // OpenGraph image URL - generated during build
 // OG images are colocated with index.html as og.png (or og.jpg for photos)
-const pathname = Astro.url.pathname
 const isPhotoPage = pathname.startsWith("/photo/")
 const ogImageExtension = isPhotoPage ? "og.jpg" : "og.png"
 // Ensure pathname ends with / for proper URL joining
