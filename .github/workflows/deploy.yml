@@ -18,7 +18,9 @@ jobs:
         run: rm -rf src/pages/experimental
 
       - name: Install, build, and cache with official Astro action
-        uses: withastro/action@v5
+        # TODO: switch to official action when https://github.com/withastro/action/pull/92 is merged
+        # uses: withastro/action@v5
+        uses: kadykov/withastro--action@astro-cache
         with:
           node-version: "24"
           package-manager: "npm"
