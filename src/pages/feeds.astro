@@ -12,7 +12,7 @@ const frontmatter = {
 }
 
 // Get all blog posts and their tags
-const posts = await getCollection("blog")
+const posts = await getCollection("blog", ({ data }) => data.draft !== true)
 const blogTags = [
   ...new Set(posts.flatMap((post) => post.data.tags || [])),
 ].sort()

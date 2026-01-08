@@ -5,7 +5,7 @@ import { getImageUrl } from "../config/photoServer"
 import type { APIContext } from "astro"
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection("blog")
+  const posts = await getCollection("blog", ({ data }) => data.draft !== true)
   const photos = await fetchPhotoManifest()
 
   // Prepare blog items
