@@ -1098,7 +1098,8 @@ article h4 a {
 }
 
 /* Calm down bold statements in articles */
-article strong {
+article strong,
+article b {
   color: var(--color-on-surface-variant);
   font-weight: 650;
 }
@@ -1423,6 +1424,11 @@ form {
 
   /* Use larger font size for inputs */
   font-size: 1.2rem;
+}
+
+mark {
+  background-color: var(--color-accent-container);
+  color: var(--color-on-accent-container);
 }
 
 /*
