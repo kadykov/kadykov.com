@@ -1,6 +1,5 @@
 ---
 import { Icon } from "astro-icon/components"
-import PagefindSearch from "astro-pagefind/components/Search"
 ---
 
 <dialog id="search-dialog">
@@ -11,20 +10,155 @@ import PagefindSearch from "astro-pagefind/components/Search"
     </button>
   </header>
 
-  <PagefindSearch
-    id="search"
-    uiOptions={{
-      showSubResults: true,
-      showImages: true,
-      excerptLength: 15,
-      resetStyles: false,
-    }}
-  />
+  <form id="search-form" role="search">
+    <input
+      type="search"
+      id="search-input"
+      name="q"
+      placeholder="Search..."
+      autocomplete="off"
+      aria-label="Search"
+    />
+  </form>
+
+  <div id="search-results" aria-live="polite" aria-atomic="false">
+    <p id="search-status" hidden></p>
+    <ul id="search-results-list"></ul>
+  </div>
 </dialog>
 
 <script>
+  let pagefind: PagefindInstance | null = null
+  let isLoading = false
+
   const dialog = document.getElementById("search-dialog") as HTMLDialogElement
   const closeButton = document.getElementById("close-search")
+  const searchInput = document.getElementById(
+    "search-input"
+  ) as HTMLInputElement
+  const searchStatus = document.getElementById(
+    "search-status"
+  ) as HTMLParagraphElement
+  const resultsList = document.getElementById(
+    "search-results-list"
+  ) as HTMLUListElement
+
+  // Pagefind bundle path - computed to prevent Vite from trying to resolve at build time
+  const pagefindPath = ["/pagefind", "pagefind.js"].join("/")
+
+  async function loadPagefind(): Promise<PagefindInstance> {
+    if (pagefind) return pagefind
+    if (isLoading) {
+      // Wait for existing load
+      while (isLoading) {
+        await new Promise((resolve) => setTimeout(resolve, 50))
+      }
+      return pagefind!
+    }
+
+    isLoading = true
+    try {
+      // Dynamic import of pagefind.js generated at build time
+      pagefind = await import(/* @vite-ignore */ pagefindPath)
+      await pagefind!.init()
+      return pagefind!
+    } finally {
+      isLoading = false
+    }
+  }
+
+  function renderResult(result: PagefindResult): HTMLLIElement {
+    const li = document.createElement("li")
+
+    // Main result link
+    const link = document.createElement("a")
+    link.href = result.url
+    link.innerHTML = `<strong>${escapeHtml(result.meta.title)}</strong>`
+    li.appendChild(link)
+
+    // Excerpt
+    if (result.excerpt) {
+      const excerpt = document.createElement("p")
+      // excerpt already has <mark> tags and is HTML-entity encoded
+      excerpt.innerHTML = result.excerpt
+      li.appendChild(excerpt)
+    }
+
+    // Sub-results (headings within the page)
+    if (result.sub_results && result.sub_results.length > 1) {
+      const subList = document.createElement("ul")
+      // Skip first sub_result as it's usually the same as main result
+      for (const sub of result.sub_results.slice(1, 4)) {
+        const subLi = document.createElement("li")
+        const subLink = document.createElement("a")
+        subLink.href = sub.url
+        subLink.textContent = sub.title
+        subLi.appendChild(subLink)
+
+        if (sub.excerpt) {
+          const subExcerpt = document.createElement("p")
+          subExcerpt.innerHTML = sub.excerpt
+          subLi.appendChild(subExcerpt)
+        }
+        subList.appendChild(subLi)
+      }
+      li.appendChild(subList)
+    }
+
+    return li
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement("div")
+    div.textContent = text
+    return div.innerHTML
+  }
+
+  async function performSearch(query: string): Promise<void> {
+    if (!query.trim()) {
+      resultsList.innerHTML = ""
+      searchStatus.hidden = true
+      return
+    }
+
+    try {
+      const pf = await loadPagefind()
+      const search = await pf.debouncedSearch(query, {}, 300)
+
+      // null means a newer search superseded this one
+      if (search === null) return
+
+      if (search.results.length === 0) {
+        resultsList.innerHTML = ""
+        searchStatus.textContent = "No results found."
+        searchStatus.hidden = false
+        return
+      }
+
+      // Load first 10 results
+      const results = await Promise.all(
+        search.results.slice(0, 10).map((r) => r.data())
+      )
+
+      resultsList.innerHTML = ""
+      searchStatus.textContent = `${search.results.length} result${search.results.length === 1 ? "" : "s"} found.`
+      searchStatus.hidden = false
+
+      for (const result of results) {
+        resultsList.appendChild(renderResult(result))
+      }
+    } catch (error) {
+      console.error("Search error:", error)
+      searchStatus.textContent = "Search failed. Please try again."
+      searchStatus.hidden = false
+    }
+  }
+
+  // Event listeners
+  searchInput?.addEventListener("input", (e) => {
+    const query = (e.target as HTMLInputElement).value
+    performSearch(query)
+  })
 
   closeButton?.addEventListener("click", () => {
     dialog?.close()
@@ -37,10 +171,24 @@ import PagefindSearch from "astro-pagefind/components/Search"
     }
   })
 
-  // Close on Escape key (handled by browser, but kept for clarity)
-  dialog?.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      dialog.close()
-    }
+  // Clear results when dialog closes
+  dialog?.addEventListener("close", () => {
+    searchInput.value = ""
+    resultsList.innerHTML = ""
+    searchStatus.hidden = true
   })
+
+  // Preload pagefind when dialog opens
+  dialog?.addEventListener("open", () => {
+    loadPagefind()
+  })
+
+  // Also preload on showModal (since 'open' event doesn't fire for showModal)
+  const originalShowModal = dialog?.showModal.bind(dialog)
+  if (dialog && originalShowModal) {
+    dialog.showModal = function () {
+      originalShowModal()
+      loadPagefind()
+    }
+  }
 </script>

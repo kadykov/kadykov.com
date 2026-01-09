@@ -2479,63 +2479,152 @@ dialog header button {
 
 /*
  * Search Dialog Styles
- * 
- * Pagefind UI customization to match design system.
- * Uses CSS custom properties for Pagefind theming.
+ *
+ * Custom search UI styling using semantic HTML selectors.
+ * Pagefind JS is loaded dynamically when dialog opens.
  */
 #search-dialog {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-width: min(40rem, 90vw);
+  max-height: 80vh;
+  width: 100%;
 }
 
-/* Pagefind UI theme variables */
-.pagefind-ui {
-  --pagefind-ui-scale: 1;
-  --pagefind-ui-primary: var(--accent-primary);
-  --pagefind-ui-text: var(--text-primary);
-  --pagefind-ui-background: var(--surface-0);
-  --pagefind-ui-border: var(--border-primary);
-  --pagefind-ui-tag: var(--surface-1);
-  --pagefind-ui-font: var(--font-sans);
+#search-dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Search input field */
-.pagefind-ui__search-input {
+#search-dialog header h2 {
+  margin: 0;
+}
+
+#search-dialog #close-search {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+#search-dialog #close-search:hover {
+  color: var(--text-primary);
+}
+
+#search-dialog #close-search svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Search form */
+#search-form {
+  margin: 0;
+}
+
+#search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   font-family: var(--font-sans);
   background: var(--surface-1);
   border: 0.1lh solid var(--border-primary);
+  border-radius: 0.25rem;
   color: var(--text-primary);
 }
 
-/* Search results */
-.pagefind-ui__result {
+#search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+#search-input:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Search results container */
+#search-results {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+#search-status {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+}
+
+/* Results list */
+#search-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#search-results-list > li {
+  padding-bottom: 1rem;
   border-bottom: 0.1lh solid var(--border-primary);
 }
 
-.pagefind-ui__result-link {
+#search-results-list > li:last-child {
+  border-bottom: none;
+}
+
+#search-results-list > li > a {
   color: var(--accent-primary);
+  text-decoration: none;
+  font-size: 1.1rem;
 }
 
-.pagefind-ui__result-excerpt {
+#search-results-list > li > a:hover {
+  text-decoration: underline;
+}
+
+#search-results-list > li > p {
   color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+  line-height: 1.5;
 }
 
-/* Filter sidebar */
-.pagefind-ui__drawer {
-  background: var(--surface-1);
-  border: 0.1lh solid var(--border-primary);
+/* Highlighted search terms */
+#search-results-list mark {
+  background: oklch(from var(--accent-primary) l c h / 0.25);
+  color: inherit;
+  padding: 0.1em 0.2em;
+  border-radius: 0.15em;
 }
 
-.pagefind-ui__filter-panel {
-  padding: 1rem;
+/* Sub-results (headings within page) */
+#search-results-list > li > ul {
+  list-style: none;
+  padding: 0.5rem 0 0 1rem;
+  margin: 0;
+  border-left: 2px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.pagefind-ui__filter-name {
-  font-weight: 500;
-  color: var(--text-primary);
+#search-results-list > li > ul li a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
-.pagefind-ui__filter-value {
-  color: var(--text-secondary);
+#search-results-list > li > ul li a:hover {
+  text-decoration: underline;
+}
+
+#search-results-list > li > ul li p {
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  margin: 0.125rem 0 0;
 }
