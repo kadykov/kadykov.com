@@ -2443,12 +2443,12 @@ dialog {
   max-width: 50rem;
   width: 90vw;
   max-height: 80vh;
-  border: 0.1lh solid var(--border-primary);
+  border: 0.1lh solid var(--color-on-surface-low);
   border-radius: 0.5rem;
   padding: 1.5rem;
   box-shadow: var(--elevation-4);
-  background: var(--surface-0);
-  color: var(--text-primary);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
 }
 
 dialog::backdrop {
@@ -2463,7 +2463,7 @@ dialog header {
   align-items: center;
   margin: 0 0 1rem;
   padding-bottom: 1rem;
-  border-bottom: 0.1lh solid var(--border-primary);
+  border-bottom: 0.1lh solid var(--color-on-surface-low);
 }
 
 dialog header h2 {
@@ -2507,12 +2507,12 @@ dialog header button {
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  color: var(--text-secondary);
+  color: var(--color-on-surface-variant);
   transition: color 0.2s ease;
 }
 
 #search-dialog #close-search:hover {
-  color: var(--text-primary);
+  color: var(--color-on-surface);
 }
 
 #search-dialog #close-search svg {
@@ -2530,18 +2530,18 @@ dialog header button {
   padding: 0.75rem 1rem;
   font-size: 1rem;
   font-family: var(--font-sans);
-  background: var(--surface-1);
-  border: 0.1lh solid var(--border-primary);
+  background: var(--color-surface-container-low);
+  border: 0.1lh solid var(--color-on-surface-low);
   border-radius: 0.25rem;
-  color: var(--text-primary);
+  color: var(--color-on-surface);
 }
 
 #search-input::placeholder {
-  color: var(--text-tertiary);
+  color: var(--color-on-surface-low);
 }
 
 #search-input:focus {
-  outline: 2px solid var(--accent-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -2553,7 +2553,7 @@ dialog header button {
 }
 
 #search-status {
-  color: var(--text-secondary);
+  color: var(--color-on-surface-variant);
   font-size: 0.875rem;
   margin: 0 0 0.5rem;
 }
@@ -2570,7 +2570,7 @@ dialog header button {
 
 #search-results-list > li {
   padding-bottom: 1rem;
-  border-bottom: 0.1lh solid var(--border-primary);
+  border-bottom: 0.1lh solid var(--color-on-surface-low);
 }
 
 #search-results-list > li:last-child {
@@ -2578,7 +2578,7 @@ dialog header button {
 }
 
 #search-results-list > li > a {
-  color: var(--accent-primary);
+  color: var(--color-accent);
   text-decoration: none;
   font-size: 1.1rem;
 }
@@ -2588,7 +2588,7 @@ dialog header button {
 }
 
 #search-results-list > li > p {
-  color: var(--text-secondary);
+  color: var(--color-on-surface-variant);
   font-size: 0.875rem;
   margin: 0.25rem 0 0;
   line-height: 1.5;
@@ -2596,7 +2596,7 @@ dialog header button {
 
 /* Highlighted search terms */
 #search-results-list mark {
-  background: oklch(from var(--accent-primary) l c h / 0.25);
+  background: oklch(from var(--color-accent) l c h / 0.25);
   color: inherit;
   padding: 0.1em 0.2em;
   border-radius: 0.15em;
@@ -2607,14 +2607,14 @@ dialog header button {
   list-style: none;
   padding: 0.5rem 0 0 1rem;
   margin: 0;
-  border-left: 2px solid var(--border-primary);
+  border-left: 2px solid var(--color-on-surface-low);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 #search-results-list > li > ul li a {
-  color: var(--accent-primary);
+  color: var(--color-accent);
   text-decoration: none;
   font-size: 0.95rem;
 }
@@ -2624,7 +2624,7 @@ dialog header button {
 }
 
 #search-results-list > li > ul li p {
-  color: var(--text-tertiary);
+  color: var(--color-on-surface-low);
   font-size: 0.8rem;
   margin: 0.125rem 0 0;
 }
