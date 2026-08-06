@@ -2,46 +2,62 @@
 import { Icon } from "astro-icon/components"
 ---
 
-<form name="contact" method="POST" data-netlify="true" netlify-honeypot="title">
-  <label>
+<form
+  id="contact-form"
+  name="contact"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="title"
+>
+  <label for="name">
     <Icon name="ri:account-circle-line" />
-    <input type="text" name="name" placeholder="Name" required />
-  </label>
-
-  <label>
-    <Icon name="ri:account-circle-line" />
+    Name
     <input
       type="text"
+      id="name"
+      name="name"
+      placeholder="e.g., John Smith"
+      required
+    />
+  </label>
+
+  <label for="title">
+    <Icon name="ri:account-circle-line" />
+    Title
+    <input
+      type="text"
+      id="title"
       name="title"
-      placeholder="Title"
+      placeholder="e.g., Mr"
       tabindex="-1"
       autocomplete="off"
     />
   </label>
 
-  <label>
+  <label for="email">
     <Icon name="ri:mail-line" />
-    <input type="email" name="email" placeholder="email@example.com" required />
+    Email
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="e.g., john@example.com"
+      required
+    />
   </label>
 
-  <textarea
-    name="message"
-    placeholder="Hey Aleksandr, I'd like to chat about..."
-    required></textarea>
+  <label for="message">
+    <Icon name="ri:message-2-line" />
+    Message
+    <textarea
+      id="message"
+      name="message"
+      placeholder="Hey Aleksandr, I'd like to chat about..."
+      required></textarea>
+  </label>
 
   <button type="submit">
     <Icon name="ri:send-plane-line" />
     Send Message
   </button>
 </form>
-
-<style>
-  /* Hide the second label (honeypot field) using positional selector.
-  Place it in the top right corner where it will be hidden by the navbar
-  and the hero section */
-  form > label:nth-of-type(2) {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-</style>

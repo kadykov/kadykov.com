@@ -936,36 +936,25 @@ ul {
   list-style-type: square;
 }
 
-/* Horizontal container for icon + text */
-button,
+/* Contact Form Styles */
+
+/* Form labels - horizontal flex for icon + text, appears above input */
 label {
-  /* Flex layout for icon + text */
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5em;
+  gap: 0.5rem;
+  cursor: pointer;
+  flex-wrap: wrap;
 }
 
-/* Icon inside horizontal container */
-button svg,
+/* Label icons */
 label svg {
-  width: 1.5rem;
-  height: 1.5rem;
   flex-shrink: 0;
-  fill: currentcolor;
+  color: var(--color-primary);
 }
-
-/* Contact Form Styles */
 
 /* Common styles for input and textarea */
 input,
-textarea {
-  outline: none;
-  min-width: 10em;
-}
-
-/* Common styles for label and textarea */
-label,
 textarea {
   font-family: var(--font-serif);
 
@@ -976,7 +965,10 @@ textarea {
   /* Spacing and border */
   border: 0.1rem solid var(--color-surface-container-high);
   border-radius: 0.2rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
+
+  /* Remove default browser outline - we use border and box-shadow instead */
+  outline: none;
 
   /* Smooth transitions for focus states */
   transition:
@@ -984,23 +976,17 @@ textarea {
     box-shadow var(--transition);
 }
 
-/* Input fields inside labels */
+/* Input fields */
 input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: inherit;
+  width: 100%;
 }
 
 /* Textarea - Message field */
 textarea {
   min-height: 10rem;
   resize: vertical;
-}
-
-/* Icons in form labels */
-label svg {
-  color: var(--color-primary);
+  width: 100%;
+  display: block;
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -1416,13 +1402,24 @@ form {
   box-shadow: var(--elevation-2);
   border-radius: 0.2rem;
 
-  /* Vertical stack of form elements */
+  /* Direct children layout - labels and inputs are siblings */
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-adaptive);
 
   /* Use larger font size for inputs */
   font-size: 1.2rem;
+}
+
+/* Hide the honeypot field (second label + input pair) by positioning off-screen.
+     Using form ID + positional selectors without obvious class names to avoid tipping off bots. */
+#contact-form > label:nth-of-type(2),
+#contact-form > input:nth-of-type(2) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /*
@@ -1487,9 +1484,25 @@ button {
   border-radius: 0.2rem;
   padding: 0.5rem;
   box-shadow: var(--elevation-2);
+
+  /* Horizontal container for icon + text */
+
+  /* Flex layout for icon + text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
 }
 
-/* Copy button styling */
+/* Icon inside horizontal container */
+button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  fill: currentcolor;
+}
+
+/* Fix copy code button inside code blocks to top right corner */
 pre button {
   position: absolute;
   top: 0.5rem;
@@ -2078,15 +2091,20 @@ textarea::placeholder {
   color: var(--color-on-surface-low);
 }
 
-/* Focus state for labels when input is focused */
-label:focus-within,
+input:hover,
+textarea:hover {
+  border-color: var(--color-primary);
+}
+
+/* Focus state for form inputs */
+input:focus,
 textarea:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 0.2rem var(--color-accent-container);
 }
 
 /* Invalid state - show error indicator only after user interaction */
-label:has(input:user-invalid),
+input:user-invalid,
 textarea:user-invalid {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
