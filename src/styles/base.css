@@ -986,6 +986,13 @@ form button {
   width: 100%;
 }
 
+/* Keep checkboxes and radio buttons compact so their labels stay on the same line */
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  flex-shrink: 0;
+}
+
 /* Textarea - Message field */
 textarea {
   min-height: 10rem;
