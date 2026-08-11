@@ -636,6 +636,9 @@
    */
   --spacing-adaptive: clamp(1rem, 6vw - 1rem, 3rem);
 
+  /* Smaller adaptive spacing for compact layouts */
+  --spacing-adaptive-small: clamp(0.5rem, 3vw - 0.5rem, 1.5rem);
+
   /* Fibonacci Pattern Background - Reusable Variables */
 
   /*
@@ -965,7 +968,7 @@ textarea {
   /* Spacing and border */
   border: 0.1rem solid var(--color-surface-container-high);
   border-radius: 0.2rem;
-  padding: 1rem;
+  padding: 0.5rem;
 
   /* Remove default browser outline - we use border and box-shadow instead */
   outline: none;
@@ -976,8 +979,10 @@ textarea {
     box-shadow var(--transition);
 }
 
-/* Input fields */
-input {
+/* Elements inside forms */
+input,
+textarea,
+form button {
   width: 100%;
 }
 
@@ -985,7 +990,6 @@ input {
 textarea {
   min-height: 10rem;
   resize: vertical;
-  width: 100%;
   display: block;
 }
 
@@ -1392,29 +1396,43 @@ article time {
  *
  * Design: Forms that appear as direct children of main are styled as
  * clean interactive cards with generous spacing and clear hierarchy.
+ * The form itself stays compact and the fieldset uses a responsive grid
+ * so controls can organize into multiple columns when space allows.
  */
 form {
-  /* Centered with comfortable max-width */
-  max-width: 32rem;
+  display: grid;
+  gap: var(--spacing-adaptive-small);
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-adaptive);
+  padding: var(--spacing-adaptive-small);
   background-color: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
-  border-radius: 0.2rem;
-
-  /* Direct children layout - labels and inputs are siblings */
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-adaptive);
-
-  /* Use larger font size for inputs */
-  font-size: 1.2rem;
 }
 
-/* Hide the honeypot field (second label + input pair) by positioning off-screen.
-     Using form ID + positional selectors without obvious class names to avoid tipping off bots. */
-#contact-form > label:nth-of-type(2),
-#contact-form > input:nth-of-type(2) {
+fieldset {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--spacing-adaptive-small);
+  width: 100%;
+  margin: 0;
+  padding: var(--spacing-adaptive-small);
+
+  /* Unlike form and other containers, fieldset has a legend that is rendered on the border,
+  so we need to style the border to match the overall style */
+  border: 0.1rem solid var(--color-surface-container-high);
+}
+
+fieldset legend {
+  /* Use h4 styles for legend text to maintain visual hierarchy */
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-h4);
+}
+
+/* Hide the honeypot field by positioning it off-screen based on its order.
+Since in the contact form we have only three input fields, we can safely target the second one */
+#contact-form label:nth-of-type(2),
+#contact-form label:nth-of-type(2) input {
   position: absolute;
   top: 0;
   right: 0;

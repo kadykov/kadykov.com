@@ -8,54 +8,57 @@ import { Icon } from "astro-icon/components"
   method="POST"
   data-netlify="true"
   netlify-honeypot="title"
+  aria-label="Contact form"
 >
-  <label for="name">
-    <Icon name="ri:account-circle-line" />
-    Name
-    <input
-      type="text"
-      id="name"
-      name="name"
-      placeholder="e.g., John Smith"
-      required
-    />
-  </label>
+  <fieldset>
+    <legend>Contact details</legend>
+    <label for="name">
+      <Icon name="ri:account-circle-line" />
+      Name
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="e.g., John Smith"
+        required
+      />
+    </label>
 
-  <label for="title">
-    <Icon name="ri:account-circle-line" />
-    Title
-    <input
-      type="text"
-      id="title"
-      name="title"
-      placeholder="e.g., Mr"
-      tabindex="-1"
-      autocomplete="off"
-    />
-  </label>
+    <label for="title">
+      <Icon name="ri:account-circle-line" />
+      Title
+      <input
+        type="text"
+        id="title"
+        name="title"
+        placeholder="e.g., Mr"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </label>
 
-  <label for="email">
-    <Icon name="ri:mail-line" />
-    Email
-    <input
-      type="email"
-      id="email"
-      name="email"
-      placeholder="e.g., john@example.com"
-      required
-    />
-  </label>
+    <label for="email">
+      <Icon name="ri:mail-line" />
+      Email
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="e.g., john@example.com"
+        required
+      />
+    </label>
 
-  <label for="message">
-    <Icon name="ri:message-2-line" />
-    Message
-    <textarea
-      id="message"
-      name="message"
-      placeholder="Hey Aleksandr, I'd like to chat about..."
-      required></textarea>
-  </label>
-
+    <label for="message">
+      <Icon name="ri:message-2-line" />
+      Message
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Hey Aleksandr, I'd like to chat about..."
+        required></textarea>
+    </label>
+  </fieldset>
   <button type="submit">
     <Icon name="ri:send-plane-line" />
     Send Message
