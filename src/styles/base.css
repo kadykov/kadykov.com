@@ -1436,17 +1436,6 @@ fieldset legend {
   font-weight: var(--font-weight-h4);
 }
 
-/* Hide the honeypot field by positioning it off-screen based on its order.
-Since in the contact form we have only three input fields, we can safely target the second one */
-#contact-form label:nth-of-type(2),
-#contact-form label:nth-of-type(2) input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
 /*
  * PhotoSwipe Caption Styling
  * 
@@ -2133,6 +2122,17 @@ input:user-invalid,
 textarea:user-invalid {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
+}
+
+/* Hide the honeypot field by positioning it off-screen based on its order.
+Since in the contact form we have only three input fields, we can safely target the second one */
+#contact-form label:nth-of-type(2),
+#contact-form label:nth-of-type(2) input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Remove our custom outline for PhotoSwipe buttons */
