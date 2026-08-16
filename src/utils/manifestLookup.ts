@@ -24,10 +24,10 @@ let buildPromise: Promise<Map<string, ImageDimensions>> | null = null
 
 /**
  * Extracts the relative path from a full URL.
- * Handles both production URLs (share.kadykov.com) and local dev URLs.
+ * Handles both production URLs (assets.kadykov.com) and local dev URLs.
  *
  * @example
- * extractRelativePath("https://share.kadykov.com/images/blog/post/image.png")
+ * extractRelativePath("https://assets.kadykov.com/images/blog/post/image.png")
  * // Returns: "images/blog/post/image.png"
  *
  * extractRelativePath("http://localhost:8000/photos/2024/01/01/photo.jpg")
@@ -98,14 +98,14 @@ async function buildLookupCache(): Promise<Map<string, ImageDimensions>> {
  *
  * The lookup is environment-agnostic: it extracts the relative path from
  * the URL and matches against manifest entries, so it works whether you're
- * using production URLs (share.kadykov.com) or local dev URLs.
+ * using production URLs (assets.kadykov.com) or local dev URLs.
  *
  * @param url - The full image URL to look up
  * @returns Dimensions if found in manifest, undefined otherwise
  *
  * @example
  * const dims = await lookupDimensionsFromManifest(
- *   "https://share.kadykov.com/images/blog/post/screenshot.png"
+ *   "https://assets.kadykov.com/images/blog/post/screenshot.png"
  * )
  * // Returns: { width: 1920, height: 1080 } if in manifest
  * // Returns: undefined if not found
@@ -150,7 +150,7 @@ export function isPhotoServerUrl(url: string): boolean {
 
     // Also check for production URL in case local dev uses different server
     // but content has hardcoded production URLs
-    if (urlObj.host === "share.kadykov.com") {
+    if (urlObj.host === "assets.kadykov.com") {
       return true
     }
 

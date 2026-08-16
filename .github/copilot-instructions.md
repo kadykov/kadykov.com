@@ -11,7 +11,7 @@ The site uses **Astro Content Collections** with a unique hybrid approach:
 - **Local collections**: `blog/` and `pages/` (Markdown/Markdoc files in `src/content/`)
 - **Remote collections**: `photos/` and `images/` (fetched from external JSON manifests at build time)
 
-Remote collections use **loader functions** in [src/content.config.ts](src/content.config.ts) to fetch from `https://share.kadykov.com` (configurable via `PHOTO_SERVER_URL` env var). See [PHOTO_SERVER_CONFIG.md](PHOTO_SERVER_CONFIG.md).
+Remote collections use **loader functions** in [src/content.config.ts](src/content.config.ts) to fetch from `https://assets.kadykov.com` (configurable via `PHOTO_SERVER_URL` env var). See [PHOTO_SERVER_CONFIG.md](PHOTO_SERVER_CONFIG.md).
 
 ### Image Optimization Strategy
 
@@ -134,7 +134,7 @@ Filter in queries: `getCollection("blog", ({ data }) => data.draft !== true)`
 
 ## External Dependencies
 
-- **Photo manifests**: `https://share.kadykov.com/photo_manifest.json` and `image_manifest.json`
+- **Photo manifests**: `https://assets.kadykov.com/photo_manifest.json` and `image_manifest.json`
 - **Deployment**: GitHub Actions → Netlify (see [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md))
 - **Fonts**: Self-hosted via `@fontsource` packages (preloaded in [src/config/fontPreload.ts](src/config/fontPreload.ts))
 

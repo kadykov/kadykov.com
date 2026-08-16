@@ -4,7 +4,7 @@ import { addCopyButton } from "./src/config/shiki-transformers.mts"
 
 // Import photo server URL for use in Markdoc content
 const PHOTO_SERVER_URL = (
-  process.env.PHOTO_SERVER_URL || "https://share.kadykov.com"
+  process.env.PHOTO_SERVER_URL || "https://assets.kadykov.com"
 ).replace(/\/$/, "")
 
 export default defineMarkdocConfig({

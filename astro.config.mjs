@@ -7,16 +7,27 @@ import markdoc from "@astrojs/markdoc"
 import react from "@astrojs/react"
 import opengraph from "./src/integrations/opengraph"
 import { addCopyButton } from "./src/config/shiki-transformers.mts"
+import { Agent, setGlobalDispatcher } from "undici"
+
+// Increase the default undici connect timeout from 10 s to 2 min.
+// Cloudflare R2 (and similar CDNs) can occasionally take longer than 10 s
+// to establish a TLS connection from inside a dev container, causing
+// ConnectTimeoutError and leaving corrupt partial cache entries behind.
+setGlobalDispatcher(new Agent({ connect: { timeout: 120_000 } }))
 
 // Import the photo server domain for dynamic configuration
 const PHOTO_SERVER_DOMAIN =
   process.env.PHOTO_SERVER_URL?.replace(/^https?:\/\//, "").replace(
     /\/$/,
     ""
-  ) || "share.kadykov.com"
+  ) || "assets.kadykov.com"
 
 // https://astro.build/config
 export default defineConfig({
+  // Store the image cache in .astro/assets/ instead of the default
+  // node_modules/.astro/assets/ so it survives `npm install` / `rm -rf node_modules`.
+  // To wipe the cache: `rm -rf .astro/assets/`
+  cacheDir: "./.astro/",
   integrations: [
     icon(),
     sitemap(),

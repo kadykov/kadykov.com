@@ -1,7 +1,7 @@
 /**
  * Centralized configuration for photo server URLs
  *
- * By default, uses the production server (share.kadykov.com).
+ * By default, uses the production server (assets.kadykov.com).
  * Can be overridden via PHOTO_SERVER_URL environment variable for local development.
  *
  * Usage in .env for local development:
@@ -14,7 +14,7 @@
 
 // Get the photo server base URL from environment variable or use production default
 const PHOTO_SERVER_BASE =
-  import.meta.env.PHOTO_SERVER_URL || "https://share.kadykov.com"
+  import.meta.env.PHOTO_SERVER_URL || "https://assets.kadykov.com"
 
 // Ensure no trailing slash for consistency
 export const PHOTO_SERVER_URL = PHOTO_SERVER_BASE.replace(/\/$/, "")

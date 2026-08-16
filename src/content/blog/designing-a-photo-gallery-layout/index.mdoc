@@ -99,7 +99,7 @@ Here’s how you might implement this
 }
 ```
 
-![Square grid gallery with contain (letterboxed)](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid-fit.avif "Square grid with object-fit: contain — full photos with letterboxing")
+![Square grid gallery with contain (letterboxed)](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid-fit.avif "Square grid with object-fit: contain — full photos with letterboxing")
 
 However, this straightforward implementation comes with drawbacks:
 photos come in many shapes and proportions,
@@ -127,7 +127,7 @@ but switch image sizing to a fixed aspect ratio and `object-fit: cover`
 }
 ```
 
-![Square grid gallery with cover (cropped)](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid.avif "Square grid with object-fit: cover — all photos cropped to square")
+![Square grid gallery with cover (cropped)](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/square-grid.avif "Square grid with object-fit: cover — all photos cropped to square")
 
 This approach gives you maximum space efficiency and a strong visual rhythm.
 Because every cell shares the same dimensions, gaps align into continuous leading lines:
@@ -206,9 +206,9 @@ Photos that were composed for square display suddenly got cropped differently.
 Subjects intentionally placed at edges —
 perfectly visible in the old square previews — were now cut off.
 
-![Instagram — original square previews showing a profile grid of six square thumbnails with no edge cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram’s original square grid — six square thumbnails, no edge cropping")
+![Instagram — original square previews showing a profile grid of six square thumbnails with no edge cropping](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-square.avif "Instagram’s original square grid — six square thumbnails, no edge cropping")
 
-![Instagram — newer portrait previews showing rectangular thumbnails where image edges are cropped](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-rectangular.avif "Instagram’s portrait-oriented previews — cropping can cut off image edges in thumbnails")
+![Instagram — newer portrait previews showing rectangular thumbnails where image edges are cropped](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/instagram-rectangular.avif "Instagram’s portrait-oriented previews — cropping can cut off image edges in thumbnails")
 
 The lesson: fixed aspect ratios require commitment.
 Changing them later harms content that was composed for the original ratio.
@@ -246,7 +246,7 @@ Here’s a minimal implementation
 }
 ```
 
-![Column layout gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/columns.avif "Column layout — three columns with preserved compositions")
+![Column layout gallery](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/columns.avif "Column layout — three columns with preserved compositions")
 
 Columns layout is attractive because it preserves composition, has minimal wasted space,
 and feels less rigid than strict cells.
@@ -264,7 +264,7 @@ You can tune this effect by adjusting gap size —
 wider gaps make the vertical lines more pronounced,
 while narrower gaps soften the directional emphasis.
 
-![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
+![Three-column gallery with tall portrait photos in the outer columns and landscape photos in the center column](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/unsplash-columns.avif "Column layout example: tall portrait images on the sides visually dominate landscape images in the middle, creating a strong vertical rhythm")
 
 ![Column layout emphasizing vertical leading lines created by consistent column widths](./assets/columns-leading-lines.svg "Vertical leading lines are strong; horizontal gaps are irregular and do not form continuous horizontal guides")
 
@@ -328,7 +328,7 @@ When images share a fixed height but vary in aspect ratio,
 each row ends up with a different total width.
 Some rows fall short of the container edge; others might overflow.
 
-![Flexbox gallery with justify-content: center](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center.avif "Flexbox with justify-content: center — images grouped in the center with consistent gaps; edge margins vary per row")
+![Flexbox gallery with justify-content: center](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center.avif "Flexbox with justify-content: center — images grouped in the center with consistent gaps; edge margins vary per row")
 
 This imperfect alignment weakens the horizontal leading lines.
 While gaps between rows remain consistent,
@@ -364,12 +364,12 @@ while edge margins vary ([interactive demo](https://codepen.io/kadykov/pen/ogxVj
 With `space-between`, the first and last images pin to container edges,
 while gaps between images vary ([interactive demo](https://codepen.io/kadykov/pen/QwNRjNQ)):
 
-![Flexbox gallery with justify-content: space-between](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
+![Flexbox gallery with justify-content: space-between](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-between.avif "Flexbox with justify-content: space-between — first and last images touch container edges; gaps between images vary")
 
 With `space-evenly`, both edges and gaps vary,
 balancing the compromise:
 
-![Flexbox gallery with justify-content: space-evenly — balanced spacing](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-evenly.avif "Flexbox with justify-content: space-evenly — space distributed evenly around all images; neither edges nor gaps are perfectly consistent")
+![Flexbox gallery with justify-content: space-evenly — balanced spacing](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-space-evenly.avif "Flexbox with justify-content: space-evenly — space distributed evenly around all images; neither edges nor gaps are perfectly consistent")
 
 Regardless of which you choose, the horizontal leading lines are weakened
 by inconsistent edge margins or gaps,
@@ -396,7 +396,7 @@ to make flex items grow and fill the available space
 }
 ```
 
-![Flexbox gallery with cropping — rows fill container width exactly](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop.avif "Flexbox with flex: auto and object-fit: cover — rows fill container width exactly; portrait and square images are heavily cropped")
+![Flexbox gallery with cropping — rows fill container width exactly](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop.avif "Flexbox with flex: auto and object-fit: cover — rows fill container width exactly; portrait and square images are heavily cropped")
 
 At first glance, this looks appealing:
 all rows fill the container width exactly,
@@ -419,7 +419,7 @@ the extra space is distributed proportionally,
 reducing the disproportionate cropping
 ([interactive demo](https://codepen.io/kadykov/pen/JoXVwZM)):
 
-![Flexbox gallery with proportional flex-grow — more balanced cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional.avif "Flexbox with proportional flex-grow values — cropping is distributed more evenly across images based on their aspect ratios")
+![Flexbox gallery with proportional flex-grow — more balanced cropping](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional.avif "Flexbox with proportional flex-grow values — cropping is distributed more evenly across images based on their aspect ratios")
 
 You might argue that slight cropping is a small price for filled rows,
 especially compared to grid layouts that crop everything to a fixed ratio.
@@ -439,9 +439,9 @@ and the cropping becomes destructive.
 
 Compare the proportional cropping approach with the no-crop centered approach:
 
-![Flexbox proportional cropping on last row — still problematic](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional-end.avif "Last row with proportional flex-grow — cropping is still severe when few images must fill the entire row width")
+![Flexbox proportional cropping on last row — still problematic](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-crop-proportional-end.avif "Last row with proportional flex-grow — cropping is still severe when few images must fill the entire row width")
 
-![Flexbox gallery showing last row without cropping](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center-end.avif "Last row with justify-content: center — no cropping, images preserve their original composition")
+![Flexbox gallery showing last row without cropping](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flexbox-justify-center-end.avif "Last row with justify-content: center — no cropping, images preserve their original composition")
 
 Even with proportional `flex-grow`, the cropping on an incomplete last row is severe.
 Unfortunately, you cannot disable cropping only for the last row with pure CSS.
@@ -459,9 +459,9 @@ but JavaScript implementations are effective.
 The [justified-layout library](https://github.com/flickr/justified-layout) is a solid starting point
 ([interactive demo](https://codepen.io/kadykov/pen/ogxrvxy)).
 
-![Justified layout gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/justified-layout.avif "Justified layout — each row scales to fill the container width while preserving aspect ratios")
+![Justified layout gallery](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/justified-layout.avif "Justified layout — each row scales to fill the container width while preserving aspect ratios")
 
-![Flickr justified layout — wide landscape above three smaller thumbnails](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
+![Flickr justified layout — wide landscape above three smaller thumbnails](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/flickr-justified.avif "Flickr’s justified layout — a wide landscape photo spans a row while three smaller thumbnails appear below, showing how a single landscape can occupy as much visual weight as multiple portraits")
 
 The rhythm is softer than in column layouts because row heights vary with their contents.
 At narrower viewports, fewer photos fit per row,
@@ -514,7 +514,7 @@ the cell-span grid handles mixed orientations naturally,
 and portrait shots sit alongside wide landscapes with neither dominating visually
 ([interactive demo](https://codepen.io/kadykov/pen/xbVBwwZ)):
 
-![Cell-span grid gallery](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Cell-span layout — photos sized to span multiple grid cells based on orientation")
+![Cell-span grid gallery](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span.avif "Cell-span layout — photos sized to span multiple grid cells based on orientation")
 
 At first glance, the photos seem almost randomly placed — there are no rigid grid lines.
 The layout feels more like frames pinned to a wall than tiles in a spreadsheet.
@@ -600,7 +600,7 @@ Consider these scenarios:
 - **4 columns:** Portrait (2) + Square (2) = perfect. But Landscape (3) leaves 1 unused column.
 - **3 columns:** Landscape (3) fits perfectly, but portrait (2) leaves 1 empty column.
 
-![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://share.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools overlay showing trapped cells and unused columns in a cell-span gallery — a direct consequence of giving equal visual weight to different orientations")
+![Browser DevTools overlay showing the underlying cell-span grid with trapped and unused cells](https://assets.kadykov.com/images/blog/designing-a-photo-gallery-layout/cell-span-grid.avif "DevTools overlay showing trapped cells and unused columns in a cell-span gallery — a direct consequence of giving equal visual weight to different orientations")
 
 The inefficiency is inherent to the approach.
 Even with zero gap size, the trapped cells and unused columns persist —

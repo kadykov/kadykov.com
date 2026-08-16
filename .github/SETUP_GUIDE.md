@@ -98,7 +98,7 @@ https://github.com/kadykov/kadykov.com/actions
 
 **Wrong image URLs in production:**
 
-- This should NOT happen - production uses default `https://share.kadykov.com`
+- This should NOT happen - production uses default `https://assets.kadykov.com`
 - Your local `.env` doesn't affect GitHub Actions builds
 
 ## Next Steps

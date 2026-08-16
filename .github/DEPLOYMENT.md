@@ -77,7 +77,7 @@ git push origin main
    - Caches dependencies and Astro build artifacts
    - Installs dependencies (`npm ci`)
    - Builds website (`npm run build`)
-     - Uses production `PHOTO_SERVER_URL` (default: https://share.kadykov.com)
+     - Uses production `PHOTO_SERVER_URL` (default: https://assets.kadykov.com)
      - Optimizes images (cached between builds)
    - Deploys `dist/` folder to Netlify
 3. **Netlify serves** the pre-built static files
@@ -86,7 +86,7 @@ git push origin main
 
 **Production (GitHub Actions):**
 
-- `PHOTO_SERVER_URL` not set → defaults to `https://share.kadykov.com` ✅
+- `PHOTO_SERVER_URL` not set → defaults to `https://assets.kadykov.com` ✅
 
 **Local Development:**
 
@@ -117,7 +117,7 @@ git push origin main
 **Deployed site has broken image links:**
 
 - Check that `PHOTO_SERVER_URL` is NOT set in GitHub Actions secrets
-- Should use default: `https://share.kadykov.com`
+- Should use default: `https://assets.kadykov.com`
 
 **Want to test build locally before pushing:**
 

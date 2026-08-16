@@ -2,7 +2,7 @@
 
 ## Overview
 
-This website fetches photo manifests and images from a configurable photo server. By default, it uses the production server at `https://share.kadykov.com`, but you can override this for local development.
+This website fetches photo manifests and images from a configurable photo server. By default, it uses the production server at `https://assets.kadykov.com`, but you can override this for local development.
 
 ## Configuration
 
@@ -10,8 +10,8 @@ This website fetches photo manifests and images from a configurable photo server
 
 No configuration needed! The production server URL is baked into the code and will be used automatically:
 
-- **Default URL:** `https://share.kadykov.com`
-- **Manifest:** `https://share.kadykov.com/image_manifest.json`
+- **Default URL:** `https://assets.kadykov.com`
+- **Manifest:** `https://assets.kadykov.com/image_manifest.json`
 
 ### Local Development
 
@@ -105,7 +105,7 @@ The domain `my-custom-cdn.example.com` will be automatically added to Astro's al
 When you're ready to move to a cloud server:
 
 1. **Deploy your photo server** to the cloud (e.g., AWS S3 + CloudFront, Google Cloud Storage, etc.)
-2. **Update DNS** to point `share.kadykov.com` to the new server, OR
+2. **Update DNS** to point `assets.kadykov.com` to the new server, OR
 3. **Change the default** in `src/config/photoServer.ts` to the new cloud URL
 4. **Keep local development** using `.env` to point to your local server
 

@@ -28,7 +28,7 @@ npm run preview      # Preview production build locally
 
 **Photo server configuration:**
 
-- Production: `https://share.kadykov.com` (default)
+- Production: `https://assets.kadykov.com` (default)
 - Local dev: Set `PHOTO_SERVER_URL` in `.env` to override
 
 See [.env.example](.env.example) for available configuration options.
