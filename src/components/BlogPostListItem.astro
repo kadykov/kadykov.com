@@ -13,7 +13,7 @@ interface Props {
 
 const { post, readingTime } = Astro.props
 const { title, description, pubDate, lastUpdatedDate, tags } = post.data
-const postUrl = `/blog/${post.slug}`
+const postUrl = `/blog/${post.id}`
 
 // Options for date formatting
 const dateOptions: Intl.DateTimeFormatOptions = {

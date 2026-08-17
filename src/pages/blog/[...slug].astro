@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content"
+import { getCollection, render } from "astro:content"
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro"
 import { getReadingTime } from "../../utils/readingTime"
 
@@ -9,17 +9,17 @@ export async function getStaticPaths() {
     ({ data }) => data.draft !== true
   )
   return blogEntries.map((entry) => ({
-    params: { slug: entry.slug }, // Use entry.slug for the parameter
+    params: { slug: entry.id }, // Use entry.id for the parameter
     props: { entry },
   }))
 }
 
 const { entry } = Astro.props
-// Use the modern entry.render() method - works for both .md and .mdoc files
-const { Content } = await entry.render()
+// Use the render() function from astro:content - works for both .md and .mdoc files
+const { Content } = await render(entry)
 
 // Calculate reading time from the raw content body
-const readingTime = getReadingTime(entry.body)
+const readingTime = getReadingTime(entry.body ?? "")
 ---
 
 <BlogPostLayout frontmatter={entry.data} readingTime={readingTime}>

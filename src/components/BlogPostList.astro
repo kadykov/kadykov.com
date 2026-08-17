@@ -16,7 +16,7 @@ const displayPosts = limit ? posts.slice(0, limit) : posts
 // Pre-compute reading times for all posts
 const postsWithReadingTime = displayPosts.map((post) => ({
   post,
-  readingTime: getReadingTime(post.body),
+  readingTime: getReadingTime(post.body ?? ""),
 }))
 ---
 

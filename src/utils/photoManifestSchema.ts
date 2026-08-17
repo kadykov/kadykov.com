@@ -18,7 +18,7 @@ export const photoManifestItemSchema = z.object({
     z
       .string({
         // Ensure it's a string if not null
-        invalid_type_error:
+        error:
           "dateTaken must be a string or null (or an empty string which is converted to null).",
       })
       .refine(

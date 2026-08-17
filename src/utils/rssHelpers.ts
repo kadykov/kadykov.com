@@ -35,10 +35,10 @@ export function createBlogRSSItem(
     title: post.data.title,
     pubDate: post.data.pubDate,
     description: post.data.description,
-    link: `${siteUrl}blog/${post.slug}/`,
+    link: `${siteUrl}blog/${post.id}/`,
     categories: post.data.tags || [],
     enclosure: {
-      url: `${siteUrl}blog/${post.slug}/og.png`,
+      url: `${siteUrl}blog/${post.id}/og.png`,
       type: "image/png",
       length: 0,
     },

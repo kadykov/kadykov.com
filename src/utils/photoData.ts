@@ -1,3 +1,4 @@
+import { z } from "astro/zod"
 import {
   photoManifestSchema,
   type PhotoManifestItem,
@@ -37,7 +38,10 @@ export async function fetchPhotoManifest(): Promise<PhotoManifestItem[]> {
       const parsed = photoManifestSchema.safeParse(jsonData)
 
       if (!parsed.success) {
-        console.error("Failed to parse photo manifest:", parsed.error.flatten())
+        console.error(
+          "Failed to parse photo manifest:",
+          z.treeifyError(parsed.error)
+        )
         throw new Error(
           "Failed to parse photo manifest: " + parsed.error.toString()
         )

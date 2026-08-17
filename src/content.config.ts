@@ -1,4 +1,6 @@
-import { z, defineCollection } from "astro:content"
+import { defineCollection } from "astro:content"
+import { z } from "astro/zod"
+import { glob } from "astro/loaders"
 import { IMAGE_MANIFEST_URL, PHOTO_MANIFEST_URL } from "./config/photoServer"
 
 // Backward compatibility: keep MANIFEST_URL pointing to photo manifest
@@ -6,7 +8,10 @@ const MANIFEST_URL = PHOTO_MANIFEST_URL
 
 // Define a `type` and `schema` for each collection
 const postsCollection = defineCollection({
-  type: "content", // For Markdown/MDX/Markdoc files in src/content/
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx,mdoc}",
+    base: "./src/content/blog",
+  }),
   schema: z.object({
     title: z.string(),
     // Visual display fields (Hero section, OG images)
@@ -25,7 +30,10 @@ const postsCollection = defineCollection({
 
 // Collection for static pages (About, Privacy Policy, etc.)
 const pagesCollection = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx,mdoc}",
+    base: "./src/content/pages",
+  }),
   schema: z.object({
     title: z.string(),
     // Visual display fields (Hero section, OG images)
@@ -81,7 +89,7 @@ const photosCollection = defineCollection({
       (val) => (val === "" ? null : val),
       z
         .string({
-          invalid_type_error:
+          error:
             "dateTaken must be a string or null (or an empty string which is converted to null).",
         })
         .refine(
