@@ -636,6 +636,9 @@
    */
   --spacing-adaptive: clamp(1rem, 6vw - 1rem, 3rem);
 
+  /* Smaller adaptive spacing for compact layouts */
+  --spacing-adaptive-small: clamp(0.5rem, 3vw - 0.5rem, 1.5rem);
+
   /* Fibonacci Pattern Background - Reusable Variables */
 
   /*
@@ -934,73 +937,6 @@ figure {
 /* Square bullets are more cohesive with the overall design */
 ul {
   list-style-type: square;
-}
-
-/* Horizontal container for icon + text */
-button,
-label {
-  /* Flex layout for icon + text */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-}
-
-/* Icon inside horizontal container */
-button svg,
-label svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  flex-shrink: 0;
-  fill: currentcolor;
-}
-
-/* Contact Form Styles */
-
-/* Common styles for input and textarea */
-input,
-textarea {
-  outline: none;
-  min-width: 10em;
-}
-
-/* Common styles for label and textarea */
-label,
-textarea {
-  font-family: var(--font-serif);
-
-  /* Surface container for input fields */
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
-
-  /* Spacing and border */
-  border: 0.1rem solid var(--color-surface-container-high);
-  border-radius: 0.2rem;
-  padding: 0.75rem 1rem;
-
-  /* Smooth transitions for focus states */
-  transition:
-    border-color var(--transition),
-    box-shadow var(--transition);
-}
-
-/* Input fields inside labels */
-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: inherit;
-}
-
-/* Textarea - Message field */
-textarea {
-  min-height: 10rem;
-  resize: vertical;
-}
-
-/* Icons in form labels */
-label svg {
-  color: var(--color-primary);
 }
 
 /* Headings: style h1-h4 directly, sans-serif, letter-spacing */
@@ -1406,23 +1342,37 @@ article time {
  *
  * Design: Forms that appear as direct children of main are styled as
  * clean interactive cards with generous spacing and clear hierarchy.
+ * The form itself stays compact and the fieldset uses a responsive grid
+ * so controls can organize into multiple columns when space allows.
  */
 form {
-  /* Centered with comfortable max-width */
-  max-width: 32rem;
+  display: grid;
+  gap: var(--spacing-adaptive-small);
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-adaptive);
+  padding: var(--spacing-adaptive-small);
   background-color: var(--color-surface-container-low);
   box-shadow: var(--elevation-2);
-  border-radius: 0.2rem;
+}
 
-  /* Vertical stack of form elements */
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+fieldset {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--spacing-adaptive-small);
+  width: 100%;
+  margin: 0;
+  padding: var(--spacing-adaptive-small);
 
-  /* Use larger font size for inputs */
-  font-size: 1.2rem;
+  /* Unlike form and other containers, fieldset has a legend that is rendered on the border,
+  so we need to style the border to match the overall style */
+  border: 0.1rem solid var(--color-surface-container-high);
+}
+
+fieldset legend {
+  /* Use h4 styles for legend text to maintain visual hierarchy */
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-h4);
 }
 
 /*
@@ -1487,9 +1437,25 @@ button {
   border-radius: 0.2rem;
   padding: 0.5rem;
   box-shadow: var(--elevation-2);
+
+  /* Horizontal container for icon + text */
+
+  /* Flex layout for icon + text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
 }
 
-/* Copy button styling */
+/* Icon inside horizontal container */
+button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  fill: currentcolor;
+}
+
+/* Fix copy code button inside code blocks to top right corner */
 pre button {
   position: absolute;
   top: 0.5rem;
@@ -1509,6 +1475,67 @@ button[type="reset"] {
   color: var(--color-on-accent-container);
   background-color: var(--color-accent-container);
   border: 0.1lh solid var(--color-accent);
+}
+
+/* Contact Form Styles */
+
+/* Form labels - horizontal flex for icon + text, appears above input */
+label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  flex-wrap: wrap;
+}
+
+/* Label icons */
+label svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* Common styles for input and textarea */
+input,
+textarea {
+  font-family: var(--font-serif);
+
+  /* Surface container for input fields */
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+
+  /* Spacing and border */
+  border: 0.1rem solid var(--color-surface-container-high);
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+
+  /* Remove default browser outline - we use border and box-shadow instead */
+  outline: none;
+
+  /* Smooth transitions for focus states */
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+/* Elements inside forms */
+input,
+textarea,
+form button {
+  width: 100%;
+}
+
+/* Keep checkboxes and radio buttons compact so their labels stay on the same line */
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* Textarea - Message field */
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+  display: block;
 }
 
 /* Disabled button - low contrast, non-interactive */
@@ -2078,18 +2105,34 @@ textarea::placeholder {
   color: var(--color-on-surface-low);
 }
 
-/* Focus state for labels when input is focused */
-label:focus-within,
+input:hover,
+textarea:hover {
+  border-color: var(--color-primary);
+}
+
+/* Focus state for form inputs */
+input:focus,
 textarea:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 0.2rem var(--color-accent-container);
 }
 
 /* Invalid state - show error indicator only after user interaction */
-label:has(input:user-invalid),
+input:user-invalid,
 textarea:user-invalid {
   background-color: var(--color-accent-container);
   color: var(--color-on-accent-container);
+}
+
+/* Hide the honeypot field by positioning it off-screen based on its order.
+Since in the contact form we have only three input fields, we can safely target the second one */
+#contact-form label:nth-of-type(2),
+#contact-form label:nth-of-type(2) input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Remove our custom outline for PhotoSwipe buttons */
