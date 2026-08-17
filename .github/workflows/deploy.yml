@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: "24"
           package-manager: "npm"
+          cache-dir: "./.astro"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
